@@ -115,6 +115,9 @@ fdist.plot(50, cumulative=True)
 
 
 # Exercises
+
+**Task 0.** Install required dependencies as described in the Installation section.
+
 **Task 1.** Using `FreqDist`, find the following from textN, where $N$ is $P \mod 8$:
 
 - words that are hapaxes (unique) and those that occur less than 5 times
@@ -124,41 +127,12 @@ fdist.plot(50, cumulative=True)
 
 **Task 2.** Create custom NLTK text of your favourite (public domain) book via
 ```python
-#| execute: false
   f=open('book.txt','rU')
   raw=f.read()
   tokens = nltk.word_tokenize(raw)
   text = nltk.Text(tokens)
 ```
  Practice using `concordance`, `similar`, `dispersion_plot`, `FreqDist` on the resulting text.
-
-**Task 3.** Write a program that will 
-
-- collect all monetary amounts from a given text
-
-Example: `"first amount is $123.45, second amount is $400"` -> `[123.45, 400]`.
-
-- convert these to float numbers
-- \item and sum them
-
-```json
- {
-  "HTTPHost": "localhost",
-  "HTTPPort": 8545,
-  "Config": {
-    "Enabled": true,
-    "Server": "wakuv2.prod",
-    "Nodes": [ "8.210.222.231", "168.166.125.145", ...]
-  }
- }
-```
-Write Python code that will use a regex to convert it as follows:
-
-- Remove entries from "Nodes"\ that begin with "8."
-- Replace each "Server"\ entry of the form \lstinline!ServerName.Serverype! with 
-`"name": "ServerName", "type": "ServerType"`.
-
-So, for example, `"Server": "wakuv2.prod"` will be replaced with `"Server": {"name": "wakuv2", "type": "prod"}`
 
 # Recommended reading 
 - Chapter 1 from [NLTK book](https://www.nltk.org/book/ch01.html).

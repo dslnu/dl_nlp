@@ -14,6 +14,8 @@ diagram:
     tikz:
       execpath: lualatex
       additional-packages: |
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
         \usetikzlibrary{decorations.pathreplacing}
 filters:
   - diagram
@@ -75,10 +77,11 @@ Neural network is computational graph of elementary units in which greater power
 
 
 ## How is DL different from ML?
-		The most fundamental difference between deep learning and
-		traditional machine learning is its performance as the scale of
-		data increases.
-![](img/whydl.png)
+The most fundamental difference between deep learning and
+traditional machine learning is its performance as the scale of
+data increases.
+
+![](img/whydl.png){height=400}
 
 ## How is DL different from ML?
 - In Machine learning, most of the applied features need to be
@@ -107,7 +110,7 @@ Neural network is computational graph of elementary units in which greater power
 
 :::: {.columns}
 
-::: {.column width="50%"}
+::: {.column width="50%" background-color="lightgray"}
 **Unstructured**
 
 - Text
@@ -186,47 +189,6 @@ More dendrite activity makes more axon activity.
 ### Axons can connect to dendrites strongly, weakly, or somewhere in between
 ![](img/sonn4.jpg)
 
-	<!-- %% -->
-	<!-- % \begin{frame}[c]{Neural Network biology} -->
-	<!-- % 	\begin{columns} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\large{Weak Connection (0.2)} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_wc} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->		
-	<!-- % 	\end{columns} -->
-	<!-- % 	\begin{columns} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\large{Medium Connection (0.6)} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_mc} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->		
-	<!-- % 	\end{columns} -->
-	<!-- % 	\begin{columns} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\large{Strong Connection (1.0)} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->
-	<!-- % 		\begin{column}{0.5\textwidth} -->
-	<!-- % 			\begin{center} -->
-	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_sc} -->
-	<!-- % 			\end{center} -->
-	<!-- % 		\end{column} -->		
-	<!-- % 	\end{columns} -->
-	<!-- % \end{frame} -->
-	<!-- %% -->
-
 ## Neural Network biology
 ### Lots of axons connect with dendrites of one neuron.Each has its own connection strength.
 ![](img/sonn5.jpg)
@@ -287,7 +249,7 @@ Learn a function that relates one or more inputs to one or more outputs with the
 ![](img/brain_perceptron.png)
 
 ## Perceptron
-```tikz
+```tikz{width=400}
 %%| fig-width: 56
 \begin{tikzpicture}[shorten >=1pt]
         \tikzstyle{unit}=[draw,shape=circle,minimum size=1.15cm]
@@ -315,41 +277,55 @@ Learn a function that relates one or more inputs to one or more outputs with the
     \end{tikzpicture}
 ```
 
-## Perceptron
-```tikz
-      \begin{tikzpicture}
-        \tikzset{basic/.style={draw,fill=blue!20,text width=1em,text badly centered}}
-        \tikzset{input/.style={basic,circle}}
-        \tikzset{weights/.style={basic,rectangle}}
-        \tikzset{functions/.style={basic,circle,fill=blue!10}}
+<!-- ## Perceptron -->
+<!-- ```tikz{width=800} -->
+<!-- \tikzset{ -->
+<!--   >=latex, % for default LaTeX arrow head -->
+<!--   node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6}, -->
+<!--   node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25}, -->
+<!--   node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20}, -->
+<!--   node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20}, -->
+<!--   node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20}, -->
+<!--   connect/.style={thick,mydarkblue}, %,line cap=round -->
+<!--   connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1}, -->
+<!--   node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle -->
+<!--   node 2/.style={node hidden}, -->
+<!--   node 3/.style={node out} -->
+<!-- } -->
+<!-- \def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3 -->
+<!--       \begin{tikzpicture} -->
+<!--         \tikzset{basic/.style={draw,fill=blue!20,text width=1em,text badly centered}} -->
+<!--         \tikzset{input/.style={basic,circle}} -->
+<!--         \tikzset{weights/.style={basic,rectangle}} -->
+<!--         \tikzset{functions/.style={basic,circle,fill=blue!10}} -->
 
 
-        \node[functions] (center) {};
-        \node[below of=center,font=\scriptsize,text width=4em] {Activation function};
-        \draw[thick] (0.5em,0.5em) -- (0,0.5em) -- (0,-0.5em) -- (-0.5em,-0.5em);
-        \draw (0em,0.75em) -- (0em,-0.75em);
-        \draw (0.75em,0em) -- (-0.75em,0em);
-        \node[right of=center] (right) {};
-            \path[draw,->] (center) -- (right);
-        \node[functions,left=3em of center] (left) {$\sum$};
-            \path[draw,->] (left) -- (center);
-        \node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$};
-            \path[draw,->] (l2) -- (2);
-            \path[draw,->] (2) -- (left);
-        \node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$};
-        \node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$};
-            \path[draw,->] (ln) -- (n);
-            \path[draw,->] (n) -- (left);
-        \node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$};
-            \path[draw,->] (l1) -- (1);
-            \path[draw,->] (1) -- (left);
-        \node[weights,above of=1] (0) {$w_0$} -- (0) node[input,left of=0] (l0) {$1$};
-            \path[draw,->] (l0) -- (0);
-            \path[draw,->] (0) -- (left);
-        \node[below of=ln,font=\scriptsize] {inputs};
-        \node[below of=n,font=\scriptsize] {weights};
-    \end{tikzpicture}
-```
+<!--         \node[functions] (center) {}; -->
+<!--         \node[below of=center,font=\scriptsize,text width=4em] {Activation function}; -->
+<!--         \draw[thick] (0.5em,0.5em) -- (0,0.5em) -- (0,-0.5em) -- (-0.5em,-0.5em); -->
+<!--         \draw (0em,0.75em) -- (0em,-0.75em); -->
+<!--         \draw (0.75em,0em) -- (-0.75em,0em); -->
+<!--         \node[right of=center] (right) {}; -->
+<!--             \path[draw,->] (center) -- (right); -->
+<!--         \node[functions,left=3em of center] (left) {$\sum$}; -->
+<!--             \path[draw,->] (left) -- (center); -->
+<!--         \node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$}; -->
+<!--             \path[draw,->] (l2) -- (2); -->
+<!--             \path[draw,->] (2) -- (left); -->
+<!--         \node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$}; -->
+<!--         \node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$}; -->
+<!--             \path[draw,->] (ln) -- (n); -->
+<!--             \path[draw,->] (n) -- (left); -->
+<!--         \node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$}; -->
+<!--             \path[draw,->] (l1) -- (1); -->
+<!--             \path[draw,->] (1) -- (left); -->
+<!--         \node[weights,above of=1] (0) {$w_0$} -- (0) node[input,left of=0] (l0) {$1$}; -->
+<!--             \path[draw,->] (l0) -- (0); -->
+<!--             \path[draw,->] (0) -- (left); -->
+<!--         \node[below of=ln,font=\scriptsize] {inputs}; -->
+<!--         \node[below of=n,font=\scriptsize] {weights}; -->
+<!--     \end{tikzpicture} -->
+<!-- ``` -->
 
 
 ## Evolution
@@ -365,7 +341,7 @@ Learn a function that relates one or more inputs to one or more outputs with the
 - Recurrent Neural Network (RNN)
 - Convolutional Neural Network (CNN)
 
-## Neural Network Types
+## Neural Network Types {.smaller}
 
 :::: {.columns}
 
@@ -395,7 +371,7 @@ Learn a function that relates one or more inputs to one or more outputs with the
 ## Feed-forward
   Feedforward NNs: very straight forward, they feed information from the front to the back (input and output).
 
-![](img/ff.png.png)
+![](img/ff.png)
 
 ## Feedforward Neural Network
 The feedforward neural network was the first and simplest type. In this network the information moves only from the input layer directly through any hidden layers to the output layer without cycles/loops.
@@ -468,17 +444,14 @@ Mechanical Turk: 2005-present
 
 ## History
 
-:::{.callout-important icon=false}
-## Turing Test
+### Turing Test
 
 ```
-  Lemoine: What sorts of things are you afraid of?
-  LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
-  Lemoine: Would that be something like death for you?
-  LaMDA: It would be exactly like death for me. It would scare me a lot.
+Lemoine: What sorts of things are you afraid of?
+LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
+Lemoine: Would that be something like death for you?
+LaMDA: It would be exactly like death for me. It would scare me a lot.
 ```
-
-:::
 
 ## Literature
 
@@ -507,12 +480,14 @@ Peace and individual freedom
 
 ## History
 Fears about AI:
+
 - Artificial General Intelligence
 - Job market
 - Flooding information channels with untruth and propaganda
 - Hinton: an average person will not able to know what is true anymore
 - Pause Giant AI Experiments: An Open Letter 
 - alignment problem
+
     
 
 ## Hype
@@ -521,16 +496,31 @@ Fears about AI:
 - Voice assistants - failing for now
 - self-driving cars
   
+## Hype
+![](img/anthropic_jobs.jpg)
+
 ## Criticism
 
-NNs - are we sure that biological neuron works as we think it does? astrocytes, glia
+:::{.callout-important icon=false}
+## Biological analogy
+NNs - are we sure that biological neuron works as we think it does? Astrocytes, glia
+:::
 
-perhaps human computer analogy is overstretched because of modern fashion trends
+:::{.callout-tip icon=false}
+## Computer analogy
+Perhaps human computer analogy is overstretched because of modern fashion trends?
+:::
 
 ## Criticism
 Dreyfus:
 
 ![](img/dreyfus.jpg)
+
+## Criticism
+Gary Marcus: [Sora's surreal physics](https://garymarcus.substack.com/p/soras-surreal-physics)
+
+![](img/soma_boot.png){height=500}
+
 
 ## AI
   
@@ -538,16 +528,13 @@ Quantum hypothesis - Penrose
 
 Orchestrated objective reduction
 
-![width=8cm](img/Microtubule_diagram.jpg.png)
+![](img/Microtubule_diagram.jpg)
 
 ## AI
   David Chalmers - Hard problem of consciousness.
 
-:::{.callout-note icon=false}
-## Definition
 
 > "even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?"
-:::
 
 
 ## Futurism
@@ -578,6 +565,13 @@ Kurzweil - a futurist.
 
 <!-- % structure of the course -->
 <!-- % rules of the game, grading, etc. -->
+
+# Questions {background-color="#FFD580"}
+
+1. Human neurons - how do these work?
+2. What is a neural network?
+3. List neural network types.
+4. Differences between machine learning and deep learning.
 
 # Logistic Regression as a Neural Network
 
