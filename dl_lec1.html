@@ -301,11 +301,9 @@ Vitaly Vlasov
 </section>
 <section id="how-is-dl-different-from-ml" class="slide level2">
 <h2>How is DL different from ML?</h2>
-<pre><code>    The most fundamental difference between deep learning and
-    traditional machine learning is its performance as the scale of
-    data increases.</code></pre>
-
-<img data-src="img/whydl.png" class="r-stretch"></section>
+<p>The most fundamental difference between deep learning and traditional machine learning is its performance as the scale of data increases.</p>
+<p><img data-src="img/whydl.png" height="400"></p>
+</section>
 <section id="how-is-dl-different-from-ml-1" class="slide level2">
 <h2>How is DL different from ML?</h2>
 <ul>
@@ -331,7 +329,7 @@ Vitaly Vlasov
 <section id="neural-network-data-types" class="slide level2">
 <h2>Neural network data types</h2>
 <div class="columns">
-<div class="column" style="width:50%;">
+<div class="column" data-background-color="lightgray" style="width:50%;">
 <p><strong>Unstructured</strong></p>
 <ul>
 <li>Text</li>
@@ -398,47 +396,7 @@ Vitaly Vlasov
 <h2>Neural Network biology</h2>
 <h3 id="axons-can-connect-to-dendrites-strongly-weakly-or-somewhere-in-between">Axons can connect to dendrites strongly, weakly, or somewhere in between</h3>
 
-<img data-src="img/sonn4.jpg" class="r-stretch"><pre><code>&lt;!-- %% --&gt;
-&lt;!-- % \begin{frame}[c]{Neural Network biology} --&gt;
-&lt;!-- %  \begin{columns} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \large{Weak Connection (0.2)} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \includegraphics[width=0.85\linewidth]{img/sonn_wc} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;        
-&lt;!-- %  \end{columns} --&gt;
-&lt;!-- %  \begin{columns} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \large{Medium Connection (0.6)} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \includegraphics[width=0.85\linewidth]{img/sonn_mc} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;        
-&lt;!-- %  \end{columns} --&gt;
-&lt;!-- %  \begin{columns} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \large{Strong Connection (1.0)} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;
-&lt;!-- %      \begin{column}{0.5\textwidth} --&gt;
-&lt;!-- %          \begin{center} --&gt;
-&lt;!-- %              \includegraphics[width=0.85\linewidth]{img/sonn_sc} --&gt;
-&lt;!-- %          \end{center} --&gt;
-&lt;!-- %      \end{column} --&gt;        
-&lt;!-- %  \end{columns} --&gt;
-&lt;!-- % \end{frame} --&gt;
-&lt;!-- %% --&gt;</code></pre>
-</section>
+<img data-src="img/sonn4.jpg" class="r-stretch"></section>
 <section id="neural-network-biology-5" class="slide level2">
 <h2>Neural Network biology</h2>
 <h3 id="lots-of-axons-connect-with-dendrites-of-one-neuron.each-has-its-own-connection-strength.">Lots of axons connect with dendrites of one neuron.Each has its own connection strength.</h3>
@@ -521,11 +479,54 @@ Vitaly Vlasov
 </section>
 <section id="perceptron-1" class="slide level2">
 <h2>Perceptron</h2>
-<img data-src="dl_lec1_files/mediabag/afff45af975619eb809b1cc6a03da26c1f9b514d.svg">
-</section>
-<section id="perceptron-2" class="slide level2">
-<h2>Perceptron</h2>
-<img data-src="dl_lec1_files/mediabag/1add82ba20070b53049aaa7a5a2563bca755cdee.svg">
+<img data-src="dl_lec1_files/mediabag/afff45af975619eb809b1cc6a03da26c1f9b514d.svg" width="400">
+<!-- ## Perceptron -->
+<!-- ```tikz{width=800} -->
+<!-- \tikzset{ -->
+<!--   >=latex, % for default LaTeX arrow head -->
+<!--   node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6}, -->
+<!--   node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25}, -->
+<!--   node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20}, -->
+<!--   node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20}, -->
+<!--   node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20}, -->
+<!--   connect/.style={thick,mydarkblue}, %,line cap=round -->
+<!--   connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1}, -->
+<!--   node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle -->
+<!--   node 2/.style={node hidden}, -->
+<!--   node 3/.style={node out} -->
+<!-- } -->
+<!-- \def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3 -->
+<!--       \begin{tikzpicture} -->
+<!--         \tikzset{basic/.style={draw,fill=blue!20,text width=1em,text badly centered}} -->
+<!--         \tikzset{input/.style={basic,circle}} -->
+<!--         \tikzset{weights/.style={basic,rectangle}} -->
+<!--         \tikzset{functions/.style={basic,circle,fill=blue!10}} -->
+<!--         \node[functions] (center) {}; -->
+<!--         \node[below of=center,font=\scriptsize,text width=4em] {Activation function}; -->
+<!--         \draw[thick] (0.5em,0.5em) -- (0,0.5em) -- (0,-0.5em) -- (-0.5em,-0.5em); -->
+<!--         \draw (0em,0.75em) -- (0em,-0.75em); -->
+<!--         \draw (0.75em,0em) -- (-0.75em,0em); -->
+<!--         \node[right of=center] (right) {}; -->
+<!--             \path[draw,->] (center) -- (right); -->
+<!--         \node[functions,left=3em of center] (left) {$\sum$}; -->
+<!--             \path[draw,->] (left) -- (center); -->
+<!--         \node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$}; -->
+<!--             \path[draw,->] (l2) -- (2); -->
+<!--             \path[draw,->] (2) -- (left); -->
+<!--         \node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$}; -->
+<!--         \node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$}; -->
+<!--             \path[draw,->] (ln) -- (n); -->
+<!--             \path[draw,->] (n) -- (left); -->
+<!--         \node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$}; -->
+<!--             \path[draw,->] (l1) -- (1); -->
+<!--             \path[draw,->] (1) -- (left); -->
+<!--         \node[weights,above of=1] (0) {$w_0$} -- (0) node[input,left of=0] (l0) {$1$}; -->
+<!--             \path[draw,->] (l0) -- (0); -->
+<!--             \path[draw,->] (0) -- (left); -->
+<!--         \node[below of=ln,font=\scriptsize] {inputs}; -->
+<!--         \node[below of=n,font=\scriptsize] {weights}; -->
+<!--     \end{tikzpicture} -->
+<!-- ``` -->
 </section>
 <section id="evolution" class="slide level2">
 <h2>Evolution</h2>
@@ -544,7 +545,7 @@ Vitaly Vlasov
 <li>Convolutional Neural Network (CNN)</li>
 </ul>
 </section>
-<section id="neural-network-types-1" class="slide level2">
+<section id="neural-network-types-1" class="slide level2 smaller">
 <h2>Neural Network Types</h2>
 <div class="columns">
 <div class="column" style="width:50%;">
@@ -572,7 +573,7 @@ Vitaly Vlasov
 <h2>Feed-forward</h2>
 <p>Feedforward NNs: very straight forward, they feed information from the front to the back (input and output).</p>
 
-<img data-src="img/ff.png.png" class="r-stretch"></section>
+<img data-src="img/ff.png" class="r-stretch"></section>
 <section id="feedforward-neural-network" class="slide level2">
 <h2>Feedforward Neural Network</h2>
 <p>The feedforward neural network was the first and simplest type. In this network the information moves only from the input layer directly through any hidden layers to the output layer without cycles/loops. <img data-src="img/feedforward.png" height="400"></p>
@@ -650,19 +651,11 @@ Vitaly Vlasov
 </section>
 <section id="history-6" class="slide level2">
 <h2>History</h2>
-<div class="callout callout-important no-icon callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Turing Test</strong></p>
-</div>
-<div class="callout-content">
-<pre><code>  Lemoine: What sorts of things are you afraid of?
-  LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
-  Lemoine: Would that be something like death for you?
-  LaMDA: It would be exactly like death for me. It would scare me a lot.</code></pre>
-</div>
-</div>
-</div>
+<h3 id="turing-test">Turing Test</h3>
+<pre><code>Lemoine: What sorts of things are you afraid of?
+LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
+Lemoine: Would that be something like death for you?
+LaMDA: It would be exactly like death for me. It would scare me a lot.</code></pre>
 </section>
 <section id="literature" class="slide level2">
 <h2>Literature</h2>
@@ -703,7 +696,15 @@ Vitaly Vlasov
 </section>
 <section id="history-7" class="slide level2">
 <h2>History</h2>
-<p>Fears about AI: - Artificial General Intelligence - Job market - Flooding information channels with untruth and propaganda - Hinton: an average person will not able to know what is true anymore - Pause Giant AI Experiments: An Open Letter - alignment problem</p>
+<p>Fears about AI:</p>
+<ul>
+<li>Artificial General Intelligence</li>
+<li>Job market</li>
+<li>Flooding information channels with untruth and propaganda</li>
+<li>Hinton: an average person will not able to know what is true anymore</li>
+<li>Pause Giant AI Experiments: An Open Letter</li>
+<li>alignment problem</li>
+</ul>
 </section>
 <section id="hype" class="slide level2">
 <h2>Hype</h2>
@@ -714,37 +715,55 @@ Vitaly Vlasov
 <li>self-driving cars</li>
 </ul>
 </section>
+<section id="hype-1" class="slide level2">
+<h2>Hype</h2>
+
+<img data-src="img/anthropic_jobs.jpg" class="r-stretch"></section>
 <section id="criticism" class="slide level2">
 <h2>Criticism</h2>
-<p>NNs - are we sure that biological neuron works as we think it does? astrocytes, glia</p>
-<p>perhaps human computer analogy is overstretched because of modern fashion trends</p>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Biological analogy</strong></p>
+</div>
+<div class="callout-content">
+<p>NNs - are we sure that biological neuron works as we think it does? Astrocytes, glia</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Computer analogy</strong></p>
+</div>
+<div class="callout-content">
+<p>Perhaps human computer analogy is overstretched because of modern fashion trends?</p>
+</div>
+</div>
+</div>
 </section>
 <section id="criticism-1" class="slide level2">
 <h2>Criticism</h2>
 <p>Dreyfus:</p>
 
 <img data-src="img/dreyfus.jpg" class="r-stretch"></section>
+<section id="criticism-2" class="slide level2">
+<h2>Criticism</h2>
+<p>Gary Marcus: <a href="https://garymarcus.substack.com/p/soras-surreal-physics">Sora’s surreal physics</a></p>
+<p><img data-src="img/soma_boot.png" height="500"></p>
+</section>
 <section id="ai" class="slide level2">
 <h2>AI</h2>
 <p>Quantum hypothesis - Penrose</p>
 <p>Orchestrated objective reduction</p>
 
-<img data-src="img/Microtubule_diagram.jpg.png" class="r-stretch quarto-figure-center"><p class="caption">width=8cm</p></section>
+<img data-src="img/Microtubule_diagram.jpg" class="r-stretch"></section>
 <section id="ai-1" class="slide level2">
 <h2>AI</h2>
 <p>David Chalmers - Hard problem of consciousness.</p>
-<div class="callout callout-note no-icon callout-titled callout-style-default">
-<div class="callout-body">
-<div class="callout-title">
-<p><strong>Definition</strong></p>
-</div>
-<div class="callout-content">
 <blockquote>
 <p>“even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?”</p>
 </blockquote>
-</div>
-</div>
-</div>
 </section>
 <section id="futurism" class="slide level2">
 <h2>Futurism</h2>
@@ -774,6 +793,16 @@ Vitaly Vlasov
 <!-- % structure of the course -->
 <!-- % rules of the game, grading, etc. -->
 </section></section>
+<section id="questions" class="title-slide slide level1 center" data-background-color="#FFD580">
+<h1>Questions</h1>
+<ol type="1">
+<li>Human neurons - how do these work?</li>
+<li>What is a neural network?</li>
+<li>List neural network types.</li>
+<li>Differences between machine learning and deep learning.</li>
+</ol>
+</section>
+
 <section>
 <section id="logistic-regression-as-a-neural-network" class="title-slide slide level1 center">
 <h1>Logistic Regression as a Neural Network</h1>
@@ -891,7 +920,7 @@ db=0
 <section id="vectorization" class="slide level2">
 <h2>Vectorization</h2>
 <p>We have to compute <span class="math inline">\(z=w^T x + b\)</span>, where <span class="math inline">\(w,x \in R^{n_x}\)</span>, and for this we can naturally use a for loop. A vectorized Python command is</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>z <span class="op">=</span> np.dot(w,x)<span class="op">+</span>b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>z <span class="op">=</span> np.dot(w,x)<span class="op">+</span>b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <!-- An jupyter example follows, comparing times of for-loop and vectorized code samples. -->
 <!-- SIMD calculations on GPUs and CPUs. -->
 </section>
@@ -917,8 +946,8 @@ db=0
     \end{bmatrix}
   \end{align*}
   \]</span> A code listing is</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>  <span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb6-2"><a></a>  u <span class="op">=</span> np.exp(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a></a>  u <span class="op">=</span> np.exp(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>So we can modify the above code to get rid of for loops (except for the one for <span class="math inline">\(m\)</span>).</p>
 </section>
 <section id="vectorizing-logistic-regression" class="slide level2">
@@ -952,7 +981,7 @@ X = \begin{bmatrix}
 Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
 = [w^T x^{(1)}+b, \dots, w^T x^{(m)}+b].
 \]</span></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>  z <span class="op">=</span> np.dot(w.T, x) <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>  z <span class="op">=</span> np.dot(w.T, x) <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p><span class="math inline">\(b\)</span> is a raw number, Python will automatically take care of expanding it into a vector - this is called <em>broadcasting</em>.</p>
 <p>For predictions we can also compute it similarly: <span class="math display">\[
 \begin{align*}

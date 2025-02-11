@@ -25,7 +25,7 @@
     "href": "dl_lec1.html#how-is-dl-different-from-ml",
     "title": "Deep learning: intro",
     "section": "How is DL different from ML?",
-    "text": "How is DL different from ML?\n    The most fundamental difference between deep learning and\n    traditional machine learning is its performance as the scale of\n    data increases."
+    "text": "How is DL different from ML?\nThe most fundamental difference between deep learning and traditional machine learning is its performance as the scale of data increases."
   },
   {
     "objectID": "dl_lec1.html#how-is-dl-different-from-ml-1",
@@ -95,7 +95,7 @@
     "href": "dl_lec1.html#neural-network-biology-4",
     "title": "Deep learning: intro",
     "section": "Neural Network biology",
-    "text": "Neural Network biology\nAxons can connect to dendrites strongly, weakly, or somewhere in between\n\n&lt;!-- %% --&gt;\n&lt;!-- % \\begin{frame}[c]{Neural Network biology} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Weak Connection (0.2)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_wc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Medium Connection (0.6)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_mc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Strong Connection (1.0)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_sc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- % \\end{frame} --&gt;\n&lt;!-- %% --&gt;"
+    "text": "Neural Network biology\nAxons can connect to dendrites strongly, weakly, or somewhere in between"
   },
   {
     "objectID": "dl_lec1.html#neural-network-biology-5",
@@ -170,13 +170,6 @@
   {
     "objectID": "dl_lec1.html#perceptron-1",
     "href": "dl_lec1.html#perceptron-1",
-    "title": "Deep learning: intro",
-    "section": "Perceptron",
-    "text": "Perceptron"
-  },
-  {
-    "objectID": "dl_lec1.html#perceptron-2",
-    "href": "dl_lec1.html#perceptron-2",
     "title": "Deep learning: intro",
     "section": "Perceptron",
     "text": "Perceptron"
@@ -305,7 +298,7 @@
     "href": "dl_lec1.html#history-6",
     "title": "Deep learning: intro",
     "section": "History",
-    "text": "History\n\n\n\nTuring Test\n\n\n  Lemoine: What sorts of things are you afraid of?\n  LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.\n  Lemoine: Would that be something like death for you?\n  LaMDA: It would be exactly like death for me. It would scare me a lot."
+    "text": "History\nTuring Test\nLemoine: What sorts of things are you afraid of?\nLaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.\nLemoine: Would that be something like death for you?\nLaMDA: It would be exactly like death for me. It would scare me a lot."
   },
   {
     "objectID": "dl_lec1.html#literature",
@@ -333,7 +326,7 @@
     "href": "dl_lec1.html#history-7",
     "title": "Deep learning: intro",
     "section": "History",
-    "text": "History\nFears about AI: - Artificial General Intelligence - Job market - Flooding information channels with untruth and propaganda - Hinton: an average person will not able to know what is true anymore - Pause Giant AI Experiments: An Open Letter - alignment problem"
+    "text": "History\nFears about AI:\n\nArtificial General Intelligence\nJob market\nFlooding information channels with untruth and propaganda\nHinton: an average person will not able to know what is true anymore\nPause Giant AI Experiments: An Open Letter\nalignment problem"
   },
   {
     "objectID": "dl_lec1.html#hype",
@@ -343,11 +336,18 @@
     "text": "Hype\n\n“Sparks of AGI” - sponsored by Microsoft\n“Wired” article about OpenAI\nVoice assistants - failing for now\nself-driving cars"
   },
   {
+    "objectID": "dl_lec1.html#hype-1",
+    "href": "dl_lec1.html#hype-1",
+    "title": "Deep learning: intro",
+    "section": "Hype",
+    "text": "Hype"
+  },
+  {
     "objectID": "dl_lec1.html#criticism",
     "href": "dl_lec1.html#criticism",
     "title": "Deep learning: intro",
     "section": "Criticism",
-    "text": "Criticism\nNNs - are we sure that biological neuron works as we think it does? astrocytes, glia\nperhaps human computer analogy is overstretched because of modern fashion trends"
+    "text": "Criticism\n\n\n\nBiological analogy\n\n\nNNs - are we sure that biological neuron works as we think it does? Astrocytes, glia\n\n\n\n\n\n\nComputer analogy\n\n\nPerhaps human computer analogy is overstretched because of modern fashion trends?"
   },
   {
     "objectID": "dl_lec1.html#criticism-1",
@@ -357,18 +357,25 @@
     "text": "Criticism\nDreyfus:"
   },
   {
+    "objectID": "dl_lec1.html#criticism-2",
+    "href": "dl_lec1.html#criticism-2",
+    "title": "Deep learning: intro",
+    "section": "Criticism",
+    "text": "Criticism\nGary Marcus: Sora’s surreal physics"
+  },
+  {
     "objectID": "dl_lec1.html#ai",
     "href": "dl_lec1.html#ai",
     "title": "Deep learning: intro",
     "section": "AI",
-    "text": "AI\nQuantum hypothesis - Penrose\nOrchestrated objective reduction\n\nwidth=8cm"
+    "text": "AI\nQuantum hypothesis - Penrose\nOrchestrated objective reduction"
   },
   {
     "objectID": "dl_lec1.html#ai-1",
     "href": "dl_lec1.html#ai-1",
     "title": "Deep learning: intro",
     "section": "AI",
-    "text": "AI\nDavid Chalmers - Hard problem of consciousness.\n\n\n\nDefinition\n\n\n\n“even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?”"
+    "text": "AI\nDavid Chalmers - Hard problem of consciousness.\n\n“even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?”"
   },
   {
     "objectID": "dl_lec1.html#futurism",

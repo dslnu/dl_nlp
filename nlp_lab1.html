@@ -416,6 +416,7 @@ wife way flood servant people famine pillar</code></pre>
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
+<p><strong>Task 0.</strong> Install required dependencies as described in the Installation section.</p>
 <p><strong>Task 1.</strong> Using <code>FreqDist</code>, find the following from textN, where <span class="math inline">\(N\)</span> is <span class="math inline">\(P \mod 8\)</span>:</p>
 <ul>
 <li>words that are hapaxes (unique) and those that occur less than 5 times</li>
@@ -423,36 +424,11 @@ wife way flood servant people famine pillar</code></pre>
 <li>find 10 most frequent words occurring at the end of the sentence</li>
 </ul>
 <p><strong>Task 2.</strong> Create custom NLTK text of your favourite (public domain) book via</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| execute: false</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  f<span class="op">=</span><span class="bu">open</span>(<span class="st">'book.txt'</span>,<span class="st">'rU'</span>)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  raw<span class="op">=</span>f.read()</span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  tokens <span class="op">=</span> nltk.word_tokenize(raw)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  text <span class="op">=</span> nltk.Text(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>  f<span class="op">=</span><span class="bu">open</span>(<span class="st">'book.txt'</span>,<span class="st">'rU'</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  raw<span class="op">=</span>f.read()</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  tokens <span class="op">=</span> nltk.word_tokenize(raw)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  text <span class="op">=</span> nltk.Text(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Practice using <code>concordance</code>, <code>similar</code>, <code>dispersion_plot</code>, <code>FreqDist</code> on the resulting text.</p>
-<p><strong>Task 3.</strong> Write a program that will</p>
-<ul>
-<li>collect all monetary amounts from a given text</li>
-</ul>
-<p>Example: <code>"first amount is $123.45, second amount is $400"</code> -&gt; <code>[123.45, 400]</code>.</p>
-<ul>
-<li>convert these to float numbers</li>
-<li>and sum them</li>
-</ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">{</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"HTTPHost"</span><span class="fu">:</span> <span class="st">"localhost"</span><span class="fu">,</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"HTTPPort"</span><span class="fu">:</span> <span class="dv">8545</span><span class="fu">,</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Config"</span><span class="fu">:</span> <span class="fu">{</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Enabled"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Server"</span><span class="fu">:</span> <span class="st">"wakuv2.prod"</span><span class="fu">,</span></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Nodes"</span><span class="fu">:</span> <span class="ot">[</span> <span class="st">"8.210.222.231"</span><span class="ot">,</span> <span class="st">"168.166.125.145"</span><span class="ot">,</span> <span class="er">...</span><span class="ot">]</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<p>Write Python code that will use a regex to convert it as follows:</p>
-<ul>
-<li>Remove entries from “Nodes”&nbsp;that begin with “8.”</li>
-<li>Replace each “Server”&nbsp;entry of the form with <code>"name": "ServerName", "type": "ServerType"</code>.</li>
-</ul>
-<p>So, for example, <code>"Server": "wakuv2.prod"</code> will be replaced with <code>"Server": {"name": "wakuv2", "type": "prod"}</code></p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>
