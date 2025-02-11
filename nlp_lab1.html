@@ -183,9 +183,22 @@ window.Quarto = {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link active" data-scroll-target="#recommended-reading">Recommended reading</a></li>
-  <li><a href="#install-python-nltk-package" id="toc-install-python-nltk-package" class="nav-link" data-scroll-target="#install-python-nltk-package">Install Python NLTK package</a></li>
+  <li><a href="#lab-overview" id="toc-lab-overview" class="nav-link active" data-scroll-target="#lab-overview">Lab overview</a></li>
+  <li><a href="#installation" id="toc-installation" class="nav-link" data-scroll-target="#installation">Installation</a>
+  <ul class="collapse">
+  <li><a href="#through-requirements.txt" id="toc-through-requirements.txt" class="nav-link" data-scroll-target="#through-requirements.txt">Through requirements.txt</a></li>
+  <li><a href="#install-python-nltk-package" id="toc-install-python-nltk-package" class="nav-link" data-scroll-target="#install-python-nltk-package">1. Install Python NLTK package</a></li>
+  <li><a href="#install-scattertext-and-spacy" id="toc-install-scattertext-and-spacy" class="nav-link" data-scroll-target="#install-scattertext-and-spacy">2. Install Scattertext and Spacy</a></li>
+  </ul></li>
+  <li><a href="#nltk-overview" id="toc-nltk-overview" class="nav-link" data-scroll-target="#nltk-overview">NLTK overview</a>
+  <ul class="collapse">
+  <li><a href="#example-concordance" id="toc-example-concordance" class="nav-link" data-scroll-target="#example-concordance">Example: concordance</a></li>
+  <li><a href="#example-similar" id="toc-example-similar" class="nav-link" data-scroll-target="#example-similar">Example: similar</a></li>
+  <li><a href="#example-dispersion_plot" id="toc-example-dispersion_plot" class="nav-link" data-scroll-target="#example-dispersion_plot">Example: dispersion_plot</a></li>
+  <li><a href="#example-freqdist" id="toc-example-freqdist" class="nav-link" data-scroll-target="#example-freqdist">Example: FreqDist</a></li>
+  </ul></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
 </nav>
     </div>
@@ -211,30 +224,195 @@ window.Quarto = {
 </header>
 
 
-<section id="recommended-reading" class="level1">
-<h1>Recommended reading</h1>
-<ul>
-<li>Chapter 1 from <a href="https://www.nltk.org/book/ch01.html">NLTK book</a>.</li>
-<li>Chapter 2.1 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>. Plus related slides.</li>
-<li>Official Python <a href="https://docs.python.org/3/howto/regex.html">Regex package documentation</a>.</li>
-<li><a href="https://www.debuggex.com/cheatsheet/regex/python">Regex cheatsheet</a></li>
-<li><a href="https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf">Another version with examples</a></li>
-</ul>
+<section id="lab-overview" class="level1">
+<h1>Lab overview</h1>
+<p>We’ll start with basic text analysis via statistical methods.</p>
+<p>For this purpose, we’ll use three libraries (mostly):</p>
+<ol type="1">
+<li>NLTK</li>
+<li>Scattertext</li>
+<li>Spacy</li>
+</ol>
 </section>
-<section id="install-python-nltk-package" class="level1">
-<h1>Install Python NLTK package</h1>
+<section id="installation" class="level1">
+<h1>Installation</h1>
+<section id="through-requirements.txt" class="level2">
+<h2 class="anchored" data-anchor-id="through-requirements.txt">Through requirements.txt</h2>
+<p>You can install all dependencies through <a href="./requirements.txt">requirements.txt</a>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install <span class="at">-r</span> requirements.txt</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Alternatively, or if any issues occur, we can proceed manually via the following steps:</p>
+</section>
+<section id="install-python-nltk-package" class="level2">
+<h2 class="anchored" data-anchor-id="install-python-nltk-package">1. Install Python NLTK package</h2>
 <p>From <a href="https://www.nltk.org/install.html">here</a>.</p>
-<pre><code>   pip install nltk
-   pip install matplotlib</code></pre>
-<p>In order to install Python Tkinter library, look at https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>   <span class="ex">pip</span> install nltk</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>   <span class="ex">pip</span> install matplotlib</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>In order to install Python Tkinter library, look <a href="https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter">here</a>.</p>
 <p>Also install additional data by</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>   <span class="im">import</span> nltk<span class="op">;</span> </span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'popular'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>   <span class="im">import</span> nltk<span class="op">;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'popular'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Set up the texts:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>   <span class="im">import</span> nltk</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'nps_chat'</span>)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'webtext'</span>)</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>   <span class="im">from</span> nltk.book <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="58ab9e30" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>   <span class="im">import</span> nltk</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'nps_chat'</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>   nltk.download(<span class="st">'webtext'</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>   <span class="im">from</span> nltk.book <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...
+[nltk_data]   Package nps_chat is already up-to-date!
+[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...
+[nltk_data]   Package webtext is already up-to-date!</code></pre>
+</div>
+</div>
+</section>
+<section id="install-scattertext-and-spacy" class="level2">
+<h2 class="anchored" data-anchor-id="install-scattertext-and-spacy">2. Install Scattertext and Spacy</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install spacy scattertext</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>And then update Spacy:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download en_core_web_sm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+</section>
+<section id="nltk-overview" class="level1">
+<h1>NLTK overview</h1>
+<p>Some basic functions:</p>
+<ul>
+<li><code>concordance</code>: words with context</li>
+<li><code>similar</code>: synonyms</li>
+<li><code>dispersion_plot</code>: display words as distributed through text</li>
+<li><code>FreqDist</code>: frequency distributions</li>
+</ul>
+<section id="example-concordance" class="level2">
+<h2 class="anchored" data-anchor-id="example-concordance">Example: concordance</h2>
+<div id="c7ffd6ed" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>text3.concordance(<span class="st">"earth"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Displaying 25 of 112 matches:
+nning God created the heaven and the earth . And the earth was without form , a
+d the heaven and the earth . And the earth was without form , and void ; and da
+was so . And God called the dry land Earth ; and the gathering together of the 
+it was good . And God said , Let the earth bring forth grass , the herb yieldin
+upon the ear and it was so . And the earth brought forth grass , and herb yield
+of the heaven to give light upon the earth , And to rule over the day and over 
+fe , and fowl that may fly above the earth in the open firmament of heaven . An
+ seas , and let fowl multiply in the earth . And the evening and the morning we
+e fifth day . And God said , Let the earth bring forth the living creature afte
+nd creeping thing , and beast of the earth after his ki and it was so . And God
+s so . And God made the beast of the earth after his kind , and cattle after th
+d every thing that creepeth upon the earth after his ki and God saw that it was
+d over the cattle , and over all the earth , and over every creeping thing that
+reeping thing that creepeth upon the earth . So God created man in his own imag
+l , and multiply , and replenish the earth , and subdue and have dominion over 
+ry living thing that moveth upon the earth . And God said , Behold , I have giv
+ , which is upon the face of all the earth , and every tree , in the which is t
+for meat . And to every beast of the earth , and to every fowl of the air , and
+o every thing that creepeth upon the earth , wherein there is life , I have giv
+sixth day . Thus the heavens and the earth were finished , and all the host of 
+enerations of the heavens and of the earth when they were created , in the day 
+n the day that the LORD God made the earth and the heavens , And every plant of
+nt of the field before it was in the earth , and every herb of the field before
+d had not caused it to rain upon the earth , and there was not a man to till th
+ . But there went up a mist from the earth , and watered the whole face of the </code></pre>
+</div>
+</div>
+</section>
+<section id="example-similar" class="level2">
+<h2 class="anchored" data-anchor-id="example-similar">Example: similar</h2>
+<div id="7d967e87" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>text3.similar(<span class="st">"man"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>land lord men place woman earth waters well city lad day cattle field
+wife way flood servant people famine pillar</code></pre>
+</div>
+</div>
+</section>
+<section id="example-dispersion_plot" class="level2">
+<h2 class="anchored" data-anchor-id="example-dispersion_plot">Example: dispersion_plot</h2>
+<div id="ce8fa984" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>text3.dispersion_plot([<span class="st">"man"</span>, <span class="st">"earth"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="nlp_lab1_files/figure-html/cell-5-output-1.png" width="585" height="449" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-freqdist" class="level2">
+<h2 class="anchored" data-anchor-id="example-freqdist">Example: FreqDist</h2>
+<div id="811151f0" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>fdist <span class="op">=</span> FreqDist(text3)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fdist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FreqDist with 2789 samples and 44764 outcomes&gt;</code></pre>
+</div>
+</div>
+<div id="94544fc5" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>fdist.most_common(<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<pre><code>[(',', 3681),
+ ('and', 2428),
+ ('the', 2411),
+ ('of', 1358),
+ ('.', 1315),
+ ('And', 1250),
+ ('his', 651),
+ ('he', 648),
+ ('to', 611),
+ (';', 605),
+ ('unto', 590),
+ ('in', 588),
+ ('that', 509),
+ ('I', 484),
+ ('said', 476),
+ ('him', 387),
+ ('a', 342),
+ ('my', 325),
+ ('was', 317),
+ ('for', 297),
+ ('it', 290),
+ ('with', 289),
+ ('me', 282),
+ ('thou', 272),
+ ("'", 268),
+ ('is', 267),
+ ('thy', 267),
+ ('s', 263),
+ ('thee', 257),
+ ('be', 254),
+ ('shall', 253),
+ ('they', 249),
+ ('all', 245),
+ (':', 238),
+ ('God', 231),
+ ('them', 230),
+ ('not', 224),
+ ('which', 198),
+ ('father', 198),
+ ('will', 195),
+ ('land', 184),
+ ('Jacob', 179),
+ ('came', 177),
+ ('her', 173),
+ ('LORD', 166),
+ ('were', 163),
+ ('she', 161),
+ ('from', 157),
+ ('Joseph', 157),
+ ('their', 153)]</code></pre>
+</div>
+</div>
+<div id="f05b8420" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>fdist.plot(<span class="dv">50</span>, cumulative<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="nlp_lab1_files/figure-html/cell-8-output-1.png" width="610" height="461" class="figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
@@ -245,33 +423,46 @@ window.Quarto = {
 <li>find 10 most frequent words occurring at the end of the sentence</li>
 </ul>
 <p><strong>Task 2.</strong> Create custom NLTK text of your favourite (public domain) book via</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>  f<span class="op">=</span><span class="bu">open</span>(<span class="st">'book.txt'</span>,<span class="st">'rU'</span>)</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  raw<span class="op">=</span>f.read()</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  tokens <span class="op">=</span> nltk.word_tokenize(raw)</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  text <span class="op">=</span> nltk.Text(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| execute: false</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  f<span class="op">=</span><span class="bu">open</span>(<span class="st">'book.txt'</span>,<span class="st">'rU'</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  raw<span class="op">=</span>f.read()</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  tokens <span class="op">=</span> nltk.word_tokenize(raw)</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  text <span class="op">=</span> nltk.Text(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Practice using <code>concordance</code>, <code>similar</code>, <code>dispersion_plot</code>, <code>FreqDist</code> on the resulting text.</p>
 <p><strong>Task 3.</strong> Write a program that will</p>
 <ul>
-<li>collect all monetary amounts from a given text Example: .</li>
+<li>collect all monetary amounts from a given text</li>
+</ul>
+<p>Example: <code>"first amount is $123.45, second amount is $400"</code> -&gt; <code>[123.45, 400]</code>.</p>
+<ul>
 <li>convert these to float numbers</li>
 <li>and sum them</li>
 </ul>
-<p><strong>Task 4.</strong> Consider a JSON of the following type:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a> {</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HTTPHost"</span>: <span class="st">"localhost"</span>,</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"HTTPPort"</span>: <span class="dv">8545</span>,</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Config"</span>: {</span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Enabled"</span>: true,</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Server"</span>: <span class="st">"wakuv2.prod"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nodes"</span>: [ <span class="st">"8.210.222.231"</span>, <span class="st">"168.166.125.145"</span>, ...]</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  }</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a> }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode json code-with-copy"><code class="sourceCode json"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a> <span class="fu">{</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"HTTPHost"</span><span class="fu">:</span> <span class="st">"localhost"</span><span class="fu">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"HTTPPort"</span><span class="fu">:</span> <span class="dv">8545</span><span class="fu">,</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">"Config"</span><span class="fu">:</span> <span class="fu">{</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Enabled"</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Server"</span><span class="fu">:</span> <span class="st">"wakuv2.prod"</span><span class="fu">,</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">"Nodes"</span><span class="fu">:</span> <span class="ot">[</span> <span class="st">"8.210.222.231"</span><span class="ot">,</span> <span class="st">"168.166.125.145"</span><span class="ot">,</span> <span class="er">...</span><span class="ot">]</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">}</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a> <span class="fu">}</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Write Python code that will use a regex to convert it as follows:</p>
 <ul>
 <li>Remove entries from “Nodes”&nbsp;that begin with “8.”</li>
 <li>Replace each “Server”&nbsp;entry of the form with <code>"name": "ServerName", "type": "ServerType"</code>.</li>
 </ul>
 <p>So, for example, <code>"Server": "wakuv2.prod"</code> will be replaced with <code>"Server": {"name": "wakuv2", "type": "prod"}</code></p>
+</section>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Chapter 1 from <a href="https://www.nltk.org/book/ch01.html">NLTK book</a>.</li>
+<li>Chapter 2.1 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>. Plus related slides.</li>
+<li>Official Python <a href="https://docs.python.org/3/howto/regex.html">Regex package documentation</a>.</li>
+<li><a href="https://www.debuggex.com/cheatsheet/regex/python">Regex cheatsheet</a></li>
+<li><a href="https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf">Another version with examples</a></li>
+</ul>
 
 
 </section>

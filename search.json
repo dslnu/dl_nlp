@@ -518,18 +518,67 @@
     "text": "Vectorizing logistic regression\nFor \\(db\\) we have \\[\n\\begin{align*}\n&db = \\frac{1}{m}np.sum(dz),\\\\\n&dw = \\frac{1}{m}X dZ^T = \\\\\n& \\frac{1}{m}\\begin{bmatrix}\n  \\vdots & & \\vdots \\\\\n  x^{(1)} & \\dots & x^{(m)} \\\\\n  \\vdots & & \\vdots \\\\\n\\end{bmatrix}\n\\begin{bmatrix}\n  dz^{(1)} \\\\\n  \\vdots\\\\\n  dz^{(m)}\n\\end{bmatrix} = \\\\\n& = \\frac{1}{m}\\left[x^{(1)}dz^{(1)} + \\dots +x^{(m)}dz^{(m)}\\right]\n\\end{align*}\n\\]\nNow we can go back to the backward propagation algorithm again.\nMultiple iterations of GD will still require a for loop."
   },
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
+    "objectID": "nlp_lab1.html",
+    "href": "nlp_lab1.html",
+    "title": "NLP: Lab 1",
     "section": "",
-    "text": "Deep Learning/Natural Language Processing course"
+    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
   },
   {
-    "objectID": "nlp.html#labs",
-    "href": "nlp.html#labs",
-    "title": "Natural Language Processing",
-    "section": "Labs",
-    "text": "Labs\nLab 1"
+    "objectID": "nlp_lab1.html#through-requirements.txt",
+    "href": "nlp_lab1.html#through-requirements.txt",
+    "title": "NLP: Lab 1",
+    "section": "Through requirements.txt",
+    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-python-nltk-package",
+    "href": "nlp_lab1.html#install-python-nltk-package",
+    "title": "NLP: Lab 1",
+    "section": "1. Install Python NLTK package",
+    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
+    "href": "nlp_lab1.html#install-scattertext-and-spacy",
+    "title": "NLP: Lab 1",
+    "section": "2. Install Scattertext and Spacy",
+    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-concordance",
+    "href": "nlp_lab1.html#example-concordance",
+    "title": "NLP: Lab 1",
+    "section": "Example: concordance",
+    "text": "Example: concordance\n\ntext3.concordance(\"earth\")\n\nDisplaying 25 of 112 matches:\nnning God created the heaven and the earth . And the earth was without form , a\nd the heaven and the earth . And the earth was without form , and void ; and da\nwas so . And God called the dry land Earth ; and the gathering together of the \nit was good . And God said , Let the earth bring forth grass , the herb yieldin\nupon the ear and it was so . And the earth brought forth grass , and herb yield\nof the heaven to give light upon the earth , And to rule over the day and over \nfe , and fowl that may fly above the earth in the open firmament of heaven . An\n seas , and let fowl multiply in the earth . And the evening and the morning we\ne fifth day . And God said , Let the earth bring forth the living creature afte\nnd creeping thing , and beast of the earth after his ki and it was so . And God\ns so . And God made the beast of the earth after his kind , and cattle after th\nd every thing that creepeth upon the earth after his ki and God saw that it was\nd over the cattle , and over all the earth , and over every creeping thing that\nreeping thing that creepeth upon the earth . So God created man in his own imag\nl , and multiply , and replenish the earth , and subdue and have dominion over \nry living thing that moveth upon the earth . And God said , Behold , I have giv\n , which is upon the face of all the earth , and every tree , in the which is t\nfor meat . And to every beast of the earth , and to every fowl of the air , and\no every thing that creepeth upon the earth , wherein there is life , I have giv\nsixth day . Thus the heavens and the earth were finished , and all the host of \nenerations of the heavens and of the earth when they were created , in the day \nn the day that the LORD God made the earth and the heavens , And every plant of\nnt of the field before it was in the earth , and every herb of the field before\nd had not caused it to rain upon the earth , and there was not a man to till th\n . But there went up a mist from the earth , and watered the whole face of the"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-similar",
+    "href": "nlp_lab1.html#example-similar",
+    "title": "NLP: Lab 1",
+    "section": "Example: similar",
+    "text": "Example: similar\n\ntext3.similar(\"man\")\n\nland lord men place woman earth waters well city lad day cattle field\nwife way flood servant people famine pillar"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-dispersion_plot",
+    "href": "nlp_lab1.html#example-dispersion_plot",
+    "title": "NLP: Lab 1",
+    "section": "Example: dispersion_plot",
+    "text": "Example: dispersion_plot\n\ntext3.dispersion_plot([\"man\", \"earth\"])"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-freqdist",
+    "href": "nlp_lab1.html#example-freqdist",
+    "title": "NLP: Lab 1",
+    "section": "Example: FreqDist",
+    "text": "Example: FreqDist\n\nfdist = FreqDist(text3)\nprint(fdist)\n\n&lt;FreqDist with 2789 samples and 44764 outcomes&gt;\n\n\n\nfdist.most_common(50)\n\n[(',', 3681),\n ('and', 2428),\n ('the', 2411),\n ('of', 1358),\n ('.', 1315),\n ('And', 1250),\n ('his', 651),\n ('he', 648),\n ('to', 611),\n (';', 605),\n ('unto', 590),\n ('in', 588),\n ('that', 509),\n ('I', 484),\n ('said', 476),\n ('him', 387),\n ('a', 342),\n ('my', 325),\n ('was', 317),\n ('for', 297),\n ('it', 290),\n ('with', 289),\n ('me', 282),\n ('thou', 272),\n (\"'\", 268),\n ('is', 267),\n ('thy', 267),\n ('s', 263),\n ('thee', 257),\n ('be', 254),\n ('shall', 253),\n ('they', 249),\n ('all', 245),\n (':', 238),\n ('God', 231),\n ('them', 230),\n ('not', 224),\n ('which', 198),\n ('father', 198),\n ('will', 195),\n ('land', 184),\n ('Jacob', 179),\n ('came', 177),\n ('her', 173),\n ('LORD', 166),\n ('were', 163),\n ('she', 161),\n ('from', 157),\n ('Joseph', 157),\n ('their', 153)]\n\n\n\nfdist.plot(50, cumulative=True)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Deep Learning/NLP",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
   },
   {
     "objectID": "dl.html",
@@ -553,17 +602,24 @@
     "text": "Labs"
   },
   {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Deep Learning/NLP",
+    "objectID": "nlp.html#labs",
+    "href": "nlp.html#labs",
+    "title": "Natural Language Processing",
+    "section": "Labs",
+    "text": "Labs\nLab 1"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
     "section": "",
     "text": "Deep Learning/Natural Language Processing course"
   },
   {
-    "objectID": "nlp_lab1.html",
-    "href": "nlp_lab1.html",
-    "title": "NLP: Lab 1",
+    "objectID": "nb/Untitled.html",
+    "href": "nb/Untitled.html",
+    "title": "Deep Learning/NLP course",
     "section": "",
-    "text": "Recommended reading\n\nChapter 1 from NLTK book.\nChapter 2.1 from Jurafsky’s book. Plus related slides.\nOfficial Python Regex package documentation.\nRegex cheatsheet\nAnother version with examples\n\n\n\nInstall Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look at https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n\nExercises\nTask 1. Using FreqDist, find the following from textN, where \\(N\\) is \\(P \\mod 8\\):\n\nwords that are hapaxes (unique) and those that occur less than 5 times\ndraw a plot showing mapping from word length to word frequency\nfind 10 most frequent words occurring at the end of the sentence\n\nTask 2. Create custom NLTK text of your favourite (public domain) book via\n  f=open('book.txt','rU')\n  raw=f.read()\n  tokens = nltk.word_tokenize(raw)\n  text = nltk.Text(tokens)\nPractice using concordance, similar, dispersion_plot, FreqDist on the resulting text.\nTask 3. Write a program that will\n\ncollect all monetary amounts from a given text Example: .\nconvert these to float numbers\nand sum them\n\nTask 4. Consider a JSON of the following type:\n {\n  \"HTTPHost\": \"localhost\",\n  \"HTTPPort\": 8545,\n  \"Config\": {\n    \"Enabled\": true,\n    \"Server\": \"wakuv2.prod\",\n    \"Nodes\": [ \"8.210.222.231\", \"168.166.125.145\", ...]\n  }\n }\nWrite Python code that will use a regex to convert it as follows:\n\nRemove entries from “Nodes” that begin with “8.”\nReplace each “Server” entry of the form with \"name\": \"ServerName\", \"type\": \"ServerType\".\n\nSo, for example, \"Server\": \"wakuv2.prod\" will be replaced with \"Server\": {\"name\": \"wakuv2\", \"type\": \"prod\"}"
+    "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178"
   }
 ]
