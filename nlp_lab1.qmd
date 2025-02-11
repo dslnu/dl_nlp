@@ -1,13 +1,13 @@
 ---
 title: "NLP: Lab 1"
 execute:
-  enabled: false
+  enabled: true
+  echo: true
   cache: true
 format:
   html:
-    code-fold: true
+    code-fold: false
 jupyter: python3
-code-fold: false
 diagram:
   cache: true
   cache-dir: ./cache
@@ -17,24 +17,37 @@ diagram:
 filters:
   - diagram
 ---
-
-# Recommended reading 
-- Chapter 1 from [NLTK book](https://www.nltk.org/book/ch01.html).
-- Chapter 2.1 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/). Plus related slides.
-- Official Python [Regex package documentation](https://docs.python.org/3/howto/regex.html).
-- [Regex cheatsheet](https://www.debuggex.com/cheatsheet/regex/python)
-- [Another version with examples](https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf)
+# Lab overview
+We'll start with basic text analysis via statistical methods.
 
 
-# Install Python NLTK package
+For this purpose, we'll use three libraries (mostly): 
+
+1. NLTK
+2. Scattertext
+3. Spacy
+
+
+# Installation
+
+## Through requirements.txt
+
+You can install all dependencies through [requirements.txt](./requirements.txt):
+```bash
+pip install -r requirements.txt
+```
+
+Alternatively, or if any issues occur, we can proceed manually via the following steps:
+
+## 1. Install Python NLTK package
 
 From [here](https://www.nltk.org/install.html).
-```
+```bash
    pip install nltk
    pip install matplotlib
 ```
 
-In order to install Python Tkinter library, look at https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter
+In order to install Python Tkinter library, look [here](https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter).
 
 Also install additional data by 
 ```python
@@ -43,12 +56,63 @@ Also install additional data by
 ```
 
 Set up the texts:
-```python
+```{python}
    import nltk
    nltk.download('nps_chat')
    nltk.download('webtext')
    from nltk.book import *
 ```
+## 2. Install Scattertext and Spacy
+
+```bash
+pip install spacy scattertext
+```
+And then update Spacy:
+
+```python
+!python -m spacy download en_core_web_sm
+```
+
+# NLTK overview
+
+Some basic functions:
+
+- `concordance`: words with context
+- `similar`: synonyms
+- `dispersion_plot`: display words as distributed through text
+- `FreqDist`: frequency distributions
+
+## Example: concordance
+
+```{python}
+text3.concordance("earth")
+```
+
+## Example: similar
+```{python}
+text3.similar("man")
+```
+
+## Example: dispersion_plot
+```{python}
+text3.dispersion_plot(["man", "earth"])
+```
+
+## Example: FreqDist
+
+```{python}
+fdist = FreqDist(text3)
+print(fdist)
+```
+
+```{python}
+fdist.most_common(50)
+```
+
+```{python}
+fdist.plot(50, cumulative=True)
+```
+
 
 # Exercises
 **Task 1.** Using `FreqDist`, find the following from textN, where $N$ is $P \mod 8$:
@@ -60,6 +124,7 @@ Set up the texts:
 
 **Task 2.** Create custom NLTK text of your favourite (public domain) book via
 ```python
+#| execute: false
   f=open('book.txt','rU')
   raw=f.read()
   tokens = nltk.word_tokenize(raw)
@@ -76,8 +141,7 @@ Example: `"first amount is $123.45, second amount is $400"` -> `[123.45, 400]`.
 - convert these to float numbers
 - \item and sum them
 
-**Task 4.** Consider a JSON of the following type:
-```python
+```json
  {
   "HTTPHost": "localhost",
   "HTTPPort": 8545,
@@ -95,3 +159,12 @@ Write Python code that will use a regex to convert it as follows:
 `"name": "ServerName", "type": "ServerType"`.
 
 So, for example, `"Server": "wakuv2.prod"` will be replaced with `"Server": {"name": "wakuv2", "type": "prod"}`
+
+# Recommended reading 
+- Chapter 1 from [NLTK book](https://www.nltk.org/book/ch01.html).
+- Chapter 2.1 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/). Plus related slides.
+- Official Python [Regex package documentation](https://docs.python.org/3/howto/regex.html).
+- [Regex cheatsheet](https://www.debuggex.com/cheatsheet/regex/python)
+- [Another version with examples](https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf)
+
+
