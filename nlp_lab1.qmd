@@ -70,7 +70,9 @@ Set up the texts:
 **Task 3.** Write a program that will 
 
 - collect all monetary amounts from a given text
-Example: \lstinline!"first amount is $123.45, second amount is $400" -> [123.45, 400]!.
+
+Example: `"first amount is $123.45, second amount is $400"` -> `[123.45, 400]`.
+
 - convert these to float numbers
 - \item and sum them
 
