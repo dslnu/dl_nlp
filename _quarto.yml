@@ -1,0 +1,29 @@
+project:
+  type: website
+
+website:
+  title: "Deep Learning/NLP course"
+  navbar:
+    left:
+      - href: index.qmd
+        text: Home
+      - href: dl.qmd
+        text: Deep Learning
+      - href: nlp.qmd
+        text: Natural Language Processing
+      - about.qmd
+  page-footer: 
+    left: "LNU" 
+    right: 
+      - icon: github
+        href: https://github.com/
+format:
+  html:
+    theme:
+      - cosmo
+      - brand
+    css: styles.css
+    toc: true
+
+
+

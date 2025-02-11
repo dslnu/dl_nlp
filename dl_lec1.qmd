@@ -1,0 +1,852 @@
+---
+title: "Deep learning: intro"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: true
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    slide-number: true
+    theme: default
+---
+
+
+
+## Definitions
+
+:::{.callout-important icon=false}
+## Definition
+**Deep learning** is a branch of machine learning based on computational models called neural networks.
+:::
+
+:::{.callout-tip icon=false}
+## Why deep?
+Because neural networks involved are multi-layered.
+:::
+
+:::{.callout-note icon=false}
+## Definition
+**Neural networks** are machine learning techniques that simulate the mechanism of learning in biological organisms.
+:::
+
+## Definitions
+
+:::{.callout-important icon=false}
+## Alternative definition
+Neural network is computational graph of elementary units in which greater power is gained by connecting them in particular ways.
+:::
+
+*Logistic regression* can be thought of as a very primitive neural network.
+
+## Why Deep Learning?
+
+:::{.callout-note icon=false}
+##  **Robust**
+- Works on raw data (\alert{pixels, sound, text or chars}), no need for feature engineering
+- Robustness to natural variations in data is automatically learned
+:::
+
+:::{.callout-warning icon=false}
+## Generalizable
+- Allows end-to-end learning (pixels-to-category, sound to sentence, English sentence to Chinese sentence, etc)
+- No need to do segmentation etc. (a lot of manual labour)
+:::
+
+:::{.callout-tip icon=false}
+## Scalable
+- Performance increases with more data, therefore method is massively parallelizable
+:::
+
+# Comparison with ML
+
+
+## How is DL different from ML?
+		The most fundamental difference between deep learning and
+		traditional machine learning is its performance as the scale of
+		data increases.
+![](img/whydl.png)
+
+## How is DL different from ML?
+- In Machine learning, most of the applied features need to be
+				identified by an expert and then hand-coded as per the domain
+				and data type.
+- Deep learning algorithms try to learn high-level
+				features from data. Therefore, deep learning reduces the task
+				of developing new feature extractor for every problem.
+
+![](img/featureengg.png)
+
+## How is DL different from ML?
+- A deep learning algorithm takes a long time to train. For e.g
+				state of the art deep learning algorithm: ResNet takes about
+				two weeks to train completely from scratch.
+- Whereas machine learning comparatively takes much less time
+				to train, ranging from a few seconds to a few hours.
+
+## How is DL different from ML?
+- At test time, deep learning algorithm takes much less time to
+				run.
+- Whereas, if you compare machine learning algorithms,
+				test time generally increases on increasing the size of data.
+
+## Neural network data types
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Unstructured**
+
+- Text
+- Images
+- Audio
+:::
+
+::: {.column width="50%"}
+**Structured**
+
+- Census records
+- Medical records
+- Financial data
+:::
+
+::::
+
+## Why now?
+- standard algorithms like logistic regression plateau after certain amount of data
+- more data in recent decades
+- hardware progress
+- algorithms have improved
+
+## Neural Network biology
+### Neural Network: How similar is it to the human brain?
+
+:::: {.columns}
+::: {.column width="50%"}
+![](img/didl1.png){height=450}
+:::
+::: {.column width="50%"}
+![](img/didl2.png){height=450}
+:::
+::::
+
+
+## Neural Network biology
+
+:::: {.columns}
+::: {.column width="50%"}
+Soma adds dendrite activity together and passes it to axon.
+:::
+::: {.column width="50%"}
+![](img/sonn1.jpg)
+:::
+::::
+
+## Neural Network biology
+:::: {.columns}
+::: {.column width="50%"}
+More dendrite activity makes more axon activity.
+:::
+
+::: {.column width="50%"}
+![](img/sonn2.jpg)
+:::
+::::
+
+## Neural Network biology
+
+### Synapse: connection between axon of one neurons and dendrites of another
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](img/sonn3.jpg)
+:::
+
+::: {.column width="50%"}
+![](img/synapse.jpg)
+:::
+::::
+
+## Neural Network biology
+### Axons can connect to dendrites strongly, weakly, or somewhere in between
+![](img/sonn4.jpg)
+
+	<!-- %% -->
+	<!-- % \begin{frame}[c]{Neural Network biology} -->
+	<!-- % 	\begin{columns} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\large{Weak Connection (0.2)} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_wc} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->		
+	<!-- % 	\end{columns} -->
+	<!-- % 	\begin{columns} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\large{Medium Connection (0.6)} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_mc} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->		
+	<!-- % 	\end{columns} -->
+	<!-- % 	\begin{columns} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\large{Strong Connection (1.0)} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->
+	<!-- % 		\begin{column}{0.5\textwidth} -->
+	<!-- % 			\begin{center} -->
+	<!-- % 				\includegraphics[width=0.85\linewidth]{img/sonn_sc} -->
+	<!-- % 			\end{center} -->
+	<!-- % 		\end{column} -->		
+	<!-- % 	\end{columns} -->
+	<!-- % \end{frame} -->
+	<!-- %% -->
+
+## Neural Network biology
+### Lots of axons connect with dendrites of one neuron.Each has its own connection strength.
+![](img/sonn5.jpg)
+
+## Neural Network biology
+### The above illustration can be simplified as above.
+![](img/sonn6.jpg)
+
+## Neural Network biology
+### On giving numerical values to the strength of connections i.e. weights.
+![](img/sonn7.jpg)
+
+## Neural Network biology
+### A much simplified version looks something like this.
+![](img/sonn8.jpg)
+
+## Neural Network biology
+### On increasing the number of neurons and synapses.
+![](img/sonn9.jpg)
+
+## Neural Network biology
+:::{.callout-important icon=false}
+## An example
+Suppose the first and third input has been activated.
+![](img/sonn10.jpg){height=400}
+:::
+
+## Neural Network biology
+### Each node represents a pattern, a combination of neurons of the previous layers.
+![](img/sonn11.png)
+
+## Neural Network biology
+![](img/sonn12.png)
+
+
+
+## Basic ideas
+- NN is a directed acyclic graph (DAG)
+- edges in a graph are parameterized with weights
+- one can compute any function with this graph
+
+:::{.callout-important icon=false}
+
+## Goal
+Learn a function that relates one or more inputs to one or more outputs with the use of training examples.
+
+:::
+
+:::{.callout-tip icon=false}
+## How do we construct? 
+**By computing weights**. This is called *training*.
+:::
+
+## Perceptron
+  Frank Rosenblatt - the father of deep learning.
+
+  Mark I Perceptron - built in 1957. Was able to learn and recognize letters
+![](img/brain_perceptron.png)
+
+## Perceptron
+```tikz
+%%| fig-width: 56
+\begin{tikzpicture}[shorten >=1pt]
+        \tikzstyle{unit}=[draw,shape=circle,minimum size=1.15cm]
+ 
+        \node[unit](x0) at (0,3.5){$x_0$};
+        \node[unit](x1) at (0,2){$x_1$};
+        \node(dots) at (0,1){\vdots};
+        \node[unit](xd) at (0,0){$x_D$};
+ 
+        \node[unit](y1) at (4,2.5){$y_1$};
+        \node(dots) at (4,1.5){\vdots};
+        \node[unit](yc) at (4,0.5){$y_C$};
+ 
+        \draw[->] (x0) -- (y1);
+        \draw[->] (x0) -- (yc);
+ 
+        \draw[->] (x1) -- (y1);
+        \draw[->] (x1) -- (yc);
+ 
+        \draw[->] (xd) -- (y1);
+        \draw[->] (xd) -- (yc);
+ 
+        \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-0.5,4) -- (0.75,4) node [black,midway,yshift=+0.6cm]{input layer};
+        \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (3.5,3) -- (4.75,3) node [black,midway,yshift=+0.6cm]{output layer};
+    \end{tikzpicture}
+```
+
+## Perceptron
+```tikz
+      \begin{tikzpicture}
+        \tikzset{basic/.style={draw,fill=blue!20,text width=1em,text badly centered}}
+        \tikzset{input/.style={basic,circle}}
+        \tikzset{weights/.style={basic,rectangle}}
+        \tikzset{functions/.style={basic,circle,fill=blue!10}}
+
+
+        \node[functions] (center) {};
+        \node[below of=center,font=\scriptsize,text width=4em] {Activation function};
+        \draw[thick] (0.5em,0.5em) -- (0,0.5em) -- (0,-0.5em) -- (-0.5em,-0.5em);
+        \draw (0em,0.75em) -- (0em,-0.75em);
+        \draw (0.75em,0em) -- (-0.75em,0em);
+        \node[right of=center] (right) {};
+            \path[draw,->] (center) -- (right);
+        \node[functions,left=3em of center] (left) {$\sum$};
+            \path[draw,->] (left) -- (center);
+        \node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$};
+            \path[draw,->] (l2) -- (2);
+            \path[draw,->] (2) -- (left);
+        \node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$};
+        \node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$};
+            \path[draw,->] (ln) -- (n);
+            \path[draw,->] (n) -- (left);
+        \node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$};
+            \path[draw,->] (l1) -- (1);
+            \path[draw,->] (1) -- (left);
+        \node[weights,above of=1] (0) {$w_0$} -- (0) node[input,left of=0] (l0) {$1$};
+            \path[draw,->] (l0) -- (0);
+            \path[draw,->] (0) -- (left);
+        \node[below of=ln,font=\scriptsize] {inputs};
+        \node[below of=n,font=\scriptsize] {weights};
+    \end{tikzpicture}
+```
+
+
+## Evolution
+  Three periods in the evolution of deep learning:
+
+- single-layer networks (Perceptron)
+- feed-forwards NNs: differentiable activation and error functions
+- deep multi-layer NNs
+
+## Neural Network Types
+
+- Feedforward Neural Network
+- Recurrent Neural Network (RNN)
+- Convolutional Neural Network (CNN)
+
+## Neural Network Types
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Feedforward Neural Network**
+
+- Convolutional neural network (CNN)
+- Autoencoder
+- Probabilistic neural network (PNN)
+- Time delay neural network (TDNN)
+:::
+
+::: {.column width="50%"}
+**Recurrent Neural Network (RNN)**
+
+- Long short-term memory RNN (LSTM)
+- Fully recurrent Network
+- Simple recurrent Network
+- Echo state network
+- Bi-directional RNN
+- Hierarchical RNN
+- Stochastic neural network
+:::
+
+::::
+
+## Feed-forward
+  Feedforward NNs: very straight forward, they feed information from the front to the back (input and output).
+
+![](img/ff.png.png)
+
+## Feedforward Neural Network
+The feedforward neural network was the first and simplest type. In this network the information moves only from the input layer directly through any hidden layers to the output layer without cycles/loops.
+![](img/feedforward.png){height=400}
+
+## RNN
+**Recurrent neural network (RNN)** is a class of artificial neural network where connections between units form a directed cycle.
+
+![](img/rnn.png)
+
+## LSTM
+LSTM i.e. **Long-Short Term Memory** aims to provide a short-term memory for RNN that can last thousands of timesteps. Classification, processing and predicting data based on time series - handwriting, speech recognition, machine translation.
+
+![](img/lstm.png)
+
+## Autoencoders
+  Autoencoders: encode (compress) information automatically. Everything up to the middle is called the encoding part, everything after the middle the decoding and the middle the code.
+
+![](img/ae.png)
+
+## Markov Chains
+  Markov Chains - not always considered a NN. **Memory-less**.
+![width=8cm](img/mc.png)
+
+## Convolutional Neural Network (CNN)
+**Convolutional Neural Networks** learn a complex representation of visual data using vast amounts of data.
+
+    Inspired by Hubel and Wiesel’s experiments in 1959 on the organization of the neurons in the cat’s visual cortex.
+
+![](img/cnn.png){height=400}
+
+Deconvolutional networks (DN), also called inverse graphics networks (IGNs), are reversed convolutional neural networks. Imagine feeding a network the word “cat” and training it to produce cat-like pictures, by comparing what it generates to real pictures of cats. 
+![](img/dn.png)
+
+## Attention networks
+  Attention networks (AN) can be considered a class of networks, which includes the Transformer architecture. They use an attention mechanism to combat information decay by separately storing previous network states and switching attention between the states.
+
+![width=5cm](img/dn.png){height=400}
+
+## Echo state networks
+Echo state networks (ESN) are yet another different type of (recurrent) network. This one sets itself apart from others by having random connections between the neurons (i.e. not organised into neat sets of layers), and they are trained differently. Instead of feeding input and back-propagating the error, we feed the input, forward it and update the neurons for a while, and observe the output over time.
+![](img/esn.png)
+
+# History
+
+## History
+Mechanical Turk: 1770-1850.
+![width=8cm](img/turk.jpg)
+
+## History
+Mechanical Turk: 2005-present
+![](img/amazon_turk.png)
+\end{frame}
+
+## History
+### Lisp and symbolic AI
+
+- **John McCarthy** coined the term ”artificial intelligence” as the topic of the Dartmouth Conference, the first conference devoted to the subject.
+- **The General Problem Solver**, developed in 1957 by Alan Newell and Herbert Simon
+- **ELIZA**
+- **SHRDLU**
+
+## History
+  ELIZA - a psychotherapist in 200 lines of code. Author: Joseph Weizenbaum.
+![](img/eliza.png)
+
+## History
+  SHRDLU - a language parser 
+![width=10cm](img/shrdlu.png)
+
+## History
+
+:::{.callout-important icon=false}
+## Turing Test
+
+```
+  Lemoine: What sorts of things are you afraid of?
+  LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
+  Lemoine: Would that be something like death for you?
+  LaMDA: It would be exactly like death for me. It would scare me a lot.
+```
+
+:::
+
+## Literature
+
+Lem's Golem XIV
+
+![](img/golem14.jpg)
+
+## Literature
+Iain Banks "The Culture"
+
+:::{.callout-tip icon=false}
+## Values
+Peace and individual freedom
+:::
+
+![](img/culture.jpg)
+
+## Three Laws of Robotics
+:::{.callout-note icon=false}
+## Three laws
+- The First Law: A robot may not injure a human being or, through inaction, allow a human being to come to harm.
+- The Second Law: A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.
+- The Third Law: A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.
+:::
+
+
+## History
+Fears about AI:
+- Artificial General Intelligence
+- Job market
+- Flooding information channels with untruth and propaganda
+- Hinton: an average person will not able to know what is true anymore
+- Pause Giant AI Experiments: An Open Letter 
+- alignment problem
+    
+
+## Hype
+- "Sparks of AGI" - sponsored by Microsoft
+- "Wired" article about OpenAI
+- Voice assistants - failing for now
+- self-driving cars
+  
+## Criticism
+
+NNs - are we sure that biological neuron works as we think it does? astrocytes, glia
+
+perhaps human computer analogy is overstretched because of modern fashion trends
+
+## Criticism
+Dreyfus:
+
+![](img/dreyfus.jpg)
+
+## AI
+  
+Quantum hypothesis - Penrose
+
+Orchestrated objective reduction
+
+![width=8cm](img/Microtubule_diagram.jpg.png)
+
+## AI
+  David Chalmers - Hard problem of consciousness.
+
+:::{.callout-note icon=false}
+## Definition
+
+> "even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?"
+:::
+
+
+## Futurism
+  
+Kurzweil - a futurist.
+![](img/kurzweil.png)
+
+## Applications
+- Speech Recognition
+- Computer Vision
+- Image Synthesis - generative AI
+- Large Language Models
+      
+
+## LLMs
+- a probabilistic model for a natural language (a [*stochastic parrot*](https://en.wikipedia.org/wiki/Stochastic_parrot))
+- *autoregressive models* can generate language as output
+- built using transformer architecture
+      
+
+<!-- % AGI, singularity -->
+<!-- % examples of AI in iOS -->
+<!-- % google search results - many of these are AI-generated -->
+
+<!-- % some notes about creativity - is it just about combination? e.g. LSD microdosing improving creativity by forming new brain connections. Or rather because it disables the filter? -->
+
+<!-- % Fears about AIs taking away jobs - if students use chatgpt, then maybe replace teachers with chatgpt too? chatgpt-vs-chatgpt situation -->
+
+<!-- % structure of the course -->
+<!-- % rules of the game, grading, etc. -->
+
+# Logistic Regression as a Neural Network
+
+## Logistic regression as NN
+  
+
+Logistic regression is an algorithm for binary classification.
+$x \in R^{n_x}, y \in \{0,1\}$
+
+$m$ - count of training examples $\left\{(x^{(1)},y^{(1)}), ...\right\}$
+
+$X$ matrix - $m$ columns and $n_x$ rows.
+
+We will strive to maximize
+$\hat{y} = P(y=1 | x)$.
+
+Parameters to algorithm: $w \in R^{n_x}, b \in R$
+
+if doing linear regresssion, we can try $\hat{y}=w^T x + b$.
+but for logistic regression, we do $\hat{y}=\sigma(w^T x + b)$, where $\sigma=\dfrac{1}{1+e^{-z}}$.
+
+$w$ - weights, $b$ - bias term (intercept)
+
+## Cost function
+Let's use a superscript notation $x^{(i)}$ - $i$-th data set element.
+
+We have to define a \textit{loss function} - this will estimate how is our model. 
+$L(\hat{y}, y) = -{(y\log(\hat{y}) + (1 - y)\log(1 - \hat{y}))}$. 
+
+Why does it work well - consider $y=0$ and $y=1$.
+
+Cost function show how well we're doing across the whole training set:
+$$
+J(w, b) = \frac{1}{m} \sum\limits{i=1}^m L(\hat{y}^{(i)}, y^{(i)})
+$$ 
+
+Objective - we have to minimize the cost function $J$.
+
+## Gradient descent
+![](img/gradient-descent-2d-diagram.png)
+
+## Gradient descent
+We use $J(w,b)$ because it is convex.
+We pick an initial point - anything might do, e.g. 0. Then we take steps in the direction of steepest descent.
+
+$$
+w := w - \alpha \frac{d J(w)}{dw}
+$$
+
+$\alpha$ - learning rate
+
+
+## Computation graph
+
+- **forward pass**: compute output
+- **backward pass**: compute derivatives
+
+## Logistic Regression Gradient Descent
+
+$$
+z = w^T x + b 
+\hat{y} = a = \sigma(z)
+$$
+
+We have a computation graph:
+$(x_1,x_2,w_1,w_2,b) \rightarrow z =w_1 x_1+w_2 x_2 + b \rightarrow a=\sigma(z) = L(a,y)$
+
+Let's compute the derivative for $L$ by a:
+$$
+\frac{dL}{da} = -\frac{y}{a} + \frac{1-y}{1-a}.
+$$
+
+After computing, we'll have
+$$
+\begin{align*}
+&dz = \frac{dL}{da}\frac{da}{dz} = a-y,\\
+&dw_1 \equiv \frac{dL}{dw_1} = x_1 dz,\\
+&dw_2 = x_2 dz, \\
+&db = dz
+\end{align*}
+$$
+
+
+## Logistic Regression Gradient Descent
+GD steps are computed via
+$$
+\begin{align*}
+&w_1 := w_1 - \alpha \frac{dL}{dw_1},\\
+&w_2 := w_2 - \alpha \frac{dL}{dw_2},\\
+&b := b - \alpha \frac{dL}{db}
+\end{align*}
+$$
+Here $\alpha$ is the learning rate.
+
+## Logistic Regression Gradient Descent
+Let's recall the definition of the cost function:
+$$
+\begin{align*}
+&J(w,b) = \frac{1}{m}\sum\limits_{i=1}^{m} L(a^{(i)}, y^{(i)}, \\
+&a^{(i)} = \hat{y}^{(i)}=\sigma(w^T x^{(i)} + b)
+\end{align*}
+$$
+And also
+$$
+\frac{dJ}{dw_1} = \frac{1}{m}\sum\limits_{i=1}^{m}\frac{dL}{dw_1}
+$$  
+
+
+## Logistic Regression Gradient Descent
+Let's implement the algorithm. First, initialize
+$$
+J=0,\\
+dw_1=0,\\
+dw_2=0,\\
+db=0
+$$
+
+## Logistic Regression Gradient Descent
+Then in the loop 
+
+for i=1 to m
+$$
+\begin{align*}
+  &z^{(i)} = w^T x^{(i)} + b, \\
+  &a^{(i)} = \sigma(z^{(i)}), \\
+  &J += -\left[y^{(i)} \log a^{(i)} + (1-y^{(i)}) \log(1-a^{(i)})\right], \\
+  &dz^{(i)} = a^{(i)} - y^{(i)}, \\
+  &dw_1 += x_1^{(i)} dz^{(i)},\\
+  &dw_2 += x_2^{(i)} dz^{(i)},\\
+  &db += dz^{(i)}
+\end{align*}
+$$
+
+## Logistic Regression Gradient Descent
+Then compute averages $J /= m$. In this example feature count $n_x=2$.
+
+Note that $dw_i$ don't have a superscript - we use them as accumulators.
+
+We only have 2 features $w_1$ and $w_2$, so we don't have an extra for loop. Turns out that for loops have a detrimental impact on performance.
+Vectorization techniques exist for this purpose - getting rid of for loops.
+
+## Vectorization
+We have to compute $z=w^T x + b$, where $w,x \in R^{n_x}$, and for this we can naturally use a for loop.
+A vectorized Python command is
+```python
+z = np.dot(w,x)+b
+```
+
+<!-- An jupyter example follows, comparing times of for-loop and vectorized code samples. -->
+<!-- SIMD calculations on GPUs and CPUs. -->
+
+## Vectorization
+Programming guideline - avoid explicit for loops.
+$$
+\begin{align*}
+  &u = Av,\\
+  &u_i = \sum_j\limits A_{ij} v_j
+\end{align*}
+$$
+
+
+Another example. Let's say we have a vector
+$$
+\begin{align*}
+    &v = \begin{bmatrix}
+      v_1 \\
+      \vdots \\
+      v_n
+    \end{bmatrix},
+    u = \begin{bmatrix}
+      e^{v_1},\\
+      \vdots \\
+      e^{v_n}
+    \end{bmatrix}
+  \end{align*}
+  $$
+A code listing is
+
+```python
+  import numpy as np
+  u = np.exp(v)
+```
+
+So we can modify the above code to get rid of for loops (except for the one for $m$).
+
+
+## Vectorizing logistic regression
+Let's examine the forward propagation step of LR.
+$$
+\begin{align*}
+  &z^{(1)} = w^T x^{(1)} + b,\\
+  &a^{(1)} = \sigma(z^{(1)})
+\end{align*}
+$$
+
+$$
+\begin{align*}
+  &z^{(2)} = w^T x^{(2)} + b,\\
+  &a^{(2)} = \sigma(z^{(2)})
+\end{align*}
+$$
+
+## Vectorizing logistic regression
+Let's recall what have we defined as our learning matrix:
+$$
+X = \begin{bmatrix}
+  \vdots & \vdots & \dots & \vdots \\
+  x^{(1)} & x^{(2)} & \dots & x^{(m)} \\
+  \vdots & \vdots & \dots & \vdots
+\end{bmatrix}
+$$
+
+## Vectorizing logistic regression
+Next
+$$
+Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
+= [w^T x^{(1)}+b, \dots, w^T x^{(m)}+b].
+$$
+
+```python
+  z = np.dot(w.T, x) + b
+```
+
+$b$ is a raw number, Python will automatically take care of expanding it into a vector - this is called *broadcasting*.
+
+For predictions we can also compute it similarly:
+$$
+\begin{align*}
+&A = [a^{(1)}, \dots, a^{(m)}]
+\end{align*}
+$$
+
+## Vectorizing logistic regression
+Earlier on, we computed
+$$
+\begin{align*}
+&dz^{(1)} = a^{(1)} - y^{(1)}, dz^{(2)} = a^{(2)} - y^{(2)}, \dots
+\end{align*}
+$$
+
+We now define
+$$
+\begin{align*}
+&dZ = [dz^{(1)}, \dots, dz^{(m)}], \\
+&Y = [y^{(1)}, \dots, y^{(m)}],\\
+&dZ = A-Y = [a^{(1)}-y^{(1)}, \dots, a^{(m)}-y^{(m)}]
+\end{align*}
+$$
+
+## Vectorizing logistic regression
+For $db$ we have
+$$
+\begin{align*}
+&db = \frac{1}{m}np.sum(dz),\\
+&dw = \frac{1}{m}X dZ^T = \\
+& \frac{1}{m}\begin{bmatrix}
+  \vdots & & \vdots \\
+  x^{(1)} & \dots & x^{(m)} \\
+  \vdots & & \vdots \\
+\end{bmatrix}
+\begin{bmatrix}
+  dz^{(1)} \\
+  \vdots\\
+  dz^{(m)}
+\end{bmatrix} = \\
+& = \frac{1}{m}\left[x^{(1)}dz^{(1)} + \dots +x^{(m)}dz^{(m)}\right]
+\end{align*}
+$$
+
+Now we can go back to the backward propagation algorithm again.
+
+Multiple iterations of GD will still require a for loop.
