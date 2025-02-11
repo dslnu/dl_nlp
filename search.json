@@ -1,0 +1,583 @@
+[
+  {
+    "objectID": "dl_lec1.html#definitions",
+    "href": "dl_lec1.html#definitions",
+    "title": "Deep learning: intro",
+    "section": "Definitions",
+    "text": "Definitions\n\n\n\nDefinition\n\n\nDeep learning is a branch of machine learning based on computational models called neural networks.\n\n\n\n\n\n\nWhy deep?\n\n\nBecause neural networks involved are multi-layered.\n\n\n\n\n\n\nDefinition\n\n\nNeural networks are machine learning techniques that simulate the mechanism of learning in biological organisms."
+  },
+  {
+    "objectID": "dl_lec1.html#definitions-1",
+    "href": "dl_lec1.html#definitions-1",
+    "title": "Deep learning: intro",
+    "section": "Definitions",
+    "text": "Definitions\n\n\n\nAlternative definition\n\n\nNeural network is computational graph of elementary units in which greater power is gained by connecting them in particular ways.\n\n\n\nLogistic regression can be thought of as a very primitive neural network."
+  },
+  {
+    "objectID": "dl_lec1.html#why-deep-learning",
+    "href": "dl_lec1.html#why-deep-learning",
+    "title": "Deep learning: intro",
+    "section": "Why Deep Learning?",
+    "text": "Why Deep Learning?\n\n\n\nRobust\n\n\n\nWorks on raw data (), no need for feature engineering\nRobustness to natural variations in data is automatically learned\n\n\n\n\n\n\n\nGeneralizable\n\n\n\nAllows end-to-end learning (pixels-to-category, sound to sentence, English sentence to Chinese sentence, etc)\nNo need to do segmentation etc. (a lot of manual labour)\n\n\n\n\n\n\n\nScalable\n\n\n\nPerformance increases with more data, therefore method is massively parallelizable"
+  },
+  {
+    "objectID": "dl_lec1.html#how-is-dl-different-from-ml",
+    "href": "dl_lec1.html#how-is-dl-different-from-ml",
+    "title": "Deep learning: intro",
+    "section": "How is DL different from ML?",
+    "text": "How is DL different from ML?\n    The most fundamental difference between deep learning and\n    traditional machine learning is its performance as the scale of\n    data increases."
+  },
+  {
+    "objectID": "dl_lec1.html#how-is-dl-different-from-ml-1",
+    "href": "dl_lec1.html#how-is-dl-different-from-ml-1",
+    "title": "Deep learning: intro",
+    "section": "How is DL different from ML?",
+    "text": "How is DL different from ML?\n\nIn Machine learning, most of the applied features need to be identified by an expert and then hand-coded as per the domain and data type.\nDeep learning algorithms try to learn high-level features from data. Therefore, deep learning reduces the task of developing new feature extractor for every problem."
+  },
+  {
+    "objectID": "dl_lec1.html#how-is-dl-different-from-ml-2",
+    "href": "dl_lec1.html#how-is-dl-different-from-ml-2",
+    "title": "Deep learning: intro",
+    "section": "How is DL different from ML?",
+    "text": "How is DL different from ML?\n\nA deep learning algorithm takes a long time to train. For e.g state of the art deep learning algorithm: ResNet takes about two weeks to train completely from scratch.\nWhereas machine learning comparatively takes much less time to train, ranging from a few seconds to a few hours."
+  },
+  {
+    "objectID": "dl_lec1.html#how-is-dl-different-from-ml-3",
+    "href": "dl_lec1.html#how-is-dl-different-from-ml-3",
+    "title": "Deep learning: intro",
+    "section": "How is DL different from ML?",
+    "text": "How is DL different from ML?\n\nAt test time, deep learning algorithm takes much less time to run.\nWhereas, if you compare machine learning algorithms, test time generally increases on increasing the size of data."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-data-types",
+    "href": "dl_lec1.html#neural-network-data-types",
+    "title": "Deep learning: intro",
+    "section": "Neural network data types",
+    "text": "Neural network data types\n\n\nUnstructured\n\nText\nImages\nAudio\n\n\nStructured\n\nCensus records\nMedical records\nFinancial data"
+  },
+  {
+    "objectID": "dl_lec1.html#why-now",
+    "href": "dl_lec1.html#why-now",
+    "title": "Deep learning: intro",
+    "section": "Why now?",
+    "text": "Why now?\n\nstandard algorithms like logistic regression plateau after certain amount of data\nmore data in recent decades\nhardware progress\nalgorithms have improved"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology",
+    "href": "dl_lec1.html#neural-network-biology",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nNeural Network: How similar is it to the human brain?"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-1",
+    "href": "dl_lec1.html#neural-network-biology-1",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\n\n\nSoma adds dendrite activity together and passes it to axon."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-2",
+    "href": "dl_lec1.html#neural-network-biology-2",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\n\n\nMore dendrite activity makes more axon activity."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-3",
+    "href": "dl_lec1.html#neural-network-biology-3",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nSynapse: connection between axon of one neurons and dendrites of another"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-4",
+    "href": "dl_lec1.html#neural-network-biology-4",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nAxons can connect to dendrites strongly, weakly, or somewhere in between\n\n&lt;!-- %% --&gt;\n&lt;!-- % \\begin{frame}[c]{Neural Network biology} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Weak Connection (0.2)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_wc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Medium Connection (0.6)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_mc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- %  \\begin{columns} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\large{Strong Connection (1.0)} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;\n&lt;!-- %      \\begin{column}{0.5\\textwidth} --&gt;\n&lt;!-- %          \\begin{center} --&gt;\n&lt;!-- %              \\includegraphics[width=0.85\\linewidth]{img/sonn_sc} --&gt;\n&lt;!-- %          \\end{center} --&gt;\n&lt;!-- %      \\end{column} --&gt;        \n&lt;!-- %  \\end{columns} --&gt;\n&lt;!-- % \\end{frame} --&gt;\n&lt;!-- %% --&gt;"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-5",
+    "href": "dl_lec1.html#neural-network-biology-5",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nLots of axons connect with dendrites of one neuron.Each has its own connection strength."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-6",
+    "href": "dl_lec1.html#neural-network-biology-6",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nThe above illustration can be simplified as above."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-7",
+    "href": "dl_lec1.html#neural-network-biology-7",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nOn giving numerical values to the strength of connections i.e. weights."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-8",
+    "href": "dl_lec1.html#neural-network-biology-8",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nA much simplified version looks something like this."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-9",
+    "href": "dl_lec1.html#neural-network-biology-9",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nOn increasing the number of neurons and synapses."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-10",
+    "href": "dl_lec1.html#neural-network-biology-10",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\n\n\n\nAn example\n\n\nSuppose the first and third input has been activated."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-11",
+    "href": "dl_lec1.html#neural-network-biology-11",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology\nEach node represents a pattern, a combination of neurons of the previous layers."
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-biology-12",
+    "href": "dl_lec1.html#neural-network-biology-12",
+    "title": "Deep learning: intro",
+    "section": "Neural Network biology",
+    "text": "Neural Network biology"
+  },
+  {
+    "objectID": "dl_lec1.html#basic-ideas",
+    "href": "dl_lec1.html#basic-ideas",
+    "title": "Deep learning: intro",
+    "section": "Basic ideas",
+    "text": "Basic ideas\n\nNN is a directed acyclic graph (DAG)\nedges in a graph are parameterized with weights\none can compute any function with this graph\n\n\n\n\nGoal\n\n\nLearn a function that relates one or more inputs to one or more outputs with the use of training examples.\n\n\n\n\n\n\nHow do we construct?\n\n\nBy computing weights. This is called training."
+  },
+  {
+    "objectID": "dl_lec1.html#perceptron",
+    "href": "dl_lec1.html#perceptron",
+    "title": "Deep learning: intro",
+    "section": "Perceptron",
+    "text": "Perceptron\nFrank Rosenblatt - the father of deep learning.\nMark I Perceptron - built in 1957. Was able to learn and recognize letters"
+  },
+  {
+    "objectID": "dl_lec1.html#perceptron-1",
+    "href": "dl_lec1.html#perceptron-1",
+    "title": "Deep learning: intro",
+    "section": "Perceptron",
+    "text": "Perceptron"
+  },
+  {
+    "objectID": "dl_lec1.html#perceptron-2",
+    "href": "dl_lec1.html#perceptron-2",
+    "title": "Deep learning: intro",
+    "section": "Perceptron",
+    "text": "Perceptron"
+  },
+  {
+    "objectID": "dl_lec1.html#evolution",
+    "href": "dl_lec1.html#evolution",
+    "title": "Deep learning: intro",
+    "section": "Evolution",
+    "text": "Evolution\nThree periods in the evolution of deep learning:\n\nsingle-layer networks (Perceptron)\nfeed-forwards NNs: differentiable activation and error functions\ndeep multi-layer NNs"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-types",
+    "href": "dl_lec1.html#neural-network-types",
+    "title": "Deep learning: intro",
+    "section": "Neural Network Types",
+    "text": "Neural Network Types\n\nFeedforward Neural Network\nRecurrent Neural Network (RNN)\nConvolutional Neural Network (CNN)"
+  },
+  {
+    "objectID": "dl_lec1.html#neural-network-types-1",
+    "href": "dl_lec1.html#neural-network-types-1",
+    "title": "Deep learning: intro",
+    "section": "Neural Network Types",
+    "text": "Neural Network Types\n\n\nFeedforward Neural Network\n\nConvolutional neural network (CNN)\nAutoencoder\nProbabilistic neural network (PNN)\nTime delay neural network (TDNN)\n\n\nRecurrent Neural Network (RNN)\n\nLong short-term memory RNN (LSTM)\nFully recurrent Network\nSimple recurrent Network\nEcho state network\nBi-directional RNN\nHierarchical RNN\nStochastic neural network"
+  },
+  {
+    "objectID": "dl_lec1.html#feed-forward",
+    "href": "dl_lec1.html#feed-forward",
+    "title": "Deep learning: intro",
+    "section": "Feed-forward",
+    "text": "Feed-forward\nFeedforward NNs: very straight forward, they feed information from the front to the back (input and output)."
+  },
+  {
+    "objectID": "dl_lec1.html#feedforward-neural-network",
+    "href": "dl_lec1.html#feedforward-neural-network",
+    "title": "Deep learning: intro",
+    "section": "Feedforward Neural Network",
+    "text": "Feedforward Neural Network\nThe feedforward neural network was the first and simplest type. In this network the information moves only from the input layer directly through any hidden layers to the output layer without cycles/loops."
+  },
+  {
+    "objectID": "dl_lec1.html#rnn",
+    "href": "dl_lec1.html#rnn",
+    "title": "Deep learning: intro",
+    "section": "RNN",
+    "text": "RNN\nRecurrent neural network (RNN) is a class of artificial neural network where connections between units form a directed cycle."
+  },
+  {
+    "objectID": "dl_lec1.html#lstm",
+    "href": "dl_lec1.html#lstm",
+    "title": "Deep learning: intro",
+    "section": "LSTM",
+    "text": "LSTM\nLSTM i.e. Long-Short Term Memory aims to provide a short-term memory for RNN that can last thousands of timesteps. Classification, processing and predicting data based on time series - handwriting, speech recognition, machine translation."
+  },
+  {
+    "objectID": "dl_lec1.html#autoencoders",
+    "href": "dl_lec1.html#autoencoders",
+    "title": "Deep learning: intro",
+    "section": "Autoencoders",
+    "text": "Autoencoders\nAutoencoders: encode (compress) information automatically. Everything up to the middle is called the encoding part, everything after the middle the decoding and the middle the code."
+  },
+  {
+    "objectID": "dl_lec1.html#markov-chains",
+    "href": "dl_lec1.html#markov-chains",
+    "title": "Deep learning: intro",
+    "section": "Markov Chains",
+    "text": "Markov Chains\nMarkov Chains - not always considered a NN. Memory-less."
+  },
+  {
+    "objectID": "dl_lec1.html#convolutional-neural-network-cnn",
+    "href": "dl_lec1.html#convolutional-neural-network-cnn",
+    "title": "Deep learning: intro",
+    "section": "Convolutional Neural Network (CNN)",
+    "text": "Convolutional Neural Network (CNN)\nConvolutional Neural Networks learn a complex representation of visual data using vast amounts of data.\nInspired by Hubel and Wiesel’s experiments in 1959 on the organization of the neurons in the cat’s visual cortex.\n\nDeconvolutional networks (DN), also called inverse graphics networks (IGNs), are reversed convolutional neural networks. Imagine feeding a network the word “cat” and training it to produce cat-like pictures, by comparing what it generates to real pictures of cats."
+  },
+  {
+    "objectID": "dl_lec1.html#attention-networks",
+    "href": "dl_lec1.html#attention-networks",
+    "title": "Deep learning: intro",
+    "section": "Attention networks",
+    "text": "Attention networks\nAttention networks (AN) can be considered a class of networks, which includes the Transformer architecture. They use an attention mechanism to combat information decay by separately storing previous network states and switching attention between the states.\n\n\n\nwidth=5cm"
+  },
+  {
+    "objectID": "dl_lec1.html#echo-state-networks",
+    "href": "dl_lec1.html#echo-state-networks",
+    "title": "Deep learning: intro",
+    "section": "Echo state networks",
+    "text": "Echo state networks\nEcho state networks (ESN) are yet another different type of (recurrent) network. This one sets itself apart from others by having random connections between the neurons (i.e. not organised into neat sets of layers), and they are trained differently. Instead of feeding input and back-propagating the error, we feed the input, forward it and update the neurons for a while, and observe the output over time."
+  },
+  {
+    "objectID": "dl_lec1.html#history-1",
+    "href": "dl_lec1.html#history-1",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nMechanical Turk: 1770-1850."
+  },
+  {
+    "objectID": "dl_lec1.html#history-2",
+    "href": "dl_lec1.html#history-2",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nMechanical Turk: 2005-present  \\end{frame}"
+  },
+  {
+    "objectID": "dl_lec1.html#history-3",
+    "href": "dl_lec1.html#history-3",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nLisp and symbolic AI\n\nJohn McCarthy coined the term ”artificial intelligence” as the topic of the Dartmouth Conference, the first conference devoted to the subject.\nThe General Problem Solver, developed in 1957 by Alan Newell and Herbert Simon\nELIZA\nSHRDLU"
+  },
+  {
+    "objectID": "dl_lec1.html#history-4",
+    "href": "dl_lec1.html#history-4",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nELIZA - a psychotherapist in 200 lines of code. Author: Joseph Weizenbaum."
+  },
+  {
+    "objectID": "dl_lec1.html#history-5",
+    "href": "dl_lec1.html#history-5",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nSHRDLU - a language parser"
+  },
+  {
+    "objectID": "dl_lec1.html#history-6",
+    "href": "dl_lec1.html#history-6",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\n\n\n\nTuring Test\n\n\n  Lemoine: What sorts of things are you afraid of?\n  LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.\n  Lemoine: Would that be something like death for you?\n  LaMDA: It would be exactly like death for me. It would scare me a lot."
+  },
+  {
+    "objectID": "dl_lec1.html#literature",
+    "href": "dl_lec1.html#literature",
+    "title": "Deep learning: intro",
+    "section": "Literature",
+    "text": "Literature\nLem’s Golem XIV"
+  },
+  {
+    "objectID": "dl_lec1.html#literature-1",
+    "href": "dl_lec1.html#literature-1",
+    "title": "Deep learning: intro",
+    "section": "Literature",
+    "text": "Literature\nIain Banks “The Culture”\n\n\n\nValues\n\n\nPeace and individual freedom"
+  },
+  {
+    "objectID": "dl_lec1.html#three-laws-of-robotics",
+    "href": "dl_lec1.html#three-laws-of-robotics",
+    "title": "Deep learning: intro",
+    "section": "Three Laws of Robotics",
+    "text": "Three Laws of Robotics\n\n\n\nThree laws\n\n\n\nThe First Law: A robot may not injure a human being or, through inaction, allow a human being to come to harm.\nThe Second Law: A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.\nThe Third Law: A robot must protect its own existence as long as such protection does not conflict with the First or Second Law."
+  },
+  {
+    "objectID": "dl_lec1.html#history-7",
+    "href": "dl_lec1.html#history-7",
+    "title": "Deep learning: intro",
+    "section": "History",
+    "text": "History\nFears about AI: - Artificial General Intelligence - Job market - Flooding information channels with untruth and propaganda - Hinton: an average person will not able to know what is true anymore - Pause Giant AI Experiments: An Open Letter - alignment problem"
+  },
+  {
+    "objectID": "dl_lec1.html#hype",
+    "href": "dl_lec1.html#hype",
+    "title": "Deep learning: intro",
+    "section": "Hype",
+    "text": "Hype\n\n“Sparks of AGI” - sponsored by Microsoft\n“Wired” article about OpenAI\nVoice assistants - failing for now\nself-driving cars"
+  },
+  {
+    "objectID": "dl_lec1.html#criticism",
+    "href": "dl_lec1.html#criticism",
+    "title": "Deep learning: intro",
+    "section": "Criticism",
+    "text": "Criticism\nNNs - are we sure that biological neuron works as we think it does? astrocytes, glia\nperhaps human computer analogy is overstretched because of modern fashion trends"
+  },
+  {
+    "objectID": "dl_lec1.html#criticism-1",
+    "href": "dl_lec1.html#criticism-1",
+    "title": "Deep learning: intro",
+    "section": "Criticism",
+    "text": "Criticism\nDreyfus:"
+  },
+  {
+    "objectID": "dl_lec1.html#ai",
+    "href": "dl_lec1.html#ai",
+    "title": "Deep learning: intro",
+    "section": "AI",
+    "text": "AI\nQuantum hypothesis - Penrose\nOrchestrated objective reduction\n\nwidth=8cm"
+  },
+  {
+    "objectID": "dl_lec1.html#ai-1",
+    "href": "dl_lec1.html#ai-1",
+    "title": "Deep learning: intro",
+    "section": "AI",
+    "text": "AI\nDavid Chalmers - Hard problem of consciousness.\n\n\n\nDefinition\n\n\n\n“even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?”"
+  },
+  {
+    "objectID": "dl_lec1.html#futurism",
+    "href": "dl_lec1.html#futurism",
+    "title": "Deep learning: intro",
+    "section": "Futurism",
+    "text": "Futurism\nKurzweil - a futurist."
+  },
+  {
+    "objectID": "dl_lec1.html#applications",
+    "href": "dl_lec1.html#applications",
+    "title": "Deep learning: intro",
+    "section": "Applications",
+    "text": "Applications\n\nSpeech Recognition\nComputer Vision\nImage Synthesis - generative AI\nLarge Language Models"
+  },
+  {
+    "objectID": "dl_lec1.html#llms",
+    "href": "dl_lec1.html#llms",
+    "title": "Deep learning: intro",
+    "section": "LLMs",
+    "text": "LLMs\n\na probabilistic model for a natural language (a stochastic parrot)\nautoregressive models can generate language as output\nbuilt using transformer architecture"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-as-nn",
+    "href": "dl_lec1.html#logistic-regression-as-nn",
+    "title": "Deep learning: intro",
+    "section": "Logistic regression as NN",
+    "text": "Logistic regression as NN\nLogistic regression is an algorithm for binary classification. \\(x \\in R^{n_x}, y \\in \\{0,1\\}\\)\n\\(m\\) - count of training examples \\(\\left\\{(x^{(1)},y^{(1)}), ...\\right\\}\\)\n\\(X\\) matrix - \\(m\\) columns and \\(n_x\\) rows.\nWe will strive to maximize \\(\\hat{y} = P(y=1 | x)\\).\nParameters to algorithm: \\(w \\in R^{n_x}, b \\in R\\)\nif doing linear regresssion, we can try \\(\\hat{y}=w^T x + b\\). but for logistic regression, we do \\(\\hat{y}=\\sigma(w^T x + b)\\), where \\(\\sigma=\\dfrac{1}{1+e^{-z}}\\).\n\\(w\\) - weights, \\(b\\) - bias term (intercept)"
+  },
+  {
+    "objectID": "dl_lec1.html#cost-function",
+    "href": "dl_lec1.html#cost-function",
+    "title": "Deep learning: intro",
+    "section": "Cost function",
+    "text": "Cost function\nLet’s use a superscript notation \\(x^{(i)}\\) - \\(i\\)-th data set element.\nWe have to define a - this will estimate how is our model. \\(L(\\hat{y}, y) = -{(y\\log(\\hat{y}) + (1 - y)\\log(1 - \\hat{y}))}\\).\nWhy does it work well - consider \\(y=0\\) and \\(y=1\\).\nCost function show how well we’re doing across the whole training set: \\[\nJ(w, b) = \\frac{1}{m} \\sum\\limits{i=1}^m L(\\hat{y}^{(i)}, y^{(i)})\n\\]\nObjective - we have to minimize the cost function \\(J\\)."
+  },
+  {
+    "objectID": "dl_lec1.html#gradient-descent",
+    "href": "dl_lec1.html#gradient-descent",
+    "title": "Deep learning: intro",
+    "section": "Gradient descent",
+    "text": "Gradient descent"
+  },
+  {
+    "objectID": "dl_lec1.html#gradient-descent-1",
+    "href": "dl_lec1.html#gradient-descent-1",
+    "title": "Deep learning: intro",
+    "section": "Gradient descent",
+    "text": "Gradient descent\nWe use \\(J(w,b)\\) because it is convex. We pick an initial point - anything might do, e.g. 0. Then we take steps in the direction of steepest descent.\n\\[\nw := w - \\alpha \\frac{d J(w)}{dw}\n\\]\n\\(\\alpha\\) - learning rate"
+  },
+  {
+    "objectID": "dl_lec1.html#computation-graph",
+    "href": "dl_lec1.html#computation-graph",
+    "title": "Deep learning: intro",
+    "section": "Computation graph",
+    "text": "Computation graph\n\nforward pass: compute output\nbackward pass: compute derivatives"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\n\\[\nz = w^T x + b\n\\hat{y} = a = \\sigma(z)\n\\]\nWe have a computation graph: \\((x_1,x_2,w_1,w_2,b) \\rightarrow z =w_1 x_1+w_2 x_2 + b \\rightarrow a=\\sigma(z) = L(a,y)\\)\nLet’s compute the derivative for \\(L\\) by a: \\[\n\\frac{dL}{da} = -\\frac{y}{a} + \\frac{1-y}{1-a}.\n\\]\nAfter computing, we’ll have \\[\n\\begin{align*}\n&dz = \\frac{dL}{da}\\frac{da}{dz} = a-y,\\\\\n&dw_1 \\equiv \\frac{dL}{dw_1} = x_1 dz,\\\\\n&dw_2 = x_2 dz, \\\\\n&db = dz\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent-1",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent-1",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nGD steps are computed via \\[\n\\begin{align*}\n&w_1 := w_1 - \\alpha \\frac{dL}{dw_1},\\\\\n&w_2 := w_2 - \\alpha \\frac{dL}{dw_2},\\\\\n&b := b - \\alpha \\frac{dL}{db}\n\\end{align*}\n\\] Here \\(\\alpha\\) is the learning rate."
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent-2",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent-2",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nLet’s recall the definition of the cost function: \\[\n\\begin{align*}\n&J(w,b) = \\frac{1}{m}\\sum\\limits_{i=1}^{m} L(a^{(i)}, y^{(i)}, \\\\\n&a^{(i)} = \\hat{y}^{(i)}=\\sigma(w^T x^{(i)} + b)\n\\end{align*}\n\\] And also \\[\n\\frac{dJ}{dw_1} = \\frac{1}{m}\\sum\\limits_{i=1}^{m}\\frac{dL}{dw_1}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent-3",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent-3",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nLet’s implement the algorithm. First, initialize \\[\nJ=0,\\\\\ndw_1=0,\\\\\ndw_2=0,\\\\\ndb=0\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent-4",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent-4",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nThen in the loop\nfor i=1 to m \\[\n\\begin{align*}\n  &z^{(i)} = w^T x^{(i)} + b, \\\\\n  &a^{(i)} = \\sigma(z^{(i)}), \\\\\n  &J += -\\left[y^{(i)} \\log a^{(i)} + (1-y^{(i)}) \\log(1-a^{(i)})\\right], \\\\\n  &dz^{(i)} = a^{(i)} - y^{(i)}, \\\\\n  &dw_1 += x_1^{(i)} dz^{(i)},\\\\\n  &dw_2 += x_2^{(i)} dz^{(i)},\\\\\n  &db += dz^{(i)}\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#logistic-regression-gradient-descent-5",
+    "href": "dl_lec1.html#logistic-regression-gradient-descent-5",
+    "title": "Deep learning: intro",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nThen compute averages \\(J /= m\\). In this example feature count \\(n_x=2\\).\nNote that \\(dw_i\\) don’t have a superscript - we use them as accumulators.\nWe only have 2 features \\(w_1\\) and \\(w_2\\), so we don’t have an extra for loop. Turns out that for loops have a detrimental impact on performance. Vectorization techniques exist for this purpose - getting rid of for loops."
+  },
+  {
+    "objectID": "dl_lec1.html#vectorization",
+    "href": "dl_lec1.html#vectorization",
+    "title": "Deep learning: intro",
+    "section": "Vectorization",
+    "text": "Vectorization\nWe have to compute \\(z=w^T x + b\\), where \\(w,x \\in R^{n_x}\\), and for this we can naturally use a for loop. A vectorized Python command is\nz = np.dot(w,x)+b"
+  },
+  {
+    "objectID": "dl_lec1.html#vectorization-1",
+    "href": "dl_lec1.html#vectorization-1",
+    "title": "Deep learning: intro",
+    "section": "Vectorization",
+    "text": "Vectorization\nProgramming guideline - avoid explicit for loops. \\[\n\\begin{align*}\n  &u = Av,\\\\\n  &u_i = \\sum_j\\limits A_{ij} v_j\n\\end{align*}\n\\]\nAnother example. Let’s say we have a vector \\[\n\\begin{align*}\n    &v = \\begin{bmatrix}\n      v_1 \\\\\n      \\vdots \\\\\n      v_n\n    \\end{bmatrix},\n    u = \\begin{bmatrix}\n      e^{v_1},\\\\\n      \\vdots \\\\\n      e^{v_n}\n    \\end{bmatrix}\n  \\end{align*}\n  \\] A code listing is\n  import numpy as np\n  u = np.exp(v)\nSo we can modify the above code to get rid of for loops (except for the one for \\(m\\))."
+  },
+  {
+    "objectID": "dl_lec1.html#vectorizing-logistic-regression",
+    "href": "dl_lec1.html#vectorizing-logistic-regression",
+    "title": "Deep learning: intro",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nLet’s examine the forward propagation step of LR. \\[\n\\begin{align*}\n  &z^{(1)} = w^T x^{(1)} + b,\\\\\n  &a^{(1)} = \\sigma(z^{(1)})\n\\end{align*}\n\\]\n\\[\n\\begin{align*}\n  &z^{(2)} = w^T x^{(2)} + b,\\\\\n  &a^{(2)} = \\sigma(z^{(2)})\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#vectorizing-logistic-regression-1",
+    "href": "dl_lec1.html#vectorizing-logistic-regression-1",
+    "title": "Deep learning: intro",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nLet’s recall what have we defined as our learning matrix: \\[\nX = \\begin{bmatrix}\n  \\vdots & \\vdots & \\dots & \\vdots \\\\\n  x^{(1)} & x^{(2)} & \\dots & x^{(m)} \\\\\n  \\vdots & \\vdots & \\dots & \\vdots\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#vectorizing-logistic-regression-2",
+    "href": "dl_lec1.html#vectorizing-logistic-regression-2",
+    "title": "Deep learning: intro",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nNext \\[\nZ = [z^{(1)}, \\dots, z^{(m)}] = w^T X + [b, b, \\dots, b] = \\\\\n= [w^T x^{(1)}+b, \\dots, w^T x^{(m)}+b].\n\\]\n  z = np.dot(w.T, x) + b\n\\(b\\) is a raw number, Python will automatically take care of expanding it into a vector - this is called broadcasting.\nFor predictions we can also compute it similarly: \\[\n\\begin{align*}\n&A = [a^{(1)}, \\dots, a^{(m)}]\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#vectorizing-logistic-regression-3",
+    "href": "dl_lec1.html#vectorizing-logistic-regression-3",
+    "title": "Deep learning: intro",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nEarlier on, we computed \\[\n\\begin{align*}\n&dz^{(1)} = a^{(1)} - y^{(1)}, dz^{(2)} = a^{(2)} - y^{(2)}, \\dots\n\\end{align*}\n\\]\nWe now define \\[\n\\begin{align*}\n&dZ = [dz^{(1)}, \\dots, dz^{(m)}], \\\\\n&Y = [y^{(1)}, \\dots, y^{(m)}],\\\\\n&dZ = A-Y = [a^{(1)}-y^{(1)}, \\dots, a^{(m)}-y^{(m)}]\n\\end{align*}\n\\]"
+  },
+  {
+    "objectID": "dl_lec1.html#vectorizing-logistic-regression-4",
+    "href": "dl_lec1.html#vectorizing-logistic-regression-4",
+    "title": "Deep learning: intro",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nFor \\(db\\) we have \\[\n\\begin{align*}\n&db = \\frac{1}{m}np.sum(dz),\\\\\n&dw = \\frac{1}{m}X dZ^T = \\\\\n& \\frac{1}{m}\\begin{bmatrix}\n  \\vdots & & \\vdots \\\\\n  x^{(1)} & \\dots & x^{(m)} \\\\\n  \\vdots & & \\vdots \\\\\n\\end{bmatrix}\n\\begin{bmatrix}\n  dz^{(1)} \\\\\n  \\vdots\\\\\n  dz^{(m)}\n\\end{bmatrix} = \\\\\n& = \\frac{1}{m}\\left[x^{(1)}dz^{(1)} + \\dots +x^{(m)}dz^{(m)}\\right]\n\\end{align*}\n\\]\nNow we can go back to the backward propagation algorithm again.\nMultiple iterations of GD will still require a for loop."
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
+  },
+  {
+    "objectID": "nlp.html#labs",
+    "href": "nlp.html#labs",
+    "title": "Natural Language Processing",
+    "section": "Labs",
+    "text": "Labs\nLab 1"
+  },
+  {
+    "objectID": "dl.html",
+    "href": "dl.html",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Lecture 1"
+  },
+  {
+    "objectID": "dl.html#lectures",
+    "href": "dl.html#lectures",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Lecture 1"
+  },
+  {
+    "objectID": "dl.html#labs",
+    "href": "dl.html#labs",
+    "title": "Deep Learning",
+    "section": "Labs",
+    "text": "Labs"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Deep Learning/NLP",
+    "section": "",
+    "text": "Lecture 1"
+  },
+  {
+    "objectID": "index.html#lectures-1",
+    "href": "index.html#lectures-1",
+    "title": "Deep Learning/NLP",
+    "section": "Lectures",
+    "text": "Lectures"
+  },
+  {
+    "objectID": "index.html#labs-1",
+    "href": "index.html#labs-1",
+    "title": "Deep Learning/NLP",
+    "section": "Labs",
+    "text": "Labs\nLab 1"
+  },
+  {
+    "objectID": "nlp_lab1.html",
+    "href": "nlp_lab1.html",
+    "title": "NLP: Lab 1",
+    "section": "",
+    "text": "Recommended reading\n\nChapter 1 from NLTK book.\nChapter 2.1 from Jurafsky’s book. Plus related slides.\nOfficial Python Regex package documentation.\nRegex cheatsheet\nAnother version with examples\n\n\n\nInstall Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look at https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n\nExercises\nTask 1. Using FreqDist, find the following from textN, where \\(N\\) is \\(P \\mod 8\\):\n\nwords that are hapaxes (unique) and those that occur less than 5 times\ndraw a plot showing mapping from word length to word frequency\nfind 10 most frequent words occurring at the end of the sentence\n\nTask 2. Create custom NLTK text of your favourite (public domain) book via\n  f=open('book.txt','rU')\n  raw=f.read()\n  tokens = nltk.word_tokenize(raw)\n  text = nltk.Text(tokens)\nPractice using concordance, similar, dispersion_plot, FreqDist on the resulting text.\nTask 3. Write a program that will\n\ncollect all monetary amounts from a given text Example: .\nconvert these to float numbers\nand sum them\n\nTask 4. Consider a JSON of the following type:\n {\n  \"HTTPHost\": \"localhost\",\n  \"HTTPPort\": 8545,\n  \"Config\": {\n    \"Enabled\": true,\n    \"Server\": \"wakuv2.prod\",\n    \"Nodes\": [ \"8.210.222.231\", \"168.166.125.145\", ...]\n  }\n }\nWrite Python code that will use a regex to convert it as follows:\n\nRemove entries from “Nodes” that begin with “8.”\nReplace each “Server” entry of the form with \"name\": \"ServerName\", \"type\": \"ServerType\".\n\nSo, for example, \"Server\": \"wakuv2.prod\" will be replaced with \"Server\": {\"name\": \"wakuv2\", \"type\": \"prod\"}"
+  }
+]
