@@ -1,0 +1,737 @@
+---
+title: "Natural Language Processing: Intro"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    slide-number: true
+    theme: default
+---
+## History
+![](img/lang_spread.png)
+
+## History
+![](img/lang_tree.png)
+
+## Stats
+
+:::{.callout-tip icon=false}
+## When?
+Approximately between 200,000 years ago and 60,000 years ago (between the appearance of the first anatomically modern humans in southern Africa and the last exodus from Africa respectively)
+:::
+:::{.callout-important icon=false}
+## How many?
+Human languages count: 7097 (as of 2018).
+:::
+
+## Intelligent behaviour 
+:::{.callout-important icon=false}
+## Speaker (writer)
+- has the **goal** of communicating some
+knowledge
+- then **plans** some language that represents the knowledge
+- and **acts** to achieve the goal
+:::
+
+:::{.callout-note icon=false}
+## Listener (reader)
+- **perceives** the language
+- and **infers** the intended meaning.
+:::
+
+## Reasons for NLP
+
+- To **communicate** with humans.
+- To **learn.** 
+- To **advance the scientific understanding** of languages and language use, using the tools
+of AI in conjunction with linguistics, cognitive psychology, and neuroscience.
+
+## Language model
+
+:::{.callout-note icon=false}
+## Definition
+We define a language model as a probability distribution describing the likelihood of any string.
+:::
+
+## ELIZA
+
+![](img/eliza.png)
+
+ELIZA - an example of primitive pattern matching.
+
+## Regex
+
+Regular expressions - a tool for describing text patterns.
+
+
+:::{.callout-important icon=false}
+## Definition
+An algebraic notation for characterizing a set of strings
+:::
+
+
+:::{.callout-important icon=false}
+## Concatenation
+A sequence of characters
+```
+/someword/
+```
+:::
+
+|Regex|Example|
+|----|--------|
+|/alt/|The **alt**ernative option would be...|
+|/simple/|A **simple** regex|
+
+: Examples {.striped .hover}
+
+## Regex
+:::{.callout-important icon=false}
+## Disjunction
+A single character to choose among multiple options
+```
+/[asd]/
+```
+
+|Regex|Example|
+|----|--------|
+|/[0123456789]/|Some number examples are **0**, **3**, **5**|
+|/[rgx]/|A simple **r**e**g**e**x**|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+
+:::{.callout-important icon=false}
+## Disjunction with range
+A single character to choose among multiple options
+```
+/[a-z]/
+```
+
+|Regex|Example|
+|----|--------|
+|/[a-z]/|**P**hone number: 067-1234567|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-important icon=false}
+## Cleene *
+Zero or more occurrences of the previous character or regex.
+
+|Regex|Example|
+|----|--------|
+|/[a-z]*/|**Phone number**: 067-1234567|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-important icon=false}
+## Cleene +
+One or more occurrences of the previous character or regex.
+
+|Regex|Example|
+|----|--------|
+|/[a-z]+/|**Phone number**: 067-1234567|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-important icon=false}
+## Wildcard dot
+Any character except newline
+
+|Regex|Example|
+|----|--------|
+|/.+/|**Phone number: 067-1234567**|
+|/beg.n/|**begin, began, begun**|
+
+: Examples {.striped .hover}
+
+:::
+
+
+## Regex
+:::{.callout-important icon=false}
+## Anchors
+Matching beginning and end of lines
+
+|Regex|Example|
+|----|--------|
+|/^/|Start of line|
+|/$/|End of line|
+|`/\b/`|Word boundary|
+|`/\B/`|Non-word boundary|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-important icon=false}
+## Disjunction operator
+Either/or for strings
+
+|Regex|Example|
+|----|--------|
+|`/cat|dog/`|Raining **cat**s and **dog**s|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-important icon=false}
+## Grouping
+Used for precedence
+
+|Regex|Example|
+|----|--------|
+|`/(cat|dog)*/`|Raining **cat**s and **dog**s|
+
+: Examples {.striped .hover}
+
+:::
+
+
+## Regex
+:::{.callout-important icon=false}
+## Substitutions
+Used for precedence
+
+|Regex|Before|After|
+|----|--------|----|
+|`s/(cat|dog)*/frog/`|Raining **cat**s and **dog**s|Raining **frog**s and **frog**s|
+|`s/behaviour/behavior/`|Cognitive-behavioural therapy|Cognitive-behavioral therapy|
+
+: Examples {.striped .hover}
+
+:::
+
+## Regex
+:::{.callout-tip icon=false}
+## ELIZA sample
+```
+User1: Men are all alike.
+ELIZA1: User2: They’re always bugging us about something or other.
+ELIZA2: CAN YOU THINK OF A SPECIFIC EXAMPLE
+User3: Well, my boyfriend made me come here.
+ELIZA3: YOUR BOYFRIEND MADE YOU COME HERE
+User4: He says I’m depressed much of the time.
+ELIZA4: I AM SORRY TO HEAR YOU ARE DEPRESSED
+```
+:::
+:::{.callout-note icon=false}
+## ELIZA sample
+```
+s/.* YOU ARE (depressed|sad) .*/I AM SORRY TO HEAR YOU ARE \1/
+s/.* YOU ARE (depressed|sad) .*/WHY DO YOU THINK YOU ARE \1/
+s/.* all .*/IN WHAT WAY/
+s/.* always .*/CAN YOU THINK OF A SPECIFIC EXAMPLE/
+```
+:::
+
+## Parsing
+
+:::{.callout-important icon=false}
+## Corpus
+A computer-readable collection of text or speech.
+:::
+
+:::{.callout-note icon=false}
+## Punctuation
+Marks indicating how a piece of written text should be read and understood.
+:::
+
+
+:::{.callout-note icon=false}
+## Utterance
+Spoken correlate of a sentence.
+:::
+
+## Parsing
+:::{.callout-tip icon=false}
+## Disfluency
+Break or disruption that occurs in the flow of speech.
+
+Two types:
+
+- **fragments**
+- **fillers**
+:::
+
+## Parsing
+:::{.callout-tip icon=false}
+## Word types
+Are the number of distinct words in a corpus; if the set of words in the vocabulary is
+$V$ , the number of types is the vocabulary size $|V|$.
+:::
+
+:::{.callout-important icon=false}
+## Word instances 
+Are the total number $N$ of running words.
+
+(sometimes also called *word tokens*).
+:::
+
+:::{.callout-note icon=false}
+## Example
+> To be, or not to be, that is the question.
+
+:::
+
+## Parsing {.smaller}
+
+|Corpus|Types = $|V|$|Instances = $N$|
+|---------|---------------|-----|
+|Shakespeare|31 thousand| 884 thousand|
+|Brown corpus |38 thousand| 1 million|
+|Switchboard telephone conversations| 20 thousand| 2.4 million|
+|COCA| 2 million| 440 million|
+|Google n-grams |13 million |1 trillion|
+
+## Parsing
+
+:::{.callout-important icon=false}
+## Herdan’s Law (Herdan, 1960) or Heaps’ Law (Heaps, 1978)
+$$
+|V|= kN^{\beta}.
+$$
+Here $k$ and $\beta$ are positive constants, and $0 <\beta <1$.
+:::
+
+::: aside
+For large corpora $0.67 < \beta < 0.75$.
+:::
+
+## Parsing
+
+:::{.callout-important icon=false}
+## Wordforms
+Example: cat vs cats. We say these two words are different wordforms but have the same
+**lemma**.
+:::
+
+:::{.callout-warning icon=false}
+## Lemma
+A **lemma** is a set of lexical forms having the same stem, and usually the
+same major part-of-speech.
+:::
+
+:::{.callout-tip icon=false}
+## Example
+The wordform is the full inflected or derived form of
+the word. The two wordforms cat and cats thus have the same lemma, which we can
+represent as cat.
+:::
+
+# Parsing
+
+:::{.callout-important icon=false}
+## Morphemes
+The smallest meaning-bearing unit of a language.
+:::
+
+:::{.callout-tip icon=false}
+## Examples
+```
+Indistinguisble -> [in, distinguish, able]
+```
+:::
+
+## Corpora
+
+Varieties depending on:
+
+- languages
+- language varieties
+- genres
+- time
+- speaker demographics
+
+## Parsing
+
+Text **normalization** consists of:
+
+1. Tokenizing (segmenting) words
+2. Normalizing word formats
+3. Segmenting sentences
+
+## Tokenization
+
+Two types:
+
+- top-down
+- bottom-up
+
+## Top-down tokenization
+
+- break off punctuation as a separate token
+- internal punctuation: Ph.D., AT&T
+- prices ($45.55) and dates (18/02/2025)
+- URLs (https://www.stanford.edu),
+- Twitter hashtags (#nlproc)
+- email addresses (someone@cs.colorado.edu).
+- number expressions introduce complications: e.g.  555,500.50.
+- **clitic** contractions: `I'm`, `l'homme`.
+
+## Top-down tokenization
+:::{.callout-important icon=false}
+## Penn Treebank tokenization standard
+Used for the parsed corpora (treebanks) released by the Lin-
+guistic Data Consortium (LDC).
+
+- separates out clitics (doesn’t becomes does plus n’t)
+- keeps hyphenated words together
+- separates out all punctuation
+:::
+
+## Top-down tokenization
+:::{.callout-important icon=false}
+## nltk.regexp_tokenize
+```python
+>>> text = ’That U.S.A. poster-print costs $12.40...’
+>>> pattern = r’’’(?x) # set flag to allow verbose regexps
+... (?:[A-Z]\.)+ # abbreviations, e.g. U.S.A.
+... | \w+(?:-\w+)* # words with optional internal hyphens
+... | \$?\d+(?:\.\d+)?%? # currency, percentages, e.g. $12.40, 82%
+... | \.\.\. # ellipsis
+... | [][.,;"’?():_‘-] # these are separate tokens; includes ], [
+... ’’’
+>>> nltk.regexp_tokenize(text, pattern)
+[’That’, ’U.S.A.’, ’poster-print’, ’costs’, ’$12.40’, ’...’]
+```
+:::
+
+## Top-down tokenization
+Word tokenization is more complex in languages like written Chinese, Japanese,
+and Thai, which do not use spaces to mark potential word-boundaries. 
+
+:::{.callout-important icon=false}
+## Morphemes In Chinese
+for example, words are composed of characters (called hanzi in Chinese). Each
+character generally represents a single unit of meaning (a **morpheme**).
+:::
+
+:::{.callout-tip icon=false}
+## Word segmentation
+For Japanese and Thai the character is too small a unit, and so algorithms for word segmentation are required.
+:::
+
+## Bottom-up tokenization
+
+:::{.callout-important icon=false}
+## Definition
+We use the data to infer the tokens. We call these tokens **subwords**.
+:::
+
+
+:::{.callout-tip icon=false}
+## Parts
+- token learner: produces a vocabulary of tokens
+- token segmenter: takes a test sentence and segments it into tokens
+:::
+
+:::{.callout-note icon=false}
+## Examples
+- byte-pair encoding (Sennrich et al., 2016)
+- unigram language modeling (Kudo, 2018)
+- SentencePiece (Kudo and Richardson, 2018)
+:::
+
+## BPE
+
+Token Learner:
+
+1. Start with a vocabulary that is just the set of all individual characters. 
+2. Examine the training corpus, choose the two symbols that are most frequently adjacent
+   2.1. For example, if (‘A’, ‘B’) frequently occur together, it will add a new merged symbol ‘AB’ to the vocabulary
+   2.2. And replaces every adjacent ’A’ ’B’ in the corpus with the new ‘AB’.
+3. Continue counting and merging, creating new longer and longer character strings, until $k$ merges have been done creating k novel tokens; $k$ is thus a parameter of the algorithm. 
+
+4.The resulting vocabulary
+consists of the original set of characters plus $k$ new symbols.
+
+
+:::{.callout-note icon=false}
+The algorithm is usually run inside words (not merging across word boundaries),
+so the input corpus is first white-space-separated to give a set of strings, each corre-
+sponding to the characters of a word, plus a special end-of-word symbol , and its
+counts. 
+:::
+
+## BPE {.smaller}
+
+function BYTE-PAIR ENCODING(strings C, number of merges k) returns vocab $V$
+
+$V \leftarrow$ unique characters in C # initial set of tokens is characters
+
+ for i = 1 to k do # merge tokens k times
+
+$\quad$ $t_L$, $t_R$ $\leftarrow$ #Most frequent pair of adjacent tokens in C
+
+$\quad$ $t_{NEW} \leftarrow t_L + t_R$ # make new token by concatenating
+
+$\quad$ $V \leftarrow V + t_{NEW}$ # update the vocabulary
+
+$\quad$ Replace each occurrence of $t_L$, $t_R$ in $C$ with $t_{NEW}$. # update the corpus
+
+return $V$
+
+## BPE
+Token Segmenter:
+
+1. Runs on the merges we have learned from the training data on the test data.
+2. It runs them greedily, in the order we learned them.
+(Thus the frequencies in the test data don’t play a role, just the frequencies in the
+training data).
+
+## Word Normalization
+
+Simplest method: **case folding**.
+
+
+:::{.callout-important icon=false}
+## Note
+Not very useful for text classification: compare `US` (the country) and `us` (pronoun).
+:::
+
+
+:::{.callout-tip icon=false}
+## Lemmatization
+The task of determining that two words have the same root, despite their surface differences.
+
+`be` $\rightarrow$ `is`, `are`
+
+Performed using **morphological parsing**.
+:::
+
+
+
+## Word Normalization
+
+
+:::{.callout-important icon=false}
+## Morphological parsing
+Splitting each word into morphemes of two types:
+
+- **stems**
+- **affixes**
+:::
+
+:::{.callout-tip icon=false}
+## Naive version: stemming
+This means just dropping affixes.
+:::
+
+
+## Word Normalization
+
+<!-- https://developer.ibm.com/tutorials/awb-stemming-text-porter-stemmer-algorithm-python/#step-7-running-the-porter-stemmer9-->
+
+:::{.callout-important icon=false}
+## Porter stemmer
+
+- classify every character in a given token as either a consonant ("c") or vowel ("v")
+- group subsequent consonants as "C" and subsequent vowels as "V." 
+- represent every word token as a combination of consonant and vowel groups.
+:::
+![](img/porter_stemming.png)
+
+## Word Normalization
+
+![](img/stemmer1.png)
+
+## Word Normalization
+
+Other stemmers:
+
+:::{.callout-note icon=false}
+## Lovins stemmer
+The first published stemming algorithm, is essentially a heavily parametrized find-and-replace function. 
+
+- compares each input token against a list of common English suffixes, each suffix being conditioned by one of twenty-nine rules
+- if the stemmer finds a predefined suffix in a token and removing the suffix does not violate any conditions attached to that suffix (such as character length restrictions), the algorithm removes that suffix.
+- the stemmer then runs the resulting stemmed token through another set of rules that correct for common malformations, such as double letters (such as hopping becomes hopp becomes hop).
+:::
+
+## Word Normalization
+:::{.callout-tip icon=false}
+## Snowball stemmer
+An updated version of the Porter stemmer. It differs from Porter in two main ways:
+
+1. While Lovins and Porter only stem English words, Snowball can stem text data in other Roman script languages, such as Dutch, German, French, or Spanish. Also has capabilities for non-Roman script languages.
+2. Snowball has an option to ignore stop words.
+:::
+
+## Word Normalization
+
+:::{.callout-important icon=false}
+## Lancaster stemmer (also called Paice stemmer)
+The most aggressive English stemming algorithm. 
+
+- it contains a list of over 100 rules that dictate which ending strings to replace. 
+- the stemmer iterates each word token against each rule. If a token’s ending characters match the string defined in a given rule, the algorithm modifies the token per that rule’s operation, then runs the transformed token through every rule again. 
+- the stemmer iterates each token through each rule until that token passes all the rules without being transformed.
+:::
+
+
+## Word Normalization
+
+:::{.callout-important icon=false}
+## Stemming errors
+- over-generalizing (lemmatizing `policy` to `police`)
+- under-generalizing (not lemmatizing `European` to `Europe`)
+:::
+
+## Sentence Tokenization
+
+:::{.callout-important icon=false}
+## Challenges
+- multi-purpose punctuation
+- abbreviation dictionaries
+:::
+
+## Edit distance
+
+:::{.callout-important icon=false}
+## Definition
+**Minimum edit distance** between two strings is defined as the minimum number of editing operations:
+
+- insertion
+- deletion
+- substitution
+
+needed to transform one string into another.
+:::
+
+## Edit distance
+:::{.callout-note icon=false}
+## String alignment
+![](img/string_alignment.png)
+:::
+
+## Edit distance
+
+
+:::{.callout-tip icon=false}
+## Levenshtein distance
+Each of the 3 operations has cost 1.
+
+Alternatively, we can forbid substitutions (this is equivalent to saying that substitutions have cost 2).
+:::
+
+![](img/levenshtein.svg)
+
+## Edit distance
+
+Wagner-Fischer minimum edit distance algorithm.
+
+:::{.callout-tip icon=false}
+## Notation
+- $X$: source string with length $n$
+- $Y$: target string with length $m$
+- $D[i,j]$: edit distance between $X[1..i]$ and $Y[1..j]$.
+- $D[n,m]$: edit distance between $X$ and $Y$.
+:::
+
+:::{.callout-note icon=false}
+## Calculation
+$$
+D[i,j] = \min \begin{cases}
+D[i-1,j] + \text{del_cost}(source[i]),\\
+D[i,j-1] + \text{ins_cost}(target[j]),\\
+D[i-1,j-1] + \text{sub_cost}(source[i], target[j]).
+\end{cases}
+$$
+:::
+
+## Edit distance
+:::{.callout-note icon=false}
+## Calculation without substitution
+$$
+D[i,j] = \min \begin{cases}
+D[i-1,j] + 1,\\
+D[i,j-1] + 1,\\
+D[i-1,j-1] + \begin{cases}
+2; \quad \text{if} \quad source[i] \neq target[j]), \\
+0; \quad \text{if} \quad source[i] = target[j])
+\end{cases}
+\end{cases}
+$$
+:::
+
+## Edit distance {.smaller}
+function MIN-EDIT-DISTANCE(source, target) returns min-distance
+
+$n \leftarrow LENGTH(source)$
+
+$m \leftarrow LENGTH(target)$
+
+Create a distance matrix $D[n+1,m+1]$
+
+ # Initialization: the zeroth row and column is the distance from the empty string
+
+D[0,0] = 0
+
+for each row i from 1 to n do
+
+$\quad$ $D[i,0] \leftarrow D[i-1,0]$ + del_cost(source[i])
+
+for each column j from 1 to m do
+
+$\quad$ $D[0,j] \leftarrow D[0, j-1] + ins-cost(target[j])$
+
+## Edit distance {.smaller}
+
+ # Recurrence relation:
+
+for each row i from 1 to n do
+
+$\quad$ for each column j from 1 to m do
+
+$\quad$ $\quad$ $D[i, j] \leftarrow MIN( D[i−1, j]$ + del\_cost(source[i]),
+
+$\quad$$\quad$ $\quad$ $D[i−1, j−1] + sub\_cost(source[i], target[j])$,
+
+$\quad$$\quad$ $\quad$ $D[i, j−1] + ins\_cost(target[j]))$
+
+ # Termination
+
+return D[n,m]
+
+## Edit distance
+![](img/minimum_edit_distance_computation.png)
+
+## Cost alignment
+![](img/cost_alignment_computation.png)
+
