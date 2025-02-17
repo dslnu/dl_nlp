@@ -26,7 +26,11 @@ format:
     preview-links: auto
     slide-number: true
     theme: default
+    multiplex:
+      url: 'http://51.21.111.205'
+      id: 'b47a7ce4f5313db581542b8b021199807f40e17c0a40a8e1be729e3a810b93cc'
 ---
+
 ## History
 ![](img/lang_spread.png)
 
@@ -63,8 +67,40 @@ knowledge
 
 - To **communicate** with humans.
 - To **learn.** 
-- To **advance the scientific understanding** of languages and language use, using the tools
-of AI in conjunction with linguistics, cognitive psychology, and neuroscience.
+- To **advance the scientific understanding** of languages and language use
+
+## Goal of natural language
+A medium for **communication**
+
+rather than pure **representation**.
+
+## Sapir-Whorf hypothesis
+
+Language impacts cognition. Also known as **linguistic relativity**.
+
+## Sapir-Whorf hypothesis
+![](img/defenestration.png)
+
+## Deep structure
+
+:::{.callout-important icon=false}
+## Wanner experiment (1974)
+Subjects remember exact words with 50% accuracy but remember the content with 90% accuracy.
+
+Hence - there must an internal nonverbal representation.
+:::
+
+:::{.callout-tip icon=false}
+## Polanyi's paradox (1966)
+The theory that human knowledge of how the world functions and of our own capability are, to a large extent, beyond our explicit understanding. (aka **tacit knowledge**).
+:::
+
+## Formal language
+
+:::{.callout-important icon=false}
+## Definition
+A formal language $L$ over an alphabet $\Sigma$ is a subset of $\Sigma^*$, that is, a set of words over that alphabet.
+:::
 
 ## Language model
 
@@ -83,12 +119,53 @@ ELIZA - an example of primitive pattern matching.
 
 Regular expressions - a tool for describing text patterns.
 
-
 :::{.callout-important icon=false}
 ## Definition
 An algebraic notation for characterizing a set of strings
 :::
 
+
+::: aside
+Kleene, S. C. 1951. Representation of events in nerve nets and finite automata. Technical Report RM-704,
+RAND Corporation. RAND Research Memorandum.
+:::
+
+## Regex {.smaller}
+
+:::{.callout-tip icon=false}
+# Definition
+A Kleene algebra is a set $A$ together with two binary operations $+: A \times A \rightarrow A$ and $\cdot : A \times A \rightarrow A$ and one function $\ast : A \rightarrow A$, written as $a + b$, $ab$ and $a\ast$ respectively, so that the following axioms are satisfied.
+
+- **Associativity** of $+$ and $\cdot$: $a + (b + c) = (a + b) + c$ and $a(bc) = (ab)c$ $\forall a, b, c \in A$.
+- **Commutativity** of $+$: $a + b = b + a$ $\forall a, b \in A$
+- **Distributivity**: $a(b + c) = (ab) + (ac)$ and $(b + c)a = (ba) + (ca)$ $\forall a, b, c \in A$
+- **Identity elements** for $+$ and $\cdot$: $\exists 0 \in A:\forall a \in A: a + 0 = 0 + a = a$;
+  $\exists 1 \in A: \forall a \in A: a1 = 1a = a$.
+- **Annihilation by 0**: $a0 = 0a = 0 \forall a \in A$.
+The above axioms define a semiring.
+
+- $+$ is idempotent: $a + a = a \quad \forall a \in A$.
+:::
+
+
+## Regex {.smaller}
+:::{.callout-tip icon=false}
+## Ordering
+It is now possible to define a partial order $\leq$ on $A$ by setting $a \leq b$ if and only if $a + b = b$ (or equivalently: $a \leq b$ if and only if $\exists x \in A:  a + x = b$.
+
+With any definition, $a \leq b \leq a \Rightarrow a = b$. With this order we can formulate the last four axioms about the operation $\ast$:
+
+- $1 + a(a\ast) leq a\ast \forall a in A$.
+- $1 + (a\ast)a \leq a\ast \forall a in A$.
+- if a and x are in A such that $ax \leq x$, then $a\ast x \leq x$
+- if a and x are in A such that $xa \leq x$, then $x(a\ast) \leq x$.
+
+Intuitively, one should think of a + b as the "union" or the "least upper bound" of a and b and of ab as some multiplication which is monotonic, in the sense that $a \leq b \Rightarrow ax \leq bx$.
+
+The idea behind the star operator is $a\ast = 1 + a + aa + aaa + ...$. From the standpoint of programming language theory, one may also interpret + as "choice", $\cdot$ as "sequencing" and $\ast$ as "iteration".
+:::
+
+## Regex
 
 :::{.callout-important icon=false}
 ## Concatenation
@@ -334,6 +411,20 @@ For large corpora $0.67 < \beta < 0.75$.
 :::
 
 ## Parsing
+:::{.callout-important icon=false}
+## Zipf's law
+If $t_1$ is the most common term in the collection, $t_2$ is the next
+most common, and so on, then the collection frequency $cf_i$ of the $i$-th most
+common term is proportional to $\frac{1}{i}$:
+$$
+cf_i \propto \frac{1}{i},
+$$
+or
+$$
+cf_i = ci^k.
+$$
+:::
+## Parsing
 
 :::{.callout-important icon=false}
 ## Wordforms
@@ -354,7 +445,7 @@ the word. The two wordforms cat and cats thus have the same lemma, which we can
 represent as cat.
 :::
 
-# Parsing
+## Parsing
 
 :::{.callout-important icon=false}
 ## Morphemes
@@ -367,6 +458,48 @@ The smallest meaning-bearing unit of a language.
 Indistinguisble -> [in, distinguish, able]
 ```
 :::
+
+## Affixes
+:::{.callout-tip icon=false}
+## Affix taxonomy
+
+Affixes are classified into two types:
+
+1. According to their position in the word
+2. According to their function in a phrase or sentence.
+:::
+
+:::{.callout-note icon=false}
+# By position
+
+- Prefixes
+- Infixes
+- Suffixes. 
+- Circumfixes (Georgian, Malay)
+:::
+<!-- https://media.neliti.com/media/publications/570759-types-of-words-and-word-formation-proces-29d706d5.pdf -->
+
+
+## Affixes
+:::{.callout-important icon=false}
+# By function
+
+1. Derivational affixes are for creating new words usually by changing the part of speech
+or the meaning or both to the words when they are added to.
+
+They can be prefixes or suffixes e.g.
+unkind , kingship etc.
+
+2. Inflectional affixes mark the grammatical categories e.g. –s in girls
+
+:::
+
+
+## Language morphology
+
+- analytical (English)
+- inflected (Ukrainian)
+- agglutinative (partially German)
 
 ## Corpora
 
@@ -470,23 +603,25 @@ We use the data to infer the tokens. We call these tokens **subwords**.
 
 ## BPE
 
-Token Learner:
-
+:::{.callout-tip icon=false}
+## Token Learner
 1. Start with a vocabulary that is just the set of all individual characters. 
 2. Examine the training corpus, choose the two symbols that are most frequently adjacent
+
    2.1. For example, if (‘A’, ‘B’) frequently occur together, it will add a new merged symbol ‘AB’ to the vocabulary
+
    2.2. And replaces every adjacent ’A’ ’B’ in the corpus with the new ‘AB’.
+
 3. Continue counting and merging, creating new longer and longer character strings, until $k$ merges have been done creating k novel tokens; $k$ is thus a parameter of the algorithm. 
 
 4.The resulting vocabulary
 consists of the original set of characters plus $k$ new symbols.
+:::
 
-
+## BPE
 :::{.callout-note icon=false}
 The algorithm is usually run inside words (not merging across word boundaries),
-so the input corpus is first white-space-separated to give a set of strings, each corre-
-sponding to the characters of a word, plus a special end-of-word symbol , and its
-counts. 
+so the input corpus is first white-space-separated to give a set of strings, each corresponding to the characters of a word, plus a special end-of-word symbol , and its counts. 
 :::
 
 ## BPE {.smaller}
@@ -690,7 +825,9 @@ D[i-1,j-1] + \begin{cases}
 $$
 :::
 
-## Edit distance {.smaller}
+## Edit distance
+:::{.callout-tip icon=false}
+# Wagner-Fischer algorithm
 function MIN-EDIT-DISTANCE(source, target) returns min-distance
 
 $n \leftarrow LENGTH(source)$
@@ -710,8 +847,12 @@ $\quad$ $D[i,0] \leftarrow D[i-1,0]$ + del_cost(source[i])
 for each column j from 1 to m do
 
 $\quad$ $D[0,j] \leftarrow D[0, j-1] + ins-cost(target[j])$
+:::
 
-## Edit distance {.smaller}
+## Edit distance
+
+:::{.callout-tip icon=false}
+# Wagner-Fischer algorithm
 
  # Recurrence relation:
 
@@ -728,10 +869,34 @@ $\quad$$\quad$ $\quad$ $D[i, j−1] + ins\_cost(target[j]))$
  # Termination
 
 return D[n,m]
+:::
 
 ## Edit distance
 ![](img/minimum_edit_distance_computation.png)
 
 ## Cost alignment
 ![](img/cost_alignment_computation.png)
+
+## Edit distance
+
+:::{.callout-important icon=false}
+## Hamming distance
+A number of positions at which the corresponding symbols are different.
+
+Therefore, identical to Levenshtein with only substitution allowed.
+
+Can only work for strings of similar length.
+
+:::
+```python
+def hamming_distance(string1: str, string2: str) -> int:
+    """Return the Hamming distance between two strings."""
+    if len(string1) != len(string2):
+        raise ValueError("Strings must be of equal length.")
+    dist_counter = 0
+    for n in range(len(string1)):
+        if string1[n] != string2[n]:
+            dist_counter += 1
+    return dist_counter
+```
 
