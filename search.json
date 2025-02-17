@@ -1,5 +1,1132 @@
 [
   {
+    "objectID": "dl_lec2.html#neurons",
+    "href": "dl_lec2.html#neurons",
+    "title": "Deep learning: logistic regression",
+    "section": "Neurons",
+    "text": "Neurons\n\n\n\nImportant\n\n\nANN \\(\\equiv\\) Artificial Neural Network\nRemember - Neurons, axons, dendrites.\n\n\n\n\n\n\nTip\n\n\nInputs to neurons are scaled with weight.\nWeight is similar to a strength of synaptic connection."
+  },
+  {
+    "objectID": "dl_lec2.html#neurons-1",
+    "href": "dl_lec2.html#neurons-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Neurons",
+    "text": "Neurons"
+  },
+  {
+    "objectID": "dl_lec2.html#neurons-2",
+    "href": "dl_lec2.html#neurons-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Neurons",
+    "text": "Neurons\n\n\n\nComputation\n\n\nANN computes a function of the inputs by propagating the computed values from input neurons to output neurons, using weights as intermediate parameters.\n\n\n\n\n\n\nLearning\n\n\nLearning occurs by changing the weights. External stimuli are required for learning in bio-organisms, in case of ANNs they are provided by the training data.\n\n\n\n\n\n\nTraining\n\n\nTraining data contain input-output pairs. We compare predicted output with annotated output label from training data."
+  },
+  {
+    "objectID": "dl_lec2.html#neurons-3",
+    "href": "dl_lec2.html#neurons-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Neurons",
+    "text": "Neurons\n\n\n\nErrors\n\n\nErrors are comparison failures. These are similar to unpleasant feedback modifying synaptic strengths. Goal of changing weights - make predictions better.\n\n\n\n\n\n\nModel generalizations\n\n\nAbility to compute functions of unseen inputs accurately, even though given finite sets of input-output pairs."
+  },
+  {
+    "objectID": "dl_lec2.html#computation-graph",
+    "href": "dl_lec2.html#computation-graph",
+    "title": "Deep learning: logistic regression",
+    "section": "Computation graph",
+    "text": "Computation graph\nAlternative view - computation graph.\nWhen used in basic graph, NNs reduce to classical ML models.\n\nLeast-squares regression\nlogistic regression\nlinear regression\n\nNodes compute based on inputs and weights."
+  },
+  {
+    "objectID": "dl_lec2.html#goal",
+    "href": "dl_lec2.html#goal",
+    "title": "Deep learning: logistic regression",
+    "section": "Goal",
+    "text": "Goal\nGoal of NN: learn a function that relates inputs to outputs with the use of training examples.\nSettings the edge weights is training."
+  },
+  {
+    "objectID": "dl_lec2.html#structure",
+    "href": "dl_lec2.html#structure",
+    "title": "Deep learning: logistic regression",
+    "section": "Structure",
+    "text": "Structure\nConsider a simple case of \\(d\\) inputs and a single binary output. \\[\n(\\overline{X}, y) - \\text{training instance}\n\\]\nFeature variables: \\[\n\\overline{X}=[x_1, \\dots, x_d]\n\\] Observed value: \\(y \\in {0,1}\\), contained in target variable \\(y\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#objective",
+    "href": "dl_lec2.html#objective",
+    "title": "Deep learning: logistic regression",
+    "section": "Objective",
+    "text": "Objective\n\nlearn the function \\(f(\\cdot)\\), such that \\(y=f_{\\overline{W}}(\\overline{X})\\).\nminimize mismatch between \\(y\\) and \\(f_{\\overline{W}}(\\overline{X})\\). \\(W\\) - weight vector.\n\nIn case of perceptron, we compute a linear function: \\[\\begin{align*}\n  &\\hat{y}=f(\\overline{X}) = sign\\left\\{\\overline{W}^T \\overline{X}^T\\right\\} =  sign\\left\\{\\sum\\limits_{i=1}^d w_i x_i\\right\\}\n\\end{align*}\\] \\(\\hat{y}\\) means value, not observed value \\(y\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#perceptron",
+    "href": "dl_lec2.html#perceptron",
+    "title": "Deep learning: logistic regression",
+    "section": "Perceptron",
+    "text": "Perceptron\nA simplest NN."
+  },
+  {
+    "objectID": "dl_lec2.html#perceptron-1",
+    "href": "dl_lec2.html#perceptron-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Perceptron",
+    "text": "Perceptron\nWe choose the basic form of the function, but strive to find some parameters.\n\nSign is an activation function\nvalue of the node is also sometimes referred to as an activation.\n\nPerceptron is a single-layer network, as input nodes are not counted."
+  },
+  {
+    "objectID": "dl_lec2.html#perceptron-2",
+    "href": "dl_lec2.html#perceptron-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Perceptron",
+    "text": "Perceptron\nHow does perceptron learn? \\[\n\\overline{W} := \\overline{W} + \\alpha(y-\\hat{y})\\overline{X}^T.\n\\] So, in case when \\(y \\neq \\hat{y}\\), we can write it as \\[\n\\overline{W} := \\overline{W} + \\alpha y \\overline{X}^T.\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#perceptron-3",
+    "href": "dl_lec2.html#perceptron-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Perceptron",
+    "text": "Perceptron\nWe can show that perceptron works when data are linearly separable by a hyperplane \\(\\overline{W}^T X = 0\\).\n\n\n\nPerceptron algorithm is not guaranteed to converge when data are not linearly separable."
+  },
+  {
+    "objectID": "dl_lec2.html#bias",
+    "href": "dl_lec2.html#bias",
+    "title": "Deep learning: logistic regression",
+    "section": "Bias",
+    "text": "Bias\nBias is needed when binary class distribution is imbalanced: \\[\n\\overline{W}^T \\cdot \\sum_i \\overline{X_i}^T \\neq \\sum_i y_i\n\\] Bias can be incorporated by using a bias neuron.\n\n\n\nProblems\n\n\nIn linearly separable data sets, a nonzero weight vector \\(W\\) exists in which the \\(sign(\\overline{W}^T X) = sign(y_i)\\; \\forall (\\overline{X}_i,y_i)\\).\nHowever, the behavior of the perceptron algorithm for data that are not linearly separable is rather arbitrary."
+  },
+  {
+    "objectID": "dl_lec2.html#loss-function",
+    "href": "dl_lec2.html#loss-function",
+    "title": "Deep learning: logistic regression",
+    "section": "Loss function",
+    "text": "Loss function\nML algorithms are loss optimization problems, where gradient descent updates are used to minimize the loss.\nOriginal perceptron did not formally use a loss function.\nRetrospectively we can introduce it as: \\[\nL_i \\equiv \\max\\left\\{-y_i(\\overline{W}^T \\overline{X_i}\\right\\}\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#loss-function-1",
+    "href": "dl_lec2.html#loss-function-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Loss function",
+    "text": "Loss function\nWe differentiate: \\[\\begin{align*}\n&\\dfrac{\\partial L_i}{\\partial \\overline{W}} = \\left[\\dfrac{\\partial L_i}{\\partial w_1}, \\dots, \\dfrac{\\partial L_i}{\\partial w_d}\\right] = \\\\\n& = \\begin{cases}\n  -y_i \\overline{X_i}, & \\text{if } sign\\{W^T X_i\\} \\neq y_i,\\\\\n  0, & \\text{otherwise}\n\\end{cases}\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#perceptron-update",
+    "href": "dl_lec2.html#perceptron-update",
+    "title": "Deep learning: logistic regression",
+    "section": "Perceptron update",
+    "text": "Perceptron update\nNegative of the vector is the direction of the fastest rate of loss reduction, hence perceptron update: \\[\\begin{align*}\n   &\\overline{W} := \\overline{W} - \\alpha\\dfrac{\\partial L_i}{\\partial \\overline{W}} = \\overline{W} + \\alpha y_i \\overline{X_i}^T.\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions",
+    "href": "dl_lec2.html#activation-functions",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\nA network with weights \\(\\overline{W}\\) and input \\(\\overline{X}\\) will have a prediction of the form \\[\\begin{align*}\n   &\\hat{y}=\\Phi\\left( \\overline{W}^T \\overline{X}\\right)\n\\end{align*}\\] where \\(\\Phi\\) denotes activation function."
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-1",
+    "href": "dl_lec2.html#activation-functions-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\n\n\n\nIdentity aka linear activation\n\n\n\\[\n\\Phi(v) = v\n\\]\n\n\n\n\n\n\nSign function\n\n\n\\[\n\\Phi(v) = sign(v)\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-2",
+    "href": "dl_lec2.html#activation-functions-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\n\n\n\nSigmoid function\n\n\n\\[\n\\Phi(v) = \\dfrac{1}{1+e^{-v}}\n\\]\n\n\n\n\n\n\ntanh\n\n\n\\[\n\\Phi(v) = \\dfrac{e^{2v}-1}{e^{2v}+1}\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-3",
+    "href": "dl_lec2.html#activation-functions-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\nActually, neuron computes two functions:"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-4",
+    "href": "dl_lec2.html#activation-functions-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\nWe have pre-activation value and post-activation value.\n\npre-activation: linear transformation\npost-activation: nonlinear transformation"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-5",
+    "href": "dl_lec2.html#activation-functions-5",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-6",
+    "href": "dl_lec2.html#activation-functions-6",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-7",
+    "href": "dl_lec2.html#activation-functions-7",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\nTwo more functions that have become popular recently:\n\n\n\nRectified Linear Unit (ReLU)\n\n\n\\[\n\\Phi(v) = \\max\\left\\{v, 0\\right\\}\n\\]\n\n\n\n\n\n\nHard tanh\n\n\n\\[\n\\Phi(v) = \\max\\left\\{\\min\\left[v, 1\\right], -1 \\right\\}\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#multiple-activation-fns",
+    "href": "dl_lec2.html#multiple-activation-fns",
+    "title": "Deep learning: logistic regression",
+    "section": "Multiple activation fns",
+    "text": "Multiple activation fns"
+  },
+  {
+    "objectID": "dl_lec2.html#activation-functions-8",
+    "href": "dl_lec2.html#activation-functions-8",
+    "title": "Deep learning: logistic regression",
+    "section": "Activation functions",
+    "text": "Activation functions\nProperties:\n\nmonotonic\nsaturation at large values\nsquashing"
+  },
+  {
+    "objectID": "dl_lec2.html#softmax-activation-function",
+    "href": "dl_lec2.html#softmax-activation-function",
+    "title": "Deep learning: logistic regression",
+    "section": "Softmax activation function",
+    "text": "Softmax activation function\nUsed for k-way classification problems. Used in the output layer.\n\\[\\begin{align*}\n&\\Phi(v)_i = \\dfrac{\\exp(v_i)}{\\sum\\limits_{i=1}^k \\exp(v_i)}.\n\\end{align*}\\]\nSoftmax layer converts real values to probabilities."
+  },
+  {
+    "objectID": "dl_lec2.html#softmax-activation-function-1",
+    "href": "dl_lec2.html#softmax-activation-function-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Softmax activation function",
+    "text": "Softmax activation function"
+  },
+  {
+    "objectID": "dl_lec2.html#loss-functions",
+    "href": "dl_lec2.html#loss-functions",
+    "title": "Deep learning: logistic regression",
+    "section": "Loss functions",
+    "text": "Loss functions\n\n\n\nLeast squares regression, numeric targets\n\n\n\\[\\begin{align*}\n  &L(\\hat{y}, y) = (y-\\hat{y})^2\n\\end{align*}\\]\n\n\n\n\n\n\nLogistic regression, binary targets\n\n\n\\[\\begin{align*}\n  &L(\\hat{y}, y) = -\\log \\left|y/2 - 1/2 + \\hat{y}\\right|, \\{-1,+1\\}\n\\end{align*}\\]\n\n\n\n\n\n\nMultinomial logistic regression, categorical targets\n\n\n\\[\\begin{align*}\n  &L(\\hat{y}, y) = -\\log (\\hat{y}_r) \\text{ - cross-entropy loss}\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#multilayer-networks-1",
+    "href": "dl_lec2.html#multilayer-networks-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Multilayer networks",
+    "text": "Multilayer networks\nSuppose NN contains \\(p_1, \\dots, p_k\\) units in each of its \\(k\\) layers.\nThen column representations of these layers, denoted by \\(\\overline{h}_1, \\dots, \\overline{h}_k\\), have \\(p_1, \\dots, p_k\\) units.\n\nWeights between input layer and first hidden layer: matrix \\(W_1\\), sized \\(p_1 \\times d\\).\nWeights between \\(r\\)-th layer and \\(r+1\\)-th layer: matrix \\(W_r\\) sized \\(p_{r+1}\\times p_r\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#multilayer-networks-2",
+    "href": "dl_lec2.html#multilayer-networks-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Multilayer networks",
+    "text": "Multilayer networks"
+  },
+  {
+    "objectID": "dl_lec2.html#multilayer-networks-3",
+    "href": "dl_lec2.html#multilayer-networks-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Multilayer networks",
+    "text": "Multilayer networks\nTherefore, a \\(d\\)-dimensional input vector \\(\\overline{x}\\) is transformed into the outputs using these equations: \\[\\begin{align*}\n  &\\overline{h}_1 = \\Phi(W_1^T x),\\\\\n  &\\overline{h}_{p+1} = \\Phi(W_{p+1}^T \\overline{h}_p), \\forall p \\in \\left\\{1 \\dots k-1 \\right\\} \\\\\n  &\\overline{o} = \\Phi(W_{k+1}^T \\overline{h}_k)\n\\end{align*}\\] Activation functions operate on vectors and are applied element-wise."
+  },
+  {
+    "objectID": "dl_lec2.html#multilayer-networks-4",
+    "href": "dl_lec2.html#multilayer-networks-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Multilayer networks",
+    "text": "Multilayer networks\n\n\n\nDefinition (Aggarwal)\n\n\nA multilayer network computes a nested composition of parameterized multi-variate functions.\nThe overall function computed from the inputs to the outputs can be controlled very closely by the choice of parameters.\nThe notion of learning refers to the setting of the parameters to make the overall function consistent with observed input-output pairs."
+  },
+  {
+    "objectID": "dl_lec2.html#multilayer-networks-5",
+    "href": "dl_lec2.html#multilayer-networks-5",
+    "title": "Deep learning: logistic regression",
+    "section": "Multilayer networks",
+    "text": "Multilayer networks\nInput-output function of NN is difficult to express explicitly. NN can also be called universal function approximators.\n\n\n\nUniversal approximation theorem\n\n\nGiven a family of neural networks, for each function \\(\\displaystyle f\\) from a certain function space, there exists a sequence of neural networks \\(\\phi_1,\\phi_2,\\dots\\) from the family, such that \\(\\phi_{n} \\to f\\) according to some criterion.\n\n\n\nIn other words, the family of neural networks is dense in the function space.\n\n\nK. Hornik, M. Stinchcombe, and H. White. . Neural Networks, 2(5), pp. 359–366, 1989."
+  },
+  {
+    "objectID": "dl_lec2.html#nonlinear-activation-functions",
+    "href": "dl_lec2.html#nonlinear-activation-functions",
+    "title": "Deep learning: logistic regression",
+    "section": "Nonlinear activation functions",
+    "text": "Nonlinear activation functions\nTheorem. A multi-layer network that uses only the identity activation function in all its layers reduces to a single-layer network.\nProof. Consider a network containing \\(k\\) hidden layers, therefore containing a total of \\((k+1)\\) computational layers (including the output layer).\nThe corresponding \\((k+1)\\) weight matrices between successive layers are denoted by \\(W_1 ...W_{k+1}\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#nonlinear-activation-functions-1",
+    "href": "dl_lec2.html#nonlinear-activation-functions-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Nonlinear activation functions",
+    "text": "Nonlinear activation functions\nLet:\n\n\\(\\overline{x}\\) be the \\(d\\)-dimensional column vector corresponding to the input\n\\(\\overline{h_1},\\dots,\\overline{h_k}\\) be the column vectors corresponding to the hidden layers\nand \\(\\overline{o}\\) be the \\(m\\)-dimensional column vector corresponding to the output."
+  },
+  {
+    "objectID": "dl_lec2.html#nonlinear-activation-functions-2",
+    "href": "dl_lec2.html#nonlinear-activation-functions-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Nonlinear activation functions",
+    "text": "Nonlinear activation functions\nThen, we have the following recurrence condition for multi-layer networks: \\[\\begin{align*}\n  &\\overline{h_1} = \\Phi(W_1 x) = W_1 x,\\\\\n  &\\overline{h}_{p+1} = \\Phi(W_{p+1} \\overline{h}_p) = W_{p+1}\\overline{h}_p \\;\\; \\forall p \\in \\left\\{1 \\dots k−1\\right\\}, \\\\\n  &\\overline{o} = \\Phi(W_{k+1} \\overline{h}_k) = W_{k+1} \\overline{h}_k.\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#nonlinear-activation-functions-3",
+    "href": "dl_lec2.html#nonlinear-activation-functions-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Nonlinear activation functions",
+    "text": "Nonlinear activation functions\nIn all the cases above, the activation function \\(\\Phi(\\cdot)\\) has been set to the identity function. Then, by eliminating the hidden layer variables, we obtain the following: \\[\\begin{align*}\n&\\overline{o} = W_{k+1}W_k \\dots W_1 \\overline{x}\n\\end{align*}\\] Denote \\(W_{xo}=W_{k+1}W_k \\dots W_1\\).\n\n\n\nNote\n\n\nOne can replace the matrix \\(W_{k+1}W_k \\dots W_1\\) with the new \\(d\\times m\\) matrix \\(W_{xo}\\), and learn the coefficients of \\(W_{xo}\\) instead of those of all the matrices \\(W_1, W_2, \\dots W_{k+1}\\), without loss of expressivity."
+  },
+  {
+    "objectID": "dl_lec2.html#nonlinear-activation-functions-4",
+    "href": "dl_lec2.html#nonlinear-activation-functions-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Nonlinear activation functions",
+    "text": "Nonlinear activation functions\nIn other words, we have the following: \\[\\begin{align*}\n&\\overline{o} = W_{xo} \\overline{x}\n\\end{align*}\\] However, this condition is exactly identical to that of linear regression with multiple outputs. Therefore, a multilayer neural network with identity activations does not gain over a single-layer network in terms of expressivity.\n\n\n\nLinearity observation\n\n\nThe composition of linear functions is always a linear function. The repeated composition of simple nonlinear functions can be a very complex nonlinear function."
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation",
+    "href": "dl_lec2.html#backpropagation",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\n\n\n\nDAG Definition\n\n\nA directed acyclic computational graph is a directed acyclic graph of nodes, where each node contains a variable. Edges might be associated with learnable parameters.\nA variable in a node is either fixed externally (for input nodes with no incoming edges), or it is a computed as a function of the variables in the tail ends of edges incoming into the node and the learnable parameters on the incoming edges.\n\n\n\nDAG is a more general version of NN."
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation-1",
+    "href": "dl_lec2.html#backpropagation-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\nA computational graph evaluates compositions of functions.\nA path of length 2 in a computational graph in which the function \\(f(\\cdot)\\) follows \\(g(\\cdot)\\) can be considered a composition function \\(f(g(\\cdot))\\).\nIn case of sigmoid function: \\[\\begin{align*}\n   &f(x) = g(x) = \\dfrac{1}{1+e^{-x}} \\\\\n   &f(g(x)) = \\dfrac{1}{1 + e^{\\left[-\\dfrac{1}{1+e^{-x}}\\right]}}\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation-2",
+    "href": "dl_lec2.html#backpropagation-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\n\n\n\nImportant\n\n\nThe inability to easily express the optimization function in closed form in terms of the edge-specific parameters (as is common in all machine learning problems) causes difficulties in computing the derivatives needed for gradient descent.\n\n\n\n\n\n\nExample\n\n\nFor example, if we have a computational graph which has 10 layers, and 2 nodes per layer, the overall composition function would have \\(2^{10}\\) nested “terms”."
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation-3",
+    "href": "dl_lec2.html#backpropagation-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\n\nDerivatives of the output with respect to various variables in the computational graph are related to one another with the use of the chain rule of differential calculus.\nTherefore, the chain rule of differential calculus needs to be applied repeatedly to update derivatives of the output with respect to the variables in the computational graph.\nThis approach is referred to as the backpropagation algorithm, because the derivatives of the output with respect to the variables close to the output are simpler to compute (and are therefore computed first while propagating them backwards towards the inputs).\n\nDerivatives are computed numerically, not algebraically."
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation-4",
+    "href": "dl_lec2.html#backpropagation-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\n\n\n\nForward phase\n\n\n\nUse the attribute values from the input portion of a training data point to fix the values in the input nodes.\nSelect a node for which the values in all incoming nodes have already been computed and apply the node-specific function to also compute its variable.\nRepeat the process until the values in all nodes (including the output nodes) have been computed.\nCompute loss value if the computed and observed values mismatch."
+  },
+  {
+    "objectID": "dl_lec2.html#backpropagation-5",
+    "href": "dl_lec2.html#backpropagation-5",
+    "title": "Deep learning: logistic regression",
+    "section": "Backpropagation",
+    "text": "Backpropagation\n\n\n\nBackward phase\n\n\n\nCompute the gradient of the loss with respect to the weights on the edges.\nDerivatives of the loss with respect to weights near the output (where the loss function is computed) are easier to compute and are computed first.\nThe derivatives become increasingly complex as we move towards edge weights away from the output (in the backwards direction) and the chain rule is used repeatedly to compute them.\nUpdate the weights in the negative direction of the gradient.\n\n\n\n\nSingle cycle through all training points is an epoch."
+  },
+  {
+    "objectID": "dl_lec2.html#inputs",
+    "href": "dl_lec2.html#inputs",
+    "title": "Deep learning: logistic regression",
+    "section": "Inputs",
+    "text": "Inputs\nLogistic regression is an algorithm for binary classification.\n\\(x \\in \\mathbb{R}^{n_x}, y \\in \\{0,1\\}\\).\n\\(\\left\\{(x^{(1)},y^{(1)}), ...(x^{(m)}, y^{(m)})\\right\\}\\)- \\(m\\) training examples.\n\n\\(X\\) matrix - \\(m\\) columns and \\(n_x\\) rows.\n\\[\\begin{align*}\n&X = \\begin{bmatrix}\n  \\vdots & \\vdots & \\dots & \\vdots \\\\\n  x^{(1)} & x^{(2)} & \\dots & x^{(m)} \\\\\n  \\vdots & \\vdots & \\dots & \\vdots\n\\end{bmatrix}\n\\end{align*}\\]\n\\[\nY = \\left[y^{(1)}, y^{(2)}, \\dots, y^{(m})\\right]\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression",
+    "href": "dl_lec2.html#logistic-regression",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression",
+    "text": "Logistic Regression\n\\(X \\in \\mathbb{R}^{n_x,m}\\).\nUsing Numpy syntax:\nX.shape = (n_x,m).\n\\(Y \\in \\mathbb{R}^{1,m}\\).\nUsing Numpy syntax:\nY.shape = (1,m)."
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-1",
+    "href": "dl_lec2.html#logistic-regression-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression",
+    "text": "Logistic Regression\n\n\n\nGoal\n\n\nWe will strive to maximize \\(\\hat{y} = P(y=1 | x)\\), where \\(x \\in \\mathbb{R}^{n_x}\\).\nObviously, \\(0 \\leq \\hat{y} \\leq 1\\).\n\n\n\n\n\n\nImportant\n\n\nIf doing linear regresssion, we can try \\[\n\\hat{y}=w^T x + b.\n\\]\nBut for logistic regression, we do \\[\n\\hat{y}=\\sigma(w^T x + b)$, \\; \\text{where }\\; \\sigma=\\dfrac{1}{1+e^{-z}}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#parameters",
+    "href": "dl_lec2.html#parameters",
+    "title": "Deep learning: logistic regression",
+    "section": "Parameters",
+    "text": "Parameters\n\n\n\nInput\n\n\n\\[\nw \\in \\mathbb{R}^{n_x},\\\\\nb \\in \\mathbb{R}.\n\\]\n\n\n\n\n\n\nOutput\n\n\n\\[\n\\hat{y} = \\sigma\\left( w^T x + b\\right),\n\\]\n\\[\nz \\equiv  w^T x + b.\n\\]\n\n\n\n\\(w\\) - weights, \\(b\\) - bias term (intercept)"
+  },
+  {
+    "objectID": "dl_lec2.html#graphs",
+    "href": "dl_lec2.html#graphs",
+    "title": "Deep learning: logistic regression",
+    "section": "Graphs",
+    "text": "Graphs\n\n\\(\\sigma=\\dfrac{1}{1+e^{-z}}\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#loss-function-2",
+    "href": "dl_lec2.html#loss-function-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Loss function",
+    "text": "Loss function\nFor every \\(\\left\\{(x^{(1)},y^{(1)}), ...(x^{(m)}, y^{(m)})\\right\\}\\), we want to find \\(\\hat{y}^{(i)} \\approx y^{(i)}\\). \\[\\begin{align*}\n  &\\hat{y}^{(i)} = \\sigma\\left(w^T x^{(i)} + b\\right)\n\\end{align*}\\] We have to define a loss (error) function - this will estimate our model."
+  },
+  {
+    "objectID": "dl_lec2.html#loss-function-3",
+    "href": "dl_lec2.html#loss-function-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Loss function",
+    "text": "Loss function\n\n\n\nQuadratic\n\n\n\\[\nL(\\hat{y}, y) = \\dfrac{1}{2}\\left(\\hat{y}-y)\\right)^2.\n\\]\n\n\n\n\n\n\nLog\n\n\n\\[\nL(\\hat{y}, y) = -\\left((y\\log(\\hat{y}) + (1 - y)\\log(1 - \\hat{y}))\\right).\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#cost-function",
+    "href": "dl_lec2.html#cost-function",
+    "title": "Deep learning: logistic regression",
+    "section": "Cost function",
+    "text": "Cost function\n\n\n\nWhy does it work well?\n\n\nConsider \\(y=0\\) and \\(y=1\\).\n\\[\\begin{align*}\n  &y=1: P(y | x) = \\hat{y},\\\\\n  &y=0: P(y | x) = 1-\\hat{y}\n\\end{align*}\\]\nWe select \\(P(y|x) = \\hat{y}^y(1-\\hat{y})^{(1-y)}\\).\n\\[\n\\log P(y|x) = y\\log(\\hat{y}) + (1-y)\\log(1-\\hat{y}) = -L(\\hat{y}, y).\n\\]\n\\[\\begin{align*}\n  y=1:& L(\\hat{y},y) = -\\log(\\hat{y}),\\\\\n  y=0:& L(\\hat{y},y) = -\\log(1-\\hat{y})\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#cost-function-1",
+    "href": "dl_lec2.html#cost-function-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Cost function",
+    "text": "Cost function\nCost function show how well we’re doing across the whole training set: \\[\\begin{align*}\n&J(w, b) = \\dfrac{1}{m} \\sum\\limits_{i=1}^m L(\\hat{y}^{(i)}, y^{(i)}) = \\\\\n& = -\\dfrac{1}{m} \\sum\\limits_{i=1}^m \\left[y\\log(\\hat{y}) + (1 - y)\\log(1 - \\hat{y})\\right].\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#cost-function-2",
+    "href": "dl_lec2.html#cost-function-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Cost function",
+    "text": "Cost function\nOn \\(m\\) examples: \\[\\begin{align*}\n  &\\log P(m \\dots) = \\log \\prod_{i=1}^m P(y^{(i)} | x^{(i)}) = \\\\\n  & = \\sum\\limits_{i=1}^m \\log P(y^{(i)} | x^{(i)}) = -\\sum\\limits_{i=1}^m L(\\hat{y}^{(i)}, y^{(i)}).\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#gradient-descent",
+    "href": "dl_lec2.html#gradient-descent",
+    "title": "Deep learning: logistic regression",
+    "section": "Gradient descent",
+    "text": "Gradient descent\n\n\n\nProblem\n\n\nMinimization problem: find \\(w,b\\) that minimize \\(J(w,b)\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#gradient-descent-1",
+    "href": "dl_lec2.html#gradient-descent-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Gradient descent",
+    "text": "Gradient descent\n\nWe use \\(J(w,b)\\) because it is convex.\nWe pick an initial point - anything might do, e.g. 0.\nThen we take steps in the direction of steepest descent.\n\n\\[\nw := w - \\alpha \\frac{d J(w,b)}{dw}, \\\\\nb := b - \\alpha \\frac{d J(w,b)}{db}\n\\]\n\\(\\alpha\\) - learning rate"
+  },
+  {
+    "objectID": "dl_lec2.html#gradient-descent-2",
+    "href": "dl_lec2.html#gradient-descent-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Gradient descent",
+    "text": "Gradient descent\n\nforward pass: compute output\nbackward pass: compute derivatives"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\n\\[\\begin{align*}\n&z = w^T x + b ,\\\\\n&a \\equiv \\hat{y}  = \\sigma(z),\\\\\n&L(a,y) = -\\left[y\\log(a) + (1 - y)\\log(1 - a)\\right].\n\\end{align*}\\]\nSo, for \\(n_x=2\\) we have a computation graph:\n\\((x_1,x_2,w_1,w_2,b)\\) \\(\\rightarrow\\) \\(z =w_1 x_1+w_2 x_2 + b\\) \\(\\rightarrow\\) \\(\\hat{y}=a=\\sigma(z)\\) \\(\\rightarrow\\) \\(L(a,y)\\)."
+  },
+  {
+    "objectID": "dl_lec2.html#computation-graph-1",
+    "href": "dl_lec2.html#computation-graph-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Computation graph",
+    "text": "Computation graph\nLet’s compute the derivative for \\(L\\) by a: \\[\\begin{align*}\n&\\frac{dL}{da} = -\\dfrac{y}{a} + \\dfrac{1-y}{1-a},\\\\\n&\\frac{da}{dz} = a(1-a).\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#computation-graph-2",
+    "href": "dl_lec2.html#computation-graph-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Computation graph",
+    "text": "Computation graph\nAfter computing, we’ll have \\[\\begin{align*}\n&dz \\equiv \\dfrac{dL}{dz} = \\dfrac{dL}{da}\\dfrac{da}{dz} = a-y,\\\\\n&dw_1 \\equiv \\frac{dL}{dw_1} = x_1 dz,\\\\\n&dw_2 \\equiv \\frac{dL}{dw_2} = x_2 dz, \\\\\n&db \\equiv \\frac{dL}{db} = dz.\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent-1",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nGD steps are computed via \\[\\begin{align*}\n&w_1 := w_1 - \\alpha \\frac{dL}{dw_1},\\\\\n&w_2 := w_2 - \\alpha \\frac{dL}{dw_2},\\\\\n&b := b - \\alpha \\frac{dL}{db}.\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent-2",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nConsider now \\(m\\) examples in the training set.\nLet’s recall the definition of the cost function: \\[\\begin{align*}\n&J(w,b) = \\dfrac{1}{m}\\sum\\limits_{i=1}^{m} L(a^{(i)}, y^{(i)}, \\\\\n&a^{(i)} = \\hat{y}^{(i)}=\\sigma(w^T x^{(i)} + b).\n\\end{align*}\\] And also \\[\n\\frac{dJ}{dw_1} = \\frac{1}{m}\\sum\\limits_{i=1}^{m}\\frac{dL(a^{(i)}, y^{(i)})}{dw_1}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent-3",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nLet’s implement the algorithm. First, initialize \\[\nJ=0,\\\\\ndw_1=0,\\\\\ndw_2=0,\\\\\ndb=0\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent-4",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nfor i=1 to m \\[\\begin{align*}\n  &z^{(i)} = w^T x^{(i)} + b, \\\\\n  &a^{(i)} = \\sigma(z^{(i)}), \\\\\n  &J += -\\left[y^{(i)} \\log a^{(i)} + (1-y^{(i)}) \\log(1-a^{(i)})\\right], \\\\\n  &dz^{(i)} = a^{(i)} - y^{(i)}, \\\\\n  &dw_1 += x_1^{(i)} dz^{(i)},\\\\\n  &dw_2 += x_2^{(i)} dz^{(i)},\\\\\n  &db += dz^{(i)}.\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#logistic-regression-gradient-descent-5",
+    "href": "dl_lec2.html#logistic-regression-gradient-descent-5",
+    "title": "Deep learning: logistic regression",
+    "section": "Logistic Regression Gradient Descent",
+    "text": "Logistic Regression Gradient Descent\nThen compute averages:\n\\[\nJ = \\dfrac{J}{m}, \\\\\ndw_1 = \\dfrac{dw_1}{m}, \\; dw_2 = \\dfrac{dw_2}{m}, \\\\\ndb = \\dfrac{db}{m}.\n\\]\n\n\nNote that \\(dw_i\\) don’t have a superscript - we use them as accumulators. (In this example feature count \\(n_x=2\\))"
+  },
+  {
+    "objectID": "dl_lec2.html#gd-step",
+    "href": "dl_lec2.html#gd-step",
+    "title": "Deep learning: logistic regression",
+    "section": "GD step",
+    "text": "GD step\n\\[\nw_1 := w_1 - \\alpha dw_1,\\\\\nw_2 := w_2 - \\alpha dw_2,\\\\\nb := b - \\alpha db.\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorization",
+    "href": "dl_lec2.html#vectorization",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorization",
+    "text": "Vectorization\nWe only have 2 features \\(w_1\\) and \\(w_2\\), so we don’t have an extra for loop. Turns out that for loops have a detrimental impact on performance.\nVectorization techniques exist for this purpose - getting rid of for loops.\n\n\n\nExample\n\n\nWe have to compute \\(z=w^T x + b\\), where \\(w,x \\in \\mathbb{R}^{n_x}\\), and for this we can naturally use a for loop.\nA vectorized Python command is\nz = np.dot(w,x)+b"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorization-1",
+    "href": "dl_lec2.html#vectorization-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorization",
+    "text": "Vectorization\nProgramming guideline - avoid explicit for loops. \\[\\begin{align*}\n  &u = Av,\\\\\n  &u_i = \\sum_j\\limits A_{ij} v_j\n\\end{align*}\\] To be replaced by\nu = np.dot(A, v)\n\n\nNumpy impl: https://numpy.org/doc/1.21/reference/simd/simd-optimizations.html"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorization-2",
+    "href": "dl_lec2.html#vectorization-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorization",
+    "text": "Vectorization\nAnother example. Let’s say we have a vector \\[\\begin{align*}\n    &v = \\begin{bmatrix}\n      v_1 \\\\\n      \\vdots \\\\\n      v_n\n    \\end{bmatrix},\n    u = \\begin{bmatrix}\n      e^{v_1},\\\\\n      \\vdots \\\\\n      e^{v_n}\n    \\end{bmatrix}\n\\end{align*}\\] A code listing is\nimport numpy as np\nu = np.exp(v)\nSo we can modify the above code to get rid of for loops (except for the one for \\(m\\))."
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression",
+    "href": "dl_lec2.html#vectorizing-logistic-regression",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nLet’s examine the forward propagation step of LR. \\[\\begin{align*}\n  &z^{(1)} = w^T x^{(1)} + b,\\\\\n  &a^{(1)} = \\sigma(z^{(1)}),\n\\end{align*}\\]\n\\[\\begin{align*}\n  &z^{(2)} = w^T x^{(2)} + b,\\\\\n  &a^{(2)} = \\sigma(z^{(2)}).\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression-1",
+    "href": "dl_lec2.html#vectorizing-logistic-regression-1",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nLet’s recall what have we defined as our learning matrix: \\[\nX = \\begin{bmatrix}\n  \\vdots & \\vdots & \\dots & \\vdots \\\\\n  x^{(1)} & x^{(2)} & \\dots & x^{(m)} \\\\\n  \\vdots & \\vdots & \\dots & \\vdots\n\\end{bmatrix}\n\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression-2",
+    "href": "dl_lec2.html#vectorizing-logistic-regression-2",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nNext \\[\nZ = [z^{(1)}, \\dots, z^{(m)}] = w^T X + [b, b, \\dots, b] =\\\\\n= [w^T x^{(1)}+b, \\dots, w^T x^{(m)}+b].\n\\]\n\\[\nA = \\left[a^{(1)}, \\dots, a^{(m)}\\right] = \\sigma\\left(Z\\right)\n\\]\n  z = np.dot(w.T, x) + b\n\n\n\\(b\\) is a raw number, Python will automatically take care of expanding it into a vector - this is called broadcasting."
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression-3",
+    "href": "dl_lec2.html#vectorizing-logistic-regression-3",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nEarlier on, we computed \\[\\begin{align*}\n&dz^{(1)} = a^{(1)} - y^{(1)}, dz^{(2)} = a^{(2)} - y^{(2)}, \\dots\n\\end{align*}\\]\nWe now define \\[\\begin{align*}\n&Y = [y^{(1)}, \\dots, y^{(m)}],\\\\\n&dZ = [dz^{(1)}, \\dots, dz^{(m)}] =\\\\\n&= A-Y = [a^{(1)}-y^{(1)}, \\dots, a^{(m)}-y^{(m)}]\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression-4",
+    "href": "dl_lec2.html#vectorizing-logistic-regression-4",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nFor \\(db\\) we have \\[\\begin{align*}\n&db = \\frac{1}{m}np.sum(dZ),\\\\\n&dw = \\frac{1}{m}X dZ^T = \\\\\n& \\frac{1}{m}\\begin{bmatrix}\n  \\vdots & & \\vdots \\\\\n  x^{(1)} & \\dots & x^{(m)} \\\\\n  \\vdots & & \\vdots \\\\\n\\end{bmatrix}\n\\begin{bmatrix}\n  dz^{(1)} \\\\\n  \\vdots\\\\\n  dz^{(m)}\n\\end{bmatrix} = \\\\\n& = \\frac{1}{m}\\left[x^{(1)}dz^{(1)} + \\dots +x^{(m)}dz^{(m)}\\right].\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "dl_lec2.html#vectorizing-logistic-regression-5",
+    "href": "dl_lec2.html#vectorizing-logistic-regression-5",
+    "title": "Deep learning: logistic regression",
+    "section": "Vectorizing logistic regression",
+    "text": "Vectorizing logistic regression\nNow we can go back to the backward propagation algorithm again.\nMultiple iterations of GD will still require a for loop.\nfor it in range(m):\n  Z = np.dot(w.T, X) + B\n  A = sigma(Z)\n  dZ = A-Y\n  dw = 1/m X * dZ.T\n  db = 1/m np.sum(dZ)\n  w := w - alpha * dw\n  b := b - alpha * db"
+  },
+  {
+    "objectID": "nb/Untitled.html",
+    "href": "nb/Untitled.html",
+    "title": "Deep Learning/NLP course",
+    "section": "",
+    "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178\n\n\n\n from nltk.book import *"
+  },
+  {
+    "objectID": "nlp_lab1.html",
+    "href": "nlp_lab1.html",
+    "title": "NLP: Lab 1",
+    "section": "",
+    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
+  },
+  {
+    "objectID": "nlp_lab1.html#through-requirements.txt",
+    "href": "nlp_lab1.html#through-requirements.txt",
+    "title": "NLP: Lab 1",
+    "section": "Through requirements.txt",
+    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-python-nltk-package",
+    "href": "nlp_lab1.html#install-python-nltk-package",
+    "title": "NLP: Lab 1",
+    "section": "1. Install Python NLTK package",
+    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
+    "href": "nlp_lab1.html#install-scattertext-and-spacy",
+    "title": "NLP: Lab 1",
+    "section": "2. Install Scattertext and Spacy",
+    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-concordance",
+    "href": "nlp_lab1.html#example-concordance",
+    "title": "NLP: Lab 1",
+    "section": "Example: concordance",
+    "text": "Example: concordance\n\ntext3.concordance(\"earth\")\n\nDisplaying 25 of 112 matches:\nnning God created the heaven and the earth . And the earth was without form , a\nd the heaven and the earth . And the earth was without form , and void ; and da\nwas so . And God called the dry land Earth ; and the gathering together of the \nit was good . And God said , Let the earth bring forth grass , the herb yieldin\nupon the ear and it was so . And the earth brought forth grass , and herb yield\nof the heaven to give light upon the earth , And to rule over the day and over \nfe , and fowl that may fly above the earth in the open firmament of heaven . An\n seas , and let fowl multiply in the earth . And the evening and the morning we\ne fifth day . And God said , Let the earth bring forth the living creature afte\nnd creeping thing , and beast of the earth after his ki and it was so . And God\ns so . And God made the beast of the earth after his kind , and cattle after th\nd every thing that creepeth upon the earth after his ki and God saw that it was\nd over the cattle , and over all the earth , and over every creeping thing that\nreeping thing that creepeth upon the earth . So God created man in his own imag\nl , and multiply , and replenish the earth , and subdue and have dominion over \nry living thing that moveth upon the earth . And God said , Behold , I have giv\n , which is upon the face of all the earth , and every tree , in the which is t\nfor meat . And to every beast of the earth , and to every fowl of the air , and\no every thing that creepeth upon the earth , wherein there is life , I have giv\nsixth day . Thus the heavens and the earth were finished , and all the host of \nenerations of the heavens and of the earth when they were created , in the day \nn the day that the LORD God made the earth and the heavens , And every plant of\nnt of the field before it was in the earth , and every herb of the field before\nd had not caused it to rain upon the earth , and there was not a man to till th\n . But there went up a mist from the earth , and watered the whole face of the"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-similar",
+    "href": "nlp_lab1.html#example-similar",
+    "title": "NLP: Lab 1",
+    "section": "Example: similar",
+    "text": "Example: similar\n\ntext3.similar(\"man\")\n\nland lord men place woman earth waters well city lad day cattle field\nwife way flood servant people famine pillar"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-dispersion_plot",
+    "href": "nlp_lab1.html#example-dispersion_plot",
+    "title": "NLP: Lab 1",
+    "section": "Example: dispersion_plot",
+    "text": "Example: dispersion_plot\n\ntext3.dispersion_plot([\"man\", \"earth\"])"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-freqdist",
+    "href": "nlp_lab1.html#example-freqdist",
+    "title": "NLP: Lab 1",
+    "section": "Example: FreqDist",
+    "text": "Example: FreqDist\n\nfdist = FreqDist(text3)\nprint(fdist)\n\n&lt;FreqDist with 2789 samples and 44764 outcomes&gt;\n\n\n\nfdist.most_common(50)\n\n[(',', 3681),\n ('and', 2428),\n ('the', 2411),\n ('of', 1358),\n ('.', 1315),\n ('And', 1250),\n ('his', 651),\n ('he', 648),\n ('to', 611),\n (';', 605),\n ('unto', 590),\n ('in', 588),\n ('that', 509),\n ('I', 484),\n ('said', 476),\n ('him', 387),\n ('a', 342),\n ('my', 325),\n ('was', 317),\n ('for', 297),\n ('it', 290),\n ('with', 289),\n ('me', 282),\n ('thou', 272),\n (\"'\", 268),\n ('is', 267),\n ('thy', 267),\n ('s', 263),\n ('thee', 257),\n ('be', 254),\n ('shall', 253),\n ('they', 249),\n ('all', 245),\n (':', 238),\n ('God', 231),\n ('them', 230),\n ('not', 224),\n ('which', 198),\n ('father', 198),\n ('will', 195),\n ('land', 184),\n ('Jacob', 179),\n ('came', 177),\n ('her', 173),\n ('LORD', 166),\n ('were', 163),\n ('she', 161),\n ('from', 157),\n ('Joseph', 157),\n ('their', 153)]\n\n\n\nfdist.plot(50, cumulative=True)"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Deep Learning/NLP",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
+  },
+  {
+    "objectID": "dl.html",
+    "href": "dl.html",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#lectures",
+    "href": "dl.html#lectures",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#labs",
+    "href": "dl.html#labs",
+    "title": "Deep Learning",
+    "section": "Labs",
+    "text": "Labs"
+  },
+  {
+    "objectID": "nlp.html",
+    "href": "nlp.html",
+    "title": "Natural Language Processing",
+    "section": "",
+    "text": "Slides"
+  },
+  {
+    "objectID": "nlp.html#lectures",
+    "href": "nlp.html#lectures",
+    "title": "Natural Language Processing",
+    "section": "",
+    "text": "Slides"
+  },
+  {
+    "objectID": "nlp.html#labs",
+    "href": "nlp.html#labs",
+    "title": "Natural Language Processing",
+    "section": "Labs",
+    "text": "Labs\nLab 1"
+  },
+  {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
+  },
+  {
+    "objectID": "nlp_lec1.html#history",
+    "href": "nlp_lec1.html#history",
+    "title": "Natural Language Processing: Intro",
+    "section": "History",
+    "text": "History"
+  },
+  {
+    "objectID": "nlp_lec1.html#history-1",
+    "href": "nlp_lec1.html#history-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "History",
+    "text": "History"
+  },
+  {
+    "objectID": "nlp_lec1.html#stats",
+    "href": "nlp_lec1.html#stats",
+    "title": "Natural Language Processing: Intro",
+    "section": "Stats",
+    "text": "Stats\n\n\n\nWhen?\n\n\nApproximately between 200,000 years ago and 60,000 years ago (between the appearance of the first anatomically modern humans in southern Africa and the last exodus from Africa respectively)\n\n\n\n\n\n\nHow many?\n\n\nHuman languages count: 7097 (as of 2018)."
+  },
+  {
+    "objectID": "nlp_lec1.html#intelligent-behaviour",
+    "href": "nlp_lec1.html#intelligent-behaviour",
+    "title": "Natural Language Processing: Intro",
+    "section": "Intelligent behaviour",
+    "text": "Intelligent behaviour\n\n\n\nSpeaker (writer)\n\n\n\nhas the goal of communicating some knowledge\nthen plans some language that represents the knowledge\nand acts to achieve the goal\n\n\n\n\n\n\n\nListener (reader)\n\n\n\nperceives the language\nand infers the intended meaning."
+  },
+  {
+    "objectID": "nlp_lec1.html#reasons-for-nlp",
+    "href": "nlp_lec1.html#reasons-for-nlp",
+    "title": "Natural Language Processing: Intro",
+    "section": "Reasons for NLP",
+    "text": "Reasons for NLP\n\nTo communicate with humans.\nTo learn.\nTo advance the scientific understanding of languages and language use"
+  },
+  {
+    "objectID": "nlp_lec1.html#goal-of-natural-language",
+    "href": "nlp_lec1.html#goal-of-natural-language",
+    "title": "Natural Language Processing: Intro",
+    "section": "Goal of natural language",
+    "text": "Goal of natural language\nA medium for communication\nrather than pure representation."
+  },
+  {
+    "objectID": "nlp_lec1.html#sapir-whorf-hypothesis",
+    "href": "nlp_lec1.html#sapir-whorf-hypothesis",
+    "title": "Natural Language Processing: Intro",
+    "section": "Sapir-Whorf hypothesis",
+    "text": "Sapir-Whorf hypothesis\nLanguage impacts cognition. Also known as linguistic relativity."
+  },
+  {
+    "objectID": "nlp_lec1.html#sapir-whorf-hypothesis-1",
+    "href": "nlp_lec1.html#sapir-whorf-hypothesis-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Sapir-Whorf hypothesis",
+    "text": "Sapir-Whorf hypothesis"
+  },
+  {
+    "objectID": "nlp_lec1.html#deep-structure",
+    "href": "nlp_lec1.html#deep-structure",
+    "title": "Natural Language Processing: Intro",
+    "section": "Deep structure",
+    "text": "Deep structure\n\n\n\nWanner experiment (1974)\n\n\nSubjects remember exact words with 50% accuracy but remember the content with 90% accuracy.\nHence - there must an internal nonverbal representation.\n\n\n\n\n\n\nPolanyi’s paradox (1966)\n\n\nThe theory that human knowledge of how the world functions and of our own capability are, to a large extent, beyond our explicit understanding. (aka tacit knowledge)."
+  },
+  {
+    "objectID": "nlp_lec1.html#formal-language",
+    "href": "nlp_lec1.html#formal-language",
+    "title": "Natural Language Processing: Intro",
+    "section": "Formal language",
+    "text": "Formal language\n\n\n\nDefinition\n\n\nA formal language \\(L\\) over an alphabet \\(\\Sigma\\) is a subset of \\(\\Sigma^*\\), that is, a set of words over that alphabet."
+  },
+  {
+    "objectID": "nlp_lec1.html#language-model",
+    "href": "nlp_lec1.html#language-model",
+    "title": "Natural Language Processing: Intro",
+    "section": "Language model",
+    "text": "Language model\n\n\n\nDefinition\n\n\nWe define a language model as a probability distribution describing the likelihood of any string."
+  },
+  {
+    "objectID": "nlp_lec1.html#eliza",
+    "href": "nlp_lec1.html#eliza",
+    "title": "Natural Language Processing: Intro",
+    "section": "ELIZA",
+    "text": "ELIZA\n\nELIZA - an example of primitive pattern matching."
+  },
+  {
+    "objectID": "nlp_lec1.html#regex",
+    "href": "nlp_lec1.html#regex",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\nRegular expressions - a tool for describing text patterns.\n\n\n\nDefinition\n\n\nAn algebraic notation for characterizing a set of strings\n\n\n\n\n\nKleene, S. C. 1951. Representation of events in nerve nets and finite automata. Technical Report RM-704, RAND Corporation. RAND Research Memorandum."
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-1",
+    "href": "nlp_lec1.html#regex-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nDefinition\n\n\nA Kleene algebra is a set \\(A\\) together with two binary operations \\(+: A \\times A \\rightarrow A\\) and \\(\\cdot : A \\times A \\rightarrow A\\) and one function \\(\\ast : A \\rightarrow A\\), written as \\(a + b\\), \\(ab\\) and \\(a\\ast\\) respectively, so that the following axioms are satisfied.\n\nAssociativity of \\(+\\) and \\(\\cdot\\): \\(a + (b + c) = (a + b) + c\\) and \\(a(bc) = (ab)c\\) \\(\\forall a, b, c \\in A\\).\nCommutativity of \\(+\\): \\(a + b = b + a\\) \\(\\forall a, b \\in A\\)\nDistributivity: \\(a(b + c) = (ab) + (ac)\\) and \\((b + c)a = (ba) + (ca)\\) \\(\\forall a, b, c \\in A\\)\nIdentity elements for \\(+\\) and \\(\\cdot\\): \\(\\exists 0 \\in A:\\forall a \\in A: a + 0 = 0 + a = a\\); \\(\\exists 1 \\in A: \\forall a \\in A: a1 = 1a = a\\).\nAnnihilation by 0: \\(a0 = 0a = 0 \\forall a \\in A\\). The above axioms define a semiring.\n\\(+\\) is idempotent: \\(a + a = a \\quad \\forall a \\in A\\)."
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-2",
+    "href": "nlp_lec1.html#regex-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nOrdering\n\n\nIt is now possible to define a partial order \\(\\leq\\) on \\(A\\) by setting \\(a \\leq b\\) if and only if \\(a + b = b\\) (or equivalently: \\(a \\leq b\\) if and only if \\(\\exists x \\in A:  a + x = b\\).\nWith any definition, \\(a \\leq b \\leq a \\Rightarrow a = b\\). With this order we can formulate the last four axioms about the operation \\(\\ast\\):\n\n\\(1 + a(a\\ast) leq a\\ast \\forall a in A\\).\n\\(1 + (a\\ast)a \\leq a\\ast \\forall a in A\\).\nif a and x are in A such that \\(ax \\leq x\\), then \\(a\\ast x \\leq x\\)\nif a and x are in A such that \\(xa \\leq x\\), then \\(x(a\\ast) \\leq x\\).\n\nIntuitively, one should think of a + b as the “union” or the “least upper bound” of a and b and of ab as some multiplication which is monotonic, in the sense that \\(a \\leq b \\Rightarrow ax \\leq bx\\).\nThe idea behind the star operator is \\(a\\ast = 1 + a + aa + aaa + ...\\). From the standpoint of programming language theory, one may also interpret + as “choice”, \\(\\cdot\\) as “sequencing” and \\(\\ast\\) as “iteration”."
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-3",
+    "href": "nlp_lec1.html#regex-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nConcatenation\n\n\nA sequence of characters\n/someword/\n\n\n\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/alt/\nThe alternative option would be…\n\n\n/simple/\nA simple regex"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-4",
+    "href": "nlp_lec1.html#regex-4",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nDisjunction\n\n\nA single character to choose among multiple options\n/[asd]/\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/[0123456789]/\nSome number examples are 0, 3, 5\n\n\n/[rgx]/\nA simple regex"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-5",
+    "href": "nlp_lec1.html#regex-5",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nDisjunction with range\n\n\nA single character to choose among multiple options\n/[a-z]/\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/[a-z]/\nPhone number: 067-1234567"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-6",
+    "href": "nlp_lec1.html#regex-6",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nCleene *\n\n\nZero or more occurrences of the previous character or regex.\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/[a-z]*/\nPhone number: 067-1234567"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-7",
+    "href": "nlp_lec1.html#regex-7",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nCleene +\n\n\nOne or more occurrences of the previous character or regex.\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/[a-z]+/\nPhone number: 067-1234567"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-8",
+    "href": "nlp_lec1.html#regex-8",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nWildcard dot\n\n\nAny character except newline\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/.+/\nPhone number: 067-1234567\n\n\n/beg.n/\nbegin, began, begun"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-9",
+    "href": "nlp_lec1.html#regex-9",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nAnchors\n\n\nMatching beginning and end of lines\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/^/\nStart of line\n\n\n/$/\nEnd of line\n\n\n/\\b/\nWord boundary\n\n\n/\\B/\nNon-word boundary"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-10",
+    "href": "nlp_lec1.html#regex-10",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nDisjunction operator\n\n\nEither/or for strings\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/cat|dog/\nRaining cats and dogs"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-11",
+    "href": "nlp_lec1.html#regex-11",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nGrouping\n\n\nUsed for precedence\n\nExamples\n\n\nRegex\nExample\n\n\n\n\n/(cat|dog)*/\nRaining cats and dogs"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-12",
+    "href": "nlp_lec1.html#regex-12",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nSubstitutions\n\n\nUsed for precedence\n\nExamples\n\n\n\n\n\n\n\nRegex\nBefore\nAfter\n\n\n\n\ns/(cat|dog)*/frog/\nRaining cats and dogs\nRaining frogs and frogs\n\n\ns/behaviour/behavior/\nCognitive-behavioural therapy\nCognitive-behavioral therapy"
+  },
+  {
+    "objectID": "nlp_lec1.html#regex-13",
+    "href": "nlp_lec1.html#regex-13",
+    "title": "Natural Language Processing: Intro",
+    "section": "Regex",
+    "text": "Regex\n\n\n\nELIZA sample\n\n\nUser1: Men are all alike.\nELIZA1: User2: They’re always bugging us about something or other.\nELIZA2: CAN YOU THINK OF A SPECIFIC EXAMPLE\nUser3: Well, my boyfriend made me come here.\nELIZA3: YOUR BOYFRIEND MADE YOU COME HERE\nUser4: He says I’m depressed much of the time.\nELIZA4: I AM SORRY TO HEAR YOU ARE DEPRESSED\n\n\n\n\n\n\nELIZA sample\n\n\ns/.* YOU ARE (depressed|sad) .*/I AM SORRY TO HEAR YOU ARE \\1/\ns/.* YOU ARE (depressed|sad) .*/WHY DO YOU THINK YOU ARE \\1/\ns/.* all .*/IN WHAT WAY/\ns/.* always .*/CAN YOU THINK OF A SPECIFIC EXAMPLE/"
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing",
+    "href": "nlp_lec1.html#parsing",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nCorpus\n\n\nA computer-readable collection of text or speech.\n\n\n\n\n\n\nPunctuation\n\n\nMarks indicating how a piece of written text should be read and understood.\n\n\n\n\n\n\nUtterance\n\n\nSpoken correlate of a sentence."
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-1",
+    "href": "nlp_lec1.html#parsing-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nDisfluency\n\n\nBreak or disruption that occurs in the flow of speech.\nTwo types:\n\nfragments\nfillers"
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-2",
+    "href": "nlp_lec1.html#parsing-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nWord types\n\n\nAre the number of distinct words in a corpus; if the set of words in the vocabulary is \\(V\\) , the number of types is the vocabulary size \\(|V|\\).\n\n\n\n\n\n\nWord instances\n\n\nAre the total number \\(N\\) of running words.\n(sometimes also called word tokens).\n\n\n\n\n\n\nExample\n\n\n\nTo be, or not to be, that is the question."
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-3",
+    "href": "nlp_lec1.html#parsing-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nCorpus\nTypes = \\(|V|\\)\nInstances = \\(N\\)\n\n\n\n\nShakespeare\n31 thousand\n884 thousand\n\n\nBrown corpus\n38 thousand\n1 million\n\n\nSwitchboard telephone conversations\n20 thousand\n2.4 million\n\n\nCOCA\n2 million\n440 million\n\n\nGoogle n-grams\n13 million\n1 trillion"
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-4",
+    "href": "nlp_lec1.html#parsing-4",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nHerdan’s Law (Herdan, 1960) or Heaps’ Law (Heaps, 1978)\n\n\n\\[\n|V|= kN^{\\beta}.\n\\] Here \\(k\\) and \\(\\beta\\) are positive constants, and \\(0 &lt;\\beta &lt;1\\).\n\n\n\n\n\nFor large corpora \\(0.67 &lt; \\beta &lt; 0.75\\)."
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-5",
+    "href": "nlp_lec1.html#parsing-5",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nZipf’s law\n\n\nIf \\(t_1\\) is the most common term in the collection, \\(t_2\\) is the next most common, and so on, then the collection frequency \\(cf_i\\) of the \\(i\\)-th most common term is proportional to \\(\\frac{1}{i}\\): \\[\ncf_i \\propto \\frac{1}{i},\n\\] or \\[\ncf_i = ci^k.\n\\]"
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-6",
+    "href": "nlp_lec1.html#parsing-6",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nWordforms\n\n\nExample: cat vs cats. We say these two words are different wordforms but have the same lemma.\n\n\n\n\n\n\nLemma\n\n\nA lemma is a set of lexical forms having the same stem, and usually the same major part-of-speech.\n\n\n\n\n\n\nExample\n\n\nThe wordform is the full inflected or derived form of the word. The two wordforms cat and cats thus have the same lemma, which we can represent as cat."
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-7",
+    "href": "nlp_lec1.html#parsing-7",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\n\n\n\nMorphemes\n\n\nThe smallest meaning-bearing unit of a language.\n\n\n\n\n\n\nExamples\n\n\nIndistinguisble -&gt; [in, distinguish, able]"
+  },
+  {
+    "objectID": "nlp_lec1.html#affixes",
+    "href": "nlp_lec1.html#affixes",
+    "title": "Natural Language Processing: Intro",
+    "section": "Affixes",
+    "text": "Affixes\n\n\n\nAffix taxonomy\n\n\nAffixes are classified into two types:\n\nAccording to their position in the word\nAccording to their function in a phrase or sentence.\n\n\n\n\n\n\n\nBy position\n\n\n\nPrefixes\nInfixes\nSuffixes.\nCircumfixes (Georgian, Malay)"
+  },
+  {
+    "objectID": "nlp_lec1.html#affixes-1",
+    "href": "nlp_lec1.html#affixes-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Affixes",
+    "text": "Affixes\n\n\n\nBy function\n\n\n\nDerivational affixes are for creating new words usually by changing the part of speech or the meaning or both to the words when they are added to.\n\nThey can be prefixes or suffixes e.g. unkind , kingship etc.\n\nInflectional affixes mark the grammatical categories e.g. –s in girls"
+  },
+  {
+    "objectID": "nlp_lec1.html#language-morphology",
+    "href": "nlp_lec1.html#language-morphology",
+    "title": "Natural Language Processing: Intro",
+    "section": "Language morphology",
+    "text": "Language morphology\n\nanalytical (English)\ninflected (Ukrainian)\nagglutinative (partially German)"
+  },
+  {
+    "objectID": "nlp_lec1.html#corpora",
+    "href": "nlp_lec1.html#corpora",
+    "title": "Natural Language Processing: Intro",
+    "section": "Corpora",
+    "text": "Corpora\nVarieties depending on:\n\nlanguages\nlanguage varieties\ngenres\ntime\nspeaker demographics"
+  },
+  {
+    "objectID": "nlp_lec1.html#parsing-8",
+    "href": "nlp_lec1.html#parsing-8",
+    "title": "Natural Language Processing: Intro",
+    "section": "Parsing",
+    "text": "Parsing\nText normalization consists of:\n\nTokenizing (segmenting) words\nNormalizing word formats\nSegmenting sentences"
+  },
+  {
+    "objectID": "nlp_lec1.html#tokenization",
+    "href": "nlp_lec1.html#tokenization",
+    "title": "Natural Language Processing: Intro",
+    "section": "Tokenization",
+    "text": "Tokenization\nTwo types:\n\ntop-down\nbottom-up"
+  },
+  {
+    "objectID": "nlp_lec1.html#top-down-tokenization",
+    "href": "nlp_lec1.html#top-down-tokenization",
+    "title": "Natural Language Processing: Intro",
+    "section": "Top-down tokenization",
+    "text": "Top-down tokenization\n\nbreak off punctuation as a separate token\ninternal punctuation: Ph.D., AT&T\nprices ($45.55) and dates (18/02/2025)\nURLs (https://www.stanford.edu),\nTwitter hashtags (#nlproc)\nemail addresses (someone@cs.colorado.edu).\nnumber expressions introduce complications: e.g. 555,500.50.\nclitic contractions: I'm, l'homme."
+  },
+  {
+    "objectID": "nlp_lec1.html#top-down-tokenization-1",
+    "href": "nlp_lec1.html#top-down-tokenization-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Top-down tokenization",
+    "text": "Top-down tokenization\n\n\n\nPenn Treebank tokenization standard\n\n\nUsed for the parsed corpora (treebanks) released by the Lin- guistic Data Consortium (LDC).\n\nseparates out clitics (doesn’t becomes does plus n’t)\nkeeps hyphenated words together\nseparates out all punctuation"
+  },
+  {
+    "objectID": "nlp_lec1.html#top-down-tokenization-2",
+    "href": "nlp_lec1.html#top-down-tokenization-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Top-down tokenization",
+    "text": "Top-down tokenization\n\n\n\nnltk.regexp_tokenize\n\n\n&gt;&gt;&gt; text = ’That U.S.A. poster-print costs $12.40...’\n&gt;&gt;&gt; pattern = r’’’(?x) # set flag to allow verbose regexps\n... (?:[A-Z]\\.)+ # abbreviations, e.g. U.S.A.\n... | \\w+(?:-\\w+)* # words with optional internal hyphens\n... | \\$?\\d+(?:\\.\\d+)?%? # currency, percentages, e.g. $12.40, 82%\n... | \\.\\.\\. # ellipsis\n... | [][.,;\"’?():_‘-] # these are separate tokens; includes ], [\n... ’’’\n&gt;&gt;&gt; nltk.regexp_tokenize(text, pattern)\n[’That’, ’U.S.A.’, ’poster-print’, ’costs’, ’$12.40’, ’...’]"
+  },
+  {
+    "objectID": "nlp_lec1.html#top-down-tokenization-3",
+    "href": "nlp_lec1.html#top-down-tokenization-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Top-down tokenization",
+    "text": "Top-down tokenization\nWord tokenization is more complex in languages like written Chinese, Japanese, and Thai, which do not use spaces to mark potential word-boundaries.\n\n\n\nMorphemes In Chinese\n\n\nfor example, words are composed of characters (called hanzi in Chinese). Each character generally represents a single unit of meaning (a morpheme).\n\n\n\n\n\n\nWord segmentation\n\n\nFor Japanese and Thai the character is too small a unit, and so algorithms for word segmentation are required."
+  },
+  {
+    "objectID": "nlp_lec1.html#bottom-up-tokenization",
+    "href": "nlp_lec1.html#bottom-up-tokenization",
+    "title": "Natural Language Processing: Intro",
+    "section": "Bottom-up tokenization",
+    "text": "Bottom-up tokenization\n\n\n\nDefinition\n\n\nWe use the data to infer the tokens. We call these tokens subwords.\n\n\n\n\n\n\nParts\n\n\n\ntoken learner: produces a vocabulary of tokens\ntoken segmenter: takes a test sentence and segments it into tokens\n\n\n\n\n\n\n\nExamples\n\n\n\nbyte-pair encoding (Sennrich et al., 2016)\nunigram language modeling (Kudo, 2018)\nSentencePiece (Kudo and Richardson, 2018)"
+  },
+  {
+    "objectID": "nlp_lec1.html#bpe",
+    "href": "nlp_lec1.html#bpe",
+    "title": "Natural Language Processing: Intro",
+    "section": "BPE",
+    "text": "BPE\n\n\n\nToken Learner\n\n\n\nStart with a vocabulary that is just the set of all individual characters.\nExamine the training corpus, choose the two symbols that are most frequently adjacent\n2.1. For example, if (‘A’, ‘B’) frequently occur together, it will add a new merged symbol ‘AB’ to the vocabulary\n2.2. And replaces every adjacent ’A’ ’B’ in the corpus with the new ‘AB’.\nContinue counting and merging, creating new longer and longer character strings, until \\(k\\) merges have been done creating k novel tokens; \\(k\\) is thus a parameter of the algorithm.\n\n4.The resulting vocabulary consists of the original set of characters plus \\(k\\) new symbols."
+  },
+  {
+    "objectID": "nlp_lec1.html#bpe-1",
+    "href": "nlp_lec1.html#bpe-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "BPE",
+    "text": "BPE\n\n\n\nNote\n\n\nThe algorithm is usually run inside words (not merging across word boundaries), so the input corpus is first white-space-separated to give a set of strings, each corresponding to the characters of a word, plus a special end-of-word symbol , and its counts."
+  },
+  {
+    "objectID": "nlp_lec1.html#bpe-2",
+    "href": "nlp_lec1.html#bpe-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "BPE",
+    "text": "BPE\nfunction BYTE-PAIR ENCODING(strings C, number of merges k) returns vocab \\(V\\)\n\\(V \\leftarrow\\) unique characters in C # initial set of tokens is characters\nfor i = 1 to k do # merge tokens k times\n\\(\\quad\\) \\(t_L\\), \\(t_R\\) \\(\\leftarrow\\) #Most frequent pair of adjacent tokens in C\n\\(\\quad\\) \\(t_{NEW} \\leftarrow t_L + t_R\\) # make new token by concatenating\n\\(\\quad\\) \\(V \\leftarrow V + t_{NEW}\\) # update the vocabulary\n\\(\\quad\\) Replace each occurrence of \\(t_L\\), \\(t_R\\) in \\(C\\) with \\(t_{NEW}\\). # update the corpus\nreturn \\(V\\)"
+  },
+  {
+    "objectID": "nlp_lec1.html#bpe-3",
+    "href": "nlp_lec1.html#bpe-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "BPE",
+    "text": "BPE\nToken Segmenter:\n\nRuns on the merges we have learned from the training data on the test data.\nIt runs them greedily, in the order we learned them. (Thus the frequencies in the test data don’t play a role, just the frequencies in the training data)."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization",
+    "href": "nlp_lec1.html#word-normalization",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\nSimplest method: case folding.\n\n\n\nNote\n\n\nNot very useful for text classification: compare US (the country) and us (pronoun).\n\n\n\n\n\n\nLemmatization\n\n\nThe task of determining that two words have the same root, despite their surface differences.\nbe \\(\\rightarrow\\) is, are\nPerformed using morphological parsing."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-1",
+    "href": "nlp_lec1.html#word-normalization-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\n\n\n\nMorphological parsing\n\n\nSplitting each word into morphemes of two types:\n\nstems\naffixes\n\n\n\n\n\n\n\nNaive version: stemming\n\n\nThis means just dropping affixes."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-2",
+    "href": "nlp_lec1.html#word-normalization-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\n\n\n\n\nPorter stemmer\n\n\n\nclassify every character in a given token as either a consonant (“c”) or vowel (“v”)\ngroup subsequent consonants as “C” and subsequent vowels as “V.”\nrepresent every word token as a combination of consonant and vowel groups."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-3",
+    "href": "nlp_lec1.html#word-normalization-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization"
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-4",
+    "href": "nlp_lec1.html#word-normalization-4",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\nOther stemmers:\n\n\n\nLovins stemmer\n\n\nThe first published stemming algorithm, is essentially a heavily parametrized find-and-replace function.\n\ncompares each input token against a list of common English suffixes, each suffix being conditioned by one of twenty-nine rules\nif the stemmer finds a predefined suffix in a token and removing the suffix does not violate any conditions attached to that suffix (such as character length restrictions), the algorithm removes that suffix.\nthe stemmer then runs the resulting stemmed token through another set of rules that correct for common malformations, such as double letters (such as hopping becomes hopp becomes hop)."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-5",
+    "href": "nlp_lec1.html#word-normalization-5",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\n\n\n\nSnowball stemmer\n\n\nAn updated version of the Porter stemmer. It differs from Porter in two main ways:\n\nWhile Lovins and Porter only stem English words, Snowball can stem text data in other Roman script languages, such as Dutch, German, French, or Spanish. Also has capabilities for non-Roman script languages.\nSnowball has an option to ignore stop words."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-6",
+    "href": "nlp_lec1.html#word-normalization-6",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\n\n\n\nLancaster stemmer (also called Paice stemmer)\n\n\nThe most aggressive English stemming algorithm.\n\nit contains a list of over 100 rules that dictate which ending strings to replace.\nthe stemmer iterates each word token against each rule. If a token’s ending characters match the string defined in a given rule, the algorithm modifies the token per that rule’s operation, then runs the transformed token through every rule again.\nthe stemmer iterates each token through each rule until that token passes all the rules without being transformed."
+  },
+  {
+    "objectID": "nlp_lec1.html#word-normalization-7",
+    "href": "nlp_lec1.html#word-normalization-7",
+    "title": "Natural Language Processing: Intro",
+    "section": "Word Normalization",
+    "text": "Word Normalization\n\n\n\nStemming errors\n\n\n\nover-generalizing (lemmatizing policy to police)\nunder-generalizing (not lemmatizing European to Europe)"
+  },
+  {
+    "objectID": "nlp_lec1.html#sentence-tokenization",
+    "href": "nlp_lec1.html#sentence-tokenization",
+    "title": "Natural Language Processing: Intro",
+    "section": "Sentence Tokenization",
+    "text": "Sentence Tokenization\n\n\n\nChallenges\n\n\n\nmulti-purpose punctuation\nabbreviation dictionaries"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance",
+    "href": "nlp_lec1.html#edit-distance",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nDefinition\n\n\nMinimum edit distance between two strings is defined as the minimum number of editing operations:\n\ninsertion\ndeletion\nsubstitution\n\nneeded to transform one string into another."
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-1",
+    "href": "nlp_lec1.html#edit-distance-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nString alignment"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-2",
+    "href": "nlp_lec1.html#edit-distance-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nLevenshtein distance\n\n\nEach of the 3 operations has cost 1.\nAlternatively, we can forbid substitutions (this is equivalent to saying that substitutions have cost 2)."
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-3",
+    "href": "nlp_lec1.html#edit-distance-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\nWagner-Fischer minimum edit distance algorithm.\n\n\n\nNotation\n\n\n\n\\(X\\): source string with length \\(n\\)\n\\(Y\\): target string with length \\(m\\)\n\\(D[i,j]\\): edit distance between \\(X[1..i]\\) and \\(Y[1..j]\\).\n\\(D[n,m]\\): edit distance between \\(X\\) and \\(Y\\).\n\n\n\n\n\n\n\nCalculation\n\n\n\\[\nD[i,j] = \\min \\begin{cases}\nD[i-1,j] + \\text{del_cost}(source[i]),\\\\\nD[i,j-1] + \\text{ins_cost}(target[j]),\\\\\nD[i-1,j-1] + \\text{sub_cost}(source[i], target[j]).\n\\end{cases}\n\\]"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-4",
+    "href": "nlp_lec1.html#edit-distance-4",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nCalculation without substitution\n\n\n\\[\nD[i,j] = \\min \\begin{cases}\nD[i-1,j] + 1,\\\\\nD[i,j-1] + 1,\\\\\nD[i-1,j-1] + \\begin{cases}\n2; \\quad \\text{if} \\quad source[i] \\neq target[j]), \\\\\n0; \\quad \\text{if} \\quad source[i] = target[j])\n\\end{cases}\n\\end{cases}\n\\]"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-5",
+    "href": "nlp_lec1.html#edit-distance-5",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nWagner-Fischer algorithm\n\n\nfunction MIN-EDIT-DISTANCE(source, target) returns min-distance\n\\(n \\leftarrow LENGTH(source)\\)\n\\(m \\leftarrow LENGTH(target)\\)\nCreate a distance matrix \\(D[n+1,m+1]\\)\n# Initialization: the zeroth row and column is the distance from the empty string\nD[0,0] = 0\nfor each row i from 1 to n do\n\\(\\quad\\) \\(D[i,0] \\leftarrow D[i-1,0]\\) + del_cost(source[i])\nfor each column j from 1 to m do\n\\(\\quad\\) \\(D[0,j] \\leftarrow D[0, j-1] + ins-cost(target[j])\\)"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-6",
+    "href": "nlp_lec1.html#edit-distance-6",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nWagner-Fischer algorithm\n\n\n# Recurrence relation:\nfor each row i from 1 to n do\n\\(\\quad\\) for each column j from 1 to m do\n\\(\\quad\\) \\(\\quad\\) \\(D[i, j] \\leftarrow MIN( D[i−1, j]\\) + del_cost(source[i]),\n\\(\\quad\\)\\(\\quad\\) \\(\\quad\\) \\(D[i−1, j−1] + sub\\_cost(source[i], target[j])\\),\n\\(\\quad\\)\\(\\quad\\) \\(\\quad\\) \\(D[i, j−1] + ins\\_cost(target[j]))\\)\n# Termination\nreturn D[n,m]"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-7",
+    "href": "nlp_lec1.html#edit-distance-7",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance"
+  },
+  {
+    "objectID": "nlp_lec1.html#cost-alignment",
+    "href": "nlp_lec1.html#cost-alignment",
+    "title": "Natural Language Processing: Intro",
+    "section": "Cost alignment",
+    "text": "Cost alignment"
+  },
+  {
+    "objectID": "nlp_lec1.html#edit-distance-8",
+    "href": "nlp_lec1.html#edit-distance-8",
+    "title": "Natural Language Processing: Intro",
+    "section": "Edit distance",
+    "text": "Edit distance\n\n\n\nHamming distance\n\n\nA number of positions at which the corresponding symbols are different.\nTherefore, identical to Levenshtein with only substitution allowed.\nCan only work for strings of similar length.\n\n\n\ndef hamming_distance(string1: str, string2: str) -&gt; int:\n    \"\"\"Return the Hamming distance between two strings.\"\"\"\n    if len(string1) != len(string2):\n        raise ValueError(\"Strings must be of equal length.\")\n    dist_counter = 0\n    for n in range(len(string1)):\n        if string1[n] != string2[n]:\n            dist_counter += 1\n    return dist_counter"
+  },
+  {
     "objectID": "dl_lec1.html#definitions",
     "href": "dl_lec1.html#definitions",
     "title": "Deep learning: intro",
@@ -523,110 +1650,5 @@
     "title": "Deep learning: intro",
     "section": "Vectorizing logistic regression",
     "text": "Vectorizing logistic regression\nFor \\(db\\) we have \\[\n\\begin{align*}\n&db = \\frac{1}{m}np.sum(dz),\\\\\n&dw = \\frac{1}{m}X dZ^T = \\\\\n& \\frac{1}{m}\\begin{bmatrix}\n  \\vdots & & \\vdots \\\\\n  x^{(1)} & \\dots & x^{(m)} \\\\\n  \\vdots & & \\vdots \\\\\n\\end{bmatrix}\n\\begin{bmatrix}\n  dz^{(1)} \\\\\n  \\vdots\\\\\n  dz^{(m)}\n\\end{bmatrix} = \\\\\n& = \\frac{1}{m}\\left[x^{(1)}dz^{(1)} + \\dots +x^{(m)}dz^{(m)}\\right]\n\\end{align*}\n\\]\nNow we can go back to the backward propagation algorithm again.\nMultiple iterations of GD will still require a for loop."
-  },
-  {
-    "objectID": "nlp_lab1.html",
-    "href": "nlp_lab1.html",
-    "title": "NLP: Lab 1",
-    "section": "",
-    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
-  },
-  {
-    "objectID": "nlp_lab1.html#through-requirements.txt",
-    "href": "nlp_lab1.html#through-requirements.txt",
-    "title": "NLP: Lab 1",
-    "section": "Through requirements.txt",
-    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-python-nltk-package",
-    "href": "nlp_lab1.html#install-python-nltk-package",
-    "title": "NLP: Lab 1",
-    "section": "1. Install Python NLTK package",
-    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
-    "href": "nlp_lab1.html#install-scattertext-and-spacy",
-    "title": "NLP: Lab 1",
-    "section": "2. Install Scattertext and Spacy",
-    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-concordance",
-    "href": "nlp_lab1.html#example-concordance",
-    "title": "NLP: Lab 1",
-    "section": "Example: concordance",
-    "text": "Example: concordance\n\ntext3.concordance(\"earth\")\n\nDisplaying 25 of 112 matches:\nnning God created the heaven and the earth . And the earth was without form , a\nd the heaven and the earth . And the earth was without form , and void ; and da\nwas so . And God called the dry land Earth ; and the gathering together of the \nit was good . And God said , Let the earth bring forth grass , the herb yieldin\nupon the ear and it was so . And the earth brought forth grass , and herb yield\nof the heaven to give light upon the earth , And to rule over the day and over \nfe , and fowl that may fly above the earth in the open firmament of heaven . An\n seas , and let fowl multiply in the earth . And the evening and the morning we\ne fifth day . And God said , Let the earth bring forth the living creature afte\nnd creeping thing , and beast of the earth after his ki and it was so . And God\ns so . And God made the beast of the earth after his kind , and cattle after th\nd every thing that creepeth upon the earth after his ki and God saw that it was\nd over the cattle , and over all the earth , and over every creeping thing that\nreeping thing that creepeth upon the earth . So God created man in his own imag\nl , and multiply , and replenish the earth , and subdue and have dominion over \nry living thing that moveth upon the earth . And God said , Behold , I have giv\n , which is upon the face of all the earth , and every tree , in the which is t\nfor meat . And to every beast of the earth , and to every fowl of the air , and\no every thing that creepeth upon the earth , wherein there is life , I have giv\nsixth day . Thus the heavens and the earth were finished , and all the host of \nenerations of the heavens and of the earth when they were created , in the day \nn the day that the LORD God made the earth and the heavens , And every plant of\nnt of the field before it was in the earth , and every herb of the field before\nd had not caused it to rain upon the earth , and there was not a man to till th\n . But there went up a mist from the earth , and watered the whole face of the"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-similar",
-    "href": "nlp_lab1.html#example-similar",
-    "title": "NLP: Lab 1",
-    "section": "Example: similar",
-    "text": "Example: similar\n\ntext3.similar(\"man\")\n\nland lord men place woman earth waters well city lad day cattle field\nwife way flood servant people famine pillar"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-dispersion_plot",
-    "href": "nlp_lab1.html#example-dispersion_plot",
-    "title": "NLP: Lab 1",
-    "section": "Example: dispersion_plot",
-    "text": "Example: dispersion_plot\n\ntext3.dispersion_plot([\"man\", \"earth\"])"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-freqdist",
-    "href": "nlp_lab1.html#example-freqdist",
-    "title": "NLP: Lab 1",
-    "section": "Example: FreqDist",
-    "text": "Example: FreqDist\n\nfdist = FreqDist(text3)\nprint(fdist)\n\n&lt;FreqDist with 2789 samples and 44764 outcomes&gt;\n\n\n\nfdist.most_common(50)\n\n[(',', 3681),\n ('and', 2428),\n ('the', 2411),\n ('of', 1358),\n ('.', 1315),\n ('And', 1250),\n ('his', 651),\n ('he', 648),\n ('to', 611),\n (';', 605),\n ('unto', 590),\n ('in', 588),\n ('that', 509),\n ('I', 484),\n ('said', 476),\n ('him', 387),\n ('a', 342),\n ('my', 325),\n ('was', 317),\n ('for', 297),\n ('it', 290),\n ('with', 289),\n ('me', 282),\n ('thou', 272),\n (\"'\", 268),\n ('is', 267),\n ('thy', 267),\n ('s', 263),\n ('thee', 257),\n ('be', 254),\n ('shall', 253),\n ('they', 249),\n ('all', 245),\n (':', 238),\n ('God', 231),\n ('them', 230),\n ('not', 224),\n ('which', 198),\n ('father', 198),\n ('will', 195),\n ('land', 184),\n ('Jacob', 179),\n ('came', 177),\n ('her', 173),\n ('LORD', 166),\n ('were', 163),\n ('she', 161),\n ('from', 157),\n ('Joseph', 157),\n ('their', 153)]\n\n\n\nfdist.plot(50, cumulative=True)"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Deep Learning/NLP",
-    "section": "",
-    "text": "Deep Learning/Natural Language Processing course"
-  },
-  {
-    "objectID": "dl.html",
-    "href": "dl.html",
-    "title": "Deep Learning",
-    "section": "",
-    "text": "Lecture 1"
-  },
-  {
-    "objectID": "dl.html#lectures",
-    "href": "dl.html#lectures",
-    "title": "Deep Learning",
-    "section": "",
-    "text": "Lecture 1"
-  },
-  {
-    "objectID": "dl.html#labs",
-    "href": "dl.html#labs",
-    "title": "Deep Learning",
-    "section": "Labs",
-    "text": "Labs"
-  },
-  {
-    "objectID": "nlp.html#labs",
-    "href": "nlp.html#labs",
-    "title": "Natural Language Processing",
-    "section": "Labs",
-    "text": "Labs\nLab 1"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "Deep Learning/Natural Language Processing course"
-  },
-  {
-    "objectID": "nb/Untitled.html",
-    "href": "nb/Untitled.html",
-    "title": "Deep Learning/NLP course",
-    "section": "",
-    "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178"
   }
 ]
