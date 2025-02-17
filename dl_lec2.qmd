@@ -14,6 +14,9 @@ diagram:
     tikz:
       execpath: lualatex
       additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
         \usetikzlibrary{arrows.meta}
         \usetikzlibrary{positioning}
         \usetikzlibrary{decorations.pathreplacing}
@@ -160,8 +163,8 @@ Bias can be incorporated by using a bias neuron.
 
 :::{.callout-important icon=false}
 ## Problems
-In linearly separable data sets, a nonzero weight vector $W$ exists in which the sign
-of $\overline{W}^T X$ correctly matches the sign of $y_i$ for each and every training instance $(\overline{X}_i,y_i)$.
+In linearly separable data sets, a nonzero weight vector $W$ exists in which the $sign(\overline{W}^T X) = sign(y_i)\; \forall (\overline{X}_i,y_i)$.
+
 However, the behavior of the perceptron algorithm for data that are not linearly separable
 is rather arbitrary.
 :::
@@ -169,11 +172,14 @@ is rather arbitrary.
 ## Loss function
 ML algorithms are loss optimization problems, where gradient descent updates are used to minimize the loss.
 
-Original perceptron did not formally use a loss function. *Retrospectively* we can introduce it as:
+Original perceptron did not formally use a loss function.
+
+*Retrospectively* we can introduce it as:
 $$
 L_i \equiv \max\left\{-y_i(\overline{W}^T \overline{X_i}\right\}
 $$
 
+## Loss function
 We differentiate:
 \begin{align*}
 &\dfrac{\partial L_i}{\partial \overline{W}} = \left[\dfrac{\partial L_i}{\partial w_1}, \dots, \dfrac{\partial L_i}{\partial w_d}\right] = \\
@@ -197,6 +203,7 @@ A network with weights $\overline{W}$ and input $\overline{X}$ will have a predi
 \end{align*}
 where $\Phi$ denotes *activation function*.  
 
+## Activation functions
 :::{.callout-note icon=false}
 ## Identity aka linear activation
 $$
@@ -204,7 +211,6 @@ $$
 $$
 :::
 
-## Activation functions
 
 :::{.callout-tip icon=false}
 ## Sign function
@@ -213,6 +219,7 @@ $$
 $$
 :::
 
+## Activation functions
 :::{.callout-note icon=false}
 ## Sigmoid function
 $$
@@ -230,8 +237,9 @@ $$
 ## Activation functions
 Actually, neuron computes two functions:
 
-![width=10cm](img/activation.png)
+![](img/activation.png)
 
+## Activation functions
 We have *pre-activation value* and *post-activation value*.
 
 - **pre-activation**: linear transformation
@@ -239,10 +247,10 @@ We have *pre-activation value* and *post-activation value*.
 
 ## Activation functions
 
-```{tikz}
+```tikz{height=600}
 \begin{tikzpicture}[declare function={sigma(\x)=1/(1+exp(-\x));
 sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
-\begin{axis}%
+\begin{axis}
 [
     grid=major,     
     xmin=-6,
@@ -263,9 +271,9 @@ sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
 ```
 
 ## Activation functions
-```{tikz}
+```tikz{height=600}
 \begin{tikzpicture}
-\begin{axis}%
+\begin{axis}
 [
     grid=major,     
     xmin=-6,
@@ -287,23 +295,24 @@ sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
 ## Activation functions
 
 Two more functions that have become popular recently:
+
 :::{.callout-note icon=false}
-## tanh
+## Rectified Linear Unit (ReLU)
 $$
-\Phi(v) = \max\left\{v, 0\right\}, \text{Rectified Linear Unit (ReLU)}
+\Phi(v) = \max\left\{v, 0\right\}
 $$
 :::
 
 :::{.callout-important icon=false}
 ## Hard tanh
 $$
-\Phi(v) = \max\left\{\min\left[v, 1\right], -1 \right\}, \text{hard tanh}
+\Phi(v) = \max\left\{\min\left[v, 1\right], -1 \right\}
 $$
 :::
 
 ## Multiple activation fns
 
-![width=12cm](img/different_activation_functions.png)
+![](img/different_activation_functions.png)
 
 ## Activation functions
 Properties:
@@ -320,11 +329,11 @@ Used for k-way classification problems. Used in the output layer.
 &\Phi(v)_i = \dfrac{\exp(v_i)}{\sum\limits_{i=1}^k \exp(v_i)}.
 \end{align*}
 
-Softmax layer converts real values to probabilities.
+Softmax layer converts real values to **probabilities**.
 
 ## Softmax activation function
 
-![width=12cm](img/softmax.png)
+![](img/softmax.png)
 
 
 ## Loss functions
@@ -349,19 +358,21 @@ Softmax layer converts real values to probabilities.
 \end{align*}
 :::
 
+# Multilayer networks
+
 ## Multilayer networks
 
 Suppose NN contains $p_1, \dots, p_k$ units in each of its $k$ layers. 
 
-Then column representations of these layers, denoted by $\overline{h}_1, \dots, \overline{h}_k$, have \textit{dimensionalities} $p_1, \dots, p_k$.
+Then column representations of these layers, denoted by $\overline{h}_1, \dots, \overline{h}_k$, have \textit{dimensionalities} $p_1, \dots, p_k$ units.
 
-Weights between input layer and first hidden layer: matrix $W_1$, sized $p_1 \times d$.
+- Weights between input layer and first hidden layer: matrix $W_1$, sized $p_1 \times d$.
 
-Weights between $r$-th layer and $r+1$-th layer: matrix $W_r$ sized $p_{r+1}\times p_r$.
+- Weights between $r$-th layer and $r+1$-th layer: matrix $W_r$ sized $p_{r+1}\times p_r$.
 
 ## Multilayer networks
 
-![width=12cm](img/multi_layer.png)
+![](img/multi_layer.png)
 
 ## Multilayer networks
 Therefore, a $d$-dimensional input vector $\overline{x}$ is transformed into the outputs using these equations:
@@ -376,13 +387,24 @@ Activation functions operate on vectors and are applied element-wise.
 
 :::{.callout-important icon=false}
 ## Definition (Aggarwal)
-A multilayer network computes a nested composition of parameterized multi-variate functions. The overall function computed from the inputs to the outputs
-can be controlled very closely by the choice of parameters. The notion of learn-
-ing refers to the setting of the parameters to make the overall function consistent
+A multilayer network computes a nested composition of parameterized multi-variate functions.
+
+The overall function computed from the inputs to the outputs
+can be controlled very closely by the choice of parameters.
+
+The notion of learning refers to the setting of the parameters to make the overall function consistent
 with observed input-output pairs.
 :::
 
+## Multilayer networks
 Input-output function of NN is difficult to express explicitly. NN can also be called *universal function approximators*.
+
+:::{.callout-important icon=false}
+## Universal approximation theorem
+Given a family of neural networks, for each function $\displaystyle f$ from a certain function space, there exists a sequence of neural networks $\phi_1,\phi_2,\dots$ from the family, such that 
+$\phi_{n} \to f$ according to some criterion.
+:::
+In other words, the family of neural networks is *dense* in the function space.
 
 ::: aside
   K. Hornik, M. Stinchcombe, and H. White. \textit{Multilayer feedforward networks are universal approximators}. Neural Networks, 2(5), pp. 359–366, 1989.
@@ -397,14 +419,19 @@ $(k+1)$ computational layers (including the output layer).
 
 The corresponding $(k+1)$ weight matrices between successive layers are denoted by $W_1 ...W_{k+1}$.
 
-Let $\overline{x}$ be the $d$-dimensional
-column vector corresponding to the input, $\overline{h_1},\dots,\overline{h_k}$ be the column vectors corresponding to the hidden layers, and $\overline{o}$ be the $m$-dimensional column vector corresponding to the output.
+## Nonlinear activation functions
+Let: 
+
+- $\overline{x}$ be the $d$-dimensional
+column vector corresponding to the input
+- $\overline{h_1},\dots,\overline{h_k}$ be the column vectors corresponding to the hidden layers
+- and $\overline{o}$ be the $m$-dimensional column vector corresponding to the output.
 
 ## Nonlinear activation functions
 Then, we have the following recurrence condition for multi-layer networks:
 \begin{align*}
   &\overline{h_1} = \Phi(W_1 x) = W_1 x,\\
-  &\overline{h}_{p+1} = \Phi(W_{p+1} \overline{h}_p) = W_{p+1}\overline{h}_p \;\; \forall p \in \left\{1 \dots k−1\right\} \\
+  &\overline{h}_{p+1} = \Phi(W_{p+1} \overline{h}_p) = W_{p+1}\overline{h}_p \;\; \forall p \in \left\{1 \dots k−1\right\}, \\
   &\overline{o} = \Phi(W_{k+1} \overline{h}_k) = W_{k+1} \overline{h}_k.
 \end{align*}
 
@@ -415,9 +442,12 @@ Then, by eliminating the hidden layer variables, we obtain the following:
 &\overline{o} = W_{k+1}W_k \dots W_1 \overline{x} 
 \end{align*}
 Denote $W_{xo}=W_{k+1}W_k \dots W_1$. 
-Note that one can replace the matrix $W_{k+1}W_k \dots W_1$ with the new $d\times m$ matrix $W_{xo}$, and
-learn the coefficients of $W_{xo}$ instead of those of all the matrices $W1, W2, \dots W_{k+1}$, without
+
+:::{.callout-note icon=false}
+One can replace the matrix $W_{k+1}W_k \dots W_1$ with the new $d\times m$ matrix $W_{xo}$, and
+learn the coefficients of $W_{xo}$ instead of those of all the matrices $W_1, W_2, \dots W_{k+1}$, without
 loss of expressivity. 
+:::
 
 ## Nonlinear activation functions
 In other words, we have the following:
@@ -425,20 +455,22 @@ In other words, we have the following:
 &\overline{o} = W_{xo} \overline{x}
 \end{align*}
 However, this condition is exactly identical to that of linear regression with multiple outputs. Therefore, a multilayer neural network with identity activations does not gain over
-a single-layer network in terms of expressivity. $\qed$
+a single-layer network in terms of expressivity.
 
 :::{.callout-important icon=false}
 ## Linearity observation
-     The composition of linear functions is always a linear function. The
+The composition of linear functions is always a linear function. The
 repeated composition of simple nonlinear functions can be a very complex nonlinear function. 
 :::
 
 ## Backpropagation
 :::{.callout-tip icon=false}
-## Definition
+## DAG Definition
 A **directed
 acyclic computational graph** is a directed acyclic graph of nodes, where each node contains
-a variable. Edges might be associated with learnable parameters. A variable in a node is
+a variable. Edges might be associated with learnable parameters.
+
+A variable in a node is
 either fixed externally (for input nodes with no incoming edges), or it is a computed as a
 function of the variables in the tail ends of edges incoming into the node and the learnable
 parameters on the incoming edges. 
@@ -448,6 +480,7 @@ DAG is a more general version of NN.
 
 ## Backpropagation
 A computational graph evaluates compositions of functions.
+
 A path of length 2 in a computational graph in which the
 function $f(\cdot)$ follows $g(\cdot)$ can be considered a composition function $f(g(\cdot))$.
 
@@ -458,15 +491,20 @@ In case of sigmoid function:
 \end{align*}
 
 ## Backpropagation
+:::{.callout-important icon=false}
 The inability to easily express the optimization function in closed form in terms
 of the edge-specific parameters (as is common in all machine learning problems) causes
 difficulties in computing the derivatives needed for gradient descent.
+:::
 
+:::{.callout-tip icon=false}
+## Example
 For example, if we have a computational
 graph which has 10 layers, and 2 nodes per layer, the overall composition function would
 have $2^{10}$ nested “terms”.
+:::
 
-## Backpropagation
+## Backpropagation {.smaller}
 
 1. Derivatives of the output with respect to various variables in the computational graph are
 related to one another with the use of the **chain rule** of differential calculus.
@@ -515,13 +553,12 @@ become increasingly complex as we move towards edge weights away from the output
 ## Inputs
   
 Logistic regression is an algorithm for binary classification.
-$x \in \mathbb{R}^{n_x}, y \in \{0,1\}$
 
-$m$ - count of training examples.
+$x \in \mathbb{R}^{n_x}, y \in \{0,1\}$.
 
-So we will have $\left\{(x^{(1)},y^{(1)}), ...(x^{(m)}, y^{(m)})\right\}$.
+$\left\{(x^{(1)},y^{(1)}), ...(x^{(m)}, y^{(m)})\right\}$- $m$ training examples.
 
-Let's use a superscript notation $x^{(i)}$ - $i$-th data set element.
+<!-- Let's use a superscript notation $x^{(i)}$ - $i$-th data set element. -->
 
 $X$ matrix - $m$ columns and $n_x$ rows.
 
@@ -539,42 +576,67 @@ $$
 
 ## Logistic Regression
 $X \in \mathbb{R}^{n_x,m}$.
-Using Numpy syntax: `X.shape = (n_x,m)`.
+
+Using Numpy syntax: 
+```python
+X.shape = (n_x,m).
+```
 
 $Y \in \mathbb{R}^{1,m}$.
-Using Numpy syntax: `Y.shape = (1,m)`.
+
+Using Numpy syntax: 
+```python
+Y.shape = (1,m).
+```
 
 ## Logistic Regression
+:::{.callout-warning icon=false}
+## Goal
 We will strive to maximize
 $\hat{y} = P(y=1 | x)$, where $x \in \mathbb{R}^{n_x}$.
 
 Obviously, $0 \leq \hat{y} \leq 1$.
+:::
 
 :::{.callout-important icon=false}
+If doing linear regresssion, we can try 
+$$
+\hat{y}=w^T x + b.
+$$
 
-:::{.callout-note icon=false}
-If doing linear regresssion, we can try $\hat{y}=w^T x + b$.
-but for logistic regression, we do $\hat{y}=\sigma(w^T x + b)$, where $\sigma=\dfrac{1}{1+e^{-z}}$.
+But for logistic regression, we do 
+$$
+\hat{y}=\sigma(w^T x + b)$, \; \text{where }\; \sigma=\dfrac{1}{1+e^{-z}}.
+$$
 :::
 
 ## Parameters
-  $w \in \mathbb{R}^{n_x}, b \in \mathbb{R}$.
+:::{.callout-warning icon=false}
+## Input
+$$
+w \in \mathbb{R}^{n_x},\\
+b \in \mathbb{R}.
+$$
 :::
 
 :::{.callout-tip icon=false}
 ## Output
-$\hat{y} = \sigma\left( w^T x + b\right)$,
+$$
+\hat{y} = \sigma\left( w^T x + b\right),
+$$
 
-$z \equiv  w^T x + b$.
+$$
+z \equiv  w^T x + b.
+$$
 :::
 
 $w$ - weights, $b$ - bias term (*intercept*)
 
 ## Graphs
-```{tikz}
+```tikz{height=500}
 \begin{tikzpicture}[declare function={sigma(\x)=1/(1+exp(-\x));
 sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
-\begin{axis}%
+\begin{axis}
 [
     grid=major,     
     xmin=-6,
@@ -602,21 +664,28 @@ For every $\left\{(x^{(1)},y^{(1)}), ...(x^{(m)}, y^{(m)})\right\}$, we want to 
 \begin{align*}
   &\hat{y}^{(i)} = \sigma\left(w^T x^{(i)} + b\right)
 \end{align*}
-We have to define a *loss (error) function} - this will estimate our model. 
+We have to define a *loss (error) function* - this will estimate our model. 
 
+## Loss function
 :::{.callout-important icon=false}
 ## Quadratic
-$L(\hat{y}, y) = \dfrac{1}{2}\left(\hat{y}-y)\right)^2$
-\end{block}
+$$
+L(\hat{y}, y) = \dfrac{1}{2}\left(\hat{y}-y)\right)^2.
+$$
 :::
 
 :::{.callout-note icon=false}
 ## Log
-$L(\hat{y}, y) = -\left((y\log(\hat{y}) + (1 - y)\log(1 - \hat{y}))\right)$. 
+$$
+L(\hat{y}, y) = -\left((y\log(\hat{y}) + (1 - y)\log(1 - \hat{y}))\right).
+$$ 
 :::
 
 ## Cost function
-Why does it work well - consider $y=0$ and $y=1$.
+:::{.callout-tip icon=false}
+## Why does it work well?
+Consider $y=0$ and $y=1$.
+
 \begin{align*}
   &y=1: P(y | x) = \hat{y},\\
   &y=0: P(y | x) = 1-\hat{y}
@@ -627,10 +696,13 @@ We select $P(y|x) = \hat{y}^y(1-\hat{y})^{(1-y)}$.
 $$
 \log P(y|x) = y\log(\hat{y}) + (1-y)\log(1-\hat{y}) = -L(\hat{y}, y).
 $$
+
 \begin{align*}
   y=1:& L(\hat{y},y) = -\log(\hat{y}),\\
   y=0:& L(\hat{y},y) = -\log(1-\hat{y})
 \end{align*}
+:::
+
 
 ## Cost function
 Cost function show how well we're doing across the whole training set:
@@ -639,6 +711,7 @@ Cost function show how well we're doing across the whole training set:
 & = -\dfrac{1}{m} \sum\limits_{i=1}^m \left[y\log(\hat{y}) + (1 - y)\log(1 - \hat{y})\right].
 \end{align*}
 
+## Cost function
 On $m$ examples:
 \begin{align*}
   &\log P(m \dots) = \log \prod_{i=1}^m P(y^{(i)} | x^{(i)}) = \\
@@ -652,34 +725,37 @@ On $m$ examples:
 Minimization problem: find $w,b$ that minimize $J(w,b)$.
 :::
 
-![width=12cm](img/gradient-descent-2d-diagram.png)
+![](img/gradient-descent-2d-diagram.png){height=500}
 
 ## Gradient descent
-We use $J(w,b)$ because it is convex.
-We pick an initial point - anything might do, e.g. 0. Then we take steps in the direction of steepest descent.
+
+- We use $J(w,b)$ because it is convex.
+- We pick an initial point - anything might do, e.g. 0.
+- Then we take steps in the direction of steepest descent.
 
 $$
-w := w - \alpha \frac{d J(w,b)}{dw}
+w := w - \alpha \frac{d J(w,b)}{dw}, \\
 b := b - \alpha \frac{d J(w,b)}{db}
 $$
 
 $\alpha$ - learning rate
 
 
+## Gradient descent
 - *forward pass*: compute output
-- *backward pass*: - compute derivatives
+- *backward pass*: compute derivatives
 
 
 ## Logistic Regression Gradient Descent
 \begin{align*}
 &z = w^T x + b ,\\
 &a \equiv \hat{y}  = \sigma(z),\\
-&L(a,y) = -\left[y\log(a) + (1 - y)\log(1 - a)\right]
+&L(a,y) = -\left[y\log(a) + (1 - y)\log(1 - a)\right].
 \end{align*}
 
 So, for $n_x=2$ we have a computation graph:
 
-\mybox{$(x_1,x_2,w_1,w_2,b)$} $\rightarrow$ \mybox{$z =w_1 x_1+w_2 x_2 + b$} $ \rightarrow $ \mybox{$\hat{y}=a=\sigma(z)$} $\rightarrow$ \mybox{$L(a,y)$}.
+$(x_1,x_2,w_1,w_2,b)$ $\rightarrow$ $z =w_1 x_1+w_2 x_2 + b$ $\rightarrow$ $\hat{y}=a=\sigma(z)$ $\rightarrow$ $L(a,y)$.
 <!-- TODO tikz graph -->
 
 ## Computation graph
@@ -689,12 +765,13 @@ Let's compute the derivative for $L$ by a:
 &\frac{da}{dz} = a(1-a).
 \end{align*}
 
+## Computation graph
 After computing, we'll have
 \begin{align*}
 &dz \equiv \dfrac{dL}{dz} = \dfrac{dL}{da}\dfrac{da}{dz} = a-y,\\
 &dw_1 \equiv \frac{dL}{dw_1} = x_1 dz,\\
 &dw_2 \equiv \frac{dL}{dw_2} = x_2 dz, \\
-&db \equiv \frac{dL}{db} = dz
+&db \equiv \frac{dL}{db} = dz.
 \end{align*}
 
 
@@ -713,19 +790,23 @@ Consider now $m$ examples in the training set.
 Let's recall the definition of the cost function:
 \begin{align*}
 &J(w,b) = \dfrac{1}{m}\sum\limits_{i=1}^{m} L(a^{(i)}, y^{(i)}, \\
-&a^{(i)} = \hat{y}^{(i)}=\sigma(w^T x^{(i)} + b)
+&a^{(i)} = \hat{y}^{(i)}=\sigma(w^T x^{(i)} + b).
 \end{align*}
 And also
 $$
-\frac{dJ}{dw_1} = \frac{1}{m}\sum\limits_{i=1}^{m}\frac{dL(a^{(i)}, y^{(i)})}{dw_1}
+\frac{dJ}{dw_1} = \frac{1}{m}\sum\limits_{i=1}^{m}\frac{dL(a^{(i)}, y^{(i)})}{dw_1}.
 $$  
 
 ## Logistic Regression Gradient Descent
 Let's implement the algorithm. First, initialize
 $$
-J=0, dw_1=0, dw_2=0, db=0
+J=0,\\
+dw_1=0,\\
+dw_2=0,\\
+db=0
 $$
-Then in the loop 
+
+## Logistic Regression Gradient Descent
 
 `for i=1 to m`
 \begin{align*}
@@ -741,22 +822,24 @@ Then in the loop
 ## Logistic Regression Gradient Descent
 Then compute averages:
 
-- $J = \dfrac{J}{m}$
-- $dw_1 = \dfrac{dw_1}{m}$
-- $dw_2 = \dfrac{dw_2}{m}$
-- $db = \dfrac{db}{m}$ .
+$$
+J = \dfrac{J}{m}, \\
+dw_1 = \dfrac{dw_1}{m}, \; dw_2 = \dfrac{dw_2}{m}, \\
+db = \dfrac{db}{m}.
+$$
 
-(In this example feature count $n_x=2$)
 
+::: aside
 Note that $dw_i$ don't have a superscript - we use them as accumulators.
-:::{.callout-tip icon=false}
-## GD step
-\begin{align*}
-  & w_1 := w_1 - \alpha dw_1,\\
-  & w_2 := w_2 - \alpha dw_2,\\
-  & b := b - \alpha db.
-\end{align*}
+(In this example feature count $n_x=2$)
 :::
+
+## GD step
+$$
+w_1 := w_1 - \alpha dw_1,\\
+w_2 := w_2 - \alpha dw_2,\\
+b := b - \alpha db.
+$$
 
 ## Vectorization
 
@@ -764,16 +847,20 @@ We only have 2 features $w_1$ and $w_2$, so we don't have an extra for loop. Tur
 
 **Vectorization** techniques exist for this purpose - getting rid of for loops.
 
+:::{.callout-tip icon=false}
+## Example
 We have to compute $z=w^T x + b$, where $w,x \in \mathbb{R}^{n_x}$, and for this we can naturally use a for loop.
+
 A vectorized Python command is
 ```python
 z = np.dot(w,x)+b
 ```
+:::
 <!-- An jupyter example follows, comparing times of for-loop and vectorized code samples. -->
 <!-- SIMD calculations on GPUs and CPUs. -->
 
 ## Vectorization
-Programming guideline - avoid explicit for loops.
+**Programming guideline** - avoid explicit for loops.
 \begin{align*}
   &u = Av,\\
   &u_i = \sum_j\limits A_{ij} v_j
@@ -782,6 +869,9 @@ To be replaced by
 ```python
 u = np.dot(A, v)
 ```
+::: aside
+Numpy impl: https://numpy.org/doc/1.21/reference/simd/simd-optimizations.html
+:::
 
 ## Vectorization
 Another example. Let's say we have a vector
@@ -809,13 +899,15 @@ So we can modify the above code to get rid of for loops (except for the one for 
 Let's examine the forward propagation step of LR.
 \begin{align*}
   &z^{(1)} = w^T x^{(1)} + b,\\
-  &a^{(1)} = \sigma(z^{(1)})
+  &a^{(1)} = \sigma(z^{(1)}),
 \end{align*}
 
 \begin{align*}
   &z^{(2)} = w^T x^{(2)} + b,\\
-  &a^{(2)} = \sigma(z^{(2)})
+  &a^{(2)} = \sigma(z^{(2)}).
 \end{align*}
+
+## Vectorizing logistic regression
 Let's recall what have we defined as our learning matrix:
 $$
 X = \begin{bmatrix}
@@ -828,7 +920,8 @@ $$
 ## Vectorizing logistic regression
 Next
 $$
-Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = [w^T x^{(1)}+b, \dots, w^T x^{(m)}+b].
+Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] =\\
+= [w^T x^{(1)}+b, \dots, w^T x^{(m)}+b].
 $$
 
 $$
@@ -837,7 +930,10 @@ $$
 ```python
   z = np.dot(w.T, x) + b
 ```
-$b$ is a raw number, Python will automatically take care of expanding it into a vector - this is called broadcasting.
+
+::: aside
+$b$ is a raw number, Python will automatically take care of expanding it into a vector - this is called **broadcasting.**
+:::
 
 ## Vectorizing logistic regression
 Earlier on, we computed
@@ -867,13 +963,14 @@ For $db$ we have
   \vdots\\
   dz^{(m)}
 \end{bmatrix} = \\
-& = \frac{1}{m}\left[x^{(1)}dz^{(1)} + \dots +x^{(m)}dz^{(m)}\right]
+& = \frac{1}{m}\left[x^{(1)}dz^{(1)} + \dots +x^{(m)}dz^{(m)}\right].
 \end{align*}
+
+## Vectorizing logistic regression
+
 Now we can go back to the backward propagation algorithm again.
 
 Multiple iterations of GD will still require a for loop.
-
-## Vectorizing logistic regression
 ```python
 for it in range(m):
   Z = np.dot(w.T, X) + B
