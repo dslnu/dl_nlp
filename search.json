@@ -539,6 +539,13 @@
     "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178\n\n\n\n from nltk.book import *"
   },
   {
+    "objectID": "nlp_lab2.html",
+    "href": "nlp_lab2.html",
+    "title": "NLP: Lab 2",
+    "section": "",
+    "text": "Stemming\nThere are various stemmers already available in NLTK. Below is an example usage:\n\nimport nltk\nfrom nltk.stem import PorterStemmer\nfrom nltk.stem.snowball import SnowballStemmer\nfrom nltk.stem.lancaster import LancasterStemmer\nst = LancasterStemmer()\n \n# Create Snowball stemmer\nsnow_stemmer = SnowballStemmer(language='english')\n\n# Create a Porter Stemmer instance\nporter_stemmer = PorterStemmer()\n\n# Create a Lancaster Stemmer instance\nlancaster_stemmer = LancasterStemmer()\n\n# Example words for stemming\nwords = [\"running\", \"jumps\", \"happily\", \"programming\", 'cared','fairly','sportingly']\n\n# Apply stemming to each word\nstemmed_words = [porter_stemmer.stem(word) for word in words]\nprint(\"===Porter===:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\nprint(\"\\n===Snowball===:\")\nstemmed_words = [snow_stemmer.stem(word) for word in words]\nprint(\"Porter:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\nprint(\"\\n===Lancaster===:\")\nstemmed_words = [lancaster_stemmer.stem(word) for word in words]\nprint(\"Porter:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\n===Porter===:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fairli', 'sportingli']\n\n===Snowball===:\nPorter:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fair', 'sport']\n\n===Lancaster===:\nPorter:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happy', 'program', 'car', 'fair', 'sport']\n\n\n\n\nExercises\nTask 0. Compare frequency distributions of stemmed and unstemmed NLTK corpora. Display most commonly used stems from nltk.text corpora on a plot.\nTask 1. Write your own version of stemmer for Ukrainian (or other non-English language) using regular expressions.\nThere is a regexp stemmer in NLTK (link).\nPlease write your code so that it satisfies NLTK’s standard interface (a Stemmer class with .stem() method)\nTask 2. Implement Wagner-Fischer (or Vintsyuk) algorithm for string distance. Link.\n\nModify the algorithm so that substitution operation cost depends on the key proximity on QWERTY keyboard. For inspiration, look at this StackExchange question.\nOr consider this table directly:\nImplement another modification to the algorithm: include transposition operation, so that you compute a Damerau-Levenshtein distance.\n\n\n\nRecommended reading\n\nChapter 1 from NLTK book.\nChapter 2 from Jurafsky’s book. Plus related slides.\nOfficial Python Regex package documentation.\nRegex cheatsheet\nAnother version with examples"
+  },
+  {
     "objectID": "nlp_lab1.html",
     "href": "nlp_lab1.html",
     "title": "NLP: Lab 1",
@@ -641,7 +648,7 @@
     "href": "nlp.html#labs",
     "title": "Natural Language Processing",
     "section": "Labs",
-    "text": "Labs\nLab 1"
+    "text": "Labs\nLab 1\nLab 2"
   },
   {
     "objectID": "about.html",
@@ -1015,36 +1022,57 @@
     "text": "Word Normalization\n\n\n\n\nPorter stemmer\n\n\n\nclassify every character in a given token as either a consonant (“c”) or vowel (“v”)\ngroup subsequent consonants as “C” and subsequent vowels as “V.”\nrepresent every word token as a combination of consonant and vowel groups."
   },
   {
+    "objectID": "nlp_lec1.html#porter-stemmer-1",
+    "href": "nlp_lec1.html#porter-stemmer-1",
+    "title": "Natural Language Processing: Intro",
+    "section": "Porter Stemmer",
+    "text": "Porter Stemmer\n\n\n\nExample\n\n\ncollection \\(\\rightarrow\\) CVCV…C\nillustrate \\(\\rightarrow\\) VCVC…V\nBoth can be presented as:\n\\[\n[C](VC)^m[V]\n\\]\nm is called the measure of the word."
+  },
+  {
+    "objectID": "nlp_lec1.html#porter-stemmer-2",
+    "href": "nlp_lec1.html#porter-stemmer-2",
+    "title": "Natural Language Processing: Intro",
+    "section": "Porter Stemmer",
+    "text": "Porter Stemmer"
+  },
+  {
+    "objectID": "nlp_lec1.html#porter-stemmer-3",
+    "href": "nlp_lec1.html#porter-stemmer-3",
+    "title": "Natural Language Processing: Intro",
+    "section": "Porter Stemmer",
+    "text": "Porter Stemmer\n\n\n\nRules\n\n\nStandard form: \\[\n(\\textbf{condition})\\textbf{S}_1 \\rightarrow \\textbf{S}_2\n\\] There are five phases of rule application\n\n\n\n\n\n\nHow to read\n\n\nIf a word ends with the suffix \\(S_1\\)\nAND\nthe stem before \\(S_1\\) satisfies the given condition\nTHEN \\(S_1\\) is replaced by \\(S_2\\)."
+  },
+  {
+    "objectID": "nlp_lec1.html#porter-stemmer-4",
+    "href": "nlp_lec1.html#porter-stemmer-4",
+    "title": "Natural Language Processing: Intro",
+    "section": "Porter Stemmer",
+    "text": "Porter Stemmer\n\n\n\nConditions\n\n\n\n\\(\\ast S\\): the stem ends with S (and similarly for the other letters)\n\\(\\ast v \\ast\\): the stem contains a vowel\n\\(\\ast d\\): the stem ends with a double consonant (e.g. -TT, -SS)\n\\(\\ast o\\): the stem ends with \\(cvc\\), where the second c is not W, X or Y (e.g. -WIL, -HOP)\n\nAnd the condition part may also contain expressions with and, or and not.\n\n\n\n\n\n\nExample\n\n\n\\((m &gt; 1) EMENT \\rightarrow\\) will perform this transformation:\nreplacement \\(\\rightarrow\\) replac"
+  },
+  {
     "objectID": "nlp_lec1.html#word-normalization-3",
     "href": "nlp_lec1.html#word-normalization-3",
     "title": "Natural Language Processing: Intro",
     "section": "Word Normalization",
-    "text": "Word Normalization"
+    "text": "Word Normalization\nOther stemmers:\n\n\n\nLovins stemmer\n\n\nThe first published stemming algorithm, is essentially a heavily parametrized find-and-replace function.\n\ncompares each input token against a list of common English suffixes, each suffix being conditioned by one of twenty-nine rules\nif the stemmer finds a predefined suffix in a token and removing the suffix does not violate any conditions attached to that suffix (such as character length restrictions), the algorithm removes that suffix.\nthe stemmer then runs the resulting stemmed token through another set of rules that correct for common malformations, such as double letters (such as hopping becomes hopp becomes hop)."
   },
   {
     "objectID": "nlp_lec1.html#word-normalization-4",
     "href": "nlp_lec1.html#word-normalization-4",
     "title": "Natural Language Processing: Intro",
     "section": "Word Normalization",
-    "text": "Word Normalization\nOther stemmers:\n\n\n\nLovins stemmer\n\n\nThe first published stemming algorithm, is essentially a heavily parametrized find-and-replace function.\n\ncompares each input token against a list of common English suffixes, each suffix being conditioned by one of twenty-nine rules\nif the stemmer finds a predefined suffix in a token and removing the suffix does not violate any conditions attached to that suffix (such as character length restrictions), the algorithm removes that suffix.\nthe stemmer then runs the resulting stemmed token through another set of rules that correct for common malformations, such as double letters (such as hopping becomes hopp becomes hop)."
+    "text": "Word Normalization\n\n\n\nSnowball stemmer\n\n\nAn updated version of the Porter stemmer. It differs from Porter in two main ways:\n\nWhile Lovins and Porter only stem English words, Snowball can stem text data in other Roman script languages, such as Dutch, German, French, or Spanish. Also has capabilities for non-Roman script languages.\nSnowball has an option to ignore stop words."
   },
   {
     "objectID": "nlp_lec1.html#word-normalization-5",
     "href": "nlp_lec1.html#word-normalization-5",
     "title": "Natural Language Processing: Intro",
     "section": "Word Normalization",
-    "text": "Word Normalization\n\n\n\nSnowball stemmer\n\n\nAn updated version of the Porter stemmer. It differs from Porter in two main ways:\n\nWhile Lovins and Porter only stem English words, Snowball can stem text data in other Roman script languages, such as Dutch, German, French, or Spanish. Also has capabilities for non-Roman script languages.\nSnowball has an option to ignore stop words."
+    "text": "Word Normalization\n\n\n\nLancaster stemmer (also called Paice stemmer)\n\n\nThe most aggressive English stemming algorithm.\n\nit contains a list of over 100 rules that dictate which ending strings to replace.\nthe stemmer iterates each word token against each rule. If a token’s ending characters match the string defined in a given rule, the algorithm modifies the token per that rule’s operation, then runs the transformed token through every rule again.\nthe stemmer iterates each token through each rule until that token passes all the rules without being transformed."
   },
   {
     "objectID": "nlp_lec1.html#word-normalization-6",
     "href": "nlp_lec1.html#word-normalization-6",
-    "title": "Natural Language Processing: Intro",
-    "section": "Word Normalization",
-    "text": "Word Normalization\n\n\n\nLancaster stemmer (also called Paice stemmer)\n\n\nThe most aggressive English stemming algorithm.\n\nit contains a list of over 100 rules that dictate which ending strings to replace.\nthe stemmer iterates each word token against each rule. If a token’s ending characters match the string defined in a given rule, the algorithm modifies the token per that rule’s operation, then runs the transformed token through every rule again.\nthe stemmer iterates each token through each rule until that token passes all the rules without being transformed."
-  },
-  {
-    "objectID": "nlp_lec1.html#word-normalization-7",
-    "href": "nlp_lec1.html#word-normalization-7",
     "title": "Natural Language Processing: Intro",
     "section": "Word Normalization",
     "text": "Word Normalization\n\n\n\nStemming errors\n\n\n\nover-generalizing (lemmatizing policy to police)\nunder-generalizing (not lemmatizing European to Europe)"
@@ -1125,6 +1153,13 @@
     "title": "Natural Language Processing: Intro",
     "section": "Edit distance",
     "text": "Edit distance\n\n\n\nHamming distance\n\n\nA number of positions at which the corresponding symbols are different.\nTherefore, identical to Levenshtein with only substitution allowed.\nCan only work for strings of similar length.\n\n\n\ndef hamming_distance(string1: str, string2: str) -&gt; int:\n    \"\"\"Return the Hamming distance between two strings.\"\"\"\n    if len(string1) != len(string2):\n        raise ValueError(\"Strings must be of equal length.\")\n    dist_counter = 0\n    for n in range(len(string1)):\n        if string1[n] != string2[n]:\n            dist_counter += 1\n    return dist_counter"
+  },
+  {
+    "objectID": "nb/nlp_lab2.html",
+    "href": "nb/nlp_lab2.html",
+    "title": "Porter stemming",
+    "section": "",
+    "text": "import nltk\nfrom nltk.stem import PorterStemmer\nfrom nltk.stem.snowball import SnowballStemmer\nfrom nltk.stem.lancaster import LancasterStemmer\nst = LancasterStemmer()\n \n# Create Snowball stemmer\nsnow_stemmer = SnowballStemmer(language='english')\n\n# Create a Porter Stemmer instance\nporter_stemmer = PorterStemmer()\n\n# Create a Lancaster Stemmer instance\nlancaster_stemmer = LancasterStemmer()\n\n# Example words for stemming\nwords = [\"running\", \"jumps\", \"happily\", \"programming\", 'cared','fairly','sportingly']\n\n# Apply stemming to each word\nstemmed_words = [porter_stemmer.stem(word) for word in words]\nprint(\"===Porter===:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\nprint(\"\\n===Snowball===:\")\nstemmed_words = [snow_stemmer.stem(word) for word in words]\nprint(\"Porter:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\nprint(\"\\n===Lancaster===:\")\nstemmed_words = [lancaster_stemmer.stem(word) for word in words]\nprint(\"Porter:\")\nprint(\"Original words:\", words)\nprint(\"Stemmed words:\", stemmed_words)\n\n===Porter===:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fairli', 'sportingli']\n\n===Snowball===:\nPorter:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fair', 'sport']\n\n===Lancaster===:\nPorter:\nOriginal words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']\nStemmed words: ['run', 'jump', 'happy', 'program', 'car', 'fair', 'sport']"
   },
   {
     "objectID": "dl_lec1.html#definitions",

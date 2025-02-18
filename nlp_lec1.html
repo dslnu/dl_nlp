@@ -1300,11 +1300,89 @@ cf_i = ci^k.
 </div>
 
 <img data-src="img/porter_stemming.png" class="r-stretch"></section>
-<section id="word-normalization-3" class="slide level2">
-<h2>Word Normalization</h2>
+<section id="porter-stemmer-1" class="slide level2">
+<h2>Porter Stemmer</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p>collection <span class="math inline">\(\rightarrow\)</span> <strong>CVCV…C</strong></p>
+<p>illustrate <span class="math inline">\(\rightarrow\)</span> <strong>VCVC…V</strong></p>
+<p>Both can be presented as:</p>
+<p><span class="math display">\[
+[C](VC)^m[V]
+\]</span></p>
+<p><strong>m</strong> is called the <strong>measure</strong> of the word.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="porter-stemmer-2" class="slide level2">
+<h2>Porter Stemmer</h2>
+<!-- https://vijinimallawaarachchi.com/2017/05/09/porter-stemming-algorithm/ -->
 
 <img data-src="img/stemmer1.png" class="r-stretch"></section>
-<section id="word-normalization-4" class="slide level2">
+<section id="porter-stemmer-3" class="slide level2">
+<h2>Porter Stemmer</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Rules</strong></p>
+</div>
+<div class="callout-content">
+<p>Standard form: <span class="math display">\[
+(\textbf{condition})\textbf{S}_1 \rightarrow \textbf{S}_2
+\]</span> There are five phases of rule application</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>How to read</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>If</strong> a word ends with the suffix <span class="math inline">\(S_1\)</span></p>
+<p><strong>AND</strong></p>
+<p>the stem before <span class="math inline">\(S_1\)</span> satisfies the given condition</p>
+<p><strong>THEN</strong> <span class="math inline">\(S_1\)</span> is replaced by <span class="math inline">\(S_2\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="porter-stemmer-4" class="slide level2">
+<h2>Porter Stemmer</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Conditions</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(\ast S\)</span>: the stem ends with S (and similarly for the other letters)</li>
+<li><span class="math inline">\(\ast v \ast\)</span>: the stem contains a vowel</li>
+<li><span class="math inline">\(\ast d\)</span>: the stem ends with a double consonant (e.g.&nbsp;-TT, -SS)</li>
+<li><span class="math inline">\(\ast o\)</span>: the stem ends with <span class="math inline">\(cvc\)</span>, where the second c is not W, X or Y (e.g.&nbsp;-WIL, -HOP)</li>
+</ul>
+<p>And the condition part may also contain expressions with <strong>and</strong>, <strong>or</strong> and <strong>not</strong>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math inline">\((m &gt; 1) EMENT \rightarrow\)</span> will perform this transformation:</p>
+<p>replacement <span class="math inline">\(\rightarrow\)</span> replac</p>
+</div>
+</div>
+</div>
+</section>
+<section id="word-normalization-3" class="slide level2">
 <h2>Word Normalization</h2>
 <p>Other stemmers:</p>
 <div class="callout callout-note no-icon callout-titled callout-style-default">
@@ -1323,7 +1401,7 @@ cf_i = ci^k.
 </div>
 </div>
 </section>
-<section id="word-normalization-5" class="slide level2">
+<section id="word-normalization-4" class="slide level2">
 <h2>Word Normalization</h2>
 <div class="callout callout-tip no-icon callout-titled callout-style-default">
 <div class="callout-body">
@@ -1340,7 +1418,7 @@ cf_i = ci^k.
 </div>
 </div>
 </section>
-<section id="word-normalization-6" class="slide level2">
+<section id="word-normalization-5" class="slide level2">
 <h2>Word Normalization</h2>
 <div class="callout callout-important no-icon callout-titled callout-style-default">
 <div class="callout-body">
@@ -1358,7 +1436,7 @@ cf_i = ci^k.
 </div>
 </div>
 </section>
-<section id="word-normalization-7" class="slide level2">
+<section id="word-normalization-6" class="slide level2">
 <h2>Word Normalization</h2>
 <div class="callout callout-important no-icon callout-titled callout-style-default">
 <div class="callout-body">

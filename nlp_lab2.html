@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Natural Language Processing – Deep Learning/NLP course</title>
+<title>NLP: Lab 2 – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -97,7 +131,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Deep Learning</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./nlp.html" aria-current="page"> 
+    <a class="nav-link" href="./nlp.html"> 
 <span class="menu-text">Natural Language Processing</span></a>
   </li>  
   <li class="nav-item">
@@ -120,11 +154,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lectures" id="toc-lectures" class="nav-link active" data-scroll-target="#lectures">Lectures</a>
-  <ul class="collapse">
-  <li><a href="#lecture-1" id="toc-lecture-1" class="nav-link" data-scroll-target="#lecture-1">Lecture 1</a></li>
-  </ul></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
+  <li><a href="#stemming" id="toc-stemming" class="nav-link active" data-scroll-target="#stemming">Stemming</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
 </nav>
     </div>
@@ -133,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Natural Language Processing</h1>
+<h1 class="title">NLP: Lab 2</h1>
 </div>
 
 
@@ -150,17 +182,84 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lectures" class="level2">
-<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
-<section id="lecture-1" class="level3">
-<h3 class="anchored" data-anchor-id="lecture-1">Lecture 1</h3>
-<p><a href="./nlp_lec1.html">Slides</a></p>
+<section id="stemming" class="level1">
+<h1>Stemming</h1>
+<p>There are various stemmers already available in NLTK. Below is an example usage:</p>
+<div id="e73afc34" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem <span class="im">import</span> PorterStemmer</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.snowball <span class="im">import</span> SnowballStemmer</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.lancaster <span class="im">import</span> LancasterStemmer</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>st <span class="op">=</span> LancasterStemmer()</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Create Snowball stemmer</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>snow_stemmer <span class="op">=</span> SnowballStemmer(language<span class="op">=</span><span class="st">'english'</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Porter Stemmer instance</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>porter_stemmer <span class="op">=</span> PorterStemmer()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a Lancaster Stemmer instance</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>lancaster_stemmer <span class="op">=</span> LancasterStemmer()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Example words for stemming</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>words <span class="op">=</span> [<span class="st">"running"</span>, <span class="st">"jumps"</span>, <span class="st">"happily"</span>, <span class="st">"programming"</span>, <span class="st">'cared'</span>,<span class="st">'fairly'</span>,<span class="st">'sportingly'</span>]</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Apply stemming to each word</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>stemmed_words <span class="op">=</span> [porter_stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"===Porter===:"</span>)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Original words:"</span>, words)</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Stemmed words:"</span>, stemmed_words)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">===Snowball===:"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>stemmed_words <span class="op">=</span> [snow_stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Porter:"</span>)</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Original words:"</span>, words)</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Stemmed words:"</span>, stemmed_words)</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">===Lancaster===:"</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>stemmed_words <span class="op">=</span> [lancaster_stemmer.stem(word) <span class="cf">for</span> word <span class="kw">in</span> words]</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Porter:"</span>)</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Original words:"</span>, words)</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Stemmed words:"</span>, stemmed_words)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>===Porter===:
+Original words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']
+Stemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fairli', 'sportingli']
+
+===Snowball===:
+Porter:
+Original words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']
+Stemmed words: ['run', 'jump', 'happili', 'program', 'care', 'fair', 'sport']
+
+===Lancaster===:
+Porter:
+Original words: ['running', 'jumps', 'happily', 'programming', 'cared', 'fairly', 'sportingly']
+Stemmed words: ['run', 'jump', 'happy', 'program', 'car', 'fair', 'sport']</code></pre>
+</div>
+</div>
 </section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>Task 0.</strong> Compare frequency distributions of stemmed and unstemmed NLTK corpora. Display most commonly used stems from <code>nltk.text</code> corpora on a plot.</p>
+<p><strong>Task 1.</strong> Write your own version of stemmer for Ukrainian (or other non-English language) using regular expressions.</p>
+<p>There is a regexp stemmer in NLTK <a href="https://www.nltk.org/api/nltk.stem.regexp.html">(link)</a>.</p>
+<p>Please write your code so that it satisfies NLTK’s standard interface (a <code>Stemmer</code> class with <code>.stem()</code> method)</p>
+<p><strong>Task 2.</strong> Implement Wagner-Fischer (or <em>Vintsyuk</em>) algorithm for string distance. <a href="https://en.wikipedia.org/wiki/Wagner–Fischer_algorithm">Link</a>.</p>
+<ul>
+<li><p>Modify the algorithm so that substitution operation cost depends on the key proximity on QWERTY keyboard. For inspiration, look at this <a href="https://codegolf.stackexchange.com/questions/233618/distances-between-keys-on-a-qwerty-keyboard">StackExchange question</a>.</p>
+<p>Or consider <a href="https://gist.github.com/pxeger/ae20549834c04f1e40a4fa4ba91a0079">this table</a> directly:</p></li>
+<li><p>Implement another modification to the algorithm: include transposition operation, so that you compute a <a href="https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance">Damerau-Levenshtein distance</a>.</p></li>
+</ul>
 </section>
-<section id="labs" class="level2">
-<h2 class="anchored" data-anchor-id="labs">Labs</h2>
-<p><a href="./nlp_lab1.html">Lab 1</a></p>
-<p><a href="./nlp_lab2.html">Lab 2</a></p>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Chapter 1 from <a href="https://www.nltk.org/book/ch01.html">NLTK book</a>.</li>
+<li>Chapter 2 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>. Plus related slides.</li>
+<li>Official Python <a href="https://docs.python.org/3/howto/regex.html">Regex package documentation</a>.</li>
+<li><a href="https://www.debuggex.com/cheatsheet/regex/python">Regex cheatsheet</a></li>
+<li><a href="https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf">Another version with examples</a></li>
+</ul>
 
 
 </section>
