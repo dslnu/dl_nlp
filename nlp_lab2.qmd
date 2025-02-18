@@ -1,0 +1,87 @@
+---
+title: "NLP: Lab 2"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Stemming
+
+There are various stemmers already available in NLTK. Below is an example usage:
+
+```{python}
+import nltk
+from nltk.stem import PorterStemmer
+from nltk.stem.snowball import SnowballStemmer
+from nltk.stem.lancaster import LancasterStemmer
+st = LancasterStemmer()
+ 
+# Create Snowball stemmer
+snow_stemmer = SnowballStemmer(language='english')
+
+# Create a Porter Stemmer instance
+porter_stemmer = PorterStemmer()
+
+# Create a Lancaster Stemmer instance
+lancaster_stemmer = LancasterStemmer()
+
+# Example words for stemming
+words = ["running", "jumps", "happily", "programming", 'cared','fairly','sportingly']
+
+# Apply stemming to each word
+stemmed_words = [porter_stemmer.stem(word) for word in words]
+print("===Porter===:")
+print("Original words:", words)
+print("Stemmed words:", stemmed_words)
+
+print("\n===Snowball===:")
+stemmed_words = [snow_stemmer.stem(word) for word in words]
+print("Porter:")
+print("Original words:", words)
+print("Stemmed words:", stemmed_words)
+
+print("\n===Lancaster===:")
+stemmed_words = [lancaster_stemmer.stem(word) for word in words]
+print("Porter:")
+print("Original words:", words)
+print("Stemmed words:", stemmed_words)
+```
+
+# Exercises
+**Task 0.** Compare frequency distributions of stemmed and unstemmed NLTK corpora. Display most commonly used stems from `nltk.text` corpora on a plot.
+
+**Task 1.** Write your own version of stemmer for Ukrainian (or other non-English language) using regular expressions.
+
+There is a regexp stemmer in NLTK [(link)](https://www.nltk.org/api/nltk.stem.regexp.html).
+
+Please write your code so that it satisfies NLTK's standard interface (a `Stemmer` class with `.stem()` method)
+
+**Task 2.** Implement Wagner-Fischer (or *Vintsyuk*) algorithm for string distance. [Link](https://en.wikipedia.org/wiki/Wagner–Fischer_algorithm).
+
+- Modify the algorithm so that substitution operation cost depends on the key proximity on QWERTY keyboard. 
+    For inspiration, look at this [StackExchange question](https://codegolf.stackexchange.com/questions/233618/distances-between-keys-on-a-qwerty-keyboard).
+
+     Or consider [this table](https://gist.github.com/pxeger/ae20549834c04f1e40a4fa4ba91a0079) directly: 
+- Implement another modification to the algorithm: include transposition operation, so that you compute a [Damerau-Levenshtein distance](https://en.wikipedia.org/wiki/Damerau–Levenshtein_distance).
+
+# Recommended reading 
+- Chapter 1 from [NLTK book](https://www.nltk.org/book/ch01.html).
+- Chapter 2 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/). Plus related slides.
+- Official Python [Regex package documentation](https://docs.python.org/3/howto/regex.html).
+- [Regex cheatsheet](https://www.debuggex.com/cheatsheet/regex/python)
+- [Another version with examples](https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf)
+
+

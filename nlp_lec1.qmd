@@ -35,6 +35,7 @@ format:
 ## History
 ![](img/lang_spread.png)
 
+
 ## History
 ![](img/lang_tree.png)
 
@@ -703,9 +704,68 @@ This means just dropping affixes.
 :::
 ![](img/porter_stemming.png)
 
-## Word Normalization
+## Porter Stemmer
 
+:::{.callout-tip icon=false}
+## Example
+collection $\rightarrow$ **CVCV...C**
+
+illustrate $\rightarrow$ **VCVC...V**
+
+Both can be presented as:
+
+$$
+[C](VC)^m[V]
+$$
+
+**m** is called the **measure** of the word.
+:::
+
+## Porter Stemmer
+<!-- https://vijinimallawaarachchi.com/2017/05/09/porter-stemming-algorithm/ -->
 ![](img/stemmer1.png)
+
+## Porter Stemmer
+
+:::{.callout-tip icon=false}
+## Rules
+Standard form:
+$$
+(\textbf{condition})\textbf{S}_1 \rightarrow \textbf{S}_2
+$$
+There are five phases of rule application
+:::
+:::{.callout-note icon=false}
+# How to read
+**If** a word ends with the suffix $S_1$
+
+**AND**
+
+the stem before $S_1$ satisfies the given condition
+
+**THEN**
+$S_1$ is replaced by $S_2$.
+
+:::
+
+## Porter Stemmer
+
+:::{.callout-important icon=false}
+## Conditions
+
+- $\ast S$: the stem ends with S (and similarly for the other letters)
+- $\ast v \ast$: the stem contains a vowel
+- $\ast d$: the stem ends with a double consonant (e.g. -TT, -SS)
+- $\ast o$: the stem ends with $cvc$, where the second c is not W, X or Y (e.g. -WIL, -HOP)
+
+And the condition part may also contain expressions with **and**, **or** and **not**.
+:::
+:::{.callout-tip icon=false}
+## Example
+$(m > 1) EMENT \rightarrow$ will perform this transformation:
+
+replacement $\rightarrow$ replac
+:::
 
 ## Word Normalization
 
