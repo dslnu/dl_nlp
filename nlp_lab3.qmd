@@ -182,13 +182,16 @@ Then on each token use `lemmatizer.lemmatize()` using the converted part-of-spee
 And append it to `lemmatized_sentence`.
 
 ```python
-lemmatized_sentence = []
+def lemmatize_sentence(tokens)
+  lemmatized_sentence = []
 
-# CODE_START
-# ...
-# CODE_END
+  # CODE_START
+  # ...
+  # CODE_END
 
-print(lemmatized_sentence)
+  return lemmatized_sentence
+
+lemmatize_sentence(tokens)
 ```
 
 Note that lemmatizer converts words to their base forms (`are` $\rightarrow$ `be`, `comes` $\rightarrow$ `come`).
@@ -214,7 +217,7 @@ for i in range(10):
     print(stop_words[i])
 
 ```
-Now, please write the `process_tokens` function.
+Now, please write the `process_tokens()` function. It should be an improved version of `lemmatize_sentence()` function above.
 
 It should do the following:
 
@@ -222,7 +225,8 @@ It should do the following:
 2. Use regex to remove tokens matching URLs or mentions (`@somebody`).
 3. Remove tokens that stop words or are punctuation symbols (use Python's built-in `string.punctuation`).
 4. Lowercase all tokens
-5. Return the list of `cleaned_tokens`.
+5. Lemmatize using `WordNetLemmatizer`.
+6. Return the list of `cleaned_tokens`.
 
 ```python
 import re, string
@@ -293,10 +297,10 @@ from nltk import FreqDist
 
 **Task 1.** Change the code so it removes hashtags during pre-processing. (E.g. `#Ukraine`).
 
-**Task 2.** Let's suppose that semantic distance between words is the distance to the common semantic parent (`hypernym`). Write a function that will compute this distance between two words.
+**Task 2.** Modify `process_tokens()` so that instead of using `lemmatizer.lemmatize()`, it will use WordNet synsets.
 
+**Task 3.** Let's suppose that semantic distance between words is the distance to the common semantic parent (`hypernym`). Write a function that will compute this distance between two words.
 
-**Task 3[\*]{style="color:red"}.** Suggest improvements to the code. How can the code be made faster/more accurate?
 
 # Recommended reading 
 
