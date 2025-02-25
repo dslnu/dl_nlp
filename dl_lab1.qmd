@@ -1,0 +1,24 @@
+---
+title: "DL: Lab 1"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+# Lab overview
+
+We'll implement a binary classifier using logistic regression, but via a neural network.
+
+Code in attached Jupyter notebook.

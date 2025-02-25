@@ -1,0 +1,303 @@
+---
+title: "NLP: Lab 3"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Lemmatization. WordNet semantic hierarchies
+
+We will learn how to:
+
+- use lemmatization (a better version of `stemming`) using WordNet
+- do text cleanup
+- analyze WordNet semantic hierarchies
+
+## Plan:
+1. **Get tokens** for positive and negative tweets (by `token` in this context we mean `word`).
+2. **Lemmatize** them (convert to base word forms). For that we will use a Part-of-Speech tagger.
+3. **Clean'em up** (remove mentions, URLs, stop words).
+4. **Write** the final processing function.
+
+
+## Preparation
+First, we'll download Twitter samples from NLTK:
+```{python}
+import nltk
+
+nltk.download('twitter_samples')
+```
+
+And import these:
+```{python}
+from nltk.corpus import twitter_samples
+```
+These contain positive/negative tweet samples.
+
+We can check the string content of these tweets:
+```{python}
+positive_tweets = twitter_samples.strings('positive_tweets.json')
+negative_tweets = twitter_samples.strings('negative_tweets.json')
+
+positive_tweets[50]
+```
+
+Or we can get a list of tokens using [tokenized](https://www.nltk.org/howto/twitter.html) method on `twitter_samples`.
+```{python}
+tweet_tokens = twitter_samples.tokenized('positive_tweets.json')
+print(tweet_tokens[50])
+```
+
+Now let's setup a Part-of-Speech tagger. We will use it for lemmatization.
+
+Download and import a perceptron tagger that will be used by the PoS tagger.
+```{python}
+nltk.download('averaged_perceptron_tagger_eng')
+from nltk.tag import pos_tag
+```
+
+Check how it works. Note that it returns tuples, where second element is a Part-of-Speech identifier.
+```{python}
+pos_tag(tweet_tokens[50])
+```
+
+## WordNet
+
+WordNet is a semantically-oriented dictionary of English. It contains words along with their synonyms etc., organized in a **semantic hierarchy**.
+
+Next, we will use it's lemmatizer functionality. But first let's check how the hierarchy-focused features work.
+
+
+```{python}
+nltk.download('wordnet')
+```
+
+### Synonyms
+E.g., in order to fetch synonym sets for word `car`, you do:
+
+```{python}
+from nltk.corpus import wordnet as wn
+
+word_synset = wn.synsets("car")
+print("synsets:", word_synset)
+print("lemma names:", word_synset[0].lemma_names())
+
+```
+So, using WordNet, we can say that `lemma`s are pairings of synsets and words.
+
+We can now show definitions and examples:
+
+```{python}
+word_synset[0].definition()
+```
+```{python}
+word_synset[0].examples()
+```
+```{python}
+word_synset[1].definition()
+```
+```{python}
+word_synset[1].examples()
+```
+
+### Hyponyms
+Concepts that are **more specific**:
+```{python}
+word_synset[0].hyponyms()
+```
+
+### Hypernyms
+Concepts that are **more generic**:
+```{python}
+word_synset[0].hypernyms()
+```
+This only gave us the concept immediately above. In order to list all hypernyms, we can use **paths**:
+
+```{python}
+tree = wn.synsets("tree")[0]
+paths = tree.hypernym_paths()
+for p in paths:
+  print([synset.name() for synset in p])
+```
+
+### Meronyms
+Concept parts:
+
+```{python}
+tree.part_meronyms()
+```
+
+Or the substance it's made of:
+```{python}
+tree.substance_meronyms()
+```
+
+### Holonyms
+Entities concept is **part of**:
+```{python}
+tree.member_holonyms()
+```
+
+## Lemmatization function
+Let's write a function that will lemmatize twitter tokens.
+
+Use documentation for [lemmatize](https://www.nltk.org/api/nltk.stem.wordnet.html#nltk.stem.wordnet.WordNetLemmatizer.lemmatize).
+
+First fetch PoS tokens so that they can be passed to `WordNetLemmatizer`.
+
+```python
+from nltk.stem.wordnet import WordNetLemmatizer
+tokens = tweet_tokens[50]
+```
+
+
+```python
+# Create a lemmatizer
+lemmatizer = WordNetLemmatizer()
+```
+Now write the code that will produce an array of lemmatized tokens inside `lemmatized_sentence`.
+
+Convert PoS tags into a format used by the lemmatizer
+using the following rules:
+
+- NN $\rightarrow$ n
+- VB $\rightarrow$ v
+- else $\rightarrow$ a
+
+Then on each token use `lemmatizer.lemmatize()` using the converted part-of-speech tag.
+
+And append it to `lemmatized_sentence`.
+
+```python
+lemmatized_sentence = []
+
+# CODE_START
+# ...
+# CODE_END
+
+print(lemmatized_sentence)
+```
+
+Note that lemmatizer converts words to their base forms (`are` $\rightarrow$ `be`, `comes` $\rightarrow$ `come`).
+
+## Processing
+
+Now we can proceed to processing. 
+During processing, we will perform cleanup:
+
+- remove URLs and mentions using regexes
+- after lemmatization, remove *stopwords*
+
+```{python}
+nltk.download('stopwords')
+```
+What are these stopwords? Let's see some.
+
+```{python}
+from nltk.corpus import stopwords
+stop_words = stopwords.words('english')
+print(len(stop_words))
+for i in range(10):
+    print(stop_words[i])
+
+```
+Now, please write the `process_tokens` function.
+
+It should do the following:
+
+1. Iterate through `pos_tag(tweet_tokens)`.
+2. Use regex to remove tokens matching URLs or mentions (`@somebody`).
+3. Remove tokens that stop words or are punctuation symbols (use Python's built-in `string.punctuation`).
+4. Lowercase all tokens
+5. Return the list of `cleaned_tokens`.
+
+```python
+import re, string
+
+def process_tokens(tweet_tokens):
+
+    cleaned_tokens = []
+    stop_words = stopwords.words('english')
+    lemmatizer = WordNetLemmatizer()
+
+    for token, tag in pos_tag(tweet_tokens):
+      # CODE_START
+      # ...
+      # CODE_END
+    return cleaned_tokens
+```
+Test your function:
+
+```python
+print("Before:", tweet_tokens[50])
+print("After:", process_tokens(tweet_tokens[50]))
+```
+Now run `process_tokens` on all positive/negative tokens (use `tokenized` method as mentioned above).
+
+```python
+# CODE_START
+
+# positive_tweet_tokens =
+# negative_tweet_tokens =
+
+# positive_cleaned_tokens_list =
+# negative_cleaned_tokens_list =
+
+# CODE_END
+```
+Let's see how did the processing go.
+```python
+print(positive_tweet_tokens[500])
+print(positive_cleaned_tokens_list[500])
+```
+
+Now, let's check what words are most common.
+
+First, add a helper function `get_all_words`:
+
+```python
+def get_all_words(cleaned_tokens_list):
+  # CODE_START
+  # ...
+  # CODE_END
+all_pos_words = get_all_words(positive_cleaned_tokens_list)
+```
+Perform frequency analysis using `FreqDist` and print 10 words most commonly used in positive tweets:
+
+```python
+from nltk import FreqDist
+
+# CODE_START
+# use all_pos_words
+# ...
+# CODE_END
+```
+
+# Exercises
+
+
+**Task 0.**  Execute the notebook and complete listed exercises (between `CODE_START` and `CODE_END` blocks). 
+
+**Task 1.** Change the code so it removes hashtags during pre-processing. (E.g. `#Ukraine`).
+
+**Task 2.** Let's suppose that semantic distance between words is the distance to the common semantic parent (`hypernym`). Write a function that will compute this distance between two words.
+
+
+**Task 3[\*]{style="color:red"}.** Suggest improvements to the code. How can the code be made faster/more accurate?
+
+# Recommended reading 
+
+- Chapter 2.5 from [NLTK book](https://www.nltk.org/book/ch02.html).
