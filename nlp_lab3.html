@@ -481,13 +481,16 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 </ul>
 <p>Then on each token use <code>lemmatizer.lemmatize()</code> using the converted part-of-speech tag.</p>
 <p>And append it to <code>lemmatized_sentence</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>lemmatized_sentence <span class="op">=</span> []</span>
-<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
-<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span>
-<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span>
-<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(lemmatized_sentence)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lemmatize_sentence(tokens)</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  lemmatized_sentence <span class="op">=</span> []</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># CODE_START</span></span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ...</span></span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># CODE_END</span></span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> lemmatized_sentence</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>lemmatize_sentence(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <p>Note that lemmatizer converts words to their base forms (<code>are</code> <span class="math inline">\(\rightarrow\)</span> <code>be</code>, <code>comes</code> <span class="math inline">\(\rightarrow\)</span> <code>come</code>).</p>
 </section>
 <section id="processing" class="level2">
@@ -529,13 +532,14 @@ am
 an</code></pre>
 </div>
 </div>
-<p>Now, please write the <code>process_tokens</code> function.</p>
+<p>Now, please write the <code>process_tokens()</code> function. It should be an improved version of <code>lemmatize_sentence()</code> function above.</p>
 <p>It should do the following:</p>
 <ol type="1">
 <li>Iterate through <code>pos_tag(tweet_tokens)</code>.</li>
 <li>Use regex to remove tokens matching URLs or mentions (<code>@somebody</code>).</li>
 <li>Remove tokens that stop words or are punctuation symbols (use Python’s built-in <code>string.punctuation</code>).</li>
 <li>Lowercase all tokens</li>
+<li>Lemmatize using <code>WordNetLemmatizer</code>.</li>
 <li>Return the list of <code>cleaned_tokens</code>.</li>
 </ol>
 <div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re, string</span>
@@ -587,8 +591,8 @@ an</code></pre>
 <h1>Exercises</h1>
 <p><strong>Task 0.</strong> Execute the notebook and complete listed exercises (between <code>CODE_START</code> and <code>CODE_END</code> blocks).</p>
 <p><strong>Task 1.</strong> Change the code so it removes hashtags during pre-processing. (E.g. <code>#Ukraine</code>).</p>
-<p><strong>Task 2.</strong> Let’s suppose that semantic distance between words is the distance to the common semantic parent (<code>hypernym</code>). Write a function that will compute this distance between two words.</p>
-<p><strong>Task 3<span style="color:red">*</span>.</strong> Suggest improvements to the code. How can the code be made faster/more accurate?</p>
+<p><strong>Task 2.</strong> Modify <code>process_tokens()</code> so that instead of using <code>lemmatizer.lemmatize()</code>, it will use WordNet synsets.</p>
+<p><strong>Task 3.</strong> Let’s suppose that semantic distance between words is the distance to the common semantic parent (<code>hypernym</code>). Write a function that will compute this distance between two words.</p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>
