@@ -15,17 +15,21 @@ diagram:
       execpath: lualatex
       additional-packages: |
         \usepackage{neuralnetwork}
+        \usepackage{mathtools}
+        \usepackage{amsmath}
         \pgfplotsset{compat=1.16}
         \usepackage{pgfplots}
         \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
         \usetikzlibrary{arrows.meta}
         \usetikzlibrary{positioning}
+        \usetikzlibrary{shapes.misc}
         \usetikzlibrary{decorations.pathreplacing}
 filters:
   - diagram
 format: 
   revealjs:
     preview-links: auto
+    include-in-header: mathjax.html
     slide-number: true
     theme: default
     multiplex:
@@ -35,7 +39,13 @@ format:
 ---
 
 # Neural Network Representation
-## Deep Networks
+
+## Deep networks
+Suppose we have this network:
+
+![](img/deep_nns1.png)
+
+## Deep Networks {.smaller}
   What happens in Hidden layer 1 and Output layer?
 
 We will use this notation:
@@ -48,12 +58,12 @@ We will use this notation:
 And then we compute $L(a^{[2]}, y)$.
 
 And then, similarly, for backpropagation, we will compute $da^{[2]}, dz^{[2]}, dW^{[2]}$.
+
 ::: aside
 Do not confuse round and square brackets.
 :::
 
 ## Deep Networks
-\subsection{Neural Network Representation}
 Alternative notation: $a^{[0]} = x$.
 So in the picture
 \begin{align*}
@@ -67,13 +77,15 @@ So in the picture
 2-layer network (input layer not counted). Input layer is layer 0.
 
 ## Deep Networks
-$$
-\begin{neuralnetwork}[height=4,layertitleheight=4em]
-        \inputlayer[count=3, bias=false]
-        \hiddenlayer[count=4, bias=false] \linklayers
-        \outputlayer[count=1] \linklayers
-    \end{neuralnetwork}
-    $$
+
+<!-- ```tikz{height=600} -->
+<!-- \begin{neuralnetwork}[height=4,layertitleheight=4em] -->
+<!--         \inputlayer[count=3, bias=false] -->
+<!--         \hiddenlayer[count=4, bias=false] \linklayers -->
+<!--         \outputlayer[count=1] \linklayers -->
+<!-- \end{neuralnetwork} -->
+<!-- ``` -->
+![](img/deep_nns2.png)
 
 :::{.callout-important icon=false}
 ## First hidden layer params
@@ -101,7 +113,9 @@ So, if we have $a_i^{[l]}$, then $l$ means layer, and $i$ means node number in a
 For $m$ training examples, we compute $x^{(m)} \rightarrow a^{[2](m)} = \hat{y}^{(m)}$.
 
 The block of code:
+
 `for i = 1 to m:`
+
 \begin{align*}
   &z^{[1](i)} = W^{[1]}x^{(i)}+b^{[1]},\\
   &a^{[1](i)} = \sigma(z^{[1](i)}),\\
@@ -109,7 +123,7 @@ The block of code:
   &a^{[2](i)} = \sigma(z^{[2](i)})
 \end{align*}
 
-## Deep Networks
+## Deep Networks {.smaller}
   How do we vectorize it across multiple training examples?
 We compute by going to matrices:
 \begin{align*}
@@ -143,11 +157,23 @@ We compute by going to matrices:
 
 <!-- % Was proven in Aggarwal's book too. -->
 
-Sigmoid derivative: $\dfrac{d\sigma}{dz} = \sigma(z)(1-\sigma(z))$.
+:::{.callout-important icon=false}
+## Sigmoid derivative
+$$
+\dfrac{d\sigma}{dz} = \sigma(z)(1-\sigma(z))
+$$
+:::
 
-Tanh derivative: $\dfrac{d\tanh}{dz} = 1-(\tanh(z))^2$.
+:::{.callout-tip icon=false}
+## Tanh derivative
 
-ReLU derivative: 
+$$
+\dfrac{d\tanh}{dz} = 1-(\tanh(z))^2
+$$
+:::
+
+:::{.callout-note icon=false}
+## ReLU derivative 
 \begin{align*}
   &g'(z) = \begin{cases}
     0 , & \text{if } z < 0,\\
@@ -155,18 +181,27 @@ ReLU derivative:
     \text{undefined}, & \text{if } z = 0
   \end{cases}
 \end{align*}
+:::
 
 # Gradient Descent for Neural Networks
 
 ## Deep Networks
-Let's review the parameters: $W^{[1]}, b^{[1]}, W^{[2]}, b^{[2]}$.
+:::{.callout-tip icon=false}
+## Parameters
+Review: 
+
+$W^{[1]}, b^{[1]}, W^{[2]}, b^{[2]}$.
 
 $n_x = n^{[0]}$, $n^{[2]} = 1$.
+:::
 
-Cost function in our case will be
+:::{.callout-important icon=false}
+## Cost function
+In our case will be
 \begin{align*}
   &J(W^{[1]}, b^{[1]}, W^{[2]}, b^{[2]})= \frac{1}{m}\sum\limits_{i=1}^m L(\hat{y},y).
 \end{align*}
+:::
 Dimensions for $W^{[1]}$ are $(n^{[1]}, n^{[0]})$.
 
 ## Deep Networks
@@ -177,6 +212,7 @@ For gradient descent we compute
 - $W^{[1]} = W^{[1]} - \alpha dW^{[1]}$
 - $B^{[1]} = B^{[1]} - \alpha dB^{[1]}$
 
+## Deep Networks
 How do we compute the derivatives?
 \begin{align*}
   &dZ^{[2]} = A^{[2]} - Y,\\
@@ -197,41 +233,15 @@ Next step:
 
 ## Deep Networks
 Forward propagation:
-$$
-\begin{tikzpicture}[node distance=5mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$(x,W^{[1]},B^{[1]}) $};
-    \node (B) [default,below=of A] {$z^{[1]} = W^{[1]}x+B^{[1]}$};
-    \node (C) [default,below=of B] {$a^{[1]} = \sigma(z^{[1]})$};
-    \node (D) [default,below=of C] {$z^{[2]} = W^{[2]}a^{[1]}+b^{[2]}$};
-    \node (E) [default,below=of D] {$a^{[2]} = \sigma(z^{[2]})$};
-    \node (F) [default,below=of E] {$L(a^{[2]}, y)$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-\end{tikzpicture}
-$$
+
+![](img/deep_nns3.png)
 
 ## Deep Networks
 Backward propagation:
-$$
-\begin{tikzpicture}[node distance=5mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$dz^{[2]} = a^{[2]} - y$};
-    \node (B) [default,below=of A] {$dW^{[2]} = dz^{[2]}a^{[1]T}$};
-    \node (C) [default,below=of B] {$db^{[2]} = dz^{[2]}$};
-    \node (D) [default,below=of C] {$dz^{[1]} = W^{[2]T}dz^{[2]} \odot g^{[1]'}(z^{[1]})$};
-    \node (E) [default,below=of D] {$dW^{[1]} = dz^{[1]}x^{T}$};
-    \node (F) [default,below=of E] {$db^{[1]} = dz^{[1]}$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-\end{tikzpicture}
-$$
 
-## Deep Networks
+![](img/deep_nns4.png)
+
+## Deep Networks {.smaller}
 Vectorized versions:
 \begin{align*}
   &d\vec{Z}^{[2]} = A^{[2]} - Y,\\
@@ -244,116 +254,129 @@ Vectorized versions:
 
 ## Deep Networks: Random Initialization
 
+:::{.callout-important icon=false}
+## Symmetry-breaking problem
 If we initialize weights to zero, the hidden units will be symmetric.
-Symmetry-breaking problem.
-\begin{align*}
-  &W^{[1]} = np.random.randn((2,2))*0.01,\\
-  &b^{[1]} = np.zero((2,1))
-\end{align*} 
+$$
+W^{[1]} = np.random.randn((2,2))*0.01,\\
+b^{[1]} = np.zero((2,1))
+$$
+:::
+
+::: aside
 The 0.01 multiplier is because we don't want to end up at flat parts of the activation function.
+:::
 
 ## Deep Networks
 $a^{[l]}$ - activations in layer $l$.
-$$
-    \begin{neuralnetwork}[height=4,layertitleheight=4em]
-        \newcommand{\xinput}[2]{$x_#2$}
-        \newcommand{\y}[2]{$\hat{y}_#2$}
-        \newcommand{\hfirst}[2]{\small $a^{[1]}_#2$}
-        \newcommand{\hsecond}[2]{\small $a^{[2]}_#2$}
-        \newcommand{\hthird}[2]{\small $a^{[3]}_#2$}
-        \inputlayer[count=3, bias=false, title=Input\\layer, text=\xinput]
-        \hiddenlayer[count=5, bias=false, title=Hidden\\layer 1, text=\hfirst] \linklayers
-        \hiddenlayer[count=5, bias=false, title=Hidden\\layer 2, text=\hsecond] \linklayers
-        \hiddenlayer[count=3, bias=false, title=Hidden\\layer 3, text=\hthird] \linklayers
-        \outputlayer[count=1, title=Output\\layer, text=\y] \linklayers
-    \end{neuralnetwork}
-$$
+![](img/deep_nns5.png)
 
 # Forward Propagation in a Deep Network
 
 ## Deep Networks
-General rule: $z^{[l]} = W^{[l]}a^{[l-1]} + b^{[l]}$, $a^{[l]} = g^{[l]}(z^{[l]})$.
 
-Vectorized versions:
+:::{.callout-important icon=false}
+## General rule
+$z^{[l]} = W^{[l]}a^{[l-1]} + b^{[l]}$, $a^{[l]} = g^{[l]}(z^{[l]})$.
+:::
+
+:::{.callout-tip icon=false}
+## Vectorized versions
 \begin{align*}
 &Z^{[l]} = W^{[l]}A^{[l-1]} + b^{[l]}, \\
 &A^{[l]} = g^{[l]}(Z^{[l]})
 \end{align*}
+:::
+
+:::{.callout-note icon=false}
+## Important
 For loop is necessary for multiple layers.
+:::
 
-# Getting your Matrix Dimensions Right
-
-## Deep Networks
-$$
-\begin{neuralnetwork}[height=4,layerspacing=15mm]
-        \newcommand{\y}[2]{$\hat{y}_#2$}
-        \inputlayer[count=2, bias=false]
-        \hiddenlayer[count=3, bias=false] \linklayers
-        \hiddenlayer[count=5, bias=false] \linklayers
-        \hiddenlayer[count=4, bias=false] \linklayers
-        \hiddenlayer[count=2, bias=false] \linklayers
-        \outputlayer[count=1, text=\y] \linklayers
-    \end{neuralnetwork}
-$$
-
-Dimensions of $W^{[l]}$ are $(n^{[l]}, n^{[l-1]})$.
-And dimensions of $b^{[l]}$ should be $(n^{[l]}, 1)$.
-dW and db dimensions should be identical to the ones for W and b.
-Dimension of $Z^{[1]}$ is $(n^{[1]}, m)$.
 
 ## Deep Networks
 
-:::{.callout-important icon=false}
-## Circuit theory
- Intuition from circuit theory - small L-layer network requires exponentially less hidden units than shallower networks.
-To compute XOR, we'll need $O(log n)$ layers. With a single hidden layer, we'll need $2^{n-1}$ hidden units.
+![](img/deep_nns6.png)
+
+:::{.callout-important}
+## Getting your Matrix Dimensions Right
+
+1. Dimensions of $W^{[l]}$ are $(n^{[l]}, n^{[l-1]})$.
+2. Dimensions of $b^{[l]}$ should be $(n^{[l]}, 1)$.
+3. Dimensions of dW and db should be identical to the ones for W and b.
+4. Dimension of $Z^{[1]}$ is $(n^{[1]}, m)$.
 :::
 
 ## Deep Networks
-Forward propagation:
+
+:::{.callout-note}
+## Intuition from **circuit theory**
+Small L-layer network requires exponentially less hidden units than shallower networks.
+:::
+
+:::{.callout-tip icon=false}
+## Example
+
+To compute XOR, we'll need $O(\log \, n)$ layers. 
+
+With a single hidden layer, we'll need $2^{n-1}$ hidden units.
+:::
+
+## Deep Networks
+:::{.callout-important icon=false}
+## Forward propagation:
 
 - Inputs: $a^{[l-1]}$
 - Parameters: $W^{[l]}$, $b^{[l]}$.
 - Outputs: $a^{[l]}$
 - Cache: $z^{[l]}$
+:::
 
-Backward propagation:
+:::{.callout-tip icon=false}
+## Backward propagation:
 
 - Inputs: $da^{[l]}$
 - Parameters: $W^{[l]}$, $b^{[l]}$.
 - Outputs: $da^{[l-1]}$
 - Cache: $dz^{[l]}$, $dW^{[l]}$, $db^{[l]}$
+:::
 
 ## Deep Networks
 
-Backward propagation steps:
+:::{.callout-important icon=false}
+## Backward propagation steps:
 \begin{align*}
   &dz^{[l]} = da^{[l]}\odot g^{[l]'}(z^{[l]})\\
   &dW^{[l]} = dz^{[l]} \cdot (a^{[l-1]T})\\
   &db^{[l]} = dz^{[l]} \\
   &da^{[l-1]} = W^{[l]T} \cdot dz^{[l]}
 \end{align*}
-Vectorized versions:
+:::
+
+## Deep Networks
+:::{.callout-tip icon=false}
+## Vectorized versions:
 \begin{align*}
   &dZ^{[l]} = dA^{[l]}\odot g^{[l]'}(Z^{[l]})\\
   &dW^{[l]} = \frac{1}{m} dZ^{[l]} \cdot (A^{[l-1]T})\\
   &db^{[l]} = \frac{1}{m} np.sum(dZ^{[l]}, axis=1, keepdims=True) \\
   &dA^{[l-1]} = W^{[l]T} \cdot dZ^{[l]}
 \end{align*}
+:::
 
-## Deep Networks
-For final layer, we have
+:::{.callout-important icon=false}
+## Final layer
 \begin{align*}
   &da^{[l]} = -\frac{y}{a} + \frac{1-y}{1-a}.
 \end{align*}
+:::
 
 ## Parameters vs Hyperparameters
 :::{.callout-important icon=false}
 ## Parameters
-      \begin{itemize}
-        \item $W^{[i]}$
-        \item $b^{[i]}$ 
-      \end{itemize}
+
+- $W^{[i]}$
+- $b^{[i]}$ 
 :::
 
 :::{.callout-note icon=false}
@@ -366,43 +389,35 @@ For final layer, we have
 - choice of activation functions
 :::
 
-## Backpropagation in detail
+
+# Backpropagation in detail
+
+## Backpropagation
 
 \begin{align}
 z_{j, i}^{[l]} &= \sum_k w_{j, k}^{[l]} a_{k, i}^{[l - 1]} + b_j^{[l]}, \label{eq:z_scalar} \\
 a_{j, i}^{[l]} &= g_j^{[l]}(z_{1, i}^{[l]}, \dots, z_{j, i}^{[l]}, \dots, z_{n^{[l]}, i}^{[l]}). \label{eq:a_scalar}
 \end{align}
 
-## Backpropagation in detail
-$$
-\begin{longtable}[]{@{}ll@{}}
-\toprule\noalign{}
-\textbf{Entity} & \textbf{Description} \\
-\midrule\noalign{}
-\endhead
-\bottomrule\noalign{}
-\endlastfoot
-\(l\) & The current layer \(l = 1, \dots, L\). \\
-\(n^{[l]}\) & The number of nodes in the current layer. \\
-\(n^{[l - 1]}\) & The number of nodes in the previous layer. \\
-\(j\) & The \(j\)th node of the current layer,
-\(j = 1, \dots, n^{[l]}\). \\
-\(k\) & The \(k\)th node of the previous layer,
-\(k = 1, \dots, n^{[l - 1]}\). \\
-\(i\) & The current training example \(i = 1, \dots, m\). \\
-\(z_{j, i}^{[l]}\) & A weighted sum of the activations of the previous
-layer. \\
-\(w_{j, k}^{[l]}\) & A weight that scales the \(k\)th activation of the
-previous layer. \\
-\(b_j^{[l]}\) & A bias in the current layer. \\
-\(a_{j, i}^{[l]}\) & An activation in the current layer. \\
-\(a_{k, i}^{[l - 1]}\) & An activation in the previous layer. \\
-\(g_j^{[l]}\) & An activation function
-\(g_j^{[l]} \colon \mathbb{R}^{n^{[l]}} \to \mathbb{R}\). \\
-\end{longtable}
-$$
+## Backpropagation {.smaller}
 
-## Backpropagation in detail
+|Entity|Description|
+|--|---|
+|$l$|The current layer $l = 1, \dots, L$|
+|$n^{[l]}$|The number of nodes in the current layer|
+|$n^{[l - 1]}$|The number of nodes in the previous layer|
+|$j$|The $j$-th node of the current layer, $j = 1, \dots, n^{[l]}$|
+|$k$|The $k$-th node of the previous layer,$k = 1, \dots, n^{[l - 1]}$|
+|$i$|The current training example $i = 1, \dots, m$|
+|$z_{j, i}^{[l]}$|A weighted sum of the activations of the previous layer|
+|$w_{j, k}^{[l]}$|A weight that scales the $k$-th activation of the previous layer|
+|$b_j^{[l]}$|A bias in the current layer|
+|$a_{j, i}^{[l]}$|An activation in the current layer|
+|$a_{k, i}^{[l - 1]}$|An activation in the previous layer|
+|$g_j^{[l]}$|An activation function $g_j^{[l]} \colon \mathbb{R}^{n^{[l]}} \to \mathbb{R}$|
+: {tbl-colwidths="[15,85]"}
+
+## Backpropagation {.smaller}
 We vectorize the nodes:
 
 \begin{align*}
@@ -420,6 +435,7 @@ w_{j, 1}^{[l]} & \dots & w_{j, k}^{[l]} & \dots & w_{j, n^{[l - 1]}}^{[l]} \\
 \vdots & \ddots & \vdots & \ddots & \vdots \\
 w_{n^{[l]}, 1}^{[l]} & \dots & w_{n^{[l]}, k}^{[l]} & \dots & w_{n^{[l]}, n^{[l - 1]}}^{[l]}
 \end{bmatrix}
+
 \begin{bmatrix}
 a_{1, i}^{[l - 1]} \\
 \vdots \\
@@ -433,7 +449,11 @@ b_1^{[l]} \\
 b_j^{[l]} \\
 \vdots \\
 b_{n^{[l]}}^{[l]}
-\end{bmatrix}, \\
+\end{bmatrix},
+\end{align*}
+
+## Backpropagation {.smaller}
+\begin{align*}
 \begin{bmatrix}
 a_{1, i}^{[l]} \\
 \vdots \\
@@ -450,7 +470,7 @@ g_{n^{[l]}}^{[l]}(z_{1, i}^{[l]}, \dots, z_{j, i}^{[l]}, \dots, z_{n^{[l]}, i}^{
 \end{bmatrix},
 \end{align*}
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 which we can write as
 
 \begin{align}
@@ -460,18 +480,21 @@ which we can write as
 
 where 
 \begin{align*}
-  &\vec{z}_{:, i}^{[l]} \in \R^{n^{[l]}}, \\
-  &\vec{W}^{[l]} \in \R^{n^{[l]} \times n^{[l - 1]}}, \\
-  &\vec{b}^{[l]} \in \R^{n^{[l]}}, \\
-  &\vec{a}_{:, i}^{[l]} \in \R^{n^{[l]}}, \\
-  &\vec{a}_{:, i}^{[l - 1]} \in \R^{n^{[l - 1]}}, \\
-  &\vec{g}^{[l]} \colon \R^{n^{[l]}} \to \R^{n^{[l]}}.
+  &\vec{z}_{:, i}^{[l]} \in \mathbb{R}^{n^{[l]}}, \,
+  &\vec{W}^{[l]} \in \mathbb{R}^{n^{[l]} \times n^{[l - 1]}}, \,
+  &\vec{b}^{[l]} \in \mathbb{R}^{n^{[l]}}, \\
+  &\vec{a}_{:, i}^{[l]} \in \mathbb{R}^{n^{[l]}}, \;
+  &\vec{a}_{:, i}^{[l - 1]} \in \mathbb{R}^{n^{[l - 1]}}, \;
+  &\vec{g}^{[l]} \colon \mathbb{R}^{n^{[l]}} \to \mathbb{R}^{n^{[l]}}.
 \end{align*}
-We have used a
-colon to clarify that \(\vec{z}_{:, i}^{[l]}\) is the \(i\)th column of
-\(\vec{Z}^{[l]}\), and so on.
 
-## Backpropagation in detail
+::: aside
+We have used a
+colon to clarify that $\vec{z}_{:, i}^{[l]}$ is the $i$-th column of
+$\vec{Z}^{[l]}$, and so on.
+:::
+
+## Backpropagation {.smaller}
 Next, we vectorize the training examples:
 
 \begin{align}
@@ -486,7 +509,7 @@ Next, we vectorize the training examples:
 \begin{bmatrix}
 \vec{b}^{[l]} & \dots & \vec{b}^{[l]} & \dots & \vec{b}^{[l]}
 \end{bmatrix} \notag \\
-&= \vec{W}^{[l]} \vec{A}^{[l - 1]} + \broadcast(\vec{b}^{[l]}), \notag \\
+&= \vec{W}^{[l]} \vec{A}^{[l - 1]} + \text{broadcast}(\vec{b}^{[l]}), \notag \\
 \vec{A}^{[l]} &=
 \begin{bmatrix}
 \vec{a}_{:, 1}^{[l]} & \dots & \vec{a}_{:, i}^{[l]} & \dots & \vec{a}_{:, m}^{[l]}
@@ -495,13 +518,12 @@ Next, we vectorize the training examples:
 
 where 
 \begin{align*}
-  &\vec{Z}^{[l]} \in \R^{n^{[l]} \times m}, \\
-  &\vec{A}^{[l]} \in \R^{n^{[l]} \times m}, \\
-  &\vec{A}^{[l - 1]} \in \R^{n^{[l - 1]} \times m}. 
+  &\vec{Z}^{[l]} \in \mathbb{R}^{n^{[l]} \times m}, \\
+  &\vec{A}^{[l]} \in \mathbb{R}^{n^{[l]} \times m}, \\
+  &\vec{A}^{[l - 1]} \in \mathbb{R}^{n^{[l - 1]} \times m}. 
 \end{align*}
-\end{frame}
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 We would also like to establish two additional notations:
 
 \begin{align}
@@ -509,8 +531,8 @@ We would also like to establish two additional notations:
 \vec{A}^{[L]} &= \vec{\hat{Y}}, \label{eq:A_L}
 \end{align}
 
-where \(\vec{X} \in \R^{n^{[0]} \times m}\) denotes the inputs and
-\(\vec{\hat{Y}} \in \R^{n^{[L]} \times m}\) denotes the
+where $\vec{X} \in \mathbb{R}^{n^{[0]} \times m}$ denotes the inputs and
+$\vec{\hat{Y}} \in \mathbb{R}^{n^{[L]} \times m}$ denotes the
 predictions/outputs.
 
 Finally, we are ready to define the cost function:
@@ -519,10 +541,19 @@ Finally, we are ready to define the cost function:
 J = f(\vec{\hat{Y}}, \vec{Y}) = f(\vec{A}^{[L]}, \vec{Y}), \label{eq:J}
 \end{equation}
 
-where $\vec{Y} \in \R^{n^{[L]} \times m}$ denotes the targets and
-$f \colon \R^{2 n^{[L]}} \to \R$ can be tailored to our needs.
+where $\vec{Y} \in \mathbb{R}^{n^{[L]} \times m}$ denotes the targets and
+$f \colon \mathbb{R}^{2 n^{[L]}} \to \mathbb{R}$ can be tailored to our needs.
 
-## Backpropagation in detail
+## Backpropagation
+
+$$
+\def\pdv#1#2{\frac{\partial #1}{\partial #2}}
+\def\dpdv#1#2{\frac{\partial #1}{\partial #2}}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\peq}{\phantom{=}}
+$$
+
 :::{.callout-tip icon=false}
 ## Chain rule
  \begin{align}
@@ -535,7 +566,7 @@ y_k &= f_k(u_1, \dots, u_i, \dots, u_m). \label{eq:example_y_scalar}
 \end{equation}
 :::
 
-## Backpropagation in detail
+## Backpropagation
 Let's write out first derivatives of $J$ with respect to parameters $w$ and $b$:
 
 \begin{align}
@@ -543,7 +574,7 @@ Let's write out first derivatives of $J$ with respect to parameters $w$ and $b$:
 \pdv{J}{b_j^{[l]}} &= \sum_i \pdv{J}{z_{j, i}^{[l]}} \pdv{z_{j, i}^{[l]}}{b_j^{[l]}} = \sum_i \pdv{J}{z_{j, i}^{[l]}}. \label{eq:db_scalar}
 \end{align}
 
-## Backpropagation in detail {.smaller}
+## Backpropagation {.smaller}
 Vectorization results in
 
 \begin{align*}
@@ -572,7 +603,7 @@ a_{1, m}^{[l - 1]} & \dots & a_{k, m}^{[l - 1]} & \dots & a_{n^{[l - 1]}, m}^{[l
 \end{bmatrix}, \notag
 \end{align*}
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 \begin{align*}
 \begin{bmatrix}
 \dpdv{J}{b_1^{[l]}} \\
@@ -605,18 +636,17 @@ a_{1, m}^{[l - 1]} & \dots & a_{k, m}^{[l - 1]} & \dots & a_{n^{[l - 1]}, m}^{[l
 \end{align*}
 
 
-## Backpropagation in detail
+## Backpropagation
 \begin{align}
 \pdv{J}{\vec{W}^{[l]}} &= \sum_i \pdv{J}{\vec{z}_{:, i}^{[l]}} \vec{a}_{:, i}^{[l - 1]T} = \pdv{J}{\vec{Z}^{[l]}} \vec{A}^{[l - 1]^T}, \label{eq:dW} \\
 \pdv{J}{\vec{b}^{[l]}} &= \sum_i \pdv{J}{\vec{z}_{:, i}^{[l]}} = \underbrace{\sum_{\text{axis} = 1} \pdv{J}{\vec{Z}^{[l]}}}_\text{column vector}, \label{eq:db}
 \end{align}
-where \(\pdv{J}{\vec{z}_{:, i}^{[l]}} \in \R^{n^{[l]}}\),
-\(\pdv{J}{\vec{Z}^{[l]}} \in \R^{n^{[l]} \times m}\),
-\(\pdv{J}{\vec{W}^{[l]}} \in \R^{n^{[l]} \times n^{[l - 1]}}\), and
-\(\pdv{J}{\vec{b}^{[l]}} \in \R^{n^{[l]}}\).
-\end{frame}
+where $\pdv{J}{\vec{z}_{:, i}^{[l]}} \in \R^{n^{[l]}}$,
+$\pdv{J}{\vec{Z}^{[l]}} \in \R^{n^{[l]} \times m}$,
+$\pdv{J}{\vec{W}^{[l]}} \in \R^{n^{[l]} \times n^{[l - 1]}}$, and
+$\pdv{J}{\vec{b}^{[l]}} \in \R^{n^{[l]}}$.
 
-## Backpropagation in detail
+## Backpropagation
 Looking back at $\eqref{eq:dw_scalar}$ and $\eqref{eq:db_scalar}$,
 we see that the only unknown entity is $\pdv{J}{z_{j, i}^{[l]}}$. By
 applying the chain rule once again, we get
@@ -627,7 +657,7 @@ applying the chain rule once again, we get
 
 where $p = 1, \dots, n^{[l]}$.
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 Next, we present the vectorized version of $\eqref{eq:dz_scalar}$:
 
 \begin{equation*}
@@ -654,17 +684,17 @@ Next, we present the vectorized version of $\eqref{eq:dz_scalar}$:
 \end{bmatrix},
 \end{equation*}
 
-## Backpropagation in detail
+## Backpropagation
 Which can be converted into
 
 \begin{equation}
 \pdv{J}{\vec{z}_{:, i}^{[l]}} = \pdv{\vec{a}_{:, i}^{[l]}}{\vec{z}_{:, i}^{[l]}} \pdv{J}{\vec{a}_{:, i}^{[l]}}, \label{eq:dz}
 \end{equation}
 
-where \(\pdv{J}{\vec{a}_{:, i}^{[l]}} \in \R^{n^{[l]}}\) and
-\(\pdv{\vec{a}_{:, i}^{[l]}}{\vec{z}_{:, i}^{[l]}} \in \R^{n^{[l]} \times n^{[l]}}\).
+where $\pdv{J}{\vec{a}_{:, i}^{[l]}} \in \R^{n^{[l]}}$ and
+$\pdv{\vec{a}_{:, i}^{[l]}}{\vec{z}_{:, i}^{[l]}} \in \R^{n^{[l]} \times n^{[l]}}$.
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 We have already encountered
 
 \begin{equation}
@@ -691,21 +721,23 @@ consequently, we cannot derive an analytic expression for
 $\pdv{a_{j, i}^{[l]}}{z_{j, i}^{[l]}}$, which we depend on in
 $\eqref{eq:dz_scalar}$. 
 
-## Backpropagation in detail
+## Backpropagation {.smaller}
 Furthermore, according to $\eqref{eq:dz_scalar}$, we see that
 $\pdv{J}{z_{j, i}^{[l]}}$ also depends on $\pdv{J}{a_{j, i}^{[l]}}$.
-Now, it might come as a surprise, but $\pdv{J}{a_{j, i}^{[l]}}$ has
+
+$\pdv{J}{a_{j, i}^{[l]}}$ has
 already been computed when we reach the $l$-th layer during backward
-propagation. How did that happen, you may ask. The answer is that every
-layer paves the way for the previous layer by also computing
+propagation. 
+
+How? Each layer paves the way for the previous layer by also computing
 $\pdv{J}{a_{k, i}^{[l - 1]}}$, which we shall do now:
 
 \begin{equation}
 \pdv{J}{a_{k, i}^{[l - 1]}} = \sum_j \pdv{J}{z_{j, i}^{[l]}} \pdv{z_{j, i}^{[l]}}{a_{k, i}^{[l - 1]}} = \sum_j \pdv{J}{z_{j, i}^{[l]}} w_{j, k}^{[l]}. \label{eq:da_prev_scalar}
 \end{equation}
 
-## Backpropagation in detail {.smaller}
-As usual, our next step is vectorization:
+## Backpropagation {.smaller}
+<!-- As usual, our next step is vectorization: -->
 
 \begin{equation*}
 \begin{split}
@@ -735,7 +767,7 @@ w_{1, n^{[l - 1]}}^{[l]} & \dots & w_{j, n^{[l - 1]}}^{[l]} & \dots & w_{n^{[l]}
 \end{split}
 \end{equation*}
 
-## Backpropagation in detail
+## Backpropagation
 which we can write as
 \begin{align}
 &\pdv{J}{\vec{A}^{[l - 1]}} =\vec{W}^{[l]T} \pdv{J}{\vec{Z}^{[l]}}, \label{eq:dA_prev}
@@ -743,34 +775,36 @@ which we can write as
 
 where $\pdv{J}{\vec{A}^{[l - 1]}} \in \R^{n^{[l - 1]} \times m}$.
 
-## Backpropagation in detail
+## Backpropagation
 :::{.callout-important icon=false}
 ## Initial values
 
 - Forward:  $\vec{A}^{[0]} = \vec{X}$
-- Backrward: $\pdv{J}{\vec{A}^{[L]}} = \pdv{J}{\vec{\hat{Y}}}$
+- Backward: $\pdv{J}{\vec{A}^{[L]}} = \pdv{J}{\vec{\hat{Y}}}$
 :::
 
-:::{.callout-important icon=false}
+:::{.callout-tip icon=false}
 ## Computations
 
 - Forward:  $\vec{A}^{[0]} = \vec{X}, \vec{A}^{[L]} = \vec{\hat{Y}}, J = f(\vec{\hat{Y}}, \vec{Y}) = f(\vec{A}^{[L]}, \vec{Y})$
-i- Backward: $\dfrac{\partial J}{\partial \vec{A}^{[L]}} = \dfrac{\partial J}{\partial \vec{\hat{Y}}}, \dfrac{\partial J}{\partial \vec{W}^{[l]}}, \dfrac{\partial J}{\partial \vec{b}^{[l]}}$
+- Backward: $\dfrac{\partial J}{\partial \vec{A}^{[L]}} = \dfrac{\partial J}{\partial \vec{\hat{Y}}}, \dfrac{\partial J}{\partial \vec{W}^{[l]}}, \dfrac{\partial J}{\partial \vec{b}^{[l]}}$
 :::
 <!-- % If not stopped prematurely, it eventually computes -->
 <!-- % \(\pdv{J}{\vec{A}^{[0]}} = \pdv{J}{\vec{X}}\), a partial derivative we -->
 <!-- % usually ignore. -->
 
-## Backpropagation in detail
-Now, you might have noticed that we have yet to derive an analytic
+## Backpropagation
+:::{.callout-note}
+## Backpropagation seed
+We have yet to derive an analytic
 expression for the backpropagation seed
 $\dpdv{J}{\vec{A}^{[L]}} = \dpdv{J}{\vec{\hat{Y}}}$. 
-
+:::
 Let's derive an analytic expression for
 $\dpdv{a_{j, i}^{[l]}}{z_{j, i}^{[l]}}$ or, by extension,
 $\dpdv{J}{z_{j, i}^{[l]}}$.
 
-## Backpropagation in detail: ReLU
+## Backpropagation: ReLU
 
 The rectified linear unit, or ReLU for short, is given by
 
@@ -792,12 +826,12 @@ In other words,
 \vec{A}^{[l]} = \max(0, \vec{Z}^{[l]}).
 \end{equation}
 
-## Backpropagation in detail: ReLU
+## Backpropagation: ReLU {.smaller}
 Compute the partial derivatives of the activations in the
 current layer:
 
 \begin{align*}
-\pdv{a_{j, i}^{[l]}}{z_{j, i}^{[l]}} &\coloneqq
+\pdv{a_{j, i}^{[l]}}{z_{j, i}^{[l]}} &:=
 \begin{cases}
 1 &\text{if } z_{j, i}^{[l]} > 0, \\
 0 &\text{otherwise,}
@@ -807,7 +841,7 @@ current layer:
 \end{align*}
 
 
-## Backpropagation in detail: ReLU
+## Backpropagation: ReLU {.smaller}
 It follows that
 
 \begin{equation*}
@@ -825,15 +859,14 @@ which we can vectorize as
 
 where $\odot$ denotes element-wise multiplication (**Hadamard product**).
 
-## Backpropagation in detail: Sigmoid
+## Backpropagation: Sigmoid
 
 The sigmoid activation function is given by
 
 \begin{equation*}
 \begin{split}
 a_{j, i}^{[l]} &= g_j^{[l]}(z_{1, i}^{[l]}, \dots, z_{j, i}^{[l]}, \dots, z_{n^{[l]}, i}^{[l]}) \\
-&= \sigma(z_{j, i}^{[l]}) \\
-&= \frac{1}{1 + \exp(-z_{j, i}^{[l]})}.
+&= \sigma(z_{j, i}^{[l]}) = \frac{1}{1 + \exp(-z_{j, i}^{[l]})}.
 \end{split}
 \end{equation*}
 
@@ -843,24 +876,13 @@ Vectorization yields
 \vec{A}^{[l]} = \frac{1}{1 + \exp(-\vec{Z}^{[l]})}.
 \end{equation}
 
-## Backpropagation in detail: Sigmoid
+## Backpropagation: Sigmoid
 To practice backward propagation, first, we construct a computation
 graph:
-$$
-\begin{tikzpicture}[node distance=5mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_0 = z_{j, i}^{[l]}$};
-    \node (B) [default,below=of A] {$u_1 = -u_0$};
-    \node (C) [default,below=of B] {$u_2 = \exp(u_1)$};
-    \node (D) [default,below=of C] {$u_3 = 1 + u_2$};
-    \node (E) [default,below=of D] {$u_4 = \dfrac{1}{u_3} = a_{j, i}^{[l]}$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-\end{tikzpicture}
-$$
 
-## Backpropagation in detail: Sigmoid
+![](img/deep_nns7.png){height=500}
+
+## Backpropagation: Sigmoid {.smaller}
 Compute, starting from outside:
 
 \begin{align*}
@@ -870,7 +892,7 @@ Compute, starting from outside:
 &\pdv{a_{j, i}^{[l]}}{u_0} = \pdv{a_{j, i}^{[l]}}{u_1} \pdv{u_1}{u_0} = \frac{1}{u_3^2} \exp(u_1) = \frac{\exp(-z_{j, i}^{[l]})}{(1 + \exp(-z_{j, i}^{[l]}))^2}.
 \end{align*}
 
-## Backpropagation in detail: Sigmoid
+## Backpropagation: Sigmoid {.smaller}
 Let us simplify:
 
 \begin{equation*}
@@ -882,7 +904,7 @@ Let us simplify:
 \end{split}
 \end{equation*}
 
-## Backpropagation in detail: Sigmoid
+## Backpropagation: Sigmoid {.smaller}
 We also note that
 
 \begin{equation*}
@@ -899,14 +921,14 @@ Consequently,
 \end{split}
 \end{equation*}
 
-## Backpropagation in detail: Sigmoid
+## Backpropagation: Sigmoid
 Lastly, no summations mean trivial vectorization:
 
 \begin{equation}
 \pdv{J}{\vec{Z}^{[l]}} = \pdv{J}{\vec{A}^{[l]}} \odot \vec{A}^{[l]} \odot (1 - \vec{A}^{[l]}).
 \end{equation}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
 
 The hyperbolic tangent function, i.e., the tanh activation function, is
 given by
@@ -925,30 +947,13 @@ By utilizing element-wise multiplication, we get
 \vec{A}^{[l]} = \frac{1}{\exp(\vec{Z}^{[l]}) + \exp(-\vec{Z}^{[l]})} \odot (\exp(\vec{Z}^{[l]}) - \exp(-\vec{Z}^{[l]})).
 \end{equation}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
 Computation graph:
-$$
-\begin{tikzpicture}[node distance=2mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_0 = z_{j, i}^{[l]}$};
-    \node (B) [default,below=of A] {$u_1 = -u_0$};
-    \node (C) [default,below=of B] {$u_2 = \exp(u_0)$};
-    \node (D) [default,below=of C] {$u_3 = \exp(u_1)$};
-    \node (E) [default,below=of D] {$u_4 = u_2 - u_3$};
-    \node (F) [default,below=of E] {$u_5 = u_2 + u_3$};
-    \node (G) [default,below=of F] {$u_6 = \frac{1}{u_5}$};
-    \node (H) [default,below=of G] {$u_7 = u_4 u_6 = a_{j, i}^{[l]}$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-  \draw [->] (F.south) -> (G.north);
-  \draw [->] (G.south) -> (H.north);
-\end{tikzpicture}
-$$
 
-## Backpropagation in detail: tanh
-Next, we compute the partial derivatives:
+![](img/deep_nns8.png)
+
+## Backpropagation: tanh {.smaller}
+We compute the partial derivatives:
 
 \begin{align*}
 \pdv{a_{j, i}^{[l]}}{u_7} &= 1, \\
@@ -957,16 +962,16 @@ Next, we compute the partial derivatives:
 \pdv{a_{j, i}^{[l]}}{u_4} &= \pdv{a_{j, i}^{[l]}}{u_7} \pdv{u_7}{u_4} = u_6 = \frac{1}{\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]})}, 
 \end{align*}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
   \begin{align*}
 \pdv{a_{j, i}^{[l]}}{u_3} &= \pdv{a_{j, i}^{[l]}}{u_4} \pdv{u_4}{u_3} + \pdv{a_{j, i}^{[l]}}{u_5} \pdv{u_5}{u_3} \\
 &= -u_6 - u_4 \frac{1}{u_5^2} \notag \\
 &= -\frac{1}{\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]})} - \frac{\exp(z_{j, i}^{[l]}) - \exp(-z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2} \notag \\
 &= -\frac{2 \exp(z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2}, \notag \\
-\pdv{a_{j, i}^{[l]}}{u_2} &= \pdv{a_{j, i}^{[l]}}{u_4} \pdv{u_4}{u_2} + \pdv{a_{j, i}^{[l]}}{u_5} \pdv{u_5}{u_2} = u_6 - u_4 \frac{1}{u_5^2} \notag
+\pdv{a_{j, i}^{[l]}}{u_2} &= \pdv{a_{j, i}^{[l]}}{u_4} \pdv{u_4}{u_2} + \pdv{a_{j, i}^{[l]}}{u_5} \pdv{u_5}{u_2} = u_6 - u_4 \frac{1}{u_5^2} =\notag
 \end{align*}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
   \begin{align*}
 &= \frac{1}{\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]})} - \frac{\exp(z_{j, i}^{[l]}) - \exp(-z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2} \notag \\
 &= \frac{2 \exp(-z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2}, \notag \\
@@ -975,7 +980,7 @@ Next, we compute the partial derivatives:
 &= -\frac{2 \exp(z_{j, i}^{[l]}) \exp(-z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2}, \notag 
 \end{align*}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
 \begin{align*}
 \pdv{a_{j, i}^{[l]}}{u_0} &= \pdv{a_{j, i}^{[l]}}{u_1} \pdv{u_1}{u_0} + \pdv{a_{j, i}^{[l]}}{u_2} \pdv{u_2}{u_0} \\
 &= -\Bigl(-u_6 - u_4 \frac{1}{u_5^2}\Bigr) \exp(u_1) + \Bigl(u_6 - u_4 \frac{1}{u_5^2}\Bigr) \exp(u_0) \notag \\
@@ -983,7 +988,7 @@ Next, we compute the partial derivatives:
 &= \frac{4 \exp(z_{j, i}^{[l]}) \exp(-z_{j, i}^{[l]})}{(\exp(z_{j, i}^{[l]}) + \exp(-z_{j, i}^{[l]}))^2}. \notag
 \end{align*}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
 It follows that
 
 \begin{equation*}
@@ -995,7 +1000,7 @@ It follows that
 \end{split}
 \end{equation*}
 
-## Backpropagation in detail: tanh
+## Backpropagation: tanh {.smaller}
 
 Similarly to the sigmoid activation function: $\pdv{a_{p, i}^{[l]}}{z_{j, i}^{[l]}} = 0, \quad \forall p \ne j.$
 
@@ -1014,7 +1019,7 @@ which implies that
 \pdv{J}{\vec{Z}^{[l]}} = \pdv{J}{\vec{A}^{[l]}} \odot (1 - \vec{A}^{[l]} \odot \vec{A}^{[l]}).
 \end{equation}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
 
 The softmax activation function is given by
 
@@ -1028,31 +1033,16 @@ a_{j, i}^{[l]} &= g_j^{[l]}(z_{1, i}^{[l]}, \dots, z_{j, i}^{[l]}, \dots, z_{n^{
 Vectorization results in
 
 \begin{equation}
-\vec{A}^{[l]} = \frac{1}{\broadcast(\underbrace{\sum_{\text{axis} = 0} \exp(\vec{Z}^{[l]})}_\text{row vector})} \odot \exp(\vec{Z}^{[l]}).
+\vec{A}^{[l]} = \frac{1}{\text{broadcast}(\underbrace{\sum_{\text{axis} = 0} \exp(\vec{Z}^{[l]})}_\text{row vector})} \odot \exp(\vec{Z}^{[l]}).
 \end{equation}
 
-## Backpropagation in detail: softmax
-To begin with, we construct a computation graph for the \(j\)th
+## Backpropagation: softmax
+To begin with, we construct a computation graph for the $j$-th
 activation of the current layer:
-$$
-\begin{tikzpicture}[node distance=2mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_{-1} = z_{j, i}^{[l]}$};
-    \node (B) [default,below=of A] {$u_{0, p} = z_{p, i}^{[l]}, \; \forall p \ne j$};
-    \node (C) [default,below=of B] {$u_1 = \exp(u_{-1})$};
-    \node (D) [default,below=of C] {$u_{2, p} = \exp(u_{0, p}), \; \forall p \ne j$};
-    \node (E) [default,below=of D] {$u_3 = u_1 + \sum_{p \ne j} u_{2, p}$};
-    \node (F) [default,below=of E] {$u_4 = \frac{1}{u_3}$};
-    \node (G) [default,below=of F] {$u_5 = u_1 u_4 = a_{j, i}^{[l]}$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-  \draw [->] (F.south) -> (G.north);
-\end{tikzpicture}
-$$
 
-## Backpropagation in detail: softmax
+![](img/deep_nns9.png)
+
+## Backpropagation: softmax {.smaller}
 By applying the chain rule, we get
 
 \begin{align*}
@@ -1063,13 +1053,13 @@ By applying the chain rule, we get
 &= -u_1 \frac{1}{u_3^2} + u_4 = -\frac{\exp(z_{j, i}^{[l]})}{(\sum_p \exp(z_{p, i}^{[l]}))^2} + \frac{1}{\sum_p \exp(z_{p, i}^{[l]})}, \notag
 \end{align*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax
   \begin{align*}
 \pdv{a_{j, i}^{[l]}}{u_{-1}} &= \pdv{a_{j, i}^{[l]}}{u_1} \pdv{u_1}{u_{-1}} = \Bigl(-u_1 \frac{1}{u_3^2} + u_4\Bigr) \exp(u_{-1}) \notag \\
 &= -\frac{\exp(z_{j, i}^{[l]})^2}{(\sum_p \exp(z_{p, i}^{[l]}))^2} + \frac{\exp(z_{j, i}^{[l]})}{\sum_p \exp(z_{p, i}^{[l]})}. \notag
 \end{align*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
 Next, we need to take into account that \(z_{j, i}^{[l]}\) also affects
 other activations in the same layer:
 
@@ -1083,7 +1073,7 @@ u_4 &= \frac{1}{u_3}, \\
 u_5 &= u_{2, p} u_4 = a_{p, i}^{[l]}, &&\forall p \ne j.
 \end{align*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
 
 \begin{align*}
 \pdv{a_{p, i}^{[l]}}{u_5} &= 1, \\
@@ -1093,7 +1083,7 @@ u_5 &= u_{2, p} u_4 = a_{p, i}^{[l]}, &&\forall p \ne j.
 \pdv{a_{p, i}^{[l]}}{u_{-1}} &= \pdv{a_{p, i}^{[l]}}{u_1} \pdv{u_1}{u_{-1}} = -u_{2, p} \frac{1}{u_3^2} \exp(u_{-1}) = -\frac{\exp(z_{p, i}^{[l]}) \exp(z_{j, i}^{[l]})}{(\sum_p \exp(z_{p, i}^{[l]}))^2}.
 \end{align*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
 We now know that
 
 \begin{align*}
@@ -1103,7 +1093,7 @@ We now know that
 &= -a_{p, i}^{[l]} a_{j, i}^{[l]}, \quad \forall p \ne j. \notag
 \end{align*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
 
 \begin{equation*}
 \begin{split}
@@ -1115,7 +1105,7 @@ We now know that
 \end{split}
 \end{equation*}
 
-## Backpropagation in detail: softmax
+## Backpropagation: softmax {.smaller}
   Vectorized version:
 \begin{equation*}
 \pdv{J}{\vec{z}_{:, i}^{[l]}} = \vec{a}_{:, i}^{[l]} \odot \Bigl(\pdv{J}{\vec{a}_{:, i}^{[l]}} - \underbrace{{\vec{a}_{:, i}^{[l]}}^T \pdv{J}{\vec{a}_{:, i}^{[l]}}}_{\text{scalar}}\Bigr).
@@ -1124,10 +1114,10 @@ We now know that
 Let us not stop with the vectorization just yet:
 
 \begin{equation}
-\pdv{J}{\vec{Z}^{[l]}} = \vec{A}^{[l]} \odot \Bigl(\pdv{J}{\vec{A}^{[l]}} - \broadcast\bigl(\underbrace{\sum_{\text{axis} = 0} \pdv{J}{\vec{A}^{[l]}} \odot \vec{A}^{[l]}}_\text{row vector}\bigr)\Bigr).
+\pdv{J}{\vec{Z}^{[l]}} = \vec{A}^{[l]} \odot \Bigl(\pdv{J}{\vec{A}^{[l]}} - \text{broadcast}\bigl(\underbrace{\sum_{\text{axis} = 0} \pdv{J}{\vec{A}^{[l]}} \odot \vec{A}^{[l]}}_\text{row vector}\bigr)\Bigr).
 \end{equation}
 
-## Backpropagation in detail: cost for binary
+## Backpropagation: binary cost {.smaller}
 In binary classification, the cost function is given by
 
 \begin{equation*}
@@ -1144,26 +1134,13 @@ which we can write as
 J = -\frac{1}{m} \underbrace{\sum_{\text{axis} = 1} (\vec{Y} \odot \log(\vec{A}^{[L]}) + (1 - \vec{Y}) \odot \log(1 - \vec{A}^{[L]}))}_\text{scalar}.
 \end{equation}
 
-## Backpropagation in detail: cost for binary
+## Backpropagation: binary cost 
 
 Next, we construct a computation graph:
-$$
-\begin{tikzpicture}[node distance=3mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_{0, i} = a_i^{[L]}$};
-    \node (B) [default,below=of A] {$u_{1, i} = 1 - u_{0, i}$};
-    \node (C) [default,below=of B] {$u_{2, i} = \log(u_{0, i})$};
-    \node (D) [default,below=of C] {$u_{3, i} = \log(u_{1, i})$};
-    \node (E) [default,below=of D] {$u_{4, i} = y_i u_{2, i} + (1 - y_i) u_{3, i}$};
-    \node (F) [default,below=of E] {$u_5 = -\frac{1}{m} \sum_i u_{4, i} = J$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-\end{tikzpicture}
-$$
 
-## Backpropagation in detail: cost for binary
+![](img/deep_nns10.png)
+
+## Backpropagation: binary cost  {.smaller}
 Let's compute derivatives:
 
 \begin{align*}
@@ -1175,7 +1152,7 @@ Let's compute derivatives:
  &=\frac{1}{m} \Bigl(\frac{1 - y_i}{1 - a_i^{[L]}} - \frac{y_i}{a_i^{[L]}}\Bigr). \notag
 \end{align*}
 
-## Backpropagation in detail: cost for binary
+## Backpropagation: binary cost {.smaller}
 Thus,
 
 \begin{equation*}
@@ -1188,7 +1165,7 @@ which implies that
 \pdv{J}{\vec{A}^{[L]}} = \frac{1}{m} \Bigl(\frac{1}{1 - \vec{A}^{[L]}} \odot (1 - \vec{Y}) - \frac{1}{\vec{A}^{[L]}} \odot \vec{Y}\Bigr).
 \end{equation}
 
-## Backpropagation in detail: cost for binary
+## Backpropagation: binary cost {.smaller}
 In addition, since the sigmoid activation function is used in the output
 layer, we get
 
@@ -1211,7 +1188,7 @@ Note that both $\pdv{J}{\vec{Z}^{[L]}} \in \R^{1 \times m}$ and
 $\pdv{J}{\vec{A}^{[L]}} \in \R^{1 \times m}$, because $n^{[L]} = 1$
 in this case.
 
-## Backpropagation in detail: cost for multiclass
+## Backpropagation: multiclass cost {.smaller}
 
 In multiclass classification, the cost function is instead given by
 
@@ -1230,22 +1207,11 @@ We can vectorize the cost expression:
 J = -\frac{1}{m} \underbrace{\sum_{\substack{\text{axis} = 0 \\ \text{axis} = 1}} \vec{Y} \odot \log(\vec{A}^{[L]})}_\text{scalar}.
 \end{equation}
 
-## Backpropagation in detail: cost for multiclass
-$$
-\begin{tikzpicture}[node distance=5mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_{0, j, i} = a_{j, i}^{[L]}$};
-    \node (B) [default,below=of A] {$u_{1, j, i} = \log(u_{0, j, i})$};
-    \node (C) [default,below=of B] {$u_{2, j, i} = y_{j, i} u_{1, j, i}$};
-    \node (D) [default,below=of C] {$u_{3, i} = \sum_j u_{2, j, i}$};
-    \node (E) [default,below=of D] {$u_4 = -\frac{1}{m} \sum_i u_{3, i} = J$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-\end{tikzpicture}
-$$
+## Backpropagation: multiclass cost
 
-## Backpropagation in detail: cost
+![](img/deep_nns11.png)
+
+## Backpropagation: cost {.smaller}
 With the computation graph in place, we can perform backward
 propagation:
 
@@ -1257,7 +1223,7 @@ propagation:
 \pdv{J}{u_{0, j, i}} &= \pdv{J}{u_{1, j, i}} \pdv{u_{1, j, i}}{u_{0, j, i}} = -\frac{1}{m} y_{j, i} \frac{1}{u_{0, j, i}} = -\frac{1}{m} \frac{y_{j, i}}{a_{j, i}^{[L]}}.
 \end{align*}
 
-## Backpropagation in detail: cost for multiclass
+## Backpropagation: multiclass cost {.smaller}
 Hence,
 
 \begin{equation*}
@@ -1270,14 +1236,14 @@ Vectorization is trivial:
 \pdv{J}{\vec{A}^{[L]}} = -\frac{1}{m} \frac{1}{\vec{A}^{[L]}} \odot \vec{Y}.
 \end{equation}
 
-## Backpropagation in detail: cost for multiclass
+## Backpropagation: multiclass cost {.smaller} 
 Furthermore, since the output layer uses the softmax activation
 function, we get
 
 \begin{equation*}
 \begin{split}
 \pdv{J}{z_{j, i}^{[L]}} &= a_{j, i}^{[L]} \Bigl(\pdv{J}{a_{j, i}^{[L]}} - \sum_p \pdv{J}{a_{p, i}^{[L]}} a_{p, i}^{[L]}\Bigr) = a_{j, i}^{[L]} \Bigl(-\frac{1}{m} \frac{y_{j, i}}{a_{j, i}^{[L]}} + \sum_p \frac{1}{m} \frac{y_{p, i}}{a_{p, i}^{[L]}} a_{p, i}^{[L]}\Bigr) \\
-&= \frac{1}{m} \Bigl(-y_{j, i} + a_{j, i}^{[L]} \underbrace{\sum_p y_{p, i}}_{\mathclap{\sum \text{probabilities} = 1}}\Bigr) = \frac{1}{m} (a_{j, i}^{[L]} - y_{j, i}).
+&= \frac{1}{m} \Bigl(-y_{j, i} + a_{j, i}^{[L]} \underbrace{\sum_p y_{p, i}}_{\sum \text{probabilities} = 1}\Bigr) = \frac{1}{m} (a_{j, i}^{[L]} - y_{j, i}).
 \end{split}
 \end{equation*}
 
@@ -1287,7 +1253,7 @@ Note that $p = 1, \dots, n^{[L]}$. To conclude,
 \pdv{J}{\vec{Z}^{[L]}} = \frac{1}{m} (\vec{A}^{[L]} - \vec{Y}).
 \end{equation}
 
-## Backpropagation in detail: cost for multilabel
+## Backpropagation: multilabel cost {.smaller}
 We can view multi-label classification as $j$ binary classification
 problems:
 
@@ -1301,33 +1267,18 @@ J &= f(\vec{\hat{Y}}, \vec{Y}) = f(\vec{A}^{[L]}, \vec{Y}) \\
 
 where once again $j = 1, \dots, n^{[L]}$.
 
-## Backpropagation in detail: cost for multilabel
+## Backpropagation: multilabel cost
 Vectorization gives
 
 \begin{equation}
 J = -\frac{1}{m} \underbrace{\sum_{\substack{\text{axis} = 1 \\ \text{axis} = 0}} (\vec{Y} \odot \log(\vec{A}^{[L]}) + (1 - \vec{Y}) \odot \log(1 - \vec{A}^{[L]}))}_\text{scalar}.
 \end{equation}
 
-## Backpropagation in detail: cost for multilabel
-$$
-\begin{tikzpicture}[node distance=2mm,minimum size=6mm,default/.style={rectangle,very thick,fill=green!20, draw=black!50,rounded corners=3mm}]
-  \node (A) [default] {$u_{0, j, i} = a_{j, i}^{[L]}$};
-    \node (B) [default,below=of A] {$u_{1, j, i} = 1 - u_{0, j, i}$};
-    \node (C) [default,below=of B] {$u_{2, j, i} = \log(u_{0, j, i})$};
-    \node (D) [default,below=of C] {$u_{3, j, i} = \log(u_{1, j, i})$};
-    \node (E) [default,below=of D] {$u_{4, j, i} = y_{j, i} u_{2, j, i} + (1 - y_{j, i}) u_{3, j, i}$};
-    \node (F) [default,below=of E] {$u_{5, j} = -\frac{1}{m} \sum_i u_{4, j, i}$};
-    \node (G) [default,below=of F] {$u_6 = \sum_j u_{5, j} = J$};
-  \draw [->] (A.south) -> (B.north);
-  \draw [->] (B.south) -> (C.north);
-  \draw [->] (C.south) -> (D.north);
-  \draw [->] (D.south) -> (E.north);
-  \draw [->] (E.south) -> (F.north);
-  \draw [->] (F.south) -> (G.north);
-\end{tikzpicture}
-$$
+## Backpropagation: multilabel cost {.smaller}
 
-## Backpropagation in detail: cost for multilabel
+![](img/deep_nns12.png)
+
+## Backpropagation: multilabel cost {.smaller}
 Next, we compute the partial derivatives:
 
 \begin{align*}
@@ -1339,14 +1290,14 @@ Next, we compute the partial derivatives:
 \pdv{J}{u_{1, j, i}} &= \pdv{J}{u_{3, j, i}} \pdv{u_{3, j, i}}{u_{1, j, i}} = -\frac{1}{m} (1 - y_{j, i}) \frac{1}{u_{1, j, i}} = -\frac{1}{m} \frac{1 - y_{j, i}}{1 - a_{j, i}^{[L]}},
 \end{align*}
 
-## Backpropagation in detail: cost for multilabel
+## Backpropagation: multilabel cost {.smaller}
   \begin{align*}
 \pdv{J}{u_{0, j, i}} &= \pdv{J}{u_{1, j, i}} \pdv{u_{1, j, i}}{u_{0, j, i}} + \pdv{J}{u_{2, j, i}} \pdv{u_{2, j, i}}{u_{0, j, i}} \\
 &= \frac{1}{m} (1 - y_{j, i}) \frac{1}{u_{1, j, i}} - \frac{1}{m} y_{j, i} \frac{1}{u_{0, j, i}} \notag \\
 &= \frac{1}{m} \Bigl(\frac{1 - y_{j, i}}{1 - a_{j, i}^{[L]}} - \frac{y_{j, i}}{a_{j, i}^{[L]}}\Bigr). \notag
 \end{align*}
 
-## Backpropagation in detail: cost for multilabel
+## Backpropagation: multilabel cost {.smaller}
 Simply put, we have
 
 \begin{equation*}
@@ -1359,10 +1310,12 @@ and
 \pdv{J}{\vec{A}^{[L]}} = \frac{1}{m} \Bigl(\frac{1}{1 - \vec{A}^{[L]}} \odot (1 - \vec{Y}) - \frac{1}{\vec{A}^{[L]}} \odot \vec{Y}\Bigr).
 \end{equation}
 
-## Backpropagation in detail: cost for multilabel
+## Backpropagation: multilabel cost {.smaller}
 Bearing in mind that we view multi-label classification as $j$ binary
 classification problems, we also know that the output layer uses the
-sigmoid activation function. As a result,
+sigmoid activation function.
+
+As a result,
 
 \begin{equation*}
 \begin{split}
