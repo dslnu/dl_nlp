@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>DL: Lab 1 – Deep Learning/NLP course</title>
+<title>NLP: Lab 4 (Naive Bayes classifier) – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -120,7 +154,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lab-overview" id="toc-lab-overview" class="nav-link active" data-scroll-target="#lab-overview">Lab overview</a></li>
+  <li><a href="#plan" id="toc-plan" class="nav-link active" data-scroll-target="#plan">Plan:</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
 </nav>
     </div>
@@ -129,7 +165,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">DL: Lab 1</h1>
+<h1 class="title">NLP: Lab 4 (Naive Bayes classifier)</h1>
 </div>
 
 
@@ -146,10 +182,89 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lab-overview" class="level1">
-<h1>Lab overview</h1>
-<p>We’ll implement a binary classifier using logistic regression, but via a neural network.</p>
-<p>Code in attached Jupyter notebook.</p>
+<section id="plan" class="level2">
+<h2 class="anchored" data-anchor-id="plan">Plan:</h2>
+<ol type="1">
+<li><strong>Prepare models</strong> for the classifier, based on cleaned-up tokens from Lab3.</li>
+<li><strong>Run the Naive Bayes classifier</strong>.</li>
+</ol>
+<p>Use <code>positive_cleaned_tokens_list</code> and <code>negative_cleaned_tokens_list</code> from Lab3</p>
+<p>We’ll convert these to a data structure usable for NLTK’s naive Bayes classifier (<a href="https://www.nltk.org/_modules/nltk/classify/naivebayes.html">docs here</a>):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>[tweet_tokens <span class="cf">for</span> tweet_tokens <span class="kw">in</span> positive_cleaned_tokens_list][<span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_token_dict(tokens):</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">dict</span>([token, <span class="va">True</span>] <span class="cf">for</span> token <span class="kw">in</span> tokens)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_tweets_for_model(cleaned_tokens_list):   </span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> [get_token_dict(tweet_tokens) <span class="cf">for</span> tweet_tokens <span class="kw">in</span> cleaned_tokens_list]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>positive_tokens_for_model <span class="op">=</span> get_tweets_for_model(positive_cleaned_tokens_list)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>negative_tokens_for_model <span class="op">=</span> get_tweets_for_model(negative_cleaned_tokens_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Create two datasets for positive and negative tweets. Use 7000/3000 split for train and test data.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>positive_dataset <span class="op">=</span> [(tweet_dict, <span class="st">"Positive"</span>)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">for</span> tweet_dict <span class="kw">in</span> positive_tokens_for_model]</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>negative_dataset <span class="op">=</span> [(tweet_dict, <span class="st">"Negative"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                     <span class="cf">for</span> tweet_dict <span class="kw">in</span> negative_tokens_for_model]</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> positive_dataset <span class="op">+</span> negative_dataset</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>random.shuffle(dataset)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>train_data <span class="op">=</span> dataset[:<span class="dv">7000</span>]</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>test_data <span class="op">=</span> dataset[<span class="dv">7000</span>:]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Finally we use the nltk’s NaiveBayesClassifier on the training data we’ve just created:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk <span class="im">import</span> classify</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk <span class="im">import</span> NaiveBayesClassifier</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>classifier <span class="op">=</span> NaiveBayesClassifier.train(train_data)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Accuracy is:"</span>, classify.accuracy(classifier, test_data))</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classifier.show_most_informative_features(<span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note the Positive:Negative ratios.</p>
+<p>Let’s check some test phrase. First, download punkt sentence tokenizer (<a href="https://www.nltk.org/api/nltk.tokenize.punkt.html">docs here</a>)</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'punkt_tab'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Now we won’t rely on <code>twitter_samples.tokenized</code>, but rather will use a generic tokenization routine - <code>word_tokenize</code>.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>custom_tweet <span class="op">=</span> <span class="st">"the service was so bad"</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>custom_tokens <span class="op">=</span> process_tokens(word_tokenize(custom_tweet))</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(classifier.classify(get_token_dict(custom_tokens)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Let’s package it as a function and test it:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_sentiment(text):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    custom_tokens <span class="op">=</span> process_tokens(word_tokenize(text))</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> classifier.classify(get_token_dict(custom_tokens))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>texts <span class="op">=</span> [<span class="st">"bad"</span>, <span class="st">"service is bad"</span>, <span class="st">"service is really bad"</span>, <span class="st">"service is so terrible"</span>, <span class="st">"great service"</span>, <span class="st">"they stole my money"</span>]</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> texts:</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(t, <span class="st">": "</span>, get_sentiment(t))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>Task 0.</strong> Execute the notebook.</p>
+<p><strong>Task 1.</strong> Re-train the classifier on a different set of data. For instance, use a dataset from <a href="https://huggingface.co/datasets?modality=modality:text&amp;format=format:csv&amp;p=2&amp;sort=likes&amp;search=sentiment">HuggingFace</a> or <a href="https://www.kaggle.com/search?q=sentiment+analysis+in%3Adatasets">Kaggle</a>.</p>
+<p>Examples are:</p>
+<ul>
+<li>https://huggingface.co/datasets/gxb912/large-twitter-tweets-sentiment</li>
+<li>https://huggingface.co/datasets/kaenova/hotel-sentiment</li>
+<li>https://huggingface.co/datasets/mltrev23/financial-sentiment-analysis</li>
+<li>https://huggingface.co/datasets/rohith2812/stanford-sentiment-treebank-dataset</li>
+<li>https://www.kaggle.com/datasets/sbhatti/financial-sentiment-analysis</li>
+<li>https://www.kaggle.com/datasets/charunisa/chatgpt-sentiment-analysis</li>
+</ul>
+<p>Try testing the classifier with different kinds of text - e.g.&nbsp;Reddit comments, tweets, whatever.</p>
+<p><strong>Task 2.</strong> Try to use Logistic <a href="https://www.nltk.org/_modules/nltk/classify/scikitlearn.html">Regression classifier</a> instead and compare the results with Naive Bayes.</p>
+<p><strong>Task 3<span style="color:red">*</span>.</strong> Suggest improvements to the code. How can the code be made faster/more accurate?</p>
+</section>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Chapter 2.5 from <a href="https://www.nltk.org/book/ch02.html">NLTK book</a>.</li>
+<li>Chapters 4.1, 4.2 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>. Plus related slides.</li>
+</ul>
 
 
 </section>

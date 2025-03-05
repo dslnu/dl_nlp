@@ -1,0 +1,11 @@
+\documentclass{standalone}
+
+\usepackage{neuralnetwork}
+\begin{document}
+\begin{neuralnetwork}[height=4,layertitleheight=4em]
+        \inputlayer[count=3, bias=false]
+        \hiddenlayer[count=4, bias=false] \linklayers
+        \outputlayer[count=1] \linklayers
+\end{neuralnetwork}
+\end{document}
+
