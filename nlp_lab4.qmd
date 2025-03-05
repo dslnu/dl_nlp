@@ -1,5 +1,5 @@
 ---
-title: "NLP: Lab 3"
+title: "NLP: Lab 4 (Naive Bayes classifier)"
 execute:
   enabled: true
   echo: true
@@ -17,8 +17,6 @@ diagram:
 filters:
   - diagram
 ---
-
-# Lab4: Naive Bayes classifier
 
 ## Plan:
 1. **Prepare models** for the classifier, based on cleaned-up tokens from Lab3.
@@ -108,7 +106,18 @@ for t in texts:
 
 **Task 0.**  Execute the notebook. 
 
-**Task 1.** Try testing the classifier with different kinds of text - e.g. Reddit comments, tweets, whatever.
+**Task 1.** Re-train the classifier on a different set of data. For instance, use a dataset from [HuggingFace](https://huggingface.co/datasets?modality=modality:text&format=format:csv&p=2&sort=likes&search=sentiment) or [Kaggle](https://www.kaggle.com/search?q=sentiment+analysis+in%3Adatasets).
+
+Examples are:
+
+- https://huggingface.co/datasets/gxb912/large-twitter-tweets-sentiment
+- https://huggingface.co/datasets/kaenova/hotel-sentiment
+- https://huggingface.co/datasets/mltrev23/financial-sentiment-analysis
+- https://huggingface.co/datasets/rohith2812/stanford-sentiment-treebank-dataset
+- https://www.kaggle.com/datasets/sbhatti/financial-sentiment-analysis
+- https://www.kaggle.com/datasets/charunisa/chatgpt-sentiment-analysis
+
+Try testing the classifier with different kinds of text - e.g. Reddit comments, tweets, whatever.
 
 **Task 2.** Try to use Logistic [Regression classifier](https://www.nltk.org/_modules/nltk/classify/scikitlearn.html) instead  and compare the results with Naive Bayes.
 
