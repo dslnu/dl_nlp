@@ -110,6 +110,9 @@ For all nodes:
 So, if we have $a_i^{[l]}$, then $l$ means layer, and $i$ means node number in a layer.
 
 ## Deep Networks
+![](img/ff_nn_examples.png)
+
+## Deep Networks
 For $m$ training examples, we compute $x^{(m)} \rightarrow a^{[2](m)} = \hat{y}^{(m)}$.
 
 The block of code:
@@ -123,8 +126,9 @@ The block of code:
   &a^{[2](i)} = \sigma(z^{[2](i)})
 \end{align*}
 
+
 ## Deep Networks {.smaller}
-  How do we vectorize it across multiple training examples?
+How do we vectorize it across multiple training examples?
 We compute by going to matrices:
 \begin{align*}
   &Z^{[1]} = W^{[1]}X+b^{[1]},\; &A^{[1]} = \sigma(Z^{[1]}),\\
@@ -267,11 +271,11 @@ $$
 The 0.01 multiplier is because we don't want to end up at flat parts of the activation function.
 :::
 
+# Forward Propagation in a Deep Network
+
 ## Deep Networks
 $a^{[l]}$ - activations in layer $l$.
 ![](img/deep_nns5.png)
-
-# Forward Propagation in a Deep Network
 
 ## Deep Networks
 
@@ -293,6 +297,14 @@ $z^{[l]} = W^{[l]}a^{[l-1]} + b^{[l]}$, $a^{[l]} = g^{[l]}(z^{[l]})$.
 For loop is necessary for multiple layers.
 :::
 
+
+## Deep Networks
+
+![](img/feature_engineering.png)
+
+## Deep Networks
+
+![](img/feature_engineering2.png)
 
 ## Deep Networks
 
@@ -410,6 +422,11 @@ a_{j, i}^{[l]} &= g_j^{[l]}(z_{1, i}^{[l]}, \dots, z_{j, i}^{[l]}, \dots, z_{n^{
 |$k$|The $k$-th node of the previous layer,$k = 1, \dots, n^{[l - 1]}$|
 |$i$|The current training example $i = 1, \dots, m$|
 |$z_{j, i}^{[l]}$|A weighted sum of the activations of the previous layer|
+
+## Backpropagation {.smaller}
+
+|Entity|Description|
+|--|---|
 |$w_{j, k}^{[l]}$|A weight that scales the $k$-th activation of the previous layer|
 |$b_j^{[l]}$|A bias in the current layer|
 |$a_{j, i}^{[l]}$|An activation in the current layer|
@@ -524,6 +541,16 @@ where
 \end{align*}
 
 ## Backpropagation {.smaller}
+
+:::{.callout-note icon=false}
+## Numpy broadcasting
+Smaller array is “broadcast” across the larger array so that they have compatible shapes.
+
+Broadcasting provides a means of vectorizing array operations so that looping occurs in C instead of Python.
+:::
+![](img/numpy_broadcasting.png)
+
+## Backpropagation {.smaller}
 We would also like to establish two additional notations:
 
 \begin{align}
@@ -549,7 +576,6 @@ $f \colon \mathbb{R}^{2 n^{[L]}} \to \mathbb{R}$ can be tailored to our needs.
 $$
 \def\pdv#1#2{\frac{\partial #1}{\partial #2}}
 \def\dpdv#1#2{\frac{\partial #1}{\partial #2}}
-
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\peq}{\phantom{=}}
 $$
