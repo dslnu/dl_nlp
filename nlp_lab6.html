@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Natural Language Processing – Deep Learning/NLP course</title>
+<title>NLP: Lab 5 (bag-of-words) – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -67,6 +67,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -97,7 +126,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Deep Learning</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./nlp.html" aria-current="page"> 
+    <a class="nav-link" href="./nlp.html"> 
 <span class="menu-text">Natural Language Processing</span></a>
   </li>  
   <li class="nav-item">
@@ -120,12 +149,11 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lectures" id="toc-lectures" class="nav-link active" data-scroll-target="#lectures">Lectures</a>
-  <ul class="collapse">
-  <li><a href="#lecture-1" id="toc-lecture-1" class="nav-link" data-scroll-target="#lecture-1">Lecture 1</a></li>
-  <li><a href="#lecture-2" id="toc-lecture-2" class="nav-link" data-scroll-target="#lecture-2">Lecture 2</a></li>
-  </ul></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
+  <li><a href="#terms" id="toc-terms" class="nav-link active" data-scroll-target="#terms">Terms</a></li>
+  <li><a href="#one-hot-representation" id="toc-one-hot-representation" class="nav-link" data-scroll-target="#one-hot-representation">One-hot representation</a></li>
+  <li><a href="#bag-of-words-tagging" id="toc-bag-of-words-tagging" class="nav-link" data-scroll-target="#bag-of-words-tagging">Bag-of-Words tagging</a></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
 </nav>
     </div>
@@ -134,7 +162,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Natural Language Processing</h1>
+<h1 class="title">NLP: Lab 5 (bag-of-words)</h1>
 </div>
 
 
@@ -151,24 +179,45 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lectures" class="level2">
-<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
-<section id="lecture-1" class="level3">
-<h3 class="anchored" data-anchor-id="lecture-1">Lecture 1</h3>
-<p><a href="./nlp_lec1.html">Slides</a></p>
+<section id="terms" class="level1">
+<h1>Terms</h1>
+<p>Let’s agree on terminology:</p>
+<ul>
+<li><strong>corpus</strong> (plural: <strong>corpora</strong>) is a collection of documents</li>
+<li><strong>document</strong> is a sequence of sentences. Say, a paragraph, or a chapter</li>
+<li><strong>sentence</strong> is a sequence of words</li>
+<li><strong>word</strong> is synonymous to <strong>term</strong></li>
+</ul>
 </section>
-<section id="lecture-2" class="level3">
-<h3 class="anchored" data-anchor-id="lecture-2">Lecture 2</h3>
-<p><a href="./nlp_lec2.html">Slides</a></p>
+<section id="one-hot-representation" class="level1">
+<h1>One-hot representation</h1>
+<ol type="1">
+<li>Collect unique words in a corpus - build a <strong>vocabulary</strong> <span class="math inline">\(V\)</span> of size <span class="math inline">\(N=|V|\)</span>.</li>
+<li>Each word with index <span class="math inline">\(i \in [0,N)\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span> at <span class="math inline">\(i\)</span>-th coordinate.</li>
+<li>Each document <span class="math inline">\(d\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span>s at coordinates <span class="math inline">\(i\)</span>, where <span class="math inline">\(i \in \left\{i: t_i \in d \right\}\)</span>.</li>
+</ol>
 </section>
+<section id="bag-of-words-tagging" class="level1">
+<h1>Bag-of-Words tagging</h1>
+<p>Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting <span class="math inline">\(1\)</span> whenever we encounter a word, we put the total number of times it occurs in a given document.</p>
+<p>So, what we need to do is:</p>
+<ul>
+<li>create a vocabulary of all words in a given corpus: <span class="math inline">\(t_i,\, i \in [0,N)\)</span>, where <span class="math inline">\(N\)</span> is the size of the vocabulary;</li>
+<li>now, given a document <span class="math inline">\(d\)</span>, calculate number of times each word <span class="math inline">\(t_i\)</span> occurs and denote it <span class="math inline">\(count(t_i, d)\)</span>;</li>
+<li>map this document to an <span class="math inline">\(N\)</span>-dimensional vector, where on each <span class="math inline">\(i\)</span>-th position we’ll have <span class="math inline">\(count(t_i, d)\)</span>;</li>
+<li>compute distances between two documents via dot product.</li>
+</ul>
 </section>
-<section id="labs" class="level2">
-<h2 class="anchored" data-anchor-id="labs">Labs</h2>
-<p><a href="./nlp_lab1.html">Lab 1</a></p>
-<p><a href="./nlp_lab2.html">Lab 2</a></p>
-<p><a href="./nlp_lab3.html">Lab 3</a></p>
-<p><a href="./nlp_lab4.html">Lab 4</a></p>
-<p><a href="./nlp_lab5.html">Lab 5</a></p>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>Task 0.</strong> Take an arbitrary text from NLTK corpora (e.g.&nbsp;text3) and implement a Bag-of-Words tagger for it.</p>
+<p><strong>Task 1.</strong> Enhance the tagger so that it will use N-grams instead of words</p>
+</section>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Chapter 3 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>.</li>
+</ul>
 
 
 </section>

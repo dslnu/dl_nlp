@@ -157,8 +157,6 @@ window.Quarto = {
   <li><a href="#conditional-interpolation" id="toc-conditional-interpolation" class="nav-link" data-scroll-target="#conditional-interpolation">Conditional interpolation</a></li>
   <li><a href="#stupid-backoff" id="toc-stupid-backoff" class="nav-link" data-scroll-target="#stupid-backoff">Stupid backoff</a></li>
   </ul></li>
-  <li><a href="#one-hot-representation" id="toc-one-hot-representation" class="nav-link" data-scroll-target="#one-hot-representation">One-hot representation</a></li>
-  <li><a href="#bag-of-words-tagging" id="toc-bag-of-words-tagging" class="nav-link" data-scroll-target="#bag-of-words-tagging">Bag-of-Words tagging</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
@@ -254,40 +252,18 @@ Tip
 </div>
 </section>
 </section>
-<section id="one-hot-representation" class="level1">
-<h1>One-hot representation</h1>
-<ol type="1">
-<li>Collect unique words in a corpus - build a <strong>vocabulary</strong> <span class="math inline">\(V\)</span> of size <span class="math inline">\(N=|V|\)</span>.</li>
-<li>Each word with index <span class="math inline">\(i \in [0,N)\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span> at <span class="math inline">\(i\)</span>-th coordinate.</li>
-<li>Each document <span class="math inline">\(d\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span>s at coordinates <span class="math inline">\(i\)</span>, where <span class="math inline">\(i \in \left\{i: t_i \in d \right\}\)</span>.</li>
-</ol>
-</section>
-<section id="bag-of-words-tagging" class="level1">
-<h1>Bag-of-Words tagging</h1>
-<p>Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting <span class="math inline">\(1\)</span> whenever we encounter a word, we put the total number of times it occurs in a given document.</p>
-<p>So, what we need to do is:</p>
-<ul>
-<li>create a vocabulary of all words in a given corpus: <span class="math inline">\(t_i,\, i \in [0,N)\)</span>, where <span class="math inline">\(N\)</span> is the size of the vocabulary;</li>
-<li>now, given a document <span class="math inline">\(d\)</span>, calculate number of times each word <span class="math inline">\(t_i\)</span> occurs and denote it <span class="math inline">\(count(t_i, d)\)</span>;</li>
-<li>map this document to an <span class="math inline">\(N\)</span>-dimensional vector, where on each <span class="math inline">\(i\)</span>-th position we’ll have <span class="math inline">\(count(t_i, d)\)</span>;</li>
-<li>compute distances between two documents via dot product.</li>
-</ul>
-</section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
 <p><strong>Task 0.</strong> Build an N-gram language model based on some corpus.</p>
-<ul>
-<li>compare bi- and tri-gram models</li>
-<li>apply interpolation/backoff</li>
-<li>use this model to build sentences</li>
-</ul>
-<p><strong>Task 1.</strong> Take an arbitrary text from NLTK corpora (e.g.&nbsp;text3) and implement a Bag-of-Words tagger for it.</p>
-<p><strong>Task 2.</strong> Enhance the tagger so that it will use N-grams instead of words</p>
+<p><strong>Task 1.</strong> Compare bi- and tri-gram models</p>
+<p><strong>Task 2.</strong> Apply interpolation/backoff to your model so that it can better handle unknown words/prompts.</p>
+<p><strong>Task 3.</strong> Use this model to build sentences. Meaning, for a prompt consisting of words <span class="math inline">\(p_1,...,p_n\)</span>, it should produce a continuation <span class="math inline">\(w_1,...,w_k\)</span>.</p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>
 <ul>
 <li>Chapter 3 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>.</li>
+<li>NLP lecture 2 (https://web.stanford.edu/~jurafsky/slp3/slides/lm24aug.pdf)</li>
 </ul>
 
 
