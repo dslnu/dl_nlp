@@ -1,0 +1,1876 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.42">
+
+  <meta name="author" content="Vitaly Vlasov">
+  <title>Deep Learning/NLP course – Regularization and Optimization</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-2f366650f320edcfcf53d73c80250a32.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script>
+    MathJax = {
+      tex: {
+        tags: 'ams'  // should be 'ams', 'none', or 'all'
+      }
+    };
+  </script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Regularization and Optimization</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vitaly Vlasov 
+</div>
+        <p class="quarto-title-affiliation">
+            Lviv University
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="parameters-to-tinker-with" class="slide level2">
+<h2>Parameters to tinker with</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Hyperparameters</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>number of layers</li>
+<li>number of hidden units in each layer</li>
+<li>learning rates</li>
+<li>activation functions for different layers</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="train-dev-test-sets" class="slide level2">
+<h2>Train / Dev / Test sets</h2>
+
+<img data-src="img/regopt_1.png" class="r-stretch"><ul>
+<li>used to be 60/20/20%</li>
+<li>now it’s more like 98/1/1%.</li>
+</ul>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important</strong></p>
+</div>
+<div class="callout-content">
+<p>Train and dev sets should come from the same distribution.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="biasvariance" class="slide level2 smaller">
+<h2>Bias/Variance</h2>
+
+<img data-src="img/bias_variance.png" class="r-stretch"><ul>
+<li><strong>High Bias</strong> Simple hypothesis, not able to train properly on the training set and test set both. This is <strong>Underfitting</strong>.</li>
+<li><strong>High Variance</strong>. Very complex hypothesis, not able to generalise. Will perform great on training data and poor on the test data. This is <strong>Overfitting</strong>.</li>
+<li><strong>Just Right</strong>: The glorious balance</li>
+</ul>
+</section>
+<section id="biasvariance-1" class="slide level2">
+<h2>Bias/Variance</h2>
+
+<img data-src="img/bias_variance2.png" class="r-stretch"></section>
+<section id="biasvariance-2" class="slide level2">
+<h2>Bias/Variance</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Examples</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>if training set error is 1%, and dev set error is 11%, then we say we have <strong>high variance</strong>.</li>
+<li>If training set error is 15%, and dev set error is 16%, then we say we have <strong>high bias</strong>.</li>
+<li>If training set error is 15%, and dev set error is 30%, then we say we have both <strong>high bias</strong> and <strong>high variance</strong>.</li>
+<li>If training set error is 0.5%, and dev set error is 1%, then we say we have both <strong>low bias</strong> and <strong>low variance</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<aside><div>
+<p>The above analysis is based on the assumption that optimal (Bayes) error is 0%.</p>
+</div></aside></section>
+<section id="high-bias" class="slide level2">
+<h2>High bias</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Solutions for high bias</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>bigger network</li>
+<li>train longer</li>
+<li>NN architecture search</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="high-variance" class="slide level2">
+<h2>High variance</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Solutions for high variance</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>get more data</li>
+<li><strong>regularization</strong> in order to reduce overfitting</li>
+<li>NN architecture search</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Bias-variance tradeoff</strong></p>
+</div>
+<div class="callout-content">
+<p>A machine learning concept. Bigger network and getting more data help to solve the tradeoff problem.</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<section id="regularization" class="title-slide slide level1 center">
+<h1>Regularization</h1>
+
+</section>
+<section id="regularization-1" class="slide level2">
+<h2>Regularization</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Regularization</strong> is a strategy used in machine/deep learning designed to reduce the test error, possibly at the expense of increased training error.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition 2</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Regularization</strong> is any modification we make to a learning algorithm that is intended to reduce its generalization error but not its training error.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-2" class="slide level2">
+<h2>Regularization</h2>
+
+<img data-src="img/snoop_dogg.jpg" class="r-stretch"></section>
+<section id="regularization-penalty-based" class="slide level2">
+<h2>Regularization: penalty-based</h2>
+<p><span class="math display">\[\begin{align*}
+  &amp;\hat{y} = \sum\limits_{i=0}^d w_i x_i,  \\
+  &amp;L = \sum (y-\hat{y})^2
+\end{align*}\]</span></p>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Soft penalty</strong></p>
+</div>
+<div class="callout-content">
+<p>Larger value of <span class="math inline">\(d\)</span> increases overfitting. Decreasing <span class="math inline">\(d\)</span> = <em>economy of parameters</em>.</p>
+<p>Instead of reducing a number of parameters, we can apply a <em>soft</em> penalty.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-parameter-norm-penalties" class="slide level2">
+<h2>Regularization: parameter norm penalties</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong><span class="math inline">\(L_2\)</span> regularization</strong></p>
+</div>
+<div class="callout-content">
+<p>Consider logistic regression. We introduce an additional summand:</p>
+<p><span class="math inline">\(J(w, b) = \frac{1}{m} \sum\limits_{i=1}^m L(\hat{y}^{(i)}, y^{(i)}) + \dfrac{\lambda}{2m}\|w\|_2^2\)</span></p>
+<p><span class="math inline">\(\|w\|_2^2 = \sum\limits_{j=1}^{n_x} w_j^2 = w^T w\)</span>.</p>
+<p><span class="math inline">\(\lambda\)</span> is called a <em>regularization parameter</em>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-parameter-norm-penalties-1" class="slide level2">
+<h2>Regularization: parameter norm penalties</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Why don’t we regularize <span class="math inline">\(b\)</span></strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>because it’s just a single parameter, compared to multiple in <span class="math inline">\(w\)</span>.</li>
+<li>the biases typically require less data than the weights to fit accurately.</li>
+<li>fitting the weight well requires observing both variables in a variety of conditions.</li>
+<li>each bias controls only a single variable.</li>
+<li>this means that we do not induce too much variance by leaving the biases unregularized.</li>
+<li>also, regularizing the bias parameters can introduce a significant amount of underfitting.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-parameter-norm-penalties-2" class="slide level2">
+<h2>Regularization: parameter norm penalties</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong><span class="math inline">\(L_1\)</span> regularization</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math inline">\(J(w, b) = \frac{1}{m} \sum\limits_{i=1}^m L(\hat{y}^{(i)}, y^{(i)}) +\dfrac{\lambda}{2m}\|w\|_1\)</span>.</p>
+<p>Here <span class="math inline">\(\|w\|_1 =\sum\limits_{j=1}^{n_x} |w_j|\)</span>.</p>
+<p>Here we end up having sparse vectors for <span class="math inline">\(w\)</span> - meaning, they will contain lots of zeroes.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-3" class="slide level2">
+<h2>Regularization</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>A general case</strong></p>
+</div>
+<div class="callout-content">
+<p>For neural network, we add this to the cost function: <span class="math display">\[
+J(\vec{W}, \vec{b}) = \frac{1}{m} \sum\limits_{i=1}^m L(\hat{y}^{(i)}, y^{(i)}) + \dfrac{\lambda}{2m}\sum\limits_{l=1}^L\|\vec{W}^{[l]}\|_F^2
+\]</span> We define the matrix norm (Frobenius norm) as <span class="math display">\[
+\|\vec{W}^{[l]}\|_F^2 = \sum\limits_{i=1}^{n^{[l]}}\sum\limits_{j=1}^{n^{[l-1]}}\left(w_{ij}^{[l]}\right)^2.
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-4" class="slide level2">
+<h2>Regularization</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>A general case</strong></p>
+</div>
+<div class="callout-content">
+<p>New <span class="math inline">\(dW^{[l]}\)</span> becomes <span class="math display">\[
+dW^{[l]} = (\text{old one}) + \dfrac{\lambda}{m} W^{[l]}.
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Weight decay</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math inline">\(L_2\)</span> regularization is sometimes called <strong>weight decay</strong>. The gradient descent step: <span class="math display">\[\begin{align*}
+&amp;\vec{W}^{[l]} = \vec{W}^{[l]}-\alpha\left((\text{old one}) + \dfrac{\lambda}{m} \vec{W}^{[l]}\right) = \\
+&amp;= \vec{W}^{[l]}\left(1-\dfrac{\alpha \lambda}{m}\right) - \alpha(\text{old one}).
+\end{align*}\]</span></p>
+<p><span class="math inline">\(L_2\)</span> regularizer encourages weight values to decay towards <span class="math inline">\(0\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="regularization-5" class="slide level2">
+<h2>Regularization</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong><span class="math inline">\(L_1\)</span> vs <span class="math inline">\(L_2\)</span></strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>accuracy</strong>: <span class="math inline">\(L_2\)</span> wins</li>
+<li><span class="math inline">\(L_1\)</span> creates <strong>sparse</strong> vectors (lots of <span class="math inline">\(w_i\)</span>s are <span class="math inline">\(0\)</span>)</li>
+<li>this means these components are <strong>dropped</strong></li>
+<li>therefore <span class="math inline">\(L_1\)</span> regularizer acts as a <strong>feature selector</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="why-regularization-reduces-overfitting" class="slide level2">
+<h2>Why Regularization Reduces Overfitting?</h2>
+
+<img data-src="img/regularizer.png" class="r-stretch"></section>
+<section id="why-regularization-reduces-overfitting-1" class="slide level2 smaller">
+<h2>Why Regularization Reduces Overfitting?</h2>
+<ul>
+<li><span class="math inline">\(w^*\)</span> - minimum error for <span class="math inline">\(\lambda=0\)</span>.</li>
+<li>when <span class="math inline">\(\lambda\)</span> &gt; 0, the minimum of the regularized error function <span class="math inline">\(E(w) + \lambda(w_1^2 + w_2^2)\)</span> is shifted towards the origin.</li>
+<li>This shift is greater in the direction of <span class="math inline">\(w_1\)</span> because the unregularized error is relatively insensitive to the parameter value, and less in direction <span class="math inline">\(w_2\)</span> where the error is more strongly dependent on the parameter value.</li>
+<li>The regularization term is effectively suppressing parameters that have only a small effect on the accuracy of the network predictions.</li>
+</ul>
+</section>
+<section id="why-regularization-reduces-overfitting-2" class="slide level2 smaller">
+<h2>Why Regularization Reduces Overfitting?</h2>
+<ul>
+<li>setting large <span class="math inline">\(\lambda\)</span> helps to reduce <span class="math inline">\(\|w\|\)</span> to zero.</li>
+<li>therefore, s will also be close to zero.</li>
+<li><span class="math inline">\(L_2\)</span>-regularization relies on the assumption that a model with small weights is simpler than a model with large weights.</li>
+<li>thus, by penalizing the square values of the weights in the cost function you drive all the weights to smaller values.</li>
+<li>it becomes too costly for the cost to have large weights! This leads to a smoother model in which the output changes more slowly as the input changes.</li>
+</ul>
+</section>
+<section id="regularization-impact" class="slide level2">
+<h2>Regularization Impact</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong><span class="math inline">\(L_2\)</span>-regularization impact</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>on the <strong>cost computation</strong>: A regularization term is added to the cost.</li>
+<li>on the <strong>backpropagation function</strong>: There are extra terms in the gradients with respect to weight matrices.</li>
+<li>on <strong>weights</strong>: they end up smaller (“weight decay”): weights are pushed to smaller values.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="ensemble-methods" class="slide level2">
+<h2>Ensemble methods</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Bagging</strong> (short for <strong>b</strong>ootstrap <strong>ag</strong>gregating) is a technique for reducing generalization error by combining several models. The idea is to train several different models separately, then have all the models vote on the output for test examples.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Ensemble methods</strong></p>
+</div>
+<div class="callout-content">
+<p>This is an example of a general strategy in machine learning called <strong>model averaging</strong>.</p>
+<p>Techniques employing this strategy are known as <strong>ensemble methods</strong>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Rationale</strong></p>
+</div>
+<div class="callout-content">
+<p>Different models will not make same errors on the test set.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="bagging-vs-sampling" class="slide level2">
+<h2>Bagging vs sampling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Bagging</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Sample size <span class="math inline">\(s\)</span> = training data size <span class="math inline">\(n\)</span> (classical bagging)</li>
+<li>Resampled data will contain duplicates, and a fraction <span class="math inline">\((1-1/n)^n \approx 1/e\)</span> is not included at all</li>
+<li>Best results obtained with <span class="math inline">\(s &lt;&lt; n\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Sampling</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Sample size <span class="math inline">\(s\)</span> &lt; training data size <span class="math inline">\(n\)</span></li>
+<li>Samples are created <em>without</em> replacement.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="randomized-connection-dropping" class="slide level2">
+<h2>Randomized connection dropping</h2>
+<p>Aka <strong>DropConnect</strong>.</p>
+
+<img data-src="img/ensemble_dropconnect.png" class="r-stretch"></section>
+<section id="dropout-regularization" class="slide level2">
+<h2>Dropout Regularization</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Overview</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>for each training example, drop a different set of NN nodes.</li>
+<li>there are several techniques:
+<ul>
+<li><strong>activation scaling</strong></li>
+<li><strong>inverted dropout</strong>.</li>
+</ul></li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/ensemble_dropout.png" class="r-stretch"></section>
+<section id="dropout" class="slide level2">
+<h2>Dropout</h2>
+
+<img data-src="img/dropout.png" class="r-stretch"></section>
+<section id="dropout-1" class="slide level2">
+<h2>Dropout</h2>
+
+<img data-src="img/dropout_forwardprop.png" class="r-stretch"></section>
+<section id="dropout-regularization-1" class="slide level2">
+<h2>Dropout Regularization</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Inverted dropout</strong></p>
+</div>
+<div class="callout-content">
+<p>Create a random matrix e.g.&nbsp;for layer 3:</p>
+<p><img data-src="img/regopt_2.png" height="200"></p>
+<p><span class="math display">\[\begin{align*}
+&amp;d3 = np.random.randn(a3.shape[0], a3.shape[1]) &lt; keep\_prob \\
+&amp;a3 = np.multiply(a3, d3) \\
+&amp;a3 /= keep\_prob
+\end{align*}\]</span></p>
+<p>This ensures that the expected value of <code>keep_prob</code> remains the same. At test time we’re not using dropout.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="dropout-2" class="slide level2">
+<h2>Dropout</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Features</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Nodes cannot rely on any single feature, as they might go away randomly, so it has to spread out weights.</li>
+<li>Spreading out weights will shrink the squared norm of the weights.</li>
+<li>It’s possible to vary <code>keep_prob</code> by layer.</li>
+<li>Dropout is often used in computer vision, as we often don’t have enough data.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Downside</strong></p>
+</div>
+<div class="callout-content">
+<p>We don’t have a well-defined cost function.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="dropout-3" class="slide level2">
+<h2>Dropout</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Notes</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Dropout is a regularization technique.</li>
+<li>A <strong>common mistake</strong> when using dropout is to use it both in training and testing. You should use dropout (randomly eliminate nodes) only in training.</li>
+<li>You only use dropout during training. Don’t use dropout (randomly eliminate nodes) during test time.</li>
+<li>Apply dropout both during forward and backward propagation.</li>
+<li>During training time, divide each dropout layer by <code>keep_prob</code> to keep the same expected value for the activations.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="other-regularization-methods" class="slide level2">
+<h2>Other Regularization Methods</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Data augmentation</strong></p>
+</div>
+<div class="callout-content">
+<p>For example, flip images to generate extra training samples. Or do random distortions. <img data-src="img/data_augmentation.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="other-regularization-methods-1" class="slide level2">
+<h2>Other Regularization Methods</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Early stopping</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Plot gradient descent. On <span class="math inline">\(x\)</span> axis we’ll have number of iterations, on <span class="math inline">\(y\)</span> axis - cost.</li>
+<li>Plot both train set error and dev set error</li>
+<li>And stop before they start diverging.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/early_stopping.png" class="r-stretch"></section>
+<section id="other-regularization-methods-2" class="slide level2">
+<h2>Other Regularization Methods</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Orthogonalization</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Orthogonalization</strong>: think about minimizing cost and not overfitting separately.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Downside</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Downside</strong> of early stopping is that it merges these two tasks.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="other-regularization-methods-3" class="slide level2">
+<h2>Other Regularization Methods</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Early stopping</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Every time the error on the validation set improves, we store a copy of the model parameters.</li>
+<li>When the training algorithm terminates, we return these parameters, rather than the latest parameters.</li>
+<li>The algorithm terminates when no parameters have improved over the best recorded</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>It is probably the most commonly used form of regularization in deep learning. Its popularity is due to both its effectiveness and its simplicity.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="other-regularization-methods-4" class="slide level2 smaller">
+<h2>Other Regularization Methods</h2>
+<p><strong>Noise injection</strong>: injecting a matrix of random values from a Gaussian distribution.</p>
+
+<img data-src="img/noise_injection.png" class="r-stretch"></section></section>
+<section>
+<section id="normalization" class="title-slide slide level1 center">
+<h1>Normalization</h1>
+
+</section>
+<section id="normalizing-inputs" class="slide level2 smaller">
+<h2>Normalizing inputs</h2>
+<!-- %\subsection{Setting up Optimization Problem} -->
+<ol type="1">
+<li>First step - subtract mean. <span class="math display">\[\begin{align*}
+  &amp; \mu = \dfrac{1}{m} \sum\limits_{i=1}^m x^{(i)}, \\
+  &amp; x := x - \mu
+\end{align*}\]</span></li>
+<li>Then - normalize variance. <span class="math display">\[\begin{align*}
+  &amp; \sigma^2 = \dfrac{1}{m} \sum\limits_{i=1}^m (x^{(i)})^2, \text{ (element-wise) }\\
+  &amp; x := x / \sigma
+\end{align*}\]</span></li>
+<li>Normalize train and dev sets similarly, using same <span class="math inline">\(\mu\)</span> and <span class="math inline">\(\sigma\)</span>.</li>
+</ol>
+</section>
+<section id="normalizing-inputs-1" class="slide level2">
+<h2>Normalizing inputs</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Impact</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Normalizing the features allows the cost function to look more symmetric, as opposed to elongated.</li>
+<li>Elongated shape forces a smaller <code>learning_rate</code>.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/normalizing.png" class="r-stretch"></section>
+<section id="normalizing-inputs-2" class="slide level2">
+<h2>Normalizing inputs</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Vanishing / Exploding Gradients</strong></p>
+</div>
+<div class="callout-content">
+<p><img data-src="img/regopt_3.png"></p>
+<p>If we use linear activation function <span class="math inline">\(g(z)=z\)</span>, then we can show that <span class="math inline">\(y = w^{[L]}*w^{[L-1]}*\dots*w^{[1]}\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="vanishing-exploding-gradients-1" class="slide level2 smaller">
+<h2>Vanishing / Exploding Gradients</h2>
+<p>Suppose that weight matrices look like this: <span class="math display">\[\begin{align*}
+  &amp; w^{[l]} = \begin{bmatrix}
+    1.5 &amp; 0 \\
+    0 &amp; 1.5
+  \end{bmatrix}
+\end{align*}\]</span> Then we’ll have that <span class="math inline">\(\hat{y} = 1.5^{L-1}x\)</span>.</p>
+<p>So the value of <span class="math inline">\(\hat{y}\)</span> will explode. Conversely, if we have 0.5s in the weight matrix, then activation values will vanish.</p>
+<p>Same thing will happen to derivatives.</p>
+<p>This problem can be solved by careful <strong>initialization of the weights</strong>.</p>
+</section>
+<section id="weight-initialization-for-deep-networks" class="slide level2 smaller">
+<h2>Weight Initialization for Deep Networks</h2>
+<p>Suppose we have a single neuron.</p>
+
+<img data-src="img/regopt_4.png" class="r-stretch"><p>So we’ll have <span class="math inline">\(z=w_1 x_1 + \dots + w_n x_n\)</span>.</p>
+<p>The larger <span class="math inline">\(n\)</span> becomes, the less should the weights <span class="math inline">\(w_i\)</span> be.</p>
+<p>We can set the variance of w to be <span class="math inline">\(\dfrac{1}{n}\)</span> for <span class="math inline">\(tanh\)</span> (Xavier initialization) (or <span class="math inline">\(\dfrac{2}{n}\)</span> for ReLU).</p>
+<p>Sometimes also this is used: <span class="math inline">\(\sqrt{\dfrac{2}{n^{[l-1]}n^{[l]}}}\)</span>. <span class="math display">\[
+w^{[l]} = np.random.randn(w.shape)* np.sqrt(1/n^{[l-1]})
+\]</span></p>
+</section>
+<section id="gradient-computation" class="slide level2">
+<h2>Gradient computation</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Kinds</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>analytical manual derivation. Time-consuming, error-prone.</li>
+<li>numeric calculation using finite differences. Scales poorly. Useful for debugging</li>
+<li>symbolic differentiation. Causes <strong>expression swell</strong>.</li>
+<li><strong>autodiff</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="expression-swell" class="slide level2">
+<h2>Expression swell</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[\begin{align*}
+  &amp; z = h(w_1 x + b_1) \\
+  &amp; y = h(w_2 x + b_2) \\
+  &amp; h(a) = ln  (1+ exp(a)) \text{ (soft ReLU)} \\
+  &amp; y(x) = h(w_2 h(w_1 x + b_1) + b_2)\\
+  &amp;\dfrac{\partial y}{\partial w_1} = \dfrac{w_2 x exp\left(w_1 x + b_1 + b_2 + w_2 ln\left[1+e^{w_1 x + b_1}\right]\right)}{(1 + e^{w_1 x + b_1})(1+exp(b_2 + w_2 ln \left[1+e^{w_1 x + b_1}\right])}.
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="autodiff" class="slide level2">
+<h2>Autodiff</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Idea</strong></p>
+</div>
+<div class="callout-content">
+<p>Automatically generate the code for gradient calculations, based on forward propagation equations.</p>
+<p>It augments the forward prop code with additional variables.</p>
+<p><img data-src="img/forward_mode_autodiff.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="autodiff-1" class="slide level2">
+<h2>Autodiff</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Forward-mode</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[\begin{align*}
+&amp;f(x_1, x_2) = x_1 x_2 + exp(x_1 x_2) - sin(x_2)  \\
+&amp; \text { for } \dfrac{\partial f}{\partial x_1} \text {define tangent variables } \dot{v_i} = \dfrac{\partial v_i}{\partial x_1} \\
+&amp; \dot{v_i} = \dfrac{\partial v_i}{\partial x_1} = \sum\limits_{j \in pa(i)} \dfrac{\partial v_j}{\partial x_1}\dfrac{\partial v_i}{\partial v_j} = \sum\limits_{j \in pa(i)} \dot{v_j}\dfrac{\partial v_i}{\partial v_j}\\
+&amp; pa(i) \text{ being set of parents to node i}
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="autodiff-2" class="slide level2">
+<h2>Autodiff</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Reverse-mode</strong></p>
+</div>
+<div class="callout-content">
+<p>Augment each intermediate variable <span class="math inline">\(v_i\)</span> with additional varibles <span class="math inline">\(\overline{v_i}\)</span>.</p>
+<p><span class="math inline">\(f\)</span> - output function. <span class="math display">\[\begin{align*}
+&amp; \overline{v_i} = \dfrac{\partial f}{\partial v_i} = \sum\limits_{j \in pa(i)} \dfrac{\partial f}{\partial v_j}\dfrac{\partial v_j}{\partial v_i} = \sum\limits_{j \in pa(i)} \overline{v_j}\dfrac{\partial v_j}{\partial v_i}\\
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Backpropagation is a special-case of reverse-mode autodiff.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="numerical-approximation-of-gradients" class="slide level2">
+<h2>Numerical Approximation of Gradients</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Gradient checking</strong></p>
+</div>
+<div class="callout-content">
+<p>We check analytical gradients numerically.</p>
+<p>Gives much better approximation of derivatives (two-sided) <span class="math inline">\(f(\theta+\epsilon), f(\theta-\epsilon)\)</span> Approximation error becomes <span class="math inline">\(O(\epsilon^2)\)</span>, for one-sided approximation it’s <span class="math inline">\(O(\epsilon)\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Procedure</strong></p>
+</div>
+<div class="callout-content">
+<p>First, we take all our parameters <span class="math inline">\(W^{[l]}, b^{[l]}\)</span> and reshape them into one data vector <span class="math inline">\(\theta\)</span>.</p>
+<p>So the cost function will be transformed in a following way: <span class="math display">\[\begin{align*}
+  &amp;J(W^{[1]}, b^{[1]},\dots, W^{[L]}, b^{[L]}) = J(\theta)
+\end{align*}\]</span> Differentials can also be reshaped into a vector <span class="math inline">\(d\theta\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="numerical-approximation-of-gradients-1" class="slide level2 smaller">
+<h2>Numerical Approximation of Gradients</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Procedure</strong></p>
+</div>
+<div class="callout-content">
+<p>Then we compute a differential for each <span class="math inline">\(i\)</span>: <span class="math display">\[\begin{align*}
+  &amp;d\theta_{approx}[i] = \dfrac{J(\theta_1,\dots, \theta_i+\epsilon,\dots) - J(\theta_1,\dots, \theta_i-\epsilon,\dots)}{2\epsilon} \approx d\theta[i].
+\end{align*}\]</span> How do we check? <span class="math display">\[
+val = \dfrac{\|d\theta_{approx}-d\theta\|_2}{\|d\theta_{approx}\|^2 +\|d\theta\|^2}
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>OK</strong></p>
+</div>
+<div class="callout-content">
+<p>If <span class="math inline">\(\epsilon = 10^{-7}\)</span> and <span class="math inline">\(val=10^{-7}\)</span>, then everything’s great.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Not OK</strong></p>
+</div>
+<div class="callout-content">
+<p>If <code>val</code> is big, gradients should be rechecked.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="numerical-approximation-of-gradients-2" class="slide level2">
+<h2>Numerical Approximation of Gradients</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Notes</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Only compute <span class="math inline">\(d\theta_{approx}\)</span> in debug mode.</li>
+<li>Don’t forget about regularization.</li>
+<li>Grad check doesn’t work with dropout</li>
+<li>Try running at random initialization</li>
+</ul>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="optimization" class="title-slide slide level1 center">
+<h1>Optimization</h1>
+
+</section>
+<section id="mini-batch-gradient-descent" class="slide level2">
+<h2>Mini-batch Gradient Descent</h2>
+<p>If we split training sets in smaller sets, we call them mini-batches. <img data-src="img/shuffle.png"></p>
+</section>
+<section id="mini-batch-gradient-descent-1" class="slide level2">
+<h2>Mini-batch Gradient Descent</h2>
+
+<img data-src="img/partition.png" class="r-stretch"></section>
+<section id="mini-batch-gradient-descent-2" class="slide level2 smaller">
+<h2>Mini-batch Gradient Descent</h2>
+<p>We’ll denote first minibatch <span class="math inline">\(X^{\{1\}}\)</span>. Same for <span class="math inline">\(Y\)</span>.</p>
+<p><code>for t in 1...5000:</code></p>
+<p><span class="math display">\[\begin{align*}
+  &amp;\text{forward prop on } X^{\{t\}} \\
+  &amp;Z^{[1]} = W^{[1]}X^{\{t\}} + b^{[1]}\\
+  &amp;A^{[1]} = g^{[1]}(Z^{[1]})\\
+  &amp;\vdots \\
+  &amp;A^{[l]} = g^{[l]}(Z^{[l]})\\
+  &amp;J^{\{t\}} = \dfrac{1}{1000} \sum L(\hat{y}^{(i)}, y^{(i)}) + \dfrac{\lambda}{2 * 1000} \sum \|w^{[l]}\|^2_F \\
+  &amp;\text{backward prop to compute gradients  of } J^{\{t\}}\\
+  &amp; w^{[l]} = w^{[l]} - \alpha dw^{[l]},\, b^{[l]} = b^{[l]} - \alpha db^{[l]}
+\end{align*}\]</span> So we take 5000 gradient descent steps in one epoch.</p>
+</section>
+<section id="mini-batch-gradient-descent-3" class="slide level2">
+<h2>Mini-batch Gradient Descent</h2>
+<p><img data-src="img/minibatch.png" height="400"></p>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Mini-batch cost will have oscillations, depending on characteristics of mini-batches.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="mini-batch-gradient-descent-4" class="slide level2">
+<h2>Mini-batch Gradient Descent</h2>
+<ul>
+<li>If mini-batch size = <span class="math inline">\(m\)</span>, we end up with batch gradient descent.</li>
+<li>If mini-batch size = <span class="math inline">\(1\)</span>, we end up with <em>stochastic</em> gradient descent. Every example is its own mini-batch.</li>
+</ul>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Stochastic GD will oscillate a lot. Disadvantage is that we lose the speedup from vectorization.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="mini-batch-gradient-descent-5" class="slide level2">
+<h2>Mini-batch Gradient Descent</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Guidelines for mini-batch size</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>for small training sets (&lt; 2000), just use batch GD</li>
+<li>typical sizes would be 64, 128, 256, 512, etc.</li>
+<li>training set <span class="math inline">\(X^{\{t\}}\)</span> should fit in CPU/GPU memory</li>
+<li>mini-batch size is another <strong>hyperparameter</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="mini-batch-gradient-descent-6" class="slide level2 smaller">
+<h2>Mini-batch Gradient Descent</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Momentum: intuition</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Because mini-batch gradient descent makes a parameter update after seeing just a subset of examples, the direction of the update has some variance, and so the path taken by mini-batch gradient descent will “oscillate” toward convergence.</li>
+<li>Using <strong>momentum</strong> can reduce these oscillations.</li>
+<li>Momentum takes into account the past gradients to smooth out the update. The ‘direction’ of the previous gradients is stored in the variable.</li>
+<li>Formally, this will be the <em>exponentially weighted average</em> of the gradient on previous steps. You can also think of as the “velocity” of a ball rolling downhill.</li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/opt_momentum.png" class="r-stretch"></section>
+<section id="exponentially-weighted-averages" class="slide level2 smaller">
+<h2>Exponentially Weighted Averages</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Speed</strong></p>
+</div>
+<div class="callout-content">
+<p>Faster than GD.</p>
+</div>
+</div>
+</div>
+
+<img data-src="img/ewa.png" class="r-stretch"><p>Exponentially weighted (moving) averages for yearly temperatures: <span class="math display">\[
+V_t = \beta*V_{t-1} + (1-\beta)*\theta_t
+\]</span> where <span class="math inline">\(v_0=0\)</span>, <span class="math inline">\(\theta_i\)</span> is temperature on day <span class="math inline">\(i\)</span>.</p>
+</section>
+<section id="exponentially-weighted-averages-1" class="slide level2">
+<h2>Exponentially Weighted Averages</h2>
+<p><span class="math inline">\(V_t\)</span> averages over last <span class="math inline">\(\dfrac{1}{1-\beta}\)</span> temperature.</p>
+<p>E.g., if <span class="math inline">\(\beta=0.9\)</span>, then <span class="math inline">\(V_t\)</span> averages over last 10 days.</p>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>High values</strong></p>
+</div>
+<div class="callout-content">
+<p>With high <span class="math inline">\(\beta\)</span> values, we get a much smoother plot, but shifted to the right, because large <span class="math inline">\(\beta\)</span> values cause slower adaptation of the graph.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Low values</strong></p>
+</div>
+<div class="callout-content">
+<p>With smaller <span class="math inline">\(\beta\)</span> values, the graph is noisier, but it adapts faster.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="exponentially-weighted-averages-2" class="slide level2">
+<h2>Exponentially Weighted Averages</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Procedure</strong></p>
+</div>
+<div class="callout-content">
+<p>Recursively expand <span class="math inline">\(V_{100}\)</span>: <span class="math display">\[
+V_{100} = \sum\limits_{i=1}^100 (1-\beta)\beta^{100-i} \theta_i
+\]</span> All these coefficients above add up to a number close to <span class="math inline">\(1\)</span>.</p>
+<p>We multiply daily temperature with an exponentially decaying function. <span class="math display">\[
+(1-\epsilon)^{\dfrac{1}{\epsilon}} = \dfrac{1}{e}.
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="exponentially-weighted-averages-3" class="slide level2">
+<h2>Exponentially Weighted Averages</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Implementation</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+v_{\theta} := \beta v_{\theta} + (1-\beta)\theta_i
+\]</span> Very efficient from computation and memory efficiency points of view.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="exponentially-weighted-averages-4" class="slide level2">
+<h2>Exponentially Weighted Averages</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Bias Correction in Exponentially Weighted Averages</strong></p>
+</div>
+<div class="callout-content">
+<p>The problem is that the curves starts really low.</p>
+<p><img data-src="img/bias_correction_ewa.png"></p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Suggestion</strong></p>
+</div>
+<div class="callout-content">
+<p>Divide <span class="math inline">\(v_t\)</span> by <span class="math inline">\(1-\beta^t\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="gradient-descent-with-momentum" class="slide level2">
+<h2>Gradient Descent with Momentum</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Basic idea</strong></p>
+</div>
+<div class="callout-content">
+<p>To compute exponentially weighted average of gradients and use that in GD update step. Helps the Gradient Descent process in navigating flat regions and local optima.</p>
+</div>
+</div>
+</div>
+
+<img data-src="img/momentum.png" class="r-stretch"></section>
+<section id="gradient-descent-with-momentum-1" class="slide level2">
+<h2>Gradient Descent with Momentum</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Procedure</strong></p>
+</div>
+<div class="callout-content">
+<p>On iteration <span class="math inline">\(t\)</span> we compute <span class="math inline">\(v_{dw} = \beta v_{dw} + (1-\beta)dw\)</span>.</p>
+<p>In this formula, we can think of first summand as <code>velocity</code>, second - as <code>acceleration</code>, <span class="math inline">\(\beta\)</span> - as <code>friction</code>.</p>
+<p>Similarly, we compute <span class="math inline">\(v_{db}\)</span>.</p>
+<p>Then we update the weights as follows: <span class="math display">\[
+W := W - \alpha v_{dW}, \, b := b - \alpha v_{db}
+\]</span> This smoothes out the GD steps. Results in much smaller oscillations in vertical direction, while moving horizontally.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="gradient-descent-with-momentum-2" class="slide level2">
+<h2>Gradient Descent with Momentum</h2>
+
+<img data-src="img/momentum2.png" class="r-stretch"></section>
+<section id="gradient-descent-with-momentum-3" class="slide level2">
+<h2>Gradient Descent with Momentum</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Implementation details</strong></p>
+</div>
+<div class="callout-content">
+<p>On iteration <span class="math inline">\(t\)</span>:</p>
+<ul>
+<li>compute <span class="math inline">\(dW\)</span>, <span class="math inline">\(db\)</span> on the current mini-batch</li>
+<li><span class="math inline">\(v_{dW} = \beta v_{dW} + (1-\beta)dW\)</span>,</li>
+<li><span class="math inline">\(v_{db} = \beta v_{db} + (1-\beta)db\)</span>,</li>
+<li><span class="math inline">\(v_{db} = \beta v_{db} + (1-\beta)db\)</span>,</li>
+<li><span class="math inline">\(W := W - \alpha v_{dW}, \, b := b - \alpha v_{db}\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>We have <span class="math inline">\(\alpha\)</span> and <span class="math inline">\(\beta\)</span> as hyperparameters.</p>
+<p>Sometimes <span class="math inline">\(1-\beta\)</span> is omitted.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="gradient-descent-with-momentum-4" class="slide level2">
+<h2>Gradient Descent with Momentum</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Important notes</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Momentum takes past gradients into account to smooth out the steps of gradient descent. It can be applied with:
+<ul>
+<li>batch gradient descent</li>
+<li>mini-batch gradient descent</li>
+<li>or stochastic gradient descent.</li>
+</ul></li>
+<li>You have to tune a momentum hyperparameter <span class="math inline">\(\beta\)</span> and a learning rate <span class="math inline">\(\alpha\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="rmsprop" class="slide level2">
+<h2>RMSprop</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition: RMSprop: acronym for “<strong>R</strong>oot <strong>M</strong>ean <strong>S</strong>quare prop”.</strong></p>
+</div>
+<div class="callout-content">
+<p>Vertical oscillations - this is parameter <span class="math inline">\(b\)</span>. <span class="math inline">\(w\)</span> is horizontal direction. <span class="math display">\[\begin{align*}
+  &amp;s_{dW} = \beta s_{dW} + (1-\beta)dW^2, \; s_{db} = \beta s_{db} + (1-\beta)db^2, \\
+  &amp;W := W - \alpha \dfrac{dW}{\sqrt{s_{dw}+\epsilon}}, \, b := b - \alpha \dfrac{db}{\sqrt{s_{db}+\epsilon}}
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Intuition</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(db^2\)</span> is large, <span class="math inline">\(dW^2\)</span> is small</li>
+<li>So updates in vertical direction are divided by larger number.</li>
+<li>Thus we can use larger <span class="math inline">\(\alpha\)</span>.</li>
+</ul>
+<p>We will denote the parameter <span class="math inline">\(\beta_2\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="adam-optimization-algorithm" class="slide level2">
+<h2>Adam Optimization Algorithm</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Description</strong></p>
+</div>
+<div class="callout-content">
+<p>Works across a wide range of DL architectures. It’s a combination of GD with momentum and RMSprop.</p>
+<p>Adam stands for <strong>ADA</strong>ptive <strong>M</strong>oment estimation.</p>
+<ul>
+<li>calculate an exponentially weighted average of past gradients, and stores it in variables <span class="math inline">\(v\)</span> (before bias correction) and <span class="math inline">\(v^{corrected}\)</span> (with bias correction).</li>
+<li>calculate an exponentially weighted average of the squares of the past gradients, and stores it in variables <span class="math inline">\(s\)</span> (before bias correction) and <span class="math inline">\(s^{corrected}\)</span> (with bias correction).</li>
+<li>update parameters in a direction based on combining information from previous steps.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="adam-optimization-algorithm-1" class="slide level2">
+<h2>Adam Optimization Algorithm</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Computation</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[\begin{align*}
+   &amp; v_{dW}=0,\, s_{dW}=0 \\
+   &amp; v_{db}=0,\, s_{db}=0 \\
+   &amp; \text{on iteration } t \text{ compute } dW, db \\
+   &amp; v_{dW} = \beta_1 v_{dW} + (1-\beta_1)dW,\\
+   &amp; v_{db} = \beta_1 v_{db} + (1-\beta_1)db,\\
+   &amp; s_{dW} = \beta_2 s_{dW} + (1-\beta_2)dW^2,\\
+   &amp; v_{db} = \beta_2 v_{db} + (1-\beta_2)db^2
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="adam-optimization-algorithm-2" class="slide level2">
+<h2>Adam Optimization Algorithm</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Computation</strong></p>
+</div>
+<div class="callout-content">
+<p>We also implement bias correction: <span class="math display">\[\begin{align*}
+   &amp;V_{dW}^{corrected} = \dfrac{V_{dW}}{1-\beta_1^t},\\
+   &amp;V_{db}^{corrected} = \dfrac{V_{db}}{1-\beta_1^t},\\
+   &amp;S_{dW}^{corrected} = \dfrac{S_{dW}}{1-\beta_2^t},\\
+   &amp;S_{db}^{corrected} = \dfrac{S_{db}}{1-\beta_2^t},\\
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="adam-optimization-algorithm-3" class="slide level2">
+<h2>Adam Optimization Algorithm</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Computation</strong></p>
+</div>
+<div class="callout-content">
+<p>And the update steps: <span class="math display">\[\begin{align*}
+&amp;W := W - \alpha \dfrac{V_{dW}^{corrected}}{\sqrt{S_{dW}^{corrected}} + \epsilon},\\   
+&amp;b := b - \alpha \dfrac{V_{db}^{corrected}}{\sqrt{S_{db}^{corrected}} + \epsilon}
+\end{align*}\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="adam-optimization-algorithm-4" class="slide level2">
+<h2>Adam Optimization Algorithm</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Choice of hyperparameters</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(\alpha\)</span> needs to be tuned</li>
+<li><span class="math inline">\(\beta_1\)</span> usually is <span class="math inline">\(0.1\)</span></li>
+<li><span class="math inline">\(\beta_2\)</span> recommended to be <span class="math inline">\(0.999\)</span> by authors of the Adam paper</li>
+<li>choice of <span class="math inline">\(\epsilon\)</span> doesn’t matter much, authors of the Adam paper recommend <span class="math inline">\(10^{-8}\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="learning-rate-decay" class="slide level2">
+<h2>Learning Rate Decay</h2>
+<div class="callout callout-warning no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Clarification</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+\alpha = \dfrac{1}{1+decayRate\times epochNumber}\alpha_0
+\]</span></p>
+</div>
+</div>
+</div>
+<p>We can speed up the learning algorithm by slowly reducing the learning rate over time.</p>
+<p>Suppose we have small mini-batches.</p>
+<p><code>decay_rate</code> becomes another hyperparameter.</p>
+<p>Another option is exponential decay: <span class="math inline">\(\alpha = 0.95^{epochNumber} \alpha_0\)</span>.</p>
+</section>
+<section id="learning-rate-decay-1" class="slide level2">
+<h2>Learning Rate Decay</h2>
+<p>Some other options:</p>
+<ol type="1">
+<li><span class="math inline">\(\alpha = \dfrac{k}{\sqrt{epochNumber}} \alpha_0\)</span></li>
+<li><span class="math inline">\(\alpha = \dfrac{k}{\sqrt{t}} \alpha_0\)</span></li>
+</ol>
+</section>
+<section id="learning-rate-decay-2" class="slide level2">
+<h2>Learning Rate Decay</h2>
+
+<img data-src="img/lr_decay.png" class="r-stretch"></section>
+<section id="learning-rate-decay-3" class="slide level2">
+<h2>Learning Rate Decay</h2>
+<p><strong>Manual decay</strong>: works if we train on a small number of models.</p>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Fixed interval scheduling</strong></p>
+</div>
+<div class="callout-content">
+<p><img data-src="img/lr.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="the-problem-of-local-optima" class="slide level2">
+<h2>The Problem of Local Optima</h2>
+<p>In multidimensional spaces we are much less likely to encounter local optima, but rather <strong>saddle points</strong>.</p>
+<p>Our understanding of these spaces is still evolving.</p>
+<p><strong>Plateau</strong> - a region where a derivative is close to zero for a long time.</p>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/socket.io.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/multiplex.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'multiplex': {"url":"https://mplex.vitv.ly","secret":null,"id":"11e673604a90f9305f7da7d0313a2862688c0eb7568c4eadb64868141de66d23"},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
