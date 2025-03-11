@@ -1,0 +1,119 @@
+---
+title: "NLP: Lab 5 (bag-of-words)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+# Terms
+Let's agree on terminology:
+
+- **corpus** (plural: **corpora**) is a collection of documents
+- **document** is a sequence of sentences. Say, a paragraph, or a chapter
+- **sentence** is a sequence of words
+- **word** is synonymous to **term**
+
+# N-grams recap
+Using the chain rule of probability, we can use the below formula to compute sentence probabilities:
+$$
+P(w_{1:n}) = \prod_{i=1}^n P\left(w_i | w_{1:i-1}\right)
+$$
+Using Markov assumption, we can simplify the probability chain computation for N-grams to
+$$
+P(w_i | w_{1:i-1}) \approx P(w_i | w_{i-N+1:i-1})
+$$
+Hence, for a complete word sequence (a **sentence**) we can compute the probability as follows:
+$$
+P(w_{1:n}) \approx \prod_{i=1}^n P(w_i | w_{i-N+1:i-1})
+$$
+We can use maximum likelihood estimation to compute probabilities. For instance, for bigrams the formula will be:
+
+$$
+P(w_n | w_{1:n-1}) = \frac{C(w_{n-1}w_n)}{C(w_{n-1})},
+$$
+or in general case:
+$$
+P(w_n | w_{n-N+1:n-1}) = \frac{C(w_{n-N+1:n-1}w_n)}{C(w_{n-N+1:n-1})}.
+$$
+
+## Perplexity
+Perplexity of a test set $W$ with an N-gram model is given by (here V=|W|):
+$$
+perplexity(W) = \sqrt[V]{\frac{1}{P(w_1 w_2 ... w_{V})}} = \sqrt[V]{\prod_{i=1}^{V} \frac{1}{P(w_i | w_{i-N+1:i-1})}}
+$$
+
+## Laplace smoothing
+We have to deal with zero-probability N-grams somehow. One way is to add $1$ to all counts.
+
+Formula for bigrams:
+$$
+P_{Laplace}(w_n | w_{n-1}) = \frac{C(w_{n-1}w_n) + 1}{C(w_{n-1}) + V}.
+$$
+
+## Conditional interpolation
+Trigram example:
+\begin{align*}
+&P(w_n | w_{n-2} w_{n-1}) = \lambda_1(w_{n-2:n-1})P(w_n) +\\
+&+ \lambda_2(w_{n-2:n-1}) P(w_n | w_{n-1}) + \\
+&+ \lambda_3(w_{n-2:n-1})  P(w_n | w_{n-2} w_{n-1})
+\end{align*}
+All $\lambda_i$ should add up to $1$.
+
+## Stupid backoff
+Formula:
+$$
+S(w_i | w_{i-N+1:i-1}) = \begin{cases}
+\dfrac{C(w_{i-N+1:i})}{C(w_{i-N+1:i-1})}, & \text{ if } C(w_{i-N+1:i}) > 0 \\
+\lambda S(w_i | w_{i-N+2:i-1}) & \text{ otherwise}
+\end{cases}
+$$
+
+:::{.callout-tip icon=false}
+Value of $\lambda=0.4$ seems to be a good default
+:::
+
+
+# One-hot representation
+
+1. Collect unique words in a corpus - build a **vocabulary** $V$ of size $N=|V|$.
+2. Each word with index $i \in [0,N)$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$ at $i$-th coordinate.
+3. Each document $d$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$s at coordinates $i$, where $i \in \left\{i: t_i \in d \right\}$.
+
+# Bag-of-Words tagging
+Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting $1$ whenever we encounter a word, we put the total number of times it occurs in a given document.
+
+ So, what we need to do is:
+
+- create a vocabulary of all words in a given corpus: $t_i,\, i \in [0,N)$, where $N$ is the size of the vocabulary;
+- now, given a document $d$, calculate number of times each word $t_i$ occurs and denote it $count(t_i, d)$;
+- map this document to an $N$-dimensional vector, where on each $i$-th position we'll have $count(t_i, d)$;
+- compute distances between two documents via dot product.
+
+
+# Exercises
+
+**Task 0.** Build an N-gram language model based on some corpus.
+
+- compare bi- and tri-gram models
+- apply interpolation/backoff
+- use this model to build sentences
+
+**Task 1.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
+
+**Task 2.** Enhance the tagger so that it will use N-grams instead of words
+
+# Recommended reading 
+
+- Chapter 3 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/).

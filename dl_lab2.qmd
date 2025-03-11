@@ -1,0 +1,24 @@
+---
+title: "DL: Lab 2"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+# Lab overview
+
+We'll work with a planar data classifier using a two-layer neural network (using one hidden layer.
+
+Code in attached Jupyter notebook.
