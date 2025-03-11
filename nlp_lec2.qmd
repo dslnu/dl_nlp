@@ -1,0 +1,36 @@
+---
+title: "Natural Language Processing: N-grams"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    chalkboard: true
+    preview-links: auto
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: '9dd2f0585ee37a955b8055933f2d9f6c'
+      id: 'b47a7ce4f5313db581542b8b021199807f40e17c0a40a8e1be729e3a810b93cc'
+---
+
+Please use the slides from Jurafsky's book: https://web.stanford.edu/~jurafsky/slp3/slides/lm24aug.pdf

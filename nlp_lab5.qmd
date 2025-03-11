@@ -84,36 +84,17 @@ $$
 Value of $\lambda=0.4$ seems to be a good default
 :::
 
-
-# One-hot representation
-
-1. Collect unique words in a corpus - build a **vocabulary** $V$ of size $N=|V|$.
-2. Each word with index $i \in [0,N)$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$ at $i$-th coordinate.
-3. Each document $d$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$s at coordinates $i$, where $i \in \left\{i: t_i \in d \right\}$.
-
-# Bag-of-Words tagging
-Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting $1$ whenever we encounter a word, we put the total number of times it occurs in a given document.
-
- So, what we need to do is:
-
-- create a vocabulary of all words in a given corpus: $t_i,\, i \in [0,N)$, where $N$ is the size of the vocabulary;
-- now, given a document $d$, calculate number of times each word $t_i$ occurs and denote it $count(t_i, d)$;
-- map this document to an $N$-dimensional vector, where on each $i$-th position we'll have $count(t_i, d)$;
-- compute distances between two documents via dot product.
-
-
 # Exercises
 
 **Task 0.** Build an N-gram language model based on some corpus.
 
-- compare bi- and tri-gram models
-- apply interpolation/backoff
-- use this model to build sentences
+**Task 1.** Compare bi- and tri-gram models
 
-**Task 1.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
+**Task 2.** Apply interpolation/backoff to your model so that it can better handle unknown words/prompts.
 
-**Task 2.** Enhance the tagger so that it will use N-grams instead of words
+**Task 3.** Use this model to build sentences. Meaning, for a prompt consisting of words $p_1,...,p_n$, it should produce a continuation $w_1,...,w_k$.
 
 # Recommended reading 
 
 - Chapter 3 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/).
+- NLP lecture 2 (https://web.stanford.edu/~jurafsky/slp3/slides/lm24aug.pdf)
