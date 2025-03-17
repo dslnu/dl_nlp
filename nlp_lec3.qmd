@@ -1,0 +1,310 @@
+---
+title: "Natural Language Processing: N-grams"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    chalkboard: true
+    preview-links: auto
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: '9dd2f0585ee37a955b8055933f2d9f6c'
+      id: 'b47a7ce4f5313db581542b8b021199807f40e17c0a40a8e1be729e3a810b93cc'
+---
+
+
+## Edit distance
+![](img/levenshtein.svg)
+
+## One-hot distance
+![](img/one_hot.png)
+
+## Bag-of-Words
+![](img/bag_of_words.png)
+
+## TF-IDF
+![](img/tf.png)
+
+![](img/idf.png)
+
+## Feature space
+![](img/semantic_feature_space.png)
+
+## Coordinates
+**Gender** and **age** are called **semantic features**: they represent part of the meaning of each word. If we associate a numerical scale with each feature, then we can assign coordinates to each word:
+
+![](img/word_coords.png)
+
+## Feature space updated
+![](img/semantic_feature_space2.png)
+
+## Feature space updated
+![](img/word_coords2.png)
+
+## Feature space 3D
+New words: "king", "queen", "prince", and "princess".
+![](img/semantic_feature_space3.png){height=600}
+
+## Feature space 3D
+![](img/word_coords3.png)
+
+## Feature vectors
+:::{.callout-important icon=false}
+## Definition
+Vectors representing values of semantic features are called ***feature vectors***.
+:::
+
+
+## Applications
+:::{.callout-important icon=false}
+## How can we compute word similarity?
+
+- count number of features where words differ
+- cilculate Euclidean distance between points
+:::
+
+:::{.callout-tip icon=false}
+## Analogies
+For example, "man is to king as woman is to ?". 
+![](img/analogies_calc.png)
+:::
+
+## Analogies
+Graphical representation:
+
+![](img/analogies.png)
+
+## Embeddings
+:::{.callout-important icon=false}
+## Question
+How do we design features for all words in a dictionary?
+:::
+
+:::{.callout-tip icon=false}
+## Answer
+Feed massive amounts of text to an algorithm that will create its own feature space.
+:::
+
+:::{.callout-note}
+## Definition
+Word representations in this new synthetic space are called ***word embeddings***.
+:::
+
+## Embeddings {.smaller}
+![](img/embeddings.png){height=500}
+
+::: aside
+<!-- In the figure below each word is represented by 300 numbers with values between -0.2 and +0.2. --> 
+As you can see, component 126 appears to correlate with gender: it has slightly positive values (tan/orange) for the male words and slightly negative values (blue/gray) for the female words.
+:::
+
+
+## Embeddings
+:::{.callout-important icon=false}
+## Supported analogies
+
+- pluralization
+- past tense
+- comparisons 
+- country->capital mappings
+:::
+
+:::{.callout-tip icon=false}
+## Uses
+
+Input to NNs (transformers) that try to understand the meanings of entire sentences, or even paragraphs.  
+
+**Examples**: BERT, GPTx.
+:::
+
+## Embeddings
+:::{.callout-note icon=false}
+## Example
+ Word embedding for "king":
+```
+  [ 0.50451 , 0.68607 , -0.59517 , -0.022801, 0.60046 , -0.13498 , -0.08813 , 0.47377 , -0.61798 , -0.31012 , -0.076666, 1.493 , -0.034189, -0.98173 , 0.68229 , 0.81722 , -0.51874 , -0.31503 , -0.55809 , 0.66421 , 0.1961 , -0.13495 , -0.11476 , -0.30344 , 0.41177 , -2.223 , -1.0756 , -1.0783 , -0.34354 , 0.33505 , 1.9927 , -0.04234 , -0.64319 , 0.71125 , 0.49159 , 0.16754 , 0.34344 , -0.25663 , -0.8523 , 0.1661 , 0.40102 , 1.1685 , -1.0137 , -0.21585 , -0.15155 , 0.78321 , -0.91241 , -1.6106 , -0.64426 , -0.51042 ]
+```
+:::
+
+![](img/king-colored-embedding.png)
+
+## Embeddings
+![](img/queen-woman-girl-embeddings.png)
+
+## Analogies
+![](img//king-analogy-viz.png)
+
+## Euclidean distance
+![](img/euclidean.png)
+
+## Dot product
+![](img/dot_product.png)
+
+## Dot product {.smaller}
+:::{.callout-important icon=false}
+## Problem
+All vectors originate at the origin.
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Make them originate from the average center of all the points (***zero-mean***).
+:::
+![](img/zero_mean.png){height=420}
+
+## Dot product {.smaller}
+:::{.callout-important icon=false}
+## Problem
+Make dot product exactly equal to the cosine.
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Normalize the vectors ($u=[x,y] \rightarrow \left[\dfrac{x}{\|x\|}, \dfrac{y}{\|y\|}\right]$).
+:::
+
+![](img/zero_mean_unit.png){height=380}
+
+## Dot product
+![](img/zero_mean_unit_3d.png)
+
+## Dot product
+:::{.callout-note}
+## Why dot product?
+
+- less computations
+- can be used in a neural network
+:::
+
+## Construction
+How do we construct a language model? We can use N-grams.
+
+:::{.callout-important icon=false}
+## Definition: recall
+An n-gram is a **sequence of n words**: a 2-gram (which we’ll call bigram) is a two-word sequence of words like “please turn”, “turn your”, or ”your homework”, and a 3-gram (a trigram) is a three-word sequence of words like “please turn your”, or “turn your homework”.     
+:::
+
+:::{.callout-tip icon=false}
+## Another Definition
+A **probabilistic model** that can estimate the probability of a word given the n-1 previous words, and thereby also to assign probabilities to entire sequences. 
+:::
+
+## Construction
+```python
+# Import libraries
+from sklearn.feature_extraction.text import CountVectorizer
+
+# Create sample documents
+documents = ["This is the first document.",
+              "This document is the second document.",
+              "And this is the third one."]
+
+# Create the Bag-of-Words model with unigrams, bigrams, and trigrams
+vectorizer = CountVectorizer(ngram_range=(1, 3))
+X = vectorizer.fit_transform(documents)
+
+# Print the feature names and the document-term matrix
+print("Feature Names:", vectorizer.get_feature_names_out())
+```
+
+## Construction
+![](img/language_model_blackbox_output_vector.png)
+
+## Construction
+![](img/neural-language-model-prediction.png)
+
+## Construction
+![](img/neural-language-model-embedding.png)
+
+## Construction
+![](img/lm-sliding-window-2.png)
+
+## Construction
+![](img/lm-sliding-window-4.png)
+
+## Construction
+:::{.callout-tip icon=false}
+## Skipgram model
+Guess neighboring words using the current word.
+![](img/skipgram-sliding-window-2.png)
+:::
+
+## Construction
+![](img/skipgram-sliding-window-4.png)
+
+## Construction
+![](img/skipgram-sliding-window-5.png)
+
+## Training
+![](img/skipgram-language-model-training-2.png)
+
+## Training
+How to improve performance of the step 3?
+
+![](img/language-model-expensive.png)
+
+## Training
+<!-- Replace -->
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](img/predict-neighboring-word.png)
+:::
+
+::: {.column width="50%"}
+![](img/are-the-words-neighbors.png)
+:::
+
+::::
+
+## Training
+Logistic regression: need to add **negative samples**.
+![](img/word2vec-negative-sampling.png)
+
+## Training
+![](img/word2vec-negative-sampling-2.png)
+
+## Training
+At the start of training, initialize Embedding and Context with **random** values:
+
+![](img/word2vec-embedding-context-matrix.png)
+
+## Training
+Perform lookup:
+![](img/word2vec-lookup-embeddings.png)
+
+## Training
+Compute sigmoid:
+
+![](img/word2vec-training-dot-product-sigmoid.png)
+
+## Training
+Calculate error:
+
+![](img/word2vec-training-error.png)
+
+## Training
+Update parameters:
+![](img/word2vec-training-update.png)
