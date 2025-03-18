@@ -1,5 +1,5 @@
 ---
-title: "Natural Language Processing: N-grams"
+title: "Natural Language Processing: word embeddings"
 author: 
   - name: Vitaly Vlasov
     affiliation: Lviv University
@@ -29,10 +29,123 @@ format:
     theme: default
     multiplex:
       url: 'https://mplex.vitv.ly'
-      secret: '9dd2f0585ee37a955b8055933f2d9f6c'
-      id: 'b47a7ce4f5313db581542b8b021199807f40e17c0a40a8e1be729e3a810b93cc'
+      secret: '6bf7d491aa2c542d5f51f30f2f35ccd2'
+      id: '18bff71126f874c36351fe766cedeb7115b69ff9d78d8420d0ddc2fd1bead807'
 ---
 
+## Context
+:::{.callout-tip icon=false}
+# Distributional hypothesis
+The link between similarity in how words are distributed and similarity
+in what they mean is called the **distributional hypothesis**.
+
+Joos (1950), Harris (1954), and Firth (1957): amount of meaning difference between two words is
+**corresponding roughly to the amount of difference in their environments**.
+:::
+
+## Philosophy
+
+:::{.callout-tip icon=false}
+## Wittgenstein (1953)
+> "the meaning of a word is its use in the language"
+:::
+
+
+:::{.callout-note icon=false}
+## Lewis Carroll
+> When I use a word,’ Humpty Dumpty said in rather a scornful tone, ‘it means just what I choose it to mean — neither more nor less.’
+:::
+
+## Lexical semantics 
+![](img/Ichthyosaur_vs_dolphin.svg)
+
+## Lexical semantics {.smaller}
+
+Word Similarity
+
+C1|C2|POS|USF*|USF rank (of 999)|SimLex|SimLex rank (of 999)|
+|---|---|----|----|----|----|----|
+|dirty|narrow|A|0.00|999|0.30|996|
+|student|pupil|N|6.80|12|9.40|12|
+|win|dominate|V|0.41|364|5.68|361|
+|smart|dumb|A|2.10|92|0.60|947|
+|attention|awareness|N|0.10|895|8.73|58|
+|leave|enter|V|2.16|89|1.38|841|
+
+## Lexical semantics
+
+Word relatedness
+
+![](img/wordnet_graph.png)
+
+## Lexical semantics
+
+:::{.callout-tip icon=false}
+## Semantic field
+A semantic field is a set of words which:
+
+- cover a particular semantic domain 
+- bear structured relations with each other.
+:::
+
+## Lexical semantics
+
+:::{.callout-tip icon=false}
+## Affective meaning
+Early work on affective meaning (Osgood et al., 1957) found that words varied
+along three important dimensions of affective meaning:
+
+- **valence**: the pleasantness of the stimulus
+- **arousal**: the intensity of emotion provoked by the stimulus
+- **dominance**: the degree of control exerted by the stimulus
+:::
+
+Valence|Arousal|Dominance
+|----|----|----|
+courageous|8.05|5.5|7.38|
+music|7.67|5.57|6.5|
+heartbreak|2.45|5.65|3.58|
+cub|6.71|3.95|4.24|
+
+## Vector semantics
+:::{.callout-note icon=false}
+## Vector semantics
+$$
+\text{Vector semantics} = \text{Affective meaning} + \text{Distributional hypothesis}
+$$
+Vector semantics learns representations of the meaning of words, called **embeddings**,
+directly from their distributions in texts. 
+:::
+
+## Embeddings
+
+:::{.callout-important icon=false}
+## Taxonomy
+
+- static vs dynamic embeddings
+- sparse vs dense
+:::
+
+## Vector semantics
+
+:::{.callout-tip icon=false}
+## Concepts or word senses
+
+- Have a complex many-to-many association with words (homonymy,
+multiple senses)
+- Have relations with each other
+  - Synonymy
+  - Antonymy
+  - Similarity
+  - Relatedness
+  - Connotation
+:::
+
+
+## Vector semantics
+> Zellig Harris (1954):
+If A and B have almost identical environments we say that they
+are synonyms.
 
 ## Edit distance
 ![](img/levenshtein.svg)
@@ -94,6 +207,95 @@ For example, "man is to king as woman is to ?".
 Graphical representation:
 
 ![](img/analogies.png)
+
+## TF-IDF
+ Usually used for **term-document** matrices.
+
+ Denote a term by $t$, a document by $d$, and the corpus by $D$. 
+ $$
+ count(t,d) \equiv n \text{ of times that } t \text{ appears in } d
+ $$
+
+:::{.callout-important icon=false}
+## Term frequency
+ $$
+  TF(t,d) \equiv \begin{cases}
+   1 + log(count(t,d)), \; \text{if } count(t,d) > 0,\\
+   0, \; otherwise
+ \end{cases}
+ $$
+:::
+
+:::{.callout-tip icon=false}
+## Document frequency
+ $$
+ DF(t,D) \equiv n \text{ of documents that contain } t
+ $$
+:::
+
+
+## TF-IDF
+
+:::{.callout-note icon=false}
+## Inverse document frequency
+Defined to counter-balance the impact of often-encountered terms. IDF is a numerical measure of how much information a term provides:
+ $$
+ IDF(t,D)=log\dfrac{|D|+1}{DF(t,D)+1},
+$$
+where $|D|$ is the total number of documents in the corpus. 
+:::
+
+:::{.callout-important icon=false}
+## TF-IDF measure 
+Simply the product of TF and IDF:
+$$
+TFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).
+$$
+:::
+
+
+## PPMI
+Denote $w$ as target word, $c$ as context word.
+
+$$
+PMI(w,c) = log_2 \dfrac{P(w,c)}{P(w)P(c)}
+$$
+
+- $P(w,c)$ = how often we observe the words together
+
+- $P(w)P(c)$ = how often we *expect* the two words to co-occur assuming they each occurred independently.
+
+:::{.callout-tip}
+## Interpretation
+PMI gives us an estimate of how much more the two words co-occur than we expect by chance.
+:::
+
+## PPMI
+:::{.callout-note icon=false}
+## Positive PMI
+Negative PMI are problematic (small probabilities require enormous corpora), so it's more common to use Positive PMI:
+$$
+PPMI(w,c) = max\left(log_2 \dfrac{P(w,c)}{P(w)P(c)}, 0\right)
+$$
+:::
+
+## PPMI
+:::{.callout-tip icon=false}
+## Cooccurrence matrix 
+Let's assume we have a cooccurrence matrix F with W words as rows and C contexts as columns.
+
+We define $f_{ij}$ as number of times that word $w_i$ occurs together with context $c_j$.
+:::
+
+:::{.callout-important icon=false}
+## PPMI matrix
+\begin{align*}
+&p_{ij} = \dfrac{f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{i*} = \dfrac{\sum\limits_{j=1}^C f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},\\
+&PPMI_{ij} = max\left(log_2 \dfrac{p_{ij}}{p_{i*}p_{*j}}, 0\right)
+\end{align*}
+:::
 
 ## Embeddings
 :::{.callout-important icon=false}
@@ -251,6 +453,17 @@ Guess neighboring words using the current word.
 :::
 
 ## Construction
+
+:::{.callout-note}
+## The intuition of skip-gram
+
+1. Treat the target word and a neighboring context word as positive examples.
+2. Randomly sample other words in the lexicon to get negative samples.
+3. Use logistic regression to train a classifier to distinguish those two cases.
+4. Use the learned weights as the embeddings.
+:::
+
+## Construction
 ![](img/skipgram-sliding-window-4.png)
 
 ## Construction
@@ -308,3 +521,6 @@ Calculate error:
 ## Training
 Update parameters:
 ![](img/word2vec-training-update.png)
+
+## Semantic change
+![](img/semantic_change.png)
