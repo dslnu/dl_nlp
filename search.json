@@ -2886,21 +2886,21 @@
   {
     "objectID": "nlp_lab6.html",
     "href": "nlp_lab6.html",
-    "title": "NLP: Lab 5 (bag-of-words)",
+    "title": "NLP: Lab 6 (bag-of-words/PPMI)",
     "section": "",
     "text": "Let’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term"
   },
   {
     "objectID": "nlp_lab6.html#term-document-matrix",
     "href": "nlp_lab6.html#term-document-matrix",
-    "title": "NLP: Lab 5 (bag-of-words)",
+    "title": "NLP: Lab 6 (bag-of-words/PPMI)",
     "section": "term-document matrix",
     "text": "term-document matrix\nWord is row, document is column. Each document is a count vector (elements are word counts).\nEach word is also a vector of counts of occurrences in each document."
   },
   {
     "objectID": "nlp_lab6.html#term-term-matrix",
     "href": "nlp_lab6.html#term-term-matrix",
-    "title": "NLP: Lab 5 (bag-of-words)",
+    "title": "NLP: Lab 6 (bag-of-words/PPMI)",
     "section": "term-term matrix",
     "text": "term-term matrix\nRows and columns are rows. Counts are numbers of co-occurrences in a context. Context can either be a whole document, or a window around the word."
   },
