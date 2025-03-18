@@ -1726,7 +1726,7 @@
     "href": "nb/Untitled.html",
     "title": "Deep Learning/NLP course",
     "section": "",
-    "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178\n\n\n\n from nltk.book import *"
+    "text": "import nltk; \nnltk.download('popular')\nnltk.download('nps_chat')\nnltk.download('webtext')\nfrom nltk.book import *\n\n[nltk_data] Downloading collection 'popular'\n[nltk_data]    | \n[nltk_data]    | Downloading package cmudict to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package cmudict is already up-to-date!\n[nltk_data]    | Downloading package gazetteers to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gazetteers is already up-to-date!\n[nltk_data]    | Downloading package genesis to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package genesis is already up-to-date!\n[nltk_data]    | Downloading package gutenberg to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package gutenberg is already up-to-date!\n[nltk_data]    | Downloading package inaugural to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/inaugural.zip.\n[nltk_data]    | Downloading package movie_reviews to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/movie_reviews.zip.\n[nltk_data]    | Downloading package names to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/names.zip.\n[nltk_data]    | Downloading package shakespeare to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/shakespeare.zip.\n[nltk_data]    | Downloading package stopwords to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package stopwords is already up-to-date!\n[nltk_data]    | Downloading package treebank to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package treebank is already up-to-date!\n[nltk_data]    | Downloading package twitter_samples to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package twitter_samples is already up-to-date!\n[nltk_data]    | Downloading package omw to /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package omw-1.4 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package wordnet is already up-to-date!\n[nltk_data]    | Downloading package wordnet2021 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet31 to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package wordnet_ic to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/wordnet_ic.zip.\n[nltk_data]    | Downloading package words to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping corpora/words.zip.\n[nltk_data]    | Downloading package maxent_ne_chunker to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Unzipping chunkers/maxent_ne_chunker.zip.\n[nltk_data]    | Downloading package punkt to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package punkt is already up-to-date!\n[nltk_data]    | Downloading package snowball_data to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    | Downloading package averaged_perceptron_tagger to\n[nltk_data]    |     /Users/vitvly/nltk_data...\n[nltk_data]    |   Package averaged_perceptron_tagger is already up-\n[nltk_data]    |       to-date!\n[nltk_data]    | \n[nltk_data]  Done downloading collection popular\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/nps_chat.zip.\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/webtext.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908\n\n\n\nfrom nltk.tokenize import word_tokenize\n\n\nword_tokenize(\"how are you today?\")\n\n['how', 'are', 'you', 'today', '?']\n\n\n\nimport scattertext as st\n\n\nconvention_df = st.SampleCorpora.ConventionData2012.get_data()\n\n\nconvention_df.head()\n\n\n\n\n\n\n\n\nparty\ntext\nspeaker\n\n\n\n\n0\ndemocrat\nThank you. Thank you. Thank you. Thank you so ...\nBARACK OBAMA\n\n\n1\ndemocrat\nThank you so much. Tonight, I am so thrilled a...\nMICHELLE OBAMA\n\n\n2\ndemocrat\nThank you. It is a singular honor to be here t...\nRICHARD DURBIN\n\n\n3\ndemocrat\nHey, Delaware. \\nAnd my favorite Democrat, Jil...\nJOSEPH BIDEN\n\n\n4\ndemocrat\nHello. \\nThank you, Angie. I'm so proud of how...\nJILL BIDEN\n\n\n\n\n\n\n\n\n!python -m spacy download en_core_web_sm\n\nCollecting en-core-web-sm==3.8.0\n  Downloading https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.8.0/en_core_web_sm-3.8.0-py3-none-any.whl (12.8 MB)\n     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 4.0 MB/s eta 0:00:0000:0100:01\nInstalling collected packages: en-core-web-sm\nSuccessfully installed en-core-web-sm-3.8.0\n\n[notice] A new release of pip is available: 25.0 -&gt; 25.0.1\n[notice] To update, run: pip install --upgrade pip\n✔ Download and installation successful\nYou can now load the package via spacy.load('en_core_web_sm')\n\n\n\nimport spacy\nnlp = spacy.load('en_core_web_sm')\ncorpus = st.CorpusFromPandas(convention_df, \n                             category_col='party', \n                             text_col='text',\n                             nlp=nlp).build()\n\n\ncorpus.get_scaled_f_scores_vs_background()\n\n\n\n\n\n\n\n\nbackground\ncorpus\nScaled f-score\n\n\n\n\nobama\n565739.0\n702.0\n0.002006\n\n\nromney\n695398.0\n570.0\n0.001374\n\n\nbarack\n227861.0\n248.0\n0.001372\n\n\nmitt\n691902.0\n501.0\n0.001213\n\n\nobamacare\n0.0\n33.0\n0.000494\n\n\n...\n...\n...\n...\n\n\ngelding\n441608.0\n0.0\n0.000000\n\n\ngelderland\n90127.0\n0.0\n0.000000\n\n\ngelderen\n19339.0\n0.0\n0.000000\n\n\ngelder\n195446.0\n0.0\n0.000000\n\n\nNaN\n30739157.0\n0.0\n0.000000\n\n\n\n\n333436 rows × 3 columns\n\n\n\n\nterm_freq_df = corpus.get_term_freq_df()\nterm_freq_df['Democratic Score'] = corpus.get_scaled_f_scores('democrat')\n\n\nterm_freq_df.sort_values(by='Democratic Score', ascending=False)\n\n\n\n\n\n\n\n\ndemocrat freq\nrepublican freq\nDemocratic Score\n\n\nterm\n\n\n\n\n\n\n\nmiddle class\n148\n18\n1.000000\n\n\nforward\n105\n16\n0.994124\n\n\nclass\n161\n25\n0.993695\n\n\nmiddle\n164\n27\n0.991925\n\n\nthe middle\n98\n17\n0.989949\n\n\n...\n...\n...\n...\n\n\nsuccess\n25\n62\n0.021413\n\n\ncan do\n9\n42\n0.020554\n\n\nbusiness\n54\n140\n0.016743\n\n\nadministration\n11\n47\n0.011917\n\n\ngovernment\n43\n164\n0.000000\n\n\n\n\n62123 rows × 3 columns\n\n\n\n\nhtml = st.produce_scattertext_explorer(corpus,\n          category='democrat',\n          category_name='Democratic',\n          not_category_name='Republican',\n          width_in_pixels=1000,\n          metadata=convention_df['speaker'])\nopen(\"Convention-Visualization.html\", 'wb').write(html.encode('utf-8'))\n\n1726178\n\n\n\n from nltk.book import *"
   },
   {
     "objectID": "nb/W2A2/Logistic_Regression_with_a_Neural_Network_mindset.html",
@@ -1825,118 +1825,6 @@
     "title": "NLP: Lab 3",
     "section": "",
     "text": "Now we can proceed to processing. During processing, we will perform cleanup:\n\nremove URLs and mentions using regexes\nafter lemmatization, remove stopwords\n\n\nnltk.download('stopwords')\n\n[nltk_data] Downloading package stopwords to\n[nltk_data]     /Users/vitvly/nltk_data...\n[nltk_data]   Package stopwords is already up-to-date!\n\n\nTrue\n\n\nWhat are these stopwords? Let’s see some.\n\nfrom nltk.corpus import stopwords\nstop_words = stopwords.words('english')\nprint(len(stop_words))\nfor i in range(10):\n    print(stop_words[i])\n\n198\na\nabout\nabove\nafter\nagain\nagainst\nain\nall\nam\nan\n\n\nNow, please write the process_tokens() function. It should be an improved version of lemmatize_sentence() function above.\nIt should do the following:\n\nIterate through pos_tag(tweet_tokens).\nUse regex to remove tokens matching URLs or mentions (@somebody).\nRemove tokens that stop words or are punctuation symbols (use Python’s built-in string.punctuation).\nLowercase all tokens\nLemmatize using WordNetLemmatizer.\nReturn the list of cleaned_tokens.\n\nimport re, string\n\ndef process_tokens(tweet_tokens):\n\n    cleaned_tokens = []\n    stop_words = stopwords.words('english')\n    lemmatizer = WordNetLemmatizer()\n\n    for token, tag in pos_tag(tweet_tokens):\n      # CODE_START\n      # ...\n      # CODE_END\n    return cleaned_tokens\nTest your function:\nprint(\"Before:\", tweet_tokens[50])\nprint(\"After:\", process_tokens(tweet_tokens[50]))\nNow run process_tokens on all positive/negative tokens (use tokenized method as mentioned above).\n# CODE_START\n\n# positive_tweet_tokens =\n# negative_tweet_tokens =\n\n# positive_cleaned_tokens_list =\n# negative_cleaned_tokens_list =\n\n# CODE_END\nLet’s see how did the processing go.\nprint(positive_tweet_tokens[500])\nprint(positive_cleaned_tokens_list[500])\nNow, let’s check what words are most common.\nFirst, add a helper function get_all_words:\ndef get_all_words(cleaned_tokens_list):\n  # CODE_START\n  # ...\n  # CODE_END\nall_pos_words = get_all_words(positive_cleaned_tokens_list)\nPerform frequency analysis using FreqDist and print 10 words most commonly used in positive tweets:\nfrom nltk import FreqDist\n\n# CODE_START\n# use all_pos_words\n# ...\n# CODE_END"
-  },
-  {
-    "objectID": "nlp_lab1.html",
-    "href": "nlp_lab1.html",
-    "title": "NLP: Lab 1",
-    "section": "",
-    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
-  },
-  {
-    "objectID": "nlp_lab1.html#through-requirements.txt",
-    "href": "nlp_lab1.html#through-requirements.txt",
-    "title": "NLP: Lab 1",
-    "section": "Through requirements.txt",
-    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-python-nltk-package",
-    "href": "nlp_lab1.html#install-python-nltk-package",
-    "title": "NLP: Lab 1",
-    "section": "1. Install Python NLTK package",
-    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
-    "href": "nlp_lab1.html#install-scattertext-and-spacy",
-    "title": "NLP: Lab 1",
-    "section": "2. Install Scattertext and Spacy",
-    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-concordance",
-    "href": "nlp_lab1.html#example-concordance",
-    "title": "NLP: Lab 1",
-    "section": "Example: concordance",
-    "text": "Example: concordance\n\ntext3.concordance(\"earth\")\n\nDisplaying 25 of 112 matches:\nnning God created the heaven and the earth . And the earth was without form , a\nd the heaven and the earth . And the earth was without form , and void ; and da\nwas so . And God called the dry land Earth ; and the gathering together of the \nit was good . And God said , Let the earth bring forth grass , the herb yieldin\nupon the ear and it was so . And the earth brought forth grass , and herb yield\nof the heaven to give light upon the earth , And to rule over the day and over \nfe , and fowl that may fly above the earth in the open firmament of heaven . An\n seas , and let fowl multiply in the earth . And the evening and the morning we\ne fifth day . And God said , Let the earth bring forth the living creature afte\nnd creeping thing , and beast of the earth after his ki and it was so . And God\ns so . And God made the beast of the earth after his kind , and cattle after th\nd every thing that creepeth upon the earth after his ki and God saw that it was\nd over the cattle , and over all the earth , and over every creeping thing that\nreeping thing that creepeth upon the earth . So God created man in his own imag\nl , and multiply , and replenish the earth , and subdue and have dominion over \nry living thing that moveth upon the earth . And God said , Behold , I have giv\n , which is upon the face of all the earth , and every tree , in the which is t\nfor meat . And to every beast of the earth , and to every fowl of the air , and\no every thing that creepeth upon the earth , wherein there is life , I have giv\nsixth day . Thus the heavens and the earth were finished , and all the host of \nenerations of the heavens and of the earth when they were created , in the day \nn the day that the LORD God made the earth and the heavens , And every plant of\nnt of the field before it was in the earth , and every herb of the field before\nd had not caused it to rain upon the earth , and there was not a man to till th\n . But there went up a mist from the earth , and watered the whole face of the"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-similar",
-    "href": "nlp_lab1.html#example-similar",
-    "title": "NLP: Lab 1",
-    "section": "Example: similar",
-    "text": "Example: similar\n\ntext3.similar(\"man\")\n\nland lord men place woman earth waters well city lad day cattle field\nwife way flood servant people famine pillar"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-dispersion_plot",
-    "href": "nlp_lab1.html#example-dispersion_plot",
-    "title": "NLP: Lab 1",
-    "section": "Example: dispersion_plot",
-    "text": "Example: dispersion_plot\n\ntext3.dispersion_plot([\"man\", \"earth\"])"
-  },
-  {
-    "objectID": "nlp_lab1.html#example-freqdist",
-    "href": "nlp_lab1.html#example-freqdist",
-    "title": "NLP: Lab 1",
-    "section": "Example: FreqDist",
-    "text": "Example: FreqDist\n\nfdist = FreqDist(text3)\nprint(fdist)\n\n&lt;FreqDist with 2789 samples and 44764 outcomes&gt;\n\n\n\nfdist.most_common(50)\n\n[(',', 3681),\n ('and', 2428),\n ('the', 2411),\n ('of', 1358),\n ('.', 1315),\n ('And', 1250),\n ('his', 651),\n ('he', 648),\n ('to', 611),\n (';', 605),\n ('unto', 590),\n ('in', 588),\n ('that', 509),\n ('I', 484),\n ('said', 476),\n ('him', 387),\n ('a', 342),\n ('my', 325),\n ('was', 317),\n ('for', 297),\n ('it', 290),\n ('with', 289),\n ('me', 282),\n ('thou', 272),\n (\"'\", 268),\n ('is', 267),\n ('thy', 267),\n ('s', 263),\n ('thee', 257),\n ('be', 254),\n ('shall', 253),\n ('they', 249),\n ('all', 245),\n (':', 238),\n ('God', 231),\n ('them', 230),\n ('not', 224),\n ('which', 198),\n ('father', 198),\n ('will', 195),\n ('land', 184),\n ('Jacob', 179),\n ('came', 177),\n ('her', 173),\n ('LORD', 166),\n ('were', 163),\n ('she', 161),\n ('from', 157),\n ('Joseph', 157),\n ('their', 153)]\n\n\n\nfdist.plot(50, cumulative=True)"
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "Deep Learning/NLP",
-    "section": "",
-    "text": "Deep Learning/Natural Language Processing course"
-  },
-  {
-    "objectID": "dl.html",
-    "href": "dl.html",
-    "title": "Deep Learning",
-    "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "dl.html#lectures",
-    "href": "dl.html#lectures",
-    "title": "Deep Learning",
-    "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "dl.html#labs",
-    "href": "dl.html#labs",
-    "title": "Deep Learning",
-    "section": "Labs",
-    "text": "Labs\nLab 1\nLab 2\nLab 3"
-  },
-  {
-    "objectID": "nlp.html",
-    "href": "nlp.html",
-    "title": "Natural Language Processing",
-    "section": "",
-    "text": "Slides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "nlp.html#lectures",
-    "href": "nlp.html#lectures",
-    "title": "Natural Language Processing",
-    "section": "",
-    "text": "Slides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "nlp.html#labs",
-    "href": "nlp.html#labs",
-    "title": "Natural Language Processing",
-    "section": "Labs",
-    "text": "Labs\nLab 1\nLab 2\nLab 3\nLab 4\nLab 5"
-  },
-  {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "Deep Learning/Natural Language Processing course"
   },
   {
     "objectID": "nlp_lec1.html#history",
@@ -2436,6 +2324,559 @@
     "text": "Edit distance\n\n\n\nHamming distance\n\n\nA number of positions at which the corresponding symbols are different.\nTherefore, identical to Levenshtein with only substitution allowed.\nCan only work for strings of similar length.\n\n\n\ndef hamming_distance(string1: str, string2: str) -&gt; int:\n    \"\"\"Return the Hamming distance between two strings.\"\"\"\n    if len(string1) != len(string2):\n        raise ValueError(\"Strings must be of equal length.\")\n    dist_counter = 0\n    for n in range(len(string1)):\n        if string1[n] != string2[n]:\n            dist_counter += 1\n    return dist_counter"
   },
   {
+    "objectID": "about.html",
+    "href": "about.html",
+    "title": "About",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
+  },
+  {
+    "objectID": "nlp.html",
+    "href": "nlp.html",
+    "title": "Natural Language Processing",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "nlp.html#lectures",
+    "href": "nlp.html#lectures",
+    "title": "Natural Language Processing",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "nlp.html#labs",
+    "href": "nlp.html#labs",
+    "title": "Natural Language Processing",
+    "section": "Labs",
+    "text": "Labs\nLab 1\nLab 2\nLab 3\nLab 4\nLab 5"
+  },
+  {
+    "objectID": "dl.html",
+    "href": "dl.html",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#lectures",
+    "href": "dl.html#lectures",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#labs",
+    "href": "dl.html#labs",
+    "title": "Deep Learning",
+    "section": "Labs",
+    "text": "Labs\nLab 1\nLab 2\nLab 3"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "Deep Learning/NLP",
+    "section": "",
+    "text": "Deep Learning/Natural Language Processing course"
+  },
+  {
+    "objectID": "nlp_lab1.html",
+    "href": "nlp_lab1.html",
+    "title": "NLP: Lab 1",
+    "section": "",
+    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
+  },
+  {
+    "objectID": "nlp_lab1.html#through-requirements.txt",
+    "href": "nlp_lab1.html#through-requirements.txt",
+    "title": "NLP: Lab 1",
+    "section": "Through requirements.txt",
+    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-python-nltk-package",
+    "href": "nlp_lab1.html#install-python-nltk-package",
+    "title": "NLP: Lab 1",
+    "section": "1. Install Python NLTK package",
+    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!"
+  },
+  {
+    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
+    "href": "nlp_lab1.html#install-scattertext-and-spacy",
+    "title": "NLP: Lab 1",
+    "section": "2. Install Scattertext and Spacy",
+    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-concordance",
+    "href": "nlp_lab1.html#example-concordance",
+    "title": "NLP: Lab 1",
+    "section": "Example: concordance",
+    "text": "Example: concordance\n\ntext3.concordance(\"earth\")\n\nDisplaying 25 of 112 matches:\nnning God created the heaven and the earth . And the earth was without form , a\nd the heaven and the earth . And the earth was without form , and void ; and da\nwas so . And God called the dry land Earth ; and the gathering together of the \nit was good . And God said , Let the earth bring forth grass , the herb yieldin\nupon the ear and it was so . And the earth brought forth grass , and herb yield\nof the heaven to give light upon the earth , And to rule over the day and over \nfe , and fowl that may fly above the earth in the open firmament of heaven . An\n seas , and let fowl multiply in the earth . And the evening and the morning we\ne fifth day . And God said , Let the earth bring forth the living creature afte\nnd creeping thing , and beast of the earth after his ki and it was so . And God\ns so . And God made the beast of the earth after his kind , and cattle after th\nd every thing that creepeth upon the earth after his ki and God saw that it was\nd over the cattle , and over all the earth , and over every creeping thing that\nreeping thing that creepeth upon the earth . So God created man in his own imag\nl , and multiply , and replenish the earth , and subdue and have dominion over \nry living thing that moveth upon the earth . And God said , Behold , I have giv\n , which is upon the face of all the earth , and every tree , in the which is t\nfor meat . And to every beast of the earth , and to every fowl of the air , and\no every thing that creepeth upon the earth , wherein there is life , I have giv\nsixth day . Thus the heavens and the earth were finished , and all the host of \nenerations of the heavens and of the earth when they were created , in the day \nn the day that the LORD God made the earth and the heavens , And every plant of\nnt of the field before it was in the earth , and every herb of the field before\nd had not caused it to rain upon the earth , and there was not a man to till th\n . But there went up a mist from the earth , and watered the whole face of the"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-similar",
+    "href": "nlp_lab1.html#example-similar",
+    "title": "NLP: Lab 1",
+    "section": "Example: similar",
+    "text": "Example: similar\n\ntext3.similar(\"man\")\n\nland lord men place woman earth waters well city lad day cattle field\nwife way flood servant people famine pillar"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-dispersion_plot",
+    "href": "nlp_lab1.html#example-dispersion_plot",
+    "title": "NLP: Lab 1",
+    "section": "Example: dispersion_plot",
+    "text": "Example: dispersion_plot\n\ntext3.dispersion_plot([\"man\", \"earth\"])"
+  },
+  {
+    "objectID": "nlp_lab1.html#example-freqdist",
+    "href": "nlp_lab1.html#example-freqdist",
+    "title": "NLP: Lab 1",
+    "section": "Example: FreqDist",
+    "text": "Example: FreqDist\n\nfdist = FreqDist(text3)\nprint(fdist)\n\n&lt;FreqDist with 2789 samples and 44764 outcomes&gt;\n\n\n\nfdist.most_common(50)\n\n[(',', 3681),\n ('and', 2428),\n ('the', 2411),\n ('of', 1358),\n ('.', 1315),\n ('And', 1250),\n ('his', 651),\n ('he', 648),\n ('to', 611),\n (';', 605),\n ('unto', 590),\n ('in', 588),\n ('that', 509),\n ('I', 484),\n ('said', 476),\n ('him', 387),\n ('a', 342),\n ('my', 325),\n ('was', 317),\n ('for', 297),\n ('it', 290),\n ('with', 289),\n ('me', 282),\n ('thou', 272),\n (\"'\", 268),\n ('is', 267),\n ('thy', 267),\n ('s', 263),\n ('thee', 257),\n ('be', 254),\n ('shall', 253),\n ('they', 249),\n ('all', 245),\n (':', 238),\n ('God', 231),\n ('them', 230),\n ('not', 224),\n ('which', 198),\n ('father', 198),\n ('will', 195),\n ('land', 184),\n ('Jacob', 179),\n ('came', 177),\n ('her', 173),\n ('LORD', 166),\n ('were', 163),\n ('she', 161),\n ('from', 157),\n ('Joseph', 157),\n ('their', 153)]\n\n\n\nfdist.plot(50, cumulative=True)"
+  },
+  {
+    "objectID": "nlp_lec3.html#context",
+    "href": "nlp_lec3.html#context",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Context",
+    "text": "Context\n\n\n\nDistributional hypothesis\n\n\nThe link between similarity in how words are distributed and similarity in what they mean is called the distributional hypothesis.\nJoos (1950), Harris (1954), and Firth (1957): amount of meaning difference between two words is corresponding roughly to the amount of difference in their environments."
+  },
+  {
+    "objectID": "nlp_lec3.html#philosophy",
+    "href": "nlp_lec3.html#philosophy",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Philosophy",
+    "text": "Philosophy\n\n\n\nWittgenstein (1953)\n\n\n\n“the meaning of a word is its use in the language”\n\n\n\n\n\n\n\nLewis Carroll\n\n\n\nWhen I use a word,’ Humpty Dumpty said in rather a scornful tone, ‘it means just what I choose it to mean — neither more nor less.’"
+  },
+  {
+    "objectID": "nlp_lec3.html#lexical-semantics",
+    "href": "nlp_lec3.html#lexical-semantics",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Lexical semantics",
+    "text": "Lexical semantics"
+  },
+  {
+    "objectID": "nlp_lec3.html#lexical-semantics-1",
+    "href": "nlp_lec3.html#lexical-semantics-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Lexical semantics",
+    "text": "Lexical semantics\nWord Similarity\n\n\n\nC1\nC2\nPOS\nUSF*\nUSF rank (of 999)\nSimLex\nSimLex rank (of 999)\n\n\n\n\ndirty\nnarrow\nA\n0.00\n999\n0.30\n996\n\n\nstudent\npupil\nN\n6.80\n12\n9.40\n12\n\n\nwin\ndominate\nV\n0.41\n364\n5.68\n361\n\n\nsmart\ndumb\nA\n2.10\n92\n0.60\n947\n\n\nattention\nawareness\nN\n0.10\n895\n8.73\n58\n\n\nleave\nenter\nV\n2.16\n89\n1.38\n841"
+  },
+  {
+    "objectID": "nlp_lec3.html#lexical-semantics-2",
+    "href": "nlp_lec3.html#lexical-semantics-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Lexical semantics",
+    "text": "Lexical semantics\nWord relatedness"
+  },
+  {
+    "objectID": "nlp_lec3.html#lexical-semantics-3",
+    "href": "nlp_lec3.html#lexical-semantics-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Lexical semantics",
+    "text": "Lexical semantics\n\n\n\nSemantic field\n\n\nA semantic field is a set of words which:\n\ncover a particular semantic domain\nbear structured relations with each other."
+  },
+  {
+    "objectID": "nlp_lec3.html#lexical-semantics-4",
+    "href": "nlp_lec3.html#lexical-semantics-4",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Lexical semantics",
+    "text": "Lexical semantics\n\n\n\nAffective meaning\n\n\nEarly work on affective meaning (Osgood et al., 1957) found that words varied along three important dimensions of affective meaning:\n\nvalence: the pleasantness of the stimulus\narousal: the intensity of emotion provoked by the stimulus\ndominance: the degree of control exerted by the stimulus\n\n\n\n\n\n\n\nValence\nArousal\nDominance\n\n\n\n\ncourageous\n8.05\n5.5\n\n\nmusic\n7.67\n5.57\n\n\nheartbreak\n2.45\n5.65\n\n\ncub\n6.71\n3.95"
+  },
+  {
+    "objectID": "nlp_lec3.html#vector-semantics",
+    "href": "nlp_lec3.html#vector-semantics",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Vector semantics",
+    "text": "Vector semantics\n\n\n\nVector semantics\n\n\n\\[\n\\text{Vector semantics} = \\text{Affective meaning} + \\text{Distributional hypothesis}\n\\] Vector semantics learns representations of the meaning of words, called embeddings, directly from their distributions in texts."
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings",
+    "href": "nlp_lec3.html#embeddings",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings\n\n\n\nTaxonomy\n\n\n\nstatic vs dynamic embeddings\nsparse vs dense"
+  },
+  {
+    "objectID": "nlp_lec3.html#vector-semantics-2",
+    "href": "nlp_lec3.html#vector-semantics-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Vector semantics",
+    "text": "Vector semantics\n\n\n\nConcepts or word senses\n\n\n\nHave a complex many-to-many association with words (homonymy, multiple senses)\nHave relations with each other\n\nSynonymy\nAntonymy\nSimilarity\nRelatedness\nConnotation"
+  },
+  {
+    "objectID": "nlp_lec3.html#vector-semantics-3",
+    "href": "nlp_lec3.html#vector-semantics-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Vector semantics",
+    "text": "Vector semantics\n\nZellig Harris (1954): If A and B have almost identical environments we say that they are synonyms."
+  },
+  {
+    "objectID": "nlp_lec3.html#edit-distance",
+    "href": "nlp_lec3.html#edit-distance",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Edit distance",
+    "text": "Edit distance"
+  },
+  {
+    "objectID": "nlp_lec3.html#one-hot-distance",
+    "href": "nlp_lec3.html#one-hot-distance",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "One-hot distance",
+    "text": "One-hot distance"
+  },
+  {
+    "objectID": "nlp_lec3.html#bag-of-words",
+    "href": "nlp_lec3.html#bag-of-words",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Bag-of-Words",
+    "text": "Bag-of-Words"
+  },
+  {
+    "objectID": "nlp_lec3.html#tf-idf",
+    "href": "nlp_lec3.html#tf-idf",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "TF-IDF",
+    "text": "TF-IDF"
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-space",
+    "href": "nlp_lec3.html#feature-space",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature space",
+    "text": "Feature space"
+  },
+  {
+    "objectID": "nlp_lec3.html#coordinates",
+    "href": "nlp_lec3.html#coordinates",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Coordinates",
+    "text": "Coordinates\nGender and age are called semantic features: they represent part of the meaning of each word. If we associate a numerical scale with each feature, then we can assign coordinates to each word:"
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-space-updated",
+    "href": "nlp_lec3.html#feature-space-updated",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature space updated",
+    "text": "Feature space updated"
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-space-updated-1",
+    "href": "nlp_lec3.html#feature-space-updated-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature space updated",
+    "text": "Feature space updated"
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-space-3d",
+    "href": "nlp_lec3.html#feature-space-3d",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature space 3D",
+    "text": "Feature space 3D\nNew words: “king”, “queen”, “prince”, and “princess”."
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-space-3d-1",
+    "href": "nlp_lec3.html#feature-space-3d-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature space 3D",
+    "text": "Feature space 3D"
+  },
+  {
+    "objectID": "nlp_lec3.html#feature-vectors",
+    "href": "nlp_lec3.html#feature-vectors",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Feature vectors",
+    "text": "Feature vectors\n\n\n\nDefinition\n\n\nVectors representing values of semantic features are called feature vectors."
+  },
+  {
+    "objectID": "nlp_lec3.html#applications",
+    "href": "nlp_lec3.html#applications",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Applications",
+    "text": "Applications\n\n\n\nHow can we compute word similarity?\n\n\n\ncount number of features where words differ\ncilculate Euclidean distance between points\n\n\n\n\n\n\n\nAnalogies\n\n\nFor example, “man is to king as woman is to ?”."
+  },
+  {
+    "objectID": "nlp_lec3.html#analogies-1",
+    "href": "nlp_lec3.html#analogies-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Analogies",
+    "text": "Analogies\nGraphical representation:"
+  },
+  {
+    "objectID": "nlp_lec3.html#tf-idf-1",
+    "href": "nlp_lec3.html#tf-idf-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "TF-IDF",
+    "text": "TF-IDF\nUsually used for term-document matrices.\nDenote a term by \\(t\\), a document by \\(d\\), and the corpus by \\(D\\). \\[\ncount(t,d) \\equiv n \\text{ of times that } t \\text{ appears in } d\n\\]\n\n\n\nTerm frequency\n\n\n\\[\n  TF(t,d) \\equiv \\begin{cases}\n   1 + log(count(t,d)), \\; \\text{if } count(t,d) &gt; 0,\\\\\n   0, \\; otherwise\n\\end{cases}\n\\]\n\n\n\n\n\n\nDocument frequency\n\n\n\\[\nDF(t,D) \\equiv n \\text{ of documents that contain } t\n\\]"
+  },
+  {
+    "objectID": "nlp_lec3.html#tf-idf-2",
+    "href": "nlp_lec3.html#tf-idf-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "TF-IDF",
+    "text": "TF-IDF\n\n\n\nInverse document frequency\n\n\nDefined to counter-balance the impact of often-encountered terms. IDF is a numerical measure of how much information a term provides: \\[\nIDF(t,D)=log\\dfrac{|D|+1}{DF(t,D)+1},\n\\] where \\(|D|\\) is the total number of documents in the corpus.\n\n\n\n\n\n\nTF-IDF measure\n\n\nSimply the product of TF and IDF: \\[\nTFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).\n\\]"
+  },
+  {
+    "objectID": "nlp_lec3.html#ppmi",
+    "href": "nlp_lec3.html#ppmi",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "PPMI",
+    "text": "PPMI\nDenote \\(w\\) as target word, \\(c\\) as context word.\n\\[\nPMI(w,c) = log_2 \\dfrac{P(w,c)}{P(w)P(c)}\n\\]\n\n\\(P(w,c)\\) = how often we observe the words together\n\\(P(w)P(c)\\) = how often we expect the two words to co-occur assuming they each occurred independently.\n\n\n\n\n\n\n\nInterpretation\n\n\nPMI gives us an estimate of how much more the two words co-occur than we expect by chance."
+  },
+  {
+    "objectID": "nlp_lec3.html#ppmi-1",
+    "href": "nlp_lec3.html#ppmi-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "PPMI",
+    "text": "PPMI\n\n\n\nPositive PMI\n\n\nNegative PMI are problematic (small probabilities require enormous corpora), so it’s more common to use Positive PMI: \\[\nPPMI(w,c) = max\\left(log_2 \\dfrac{P(w,c)}{P(w)P(c)}, 0\\right)\n\\]"
+  },
+  {
+    "objectID": "nlp_lec3.html#ppmi-2",
+    "href": "nlp_lec3.html#ppmi-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "PPMI",
+    "text": "PPMI\n\n\n\nCooccurrence matrix\n\n\nLet’s assume we have a cooccurrence matrix F with W words as rows and C contexts as columns.\nWe define \\(f_{ij}\\) as number of times that word \\(w_i\\) occurs together with context \\(c_j\\).\n\n\n\n\n\n\nPPMI matrix\n\n\n\\[\\begin{align*}\n&p_{ij} = \\dfrac{f_{ij}}{\\sum\\limits_{i=1}^W \\sum\\limits_{j=1}^C f_{ij}},\np_{i*} = \\dfrac{\\sum\\limits_{j=1}^C f_{ij}}{\\sum\\limits_{i=1}^W \\sum\\limits_{j=1}^C f_{ij}},\np_{*j} = \\dfrac{\\sum\\limits_{i=1}^W f_{ij}}{\\sum\\limits_{i=1}^W \\sum\\limits_{j=1}^C f_{ij}},\\\\\n&PPMI_{ij} = max\\left(log_2 \\dfrac{p_{ij}}{p_{i*}p_{*j}}, 0\\right)\n\\end{align*}\\]"
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings-1",
+    "href": "nlp_lec3.html#embeddings-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings\n\n\n\nQuestion\n\n\nHow do we design features for all words in a dictionary?\n\n\n\n\n\n\nAnswer\n\n\nFeed massive amounts of text to an algorithm that will create its own feature space.\n\n\n\n\n\n\n\n\n\nDefinition\n\n\nWord representations in this new synthetic space are called word embeddings."
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings-2",
+    "href": "nlp_lec3.html#embeddings-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings\n\n\n\n\nAs you can see, component 126 appears to correlate with gender: it has slightly positive values (tan/orange) for the male words and slightly negative values (blue/gray) for the female words."
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings-3",
+    "href": "nlp_lec3.html#embeddings-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings\n\n\n\nSupported analogies\n\n\n\npluralization\npast tense\ncomparisons\ncountry-&gt;capital mappings\n\n\n\n\n\n\n\nUses\n\n\nInput to NNs (transformers) that try to understand the meanings of entire sentences, or even paragraphs.\nExamples: BERT, GPTx."
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings-4",
+    "href": "nlp_lec3.html#embeddings-4",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings\n\n\n\nExample\n\n\nWord embedding for “king”:\n  [ 0.50451 , 0.68607 , -0.59517 , -0.022801, 0.60046 , -0.13498 , -0.08813 , 0.47377 , -0.61798 , -0.31012 , -0.076666, 1.493 , -0.034189, -0.98173 , 0.68229 , 0.81722 , -0.51874 , -0.31503 , -0.55809 , 0.66421 , 0.1961 , -0.13495 , -0.11476 , -0.30344 , 0.41177 , -2.223 , -1.0756 , -1.0783 , -0.34354 , 0.33505 , 1.9927 , -0.04234 , -0.64319 , 0.71125 , 0.49159 , 0.16754 , 0.34344 , -0.25663 , -0.8523 , 0.1661 , 0.40102 , 1.1685 , -1.0137 , -0.21585 , -0.15155 , 0.78321 , -0.91241 , -1.6106 , -0.64426 , -0.51042 ]"
+  },
+  {
+    "objectID": "nlp_lec3.html#embeddings-5",
+    "href": "nlp_lec3.html#embeddings-5",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Embeddings",
+    "text": "Embeddings"
+  },
+  {
+    "objectID": "nlp_lec3.html#analogies-2",
+    "href": "nlp_lec3.html#analogies-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Analogies",
+    "text": "Analogies"
+  },
+  {
+    "objectID": "nlp_lec3.html#euclidean-distance",
+    "href": "nlp_lec3.html#euclidean-distance",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Euclidean distance",
+    "text": "Euclidean distance"
+  },
+  {
+    "objectID": "nlp_lec3.html#dot-product",
+    "href": "nlp_lec3.html#dot-product",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Dot product",
+    "text": "Dot product"
+  },
+  {
+    "objectID": "nlp_lec3.html#dot-product-1",
+    "href": "nlp_lec3.html#dot-product-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Dot product",
+    "text": "Dot product\n\n\n\nProblem\n\n\nAll vectors originate at the origin.\n\n\n\n\n\n\nSolution\n\n\nMake them originate from the average center of all the points (zero-mean)."
+  },
+  {
+    "objectID": "nlp_lec3.html#dot-product-2",
+    "href": "nlp_lec3.html#dot-product-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Dot product",
+    "text": "Dot product\n\n\n\nProblem\n\n\nMake dot product exactly equal to the cosine.\n\n\n\n\n\n\nSolution\n\n\nNormalize the vectors (\\(u=[x,y] \\rightarrow \\left[\\dfrac{x}{\\|x\\|}, \\dfrac{y}{\\|y\\|}\\right]\\))."
+  },
+  {
+    "objectID": "nlp_lec3.html#dot-product-3",
+    "href": "nlp_lec3.html#dot-product-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Dot product",
+    "text": "Dot product"
+  },
+  {
+    "objectID": "nlp_lec3.html#dot-product-4",
+    "href": "nlp_lec3.html#dot-product-4",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Dot product",
+    "text": "Dot product\n\n\n\n\n\n\nWhy dot product?\n\n\n\nless computations\ncan be used in a neural network"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction",
+    "href": "nlp_lec3.html#construction",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction\nHow do we construct a language model? We can use N-grams.\n\n\n\nDefinition: recall\n\n\nAn n-gram is a sequence of n words: a 2-gram (which we’ll call bigram) is a two-word sequence of words like “please turn”, “turn your”, or ”your homework”, and a 3-gram (a trigram) is a three-word sequence of words like “please turn your”, or “turn your homework”.\n\n\n\n\n\n\nAnother Definition\n\n\nA probabilistic model that can estimate the probability of a word given the n-1 previous words, and thereby also to assign probabilities to entire sequences."
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-1",
+    "href": "nlp_lec3.html#construction-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction\n# Import libraries\nfrom sklearn.feature_extraction.text import CountVectorizer\n\n# Create sample documents\ndocuments = [\"This is the first document.\",\n              \"This document is the second document.\",\n              \"And this is the third one.\"]\n\n# Create the Bag-of-Words model with unigrams, bigrams, and trigrams\nvectorizer = CountVectorizer(ngram_range=(1, 3))\nX = vectorizer.fit_transform(documents)\n\n# Print the feature names and the document-term matrix\nprint(\"Feature Names:\", vectorizer.get_feature_names_out())"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-2",
+    "href": "nlp_lec3.html#construction-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-3",
+    "href": "nlp_lec3.html#construction-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-4",
+    "href": "nlp_lec3.html#construction-4",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-5",
+    "href": "nlp_lec3.html#construction-5",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-6",
+    "href": "nlp_lec3.html#construction-6",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-7",
+    "href": "nlp_lec3.html#construction-7",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction\n\n\n\nSkipgram model\n\n\nGuess neighboring words using the current word."
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-8",
+    "href": "nlp_lec3.html#construction-8",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction\n\n\n\n\n\n\nThe intuition of skip-gram\n\n\n\nTreat the target word and a neighboring context word as positive examples.\nRandomly sample other words in the lexicon to get negative samples.\nUse logistic regression to train a classifier to distinguish those two cases.\nUse the learned weights as the embeddings."
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-9",
+    "href": "nlp_lec3.html#construction-9",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#construction-10",
+    "href": "nlp_lec3.html#construction-10",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Construction",
+    "text": "Construction"
+  },
+  {
+    "objectID": "nlp_lec3.html#training",
+    "href": "nlp_lec3.html#training",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-1",
+    "href": "nlp_lec3.html#training-1",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nHow to improve performance of the step 3?"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-2",
+    "href": "nlp_lec3.html#training-2",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-3",
+    "href": "nlp_lec3.html#training-3",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nLogistic regression: need to add negative samples."
+  },
+  {
+    "objectID": "nlp_lec3.html#training-4",
+    "href": "nlp_lec3.html#training-4",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-5",
+    "href": "nlp_lec3.html#training-5",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nAt the start of training, initialize Embedding and Context with random values:"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-6",
+    "href": "nlp_lec3.html#training-6",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nPerform lookup:"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-7",
+    "href": "nlp_lec3.html#training-7",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nCompute sigmoid:"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-8",
+    "href": "nlp_lec3.html#training-8",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nCalculate error:"
+  },
+  {
+    "objectID": "nlp_lec3.html#training-9",
+    "href": "nlp_lec3.html#training-9",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Training",
+    "text": "Training\nUpdate parameters:"
+  },
+  {
+    "objectID": "nlp_lec3.html#semantic-change",
+    "href": "nlp_lec3.html#semantic-change",
+    "title": "Natural Language Processing: word embeddings",
+    "section": "Semantic change",
+    "text": "Semantic change"
+  },
+  {
     "objectID": "nlp_lab2.html",
     "href": "nlp_lab2.html",
     "title": "NLP: Lab 2",
@@ -2447,7 +2888,21 @@
     "href": "nlp_lab6.html",
     "title": "NLP: Lab 5 (bag-of-words)",
     "section": "",
-    "text": "Terms\nLet’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term\n\n\n\nOne-hot representation\n\nCollect unique words in a corpus - build a vocabulary \\(V\\) of size \\(N=|V|\\).\nEach word with index \\(i \\in [0,N)\\) will be represented by a \\(N\\)-dimensional vector with zeroes everywhere, except for \\(1\\) at \\(i\\)-th coordinate.\nEach document \\(d\\) will be represented by a \\(N\\)-dimensional vector with zeroes everywhere, except for \\(1\\)s at coordinates \\(i\\), where \\(i \\in \\left\\{i: t_i \\in d \\right\\}\\).\n\n\n\nBag-of-Words tagging\nBag-of-Words is very similar to one-hot representation. One difference is that instead of putting \\(1\\) whenever we encounter a word, we put the total number of times it occurs in a given document.\nSo, what we need to do is:\n\ncreate a vocabulary of all words in a given corpus: \\(t_i,\\, i \\in [0,N)\\), where \\(N\\) is the size of the vocabulary;\nnow, given a document \\(d\\), calculate number of times each word \\(t_i\\) occurs and denote it \\(count(t_i, d)\\);\nmap this document to an \\(N\\)-dimensional vector, where on each \\(i\\)-th position we’ll have \\(count(t_i, d)\\);\ncompute distances between two documents via dot product.\n\n\n\nExercises\nTask 0. Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.\nTask 1. Enhance the tagger so that it will use N-grams instead of words\n\n\nRecommended reading\n\nChapter 3 from Jurafsky’s book."
+    "text": "Let’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term"
+  },
+  {
+    "objectID": "nlp_lab6.html#term-document-matrix",
+    "href": "nlp_lab6.html#term-document-matrix",
+    "title": "NLP: Lab 5 (bag-of-words)",
+    "section": "term-document matrix",
+    "text": "term-document matrix\nWord is row, document is column. Each document is a count vector (elements are word counts).\nEach word is also a vector of counts of occurrences in each document."
+  },
+  {
+    "objectID": "nlp_lab6.html#term-term-matrix",
+    "href": "nlp_lab6.html#term-term-matrix",
+    "title": "NLP: Lab 5 (bag-of-words)",
+    "section": "term-term matrix",
+    "text": "term-term matrix\nRows and columns are rows. Counts are numbers of co-occurrences in a context. Context can either be a whole document, or a window around the word."
   },
   {
     "objectID": "nb/nlp_lab2.html",

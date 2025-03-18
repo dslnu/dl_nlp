@@ -152,6 +152,12 @@ window.Quarto = {
   <li><a href="#terms" id="toc-terms" class="nav-link active" data-scroll-target="#terms">Terms</a></li>
   <li><a href="#one-hot-representation" id="toc-one-hot-representation" class="nav-link" data-scroll-target="#one-hot-representation">One-hot representation</a></li>
   <li><a href="#bag-of-words-tagging" id="toc-bag-of-words-tagging" class="nav-link" data-scroll-target="#bag-of-words-tagging">Bag-of-Words tagging</a></li>
+  <li><a href="#vector-semantics" id="toc-vector-semantics" class="nav-link" data-scroll-target="#vector-semantics">Vector semantics</a>
+  <ul class="collapse">
+  <li><a href="#term-document-matrix" id="toc-term-document-matrix" class="nav-link" data-scroll-target="#term-document-matrix">term-document matrix</a></li>
+  <li><a href="#term-term-matrix" id="toc-term-term-matrix" class="nav-link" data-scroll-target="#term-term-matrix">term-term matrix</a></li>
+  </ul></li>
+  <li><a href="#pointwise-mutual-information-weighting-function" id="toc-pointwise-mutual-information-weighting-function" class="nav-link" data-scroll-target="#pointwise-mutual-information-weighting-function">Pointwise Mutual Information weighting function</a></li>
   <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
   <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
@@ -208,15 +214,54 @@ window.Quarto = {
 <li>compute distances between two documents via dot product.</li>
 </ul>
 </section>
+<section id="vector-semantics" class="level1">
+<h1>Vector semantics</h1>
+<p>The idea of vector semantics is to represent a word as a point in a multidimensional semantic space that is derived (in ways we’ll see) from the distributions of word neighbors. Vectors for representing words are called <strong>embeddings</strong> (although the term is sometimes more strictly applied only to dense vectors like word2vec, rather than sparse tf-idf or PPMI vectors. (Jurafsky)</p>
+<p>Co-occurrence matrices: <strong>term-document</strong> and <strong>term-term</strong>.</p>
+<section id="term-document-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="term-document-matrix">term-document matrix</h2>
+<p>Word is row, document is column. Each document is a count vector (elements are word counts).</p>
+<p>Each word is also a vector of counts of occurrences in each document.</p>
+</section>
+<section id="term-term-matrix" class="level2">
+<h2 class="anchored" data-anchor-id="term-term-matrix">term-term matrix</h2>
+<p>Rows and columns are rows. Counts are numbers of co-occurrences in a context. Context can either be a whole document, or a window around the word.</p>
+</section>
+</section>
+<section id="pointwise-mutual-information-weighting-function" class="level1">
+<h1>Pointwise Mutual Information weighting function</h1>
+<p>Denote <span class="math inline">\(w\)</span> as target word, <span class="math inline">\(c\)</span> as context word.</p>
+<p><span class="math display">\[
+PMI(w,c) = log_2 \dfrac{P(w,c)}{P(w)P(c)}
+\]</span> <span class="math inline">\(P(w,c)\)</span> = how often we observe the words together</p>
+<p><span class="math inline">\(P(w)P(c)\)</span> = how often we <em>expect</em> the two words to co-occur assuming they each occurred independently.</p>
+<p>So PMI gives us an estimate of how much more the two words co-occur than we expect by chance.</p>
+<p>Negative PMI are problematic (small probabilities require enormous corpora), so it’s more common to use Positive PMI: <span class="math display">\[
+PPMI(w,c) = max\left(log_2 \dfrac{P(w,c)}{P(w)P(c)}, 0\right)
+\]</span></p>
+<p>Let’s assume we have a cooccurrence matrix F with W words as rows and C contexts as columns.</p>
+<p>We define <span class="math inline">\(f_{ij}\)</span> as number of times that word <span class="math inline">\(w_i\)</span> occurs together with context <span class="math inline">\(c_j\)</span>.</p>
+<p>We can then create a PPMI matrix: <span class="math display">\[\begin{align*}
+&amp;p_{ij} = \dfrac{f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{i*} = \dfrac{\sum\limits_{j=1}^C f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},\\
+&amp;PPMI_{ij} = max\left(log_2 \dfrac{p_{ij}}{p_{i*}p_{*j}}, 0\right)
+\end{align*}\]</span></p>
+<p><!-- \textbf{Problem:} very rare words have high PMI values. --> <!-- Solutions: --> <!-- \begin{itemize} --> <!--   \item Use $P_{\alpha}(c) = \dfrac{count(c)^{\alpha}}{\sum\limits_c count(c)^{\alpha}}$ instead of $P(c)$, with $\alpha=0.75$ for example (raising to 0.75 increases the probability assigned to rare contexts) --> <!--   \item Laplace smoothing: before computing PMI, add small constant $k$ to each of the counts. --> <!-- \end{itemize} --></p>
+</section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
 <p><strong>Task 0.</strong> Take an arbitrary text from NLTK corpora (e.g.&nbsp;text3) and implement a Bag-of-Words tagger for it.</p>
 <p><strong>Task 1.</strong> Enhance the tagger so that it will use N-grams instead of words</p>
+<p><strong>Task 2.</strong> Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.</p>
+<p><strong>Task 3.</strong> Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.</p>
+<p><strong>Task 4.</strong> Very rare words might will have high PMI values. How would you solve the problem?</p>
+<p><strong>Task 5.</strong> Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g.&nbsp;using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.</p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>
 <ul>
-<li>Chapter 3 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>.</li>
+<li>Chapter 6 from <a href="https://web.stanford.edu/~jurafsky/slp3/">Jurafsky’s book</a>.</li>
 </ul>
 
 
