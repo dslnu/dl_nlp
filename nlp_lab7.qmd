@@ -27,7 +27,7 @@ Let's agree on terminology:
 
 ## TF-IDF vectorizer
 
-In this model,  the meaning of a word is defined by a simple function of the counts of nearby words.
+In this model,  the meaning of a word is defined by a simple function of the counts of distinct words.
 
 Usually used for **term-document** matrices.
 
@@ -61,7 +61,7 @@ TFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).
 $$
 
 # Exercises
-**Task 0**. item Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g. Treebank corpus
+**Task 0**. Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g. Treebank corpus
 
 # Recommended reading 
 
