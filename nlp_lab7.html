@@ -191,7 +191,7 @@ window.Quarto = {
 </ul>
 <section id="tf-idf-vectorizer" class="level2">
 <h2 class="anchored" data-anchor-id="tf-idf-vectorizer">TF-IDF vectorizer</h2>
-<p>In this model, the meaning of a word is defined by a simple function of the counts of nearby words.</p>
+<p>In this model, the meaning of a word is defined by a simple function of the counts of distinct words.</p>
 <p>Usually used for <strong>term-document</strong> matrices.</p>
 <p>Denote a term by <span class="math inline">\(t\)</span>, a document by <span class="math inline">\(d\)</span>, and the corpus by <span class="math inline">\(D\)</span>. <span class="math display">\[
 count(t,d) \equiv n \text{ of times that } t \text{ appears in } d
@@ -215,7 +215,7 @@ TFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
-<p><strong>Task 0</strong>. item Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g.&nbsp;Treebank corpus</p>
+<p><strong>Task 0</strong>. Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g.&nbsp;Treebank corpus</p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>
