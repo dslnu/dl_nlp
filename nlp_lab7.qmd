@@ -1,0 +1,111 @@
+---
+title: "NLP: Lab 7 (TF-IDF)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+# Terms
+Let's agree on terminology:
+
+- **corpus** (plural: **corpora**) is a collection of documents
+- **document** is a sequence of sentences. Say, a paragraph, or a chapter
+- **sentence** is a sequence of words
+- **word** is synonymous to **term**
+
+# One-hot representation
+
+1. Collect unique words in a corpus - build a **vocabulary** $V$ of size $N=|V|$.
+2. Each word with index $i \in [0,N)$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$ at $i$-th coordinate.
+3. Each document $d$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$s at coordinates $i$, where $i \in \left\{i: t_i \in d \right\}$.
+
+# Bag-of-Words tagging
+Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting $1$ whenever we encounter a word, we put the total number of times it occurs in a given document.
+
+ So, what we need to do is:
+
+- create a vocabulary of all words in a given corpus: $t_i,\, i \in [0,N)$, where $N$ is the size of the vocabulary;
+- now, given a document $d$, calculate number of times each word $t_i$ occurs and denote it $count(t_i, d)$;
+- map this document to an $N$-dimensional vector, where on each $i$-th position we'll have $count(t_i, d)$;
+- compute distances between two documents via dot product.
+
+# Vector semantics
+The idea of vector semantics is to represent a word as a point in a multidimensional semantic space that is derived (in ways we’ll see) from the distributions of word neighbors.
+ Vectors for representing words are called **embeddings** (although the term is sometimes more strictly applied only to dense vectors like word2vec, rather than sparse tf-idf or PPMI vectors. (Jurafsky)
+
+Co-occurrence matrices: **term-document** and **term-term**.
+
+## term-document matrix
+Word is row, document is column. Each document is a count vector (elements are word counts).
+
+Each word is also a vector of counts of occurrences in each document.
+
+## term-term matrix
+Rows and columns are rows. Counts are numbers of co-occurrences in a context. Context can either be a whole document, or a window around the word.
+
+# Pointwise Mutual Information weighting function
+
+Denote $w$ as target word, $c$ as context word.
+
+$$
+PMI(w,c) = log_2 \dfrac{P(w,c)}{P(w)P(c)}
+$$
+$P(w,c)$ = how often we observe the words together
+
+$P(w)P(c)$ = how often we *expect* the two words to co-occur assuming they each occurred independently.
+
+So PMI gives us an estimate of how much more the two words co-occur than we expect by chance.
+
+Negative PMI are problematic (small probabilities require enormous corpora), so it's more common to use Positive PMI:
+$$
+PPMI(w,c) = max\left(log_2 \dfrac{P(w,c)}{P(w)P(c)}, 0\right)
+$$
+
+Let's assume we have a cooccurrence matrix F with W words as rows and C contexts as columns.
+
+We define $f_{ij}$ as number of times that word $w_i$ occurs together with context $c_j$.
+
+We can then create a PPMI matrix:
+\begin{align*}
+&p_{ij} = \dfrac{f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{i*} = \dfrac{\sum\limits_{j=1}^C f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},
+p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1}^C f_{ij}},\\
+&PPMI_{ij} = max\left(log_2 \dfrac{p_{ij}}{p_{i*}p_{*j}}, 0\right)
+\end{align*}
+
+ <!-- \textbf{Problem:} very rare words have high PMI values. -->
+ <!-- Solutions: -->
+ <!-- \begin{itemize} -->
+ <!--   \item Use $P_{\alpha}(c) = \dfrac{count(c)^{\alpha}}{\sum\limits_c count(c)^{\alpha}}$ instead of $P(c)$, with $\alpha=0.75$ for example (raising to 0.75 increases the probability assigned to rare contexts) -->
+ <!--   \item Laplace smoothing: before computing PMI, add small constant $k$ to each of the counts. -->
+ <!-- \end{itemize} -->
+
+# Exercises
+
+**Task 0.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
+
+**Task 1.** Enhance the tagger so that it will use N-grams instead of words
+
+**Task 2.** Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.
+
+**Task 3.** Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.
+
+**Task 4.** Very rare words might will have high PMI values. How would you solve the problem?
+
+**Task 5.** Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g. using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.
+
+# Recommended reading 
+
+- Chapter 6 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/).
