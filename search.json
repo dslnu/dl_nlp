@@ -1768,21 +1768,14 @@
     "href": "nlp_lab7.html",
     "title": "NLP: Lab 7 (TF-IDF)",
     "section": "",
-    "text": "Let’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term"
+    "text": "Let’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term\n\n\n\nIn this model, the meaning of a word is defined by a simple function of the counts of nearby words.\nUsually used for term-document matrices.\nDenote a term by \\(t\\), a document by \\(d\\), and the corpus by \\(D\\). \\[\ncount(t,d) \\equiv n \\text{ of times that } t \\text{ appears in } d\n\\]\nBy term frequency we denote \\[\n  TF(t,d) \\equiv \\begin{cases}\n   1 + log(count(t,d)), \\; \\text{if } count(t,d) &gt; 0,\\\\\n   0, \\; otherwise\n\\end{cases}\n\\] By document frequency we denote \\[\nDF(t,D) \\equiv n \\text{ of documents that contain } t\n\\]\nInverse document frequency is defined to counter-balance the impact of often-encountered terms. IDF is a numerical measure of how much information a term provides: \\[\nIDF(t,D)=log\\dfrac{|D|+1}{DF(t,D)+1},\n\\]\nwhere \\(|D|\\) is the total number of documents in the corpus.\nThe TF-IDF measure is simply the product of TF and IDF: \\[\nTFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).\n\\]"
   },
   {
-    "objectID": "nlp_lab7.html#term-document-matrix",
-    "href": "nlp_lab7.html#term-document-matrix",
+    "objectID": "nlp_lab7.html#tf-idf-vectorizer",
+    "href": "nlp_lab7.html#tf-idf-vectorizer",
     "title": "NLP: Lab 7 (TF-IDF)",
-    "section": "term-document matrix",
-    "text": "term-document matrix\nWord is row, document is column. Each document is a count vector (elements are word counts).\nEach word is also a vector of counts of occurrences in each document."
-  },
-  {
-    "objectID": "nlp_lab7.html#term-term-matrix",
-    "href": "nlp_lab7.html#term-term-matrix",
-    "title": "NLP: Lab 7 (TF-IDF)",
-    "section": "term-term matrix",
-    "text": "term-term matrix\nRows and columns are rows. Counts are numbers of co-occurrences in a context. Context can either be a whole document, or a window around the word."
+    "section": "",
+    "text": "In this model, the meaning of a word is defined by a simple function of the counts of nearby words.\nUsually used for term-document matrices.\nDenote a term by \\(t\\), a document by \\(d\\), and the corpus by \\(D\\). \\[\ncount(t,d) \\equiv n \\text{ of times that } t \\text{ appears in } d\n\\]\nBy term frequency we denote \\[\n  TF(t,d) \\equiv \\begin{cases}\n   1 + log(count(t,d)), \\; \\text{if } count(t,d) &gt; 0,\\\\\n   0, \\; otherwise\n\\end{cases}\n\\] By document frequency we denote \\[\nDF(t,D) \\equiv n \\text{ of documents that contain } t\n\\]\nInverse document frequency is defined to counter-balance the impact of often-encountered terms. IDF is a numerical measure of how much information a term provides: \\[\nIDF(t,D)=log\\dfrac{|D|+1}{DF(t,D)+1},\n\\]\nwhere \\(|D|\\) is the total number of documents in the corpus.\nThe TF-IDF measure is simply the product of TF and IDF: \\[\nTFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).\n\\]"
   },
   {
     "objectID": "nlp_lab3.html",
