@@ -1,0 +1,1309 @@
+---
+title: "Principal Component Analysis"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    chalkboard: true
+    preview-links: auto
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: '6bf7d491aa2c542d5f51f30f2f35ccd2'
+      id: '18bff71126f874c36351fe766cedeb7115b69ff9d78d8420d0ddc2fd1bead807'
+---
+
+
+## Plan
+
+::: {.hidden}
+\newcommand{\bb}[1]{\boldsymbol{#1}}
+\newcommand{\bi}[1]{\textbf{\textit{{#1}}}}
+:::
+
+:::{.callout-tip icon=false}
+## Notions to discuss
+- PCA 
+- SVD
+- LSA
+- SNE
+- ~~NSA~~
+- ~~FBI~~
+:::
+
+## Dimensionality
+:::{.callout-tip icon=false}
+## Curse of Dimensionality
+
+- When the dimensionality increases, the volume of the space increases so fast that the available data become sparse.
+- In order to obtain a reliable result, the amount of data needed often grows exponentially with the dimensionality. 
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Motivation
+Principal component analysis (PCA):
+
+- a standard tool in modern data analysis (in diverse fields from neuroscience to computer graphics)
+- a simple, non-parametric method for extracting relevant information from confusing data sets
+- with minimal effort PCA provides a roadmap for how to reduce a complex data set to a lower dimension to reveal the sometimes hidden, simplified structures that often underlie it. 
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Uses
+- data visualization 
+- feature selection
+- noise reduction
+- machine learning
+- data mining
+:::
+
+## PCA: example
+
+![](img/spring.png)
+
+::: aside
+Pretend we are studying the motion of the physicist’s ideal spring. 
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Experiment setup
+
+- We choose three camera positions $\vec{a}$, $\vec{b}$, $\vec{c}$ at some arbitrary angles with respect to the system.
+- The angles between our measurements might not even be 90 degrees!
+- Now, we record with the cameras for several minutes. 
+:::
+
+:::{.callout-important icon=false}
+## Question
+The **big question** remains: *how do we get from this data set to a simple equation of $x$?* 
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Issues
+
+- Which measurements to perform? (what is **important**?)
+- **What is noise?**
+- How many dimensions to measure? (what is **redundant**?)
+:::      
+    
+:::{.callout-warning icon=false}
+## Goal
+Identify a most meaningful basis to re-express a data set.
+
+In case of spring example, goal of PCA is to determine that **$x$ axis is the one that matters**.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Measurement definition
+$$
+\vec{X} = \begin{bmatrix}
+  x_A \\
+  y_A \\
+  x_B \\
+  y_B \\
+  x_C \\
+  y_C
+\end{bmatrix}
+$$
+:::
+
+::: aside
+If we record the ball’s position for 10 minutes at 120 Hz, then we have recorded 10 × 60 × 120 = 72000 of these vectors.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Naive basis
+**Naive basis**: reflects the methods we used to measure the data.
+$$
+\bb{B} = \begin{bmatrix}
+  \bb{b_1} \\
+  \vdots \\
+  \bb{b_m}
+\end{bmatrix} = \begin{bmatrix}
+1 & 0 & \dots & 0 \\
+0 & 1 & \dots & 0 \\
+\vdots & \vdots & \ddots & 0 \\
+0 & 0 & \dots & 1
+\end{bmatrix} = \bb{I}
+$$
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Question
+Is there another linear basis that best re-expresses our data set?
+:::
+
+:::{.callout-important}
+Note the linearity assumption!
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Basis change: definition
+Let $\bb{X}$ be the original data set ($m\times n$ matrix with $m=6$ and $n=72000$).
+
+Let $\bb{Y}$ be another $m\times n$ matrix such that:
+\begin{align}
+\label{basis}
+&\bb{P}\bb{X} = \bb{Y}
+\end{align}
+
+$p_i$: rows of $P$, $x_i$: columns of $X$, $y_i$: columns of $Y$
+:::
+
+:::{.callout-note icon=false}
+## Interpretation
+
+- $\bb{P}$ transforms $\bb{X}$ into $\bb{Y}$ 
+- $\bb{P}$ is a rotation and stretch geometrically
+- Rows of $\bb{P}$ are a new set of basis vectors
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Basis change
+\begin{align*}
+   &\bb{P}\bb{X} = \begin{bmatrix}
+     \bb{p_1} \\
+     \vdots \\
+     \bb{p_m}
+ \end{bmatrix} \begin{bmatrix}
+ \bb{x_1} & \dots & \bb{x_n}
+\end{bmatrix} = \\
+   & = \begin{bmatrix}
+     \bb{p_1} \cdot \bb{x_1} & \dots & \bb{p_1}\cdot\bb{x_n} \\
+         \vdots & \ddots & \vdots\\
+         \bb{p_m}\cdot\bb{x_1} & \dots & \bb{p_m}\cdot\bb{x_n} 
+   \end{bmatrix}
+\end{align*}
+$j$th coefficient of $\bb{y_i}$ is a projection on the $j$th row of $\bb{P}$, therefore, $\bb{p_i}$ are a new set of basis vectors for columns of $\bb{X}$.
+
+$\bb{p_i}$ will become **principal components** of $\bb{X}$.
+:::
+
+
+## PCA
+:::{.callout-tip icon=false}
+## Questions on $\bb{P}$
+
+- what is the best way to re-express $\bb{X}$? 
+- what is a good choice of $\bb{P}$? 
+
+:::
+
+:::{.callout-note icon=false}
+## How to express best?
+Use signal-to-noise ratio.
+$$
+SNR = \dfrac{\sigma^2_{signal}}{\sigma^2_{noise}}
+$$
+High SNR - precision measurement, low - noisy data.
+:::
+
+## PCA
+![](img/snr.png)
+
+::: aside
+What does ***maximizing the variance*** mean: finding the appropriate **rotation**.
+:::
+
+
+## PCA
+![](img/redundancy.png)
+
+::: aside
+- $r_1$ and $r_2$ are distinct measurements.
+- High redundancy allows to drop measurements.
+- This is the central idea behind dimensional reduction.
+:::
+
+
+## PCA
+:::{.callout-note icon=false}
+## How do we generalize to higher dimensions?
+
+Consider two sets of measurements with zero means
+\begin{align*}
+   &A=\left\{a_1, a_2, \dots, a_n\right\},  B=\left\{b_1, b_2, \dots, b_n\right\}.  
+\end{align*}
+
+Variances are
+\begin{align*}
+&\sigma_A^2 = \dfrac{1}{n}\sum\limits_i a_i^2, \, \sigma_B^2 = \dfrac{1}{n}\sum\limits_i b_i^2,\\
+\end{align*}
+
+**Covariance** of $A$ and $B$ is
+$$
+\sigma_{AB}^2 = \dfrac{1}{n}\sum\limits_i a_i b_i
+$$
+:::
+
+## PCA
+Absolute value of covariance measures the degree of redundancy.
+
+- $\sigma_{AB} = 0 \Leftrightarrow A \text{ and } B$ are uncorrelated
+- $\sigma_{AB}^2 =  \sigma_A^2 \text{ if } A=B$
+
+
+## PCA
+:::{.callout-tip icon=false}
+## Matrix form
+\begin{align*}
+   &\bb{a} = \left[a_1 a_2 \dots a_n\right] \\
+   &\bb{b} = \left[b_1 b_2 \dots b_n\right] \\
+   &\sigma_{\bb{a}\bb{b}}^2 \equiv \dfrac{1}{n} \bb{a}\bb{b}^T
+\end{align*}
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Generalization
+Let's generalize to a multiple number of vectors.
+
+- Rename $\bb{a}$ and $\bb{b}$ to $\bb{x_1}$ and $\bb{x_2}$
+- Introduce additional **measurement types** $\bb{x_i},\,i=\overline{3,m}$.
+- Define a new matrix:
+$$
+\bb{X} = \begin{bmatrix}
+  \bb{x_1}\\
+  \vdots\\
+  \bb{x_m}
+\end{bmatrix}
+$$
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Covariance matrix
+$$
+\bb{C_X} \equiv \dfrac{1}{n} \bb{X} \bb{X}^T
+$$
+:::
+
+:::{.callout-tip icon=false}
+## Covariance matrix properties
+
+- $\bb{C_X}$ is a square symmetric $m\times m$ matrix
+- diagonal terms of $\bb{C_X}$ are the **variance** of particular measurement types
+- off-diagonal terms of $\bb{C_X}$ are the **covariance** between particular measurement types
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Proof of symmetricity
+**Theorem 1**. Inverse of orthogonal matrix is its transpose.
+
+Let $A$ be an $m \times n$ orthogonal matrix where $a_i$ is the $i$th column vector. We have
+$$
+(A^T A)_{ij} = a_i^T a_j = \begin{cases} 1, \; \text{ if } i=j,\\ 0 \; \text{ otherwise} \end{cases}
+$$
+Therefore, $A^T A = I \Rightarrow A^{-1} = A^T$.
+:::
+
+
+## PCA
+:::{.callout-tip icon=false}
+## Proof of symmetricity
+**Theorem 2**. For any matrix $A$, $A^T A$ and $A A^T$ are symmetric.
+\begin{align*}
+  & (A A^T)^T = A^{TT} A^T = A A^T,\\
+  & (A^T A)^T = A^T A^{TT} = A^T A.
+\end{align*}
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Covariance
+$\bb{C_X}$ captures the covariance between all possible pairs of measurements. The covariance values reflect the noise and redundancy in our measurements.
+
+- In the diagonal terms, by assumption, large values correspond to **interesting structure**.
+- In the off-diagonal terms large magnitudes correspond to high **redundancy**.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## New goals
+
+- minimize redundancy, measured by the magnitude of the covariance
+- maximize the signal, measured by the variance. 
+
+
+Let's transform $\bb{C_X}$ into some optimized matrix $\bb{C_Y}$.
+:::
+
+:::{.callout-tip icon=false}
+## Optimized matrix $\bb{C_Y}$
+
+- all off-diagonal terms should be zero (this means that $\bb{Y}$ is decorrelated);
+- each successive dimension in $\bb{Y}$ should be rank-ordered according to variance. 
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Diagonalizing 
+What are the methods for diagonalizing $\bb{C_Y}$?
+
+We assume that all basis vectors $\left\{\bb{p_1}, \dots, \bb{p_m}\right\}$ are orthonormal, that is, $\bb{P}$ is an **orthonormal matrix**.
+:::
+
+:::{.callout-note icon=false}
+## How does PCA work?
+Looking at figure, it aligns the basis with the axis of maximal variance.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Algorithm
+
+1. Select a normalized direction in $m$-dimensional space along which the variance in $X$ is maximized. Save this vector as $\bb{p_1}$.
+2. Find another direction along which variance is maximized, however, because of the orthonormality condition, restrict the search to all directions orthogonal to all previous selected directions. Save this vector as $\bb{p_i}$.
+3. Repeat this procedure until $m$ vectors are selected.
+
+Resulting ordered set of $\bb{p}$ are called **principal components**.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Assumptions review
+
+- **Linearity**. We assume the problem can be solved by change of basis. 
+- **Large variances have important structure**. This is sometimes incorrect.
+- **Principal components are orthogonal**. This makes PCA soluble with linear algebra techniques.
+:::
+
+# Solving using eigenvector decomposition
+
+## PCA: First algebraic solution.
+:::{.callout-tip icon=false}
+## Setup
+We have a dataset $\bb{X}$ which is a $m \times n$ matrix:
+
+- $m$ being number of dimensions (measurement types)
+- $n$ - number of samples.
+:::
+
+:::{.callout-note icon=false}
+## Goal
+Find some orthonormal matrix $\bb{P}$  in $\bb{Y}=\bb{P}\bb{X}$ such that $\bb{C_Y} \equiv \dfrac{1}{n} \bb{Y}\bb{Y}^T$ is a diagonal matrix.
+
+The rows of $\bb{P}$ are the **principal components** of $\bb{X}$.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## $\bb{C_Y}$ rewrite
+Let's rewrite $\bb{C_Y}$ in terms of unknown variable $\bb{P}$:
+\begin{align*}
+   &\bb{C_Y} = \dfrac{1}{n}\bb{Y}\bb{Y}^T =  \dfrac{1}{n}(\bb{P}\bb{X})(\bb{P}\bb{X})^T  = \\
+   & = \dfrac{1}{n} \bb{P} \bb{X} \bb{X}^T \bb{P}^T = \bb{P}(\dfrac{1}{n} \bb{X} \bb{X}^T) \bb{P}^T = \\
+   &= \bb{P} \bb{C_X} \bb{P}^T,
+\end{align*}
+where $\bb{C_X}$ is the covariance matrix of $\bb{X}$.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Goal
+Any symmetrix matrix $A$ is diagonalized by an orthogonal matrix of its eigenvectors.
+:::
+
+:::{.callout-tip icon=false}
+## Theorem
+**Theorem 3**. A matrix is symmetric $\Leftrightarrow$ it is orthogonally diagonalizable.
+
+$(\Rightarrow)$ If $A$ is orthogonally diagonalizable, then $A$ is symmetric.
+
+Orthogonally diagonalizable means that $\exists E: A = E D E^T$, where $D$ is a diagonal matrix and $E$ is a matrix that diagonalizes $A$. Let's compute $A^T$:
+$$
+A^T = (E D E^T)^T = E^{TT}D^T E^T = E D E^T = A
+$$
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Theorem
+**Theorem 4**. A symmetric matrix is diagonalized by a matrix of its orthonormal eigenvectors.
+
+Let $A$ be a square $n \times n $ symmetric matrix with eigenvectors $\left\{e_1, \dots, e_n\right\}$. Let $E=\left[e_1 \dots e_n\right]$. This theorem asserts that $\exists \text{ diagonal matrix } D: A = E D E^T$.
+
+First, let's prove that any matrix can be orthogonally diagonalized if and only if it that matrix’s eigenvectors are all linearly independent.
+
+Let $A$ be some matrix with independent eigenvectors (not degenerate). Let $D$ be a diagonal matrix where $i$th eigenvalue is placed in $ii$th position. We will show that $AE=ED$.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Theorem
+\begin{align*}
+   & AE = \left[Ae_1 \dots Ae_n\right],\\ 
+   & ED = \left[\lambda_1 e_1 \dots \lambda_n e_n\right].
+\end{align*}
+Evidently, if $AE=ED$ then $Ae_i = \lambda_i e_i \; \forall i$. This is the definition of the eigenvalue equation. Therefore, $A = E D E^{-1}$.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Theorem
+Now let's prove that a symmetric matrix always has orthogonal eigenvectors. Suppose that $\lambda_1$ and $\lambda_1$ are distinct eigenvalues for eigenvectors $e_1$ and $e_2$.
+\begin{align*}
+  &\lambda_1 e_1 \cdot e_2 = (\lambda_1 e_1)^T e_2 = (A e_1)^T e_2 =\\
+  & = e_1^T A^T e_2 = e_1^T A e_2 = e_1^T(\lambda_2 e_2) = \lambda_2 e_1 \cdot e_2.
+\end{align*}
+As $\lambda_1 \neq \lambda_2$, then $e_1 \cdot e_2 = 0$.
+
+So, $E$ is an orthogonal matrix, and by theorem 1 $E^T = E^{-1}$ and $A = E D E^T$.
+:::
+
+
+## PCA
+:::{.callout-note icon=false}
+## Theorem
+For symmetric matrix $\bb{A}$ we have $\bb{A} = \bb{E} \bb{D} \bb{E}^T$, where $D$ is a diagonal matrix and $E$ is a matrix of eigenvectors of $A$ arranged as columns.
+
+ Note that $\bb{A}$ might have $r \leq m$ orthonormal eigenvectors where $r$ is the rank. This will mean that $\bb{A}$ is \textit{degenerate}. Therefore, we'll need to select
+  additional $(m-r)$ additional orthogonal vectors to fill matrix $\bb{E}$.
+
+These vectors do not affect the final solution because variances associated with these directions are $0$.
+:::
+
+## PCA
+:::{.callout-important}
+We select the matrix $\bb{P}$ to be a matrix where each row $\bb{p_i}$ is an eigenvector of $\dfrac{1}{n}\bb{X} \bb{X}^T$. By this selection, $\bb{P} \equiv \bb{E}^T$. Keeping in mind that $\bb{P}^{-1} = \bb{P}^T$ (Theorem 1), we have:
+\begin{align*}
+   & \bb{C_Y} = \bb{P} \bb{C_X} \bb{P}^T \\
+   &= \bb{P}(\bb{E}^T \bb{D} \bb{E})\bb{P}^T  \\
+   &= \bb{P}(\bb{P}^T \bb{D} \bb{P})\bb{P}^T = \\
+   & = (\bb{P} \bb{P}^T) \bb{D} (\bb{P} \bb{P}^T)  \\
+   & = (\bb{P} \bb{P}^{-1})\bb{D}(\bb{P} \bb{P}^{-1}).
+\end{align*}
+Therefore, $\bb{C_Y} = \bb{D}$.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Result
+
+- choice of $\bb{P}$ diagonalizes $\bb{C_Y}$
+- principal components of $\bb{X}$ are the eigenvectors of $\bb{C_X} = \dfrac{1}{n}\bb{X} \bb{X}^T$
+- the $i$th diagonal value of $\bb{C_Y}$ is the variance of $\bb{X}$ along $\bb{p_i}$
+:::
+
+:::{.callout-note icon=false}
+## Practical computation
+
+- subtract the mean off each measurement type
+- compute eigenvectors of $\bb{C_X}$
+:::
+
+# Singular value decomposition
+
+## PCA: Another algebraic solution
+:::{.callout-tip icon=false}
+## Setup
+
+Let $\bb{X}$ be an arbitrary $n \times m$ matrix (!) and $\bb{X}^T \bb{X}$ be a rank $r$, square, symmetric $m \times m$ matrix.
+
+- $\left\{\hat{\bb{v}_1}, \dots, \hat{\bb{v}_r}\right\}$ is the set of orthonormal $m \times 1$ eigenvectors with associated eigenvalues $\left\{\lambda_1, \dots, \lambda_r \right\}$ for the symmetric matrix $\bb{X}^T \bb{X}$:
+$$
+(\bb{X}^T \bb{X})\hat{\bb{v}_i} = \lambda_i \hat{\bb{v}_i}
+$$
+- $\sigma_i \equiv \sqrt{\lambda_i}$ are positive real and termed the **singular values**
+- $\left\{\hat{\bb{u}_1}, \dots, \hat{\bb{u}_r}\right\}$ is the set of $n \times 1$ vectors defined by $\hat{\bb{u}_i} \equiv \dfrac{1}{\sigma_i}\bb{X} \hat{\bb{v}_i}$.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Properties
+
+- $\hat{\bb{u}_i} \cdot \hat{\bb{u}_j} = \begin{cases} 1, \; \text{ if } i=j;\\ 0, \; \text{otherwise}\end{cases}$
+- $\|\bb{X} \hat{\bb{v}_i}\| = \sigma_i$
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Theorem
+**Theorem 5.** For any arbitrary $m \times n$ matrix $X$, the symmetric matrix $X^T X$ has a set of orthonormal eigenvectors of $\left\{\hat{\bb{v}_1}, \dots, \hat{\bb{v}_n}\right\}$ and a set of associated eigenvalues $\left\{\lambda_1, \dots, \lambda_n\right\}$. The set of vectors $\left\{\bb{X}\hat{\bb{v_1}}, \dots, \bb{X}\hat{\bb{v_n}}\right\}$ then forms an orthogonal basis, where each vector $X\hat{\bb{v_i}}$ is of length $\sqrt{\lambda_i}$.
+
+  \begin{align*}
+    &(X \hat{v_i}) \cdot (X \hat{v_j}) = (X \hat{v_i})^T \cdot (X \hat{v_j}) = \\
+    & = \hat{v_i} X^T X \hat{v_j} = \hat{v_i}^T(\lambda_j v_j) = \lambda_j \hat{v_i} \cdot \hat{v_j} =\\
+    & = \lambda_j \delta_{ij}.
+\end{align*}
+And so we have
+$$
+\|X \hat{v_i}\|^2 = (X \hat{v_i})\cdot(X \hat{v_i}) = \lambda_i.
+$$
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## The scalar version of SVD
+Is a restatement of the third definition:
+\begin{align}
+\label{scalar_svd}
+&\bb{X} \hat{\bb{v}_i} = \sigma_i \hat{\bb{u}_i}
+\end{align}
+
+The set of eigenvectors $\left\{\hat{\bb{v}_1}, \dots, \hat{\bb{v}_r}\right\}$ and the set of vectors $\left\{\hat{\bb{u}_1}, \dots, \hat{\bb{u}_r}\right\}$ are both bases in $r$-dimensional space.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## The matrix version of SVD.
+Construct a new diagonal matrix $\Sigma$:
+$$
+\Sigma \equiv \begin{bmatrix}
+  \sigma_{\tilde{1}} \\
+  & \ddots & & \text{0} \\
+  & & \sigma_{\tilde{r}} \\
+  \text{0}  & & & \ddots \\
+                   & & & &  0
+\end{bmatrix}
+$$
+where $\sigma_{\tilde{1}} \geq \dots \geq \sigma_{\tilde{r}}$ are the rank-ordered set of singular values. 
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## The matrix version of SVD.
+Likewise we construct accompanying orthogonal matrices
+\begin{align*}
+   & \bb{V} = \left[\hat{\bb{v_1}}, \dots, \hat{\bb{v_m}}\right],\; \bb{U} = \left[\hat{\bb{u_1}}, \dots, \hat{\bb{u_n}}\right],
+\end{align*}
+where we appended additional $(m-r)$ and $(n-r)$ orthonormal vectors to fill up the matrices for $\bb{V}$ and $\bb{U}$ respectively, in order to deal with degeneracy issues.
+
+$$
+\bb{X}\bb{V} = \bb{U} \bb{\Sigma},
+$$
+where each column of $\bb{V}$ and $\bb{U}$ perform the scalar version of decomposition \eqref{scalar_svd}.
+
+As $\bb{V}$ is orthogonal, we multiply both sides by $\bb{V}^{-1}=\bb{V}^T$ and obtain
+\begin{align}
+\label{svd}
+&\bb{X} = \bb{U} \bb{\Sigma} \bb{V}^T.
+\end{align}
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Interpretation
+Equation \eqref{svd} states that any arbitrary matrix $\bb{X}$ can be converted into an orthogonal matrix, diagonal matrix, and another orthogonal matrix (or a rotation, a stretch, and a second rotation). 
+
+ Reinterpret equation \eqref{scalar_svd} as $\bb{X}\bb{a} = k\bb{b}$, where $\bb{a}$ and $\bb{b}$ are column vectors and $k$ is a scalar constant.
+
+The set $\left\{\hat{\bb{v_1}}, \dots, \hat{\bb{v_m}}\right\}$ is analogous to $\bb{a}$ and $\left\{\hat{\bb{u_1}}, \dots, \hat{\bb{u_n}}\right\}$ is analogous to $\bb{b}$.
+
+$\left\{\hat{\bb{v_1}}, \dots, \hat{\bb{v_m}}\right\}$ and $\left\{\hat{\bb{u_1}}, \dots, \hat{\bb{u_n}}\right\}$ are orthonormal sets of vectors which span an $m$ or $n$ dimensional space, respectively.
+
+Inputs are $\bb{a}$ and outputs are $\bb{b}$. Can we formalize the view that $\left\{\hat{\bb{v_1}}, \dots, \hat{\bb{v_m}}\right\}$ and $\left\{\hat{\bb{u_1}}, \dots, \hat{\bb{u_n}}\right\}$ span all possible inputs and outputs?
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Interpretation
+From \eqref{svd} we have
+\begin{align*}
+   & \bb{X} = \bb{U} \bb{\Sigma} \bb{V}^T \Rightarrow \\
+   & \bb{U}^T \bb{X} = \bb{\Sigma} \bb{V}^T \Rightarrow \\
+   & \bb{U}^T \bb{X} = \bb{Z},
+\end{align*}
+where $\bb{Z} \equiv \bb{\Sigma} \bb{V}^T$.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Interpretation
+Comparing to \eqref{basis}, $\left\{\hat{\bb{u_1}}, \dots, \hat{\bb{u_n}}\right\}$ perform the same role as $\left\{\hat{\bb{p_1}}, \dots, \hat{\bb{p_m}}\right\}$. Hence, $\bb{U}^T$ is a **change of basis** from $\bb{X}$ to $\bb{Z}$.
+
+Therefore, from the fact that the orthonormal basis $\bb{U}^T$ (or $\bb{P}$) transforms column vectors it follows that $\bb{U}^T$ is a basis that spans the columns of $\bb{X}$. Bases that span the columns are termed **column spaces**.
+
+Column spaces are equivalent to matrix **outputs**.
+
+Row spaces are equivalent to matrix **inputs**.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## How are PCA and SVD related?
+Consider original $m \times n$ matrix $\bb{X}$. Define
+$$
+\bb{Y} \equiv \dfrac{1}{\sqrt{n}} \bb{X}^T,
+$$
+where each column of $\bb{Y}$ has zero mean. Consider:
+\begin{align*}
+  &\bb{Y}^T \bb{Y} = \left(\dfrac{1}{\sqrt{n}}\bb{X}^T\right)^T\left(\dfrac{1}{\sqrt{n}}\bb{X}^T\right) = \dfrac{1}{n}\bb{X} \bb{X}^T =  \bb{C_X}.
+\end{align*}
+By construction $\bb{Y}^T \bb{Y}$ equals the covariance matrix of $\bb{X}$. Principal components of $\bb{X}$ are the eigenvectors of $\bb{C_X}$. If we calculate the SVD of $\bb{Y}$, the columns of matrix $\bb{V}$ contain the eigenvectors of $\bb{Y}^T \bb{Y} = \bb{C_X}$.
+
+Therefore, columns of $\bb{V}$ are the principal components of $\bb{X}$.
+:::
+
+## PCA
+:::{.callout-note icon=false}
+## Interpretation
+$\bb{V}$ spans the row space of $\bb{Y} \equiv \dfrac{1}{\sqrt{n}} \bb{X}^T$. Therefore, $\bb{V}$ must also span the column space of  $\dfrac{1}{\sqrt{n}} \bb{X}$. 
+
+We conclude that finding the principal components amounts to finding an orthonormal basis that spans the **column space** of $\bb{X}$.
+:::
+
+## PCA
+:::{.callout-important}
+## Summary of PCA
+
+- Organize data as $m \times n$ matrix, where $m$ is the number of measurement types and $n$ is the number of samples
+- Subtract off the mean for each measurement type 
+- Calculate the SVD or the eigenvectors of the covariance
+:::
+
+## PCA
+<!-- PCA is non-parametric! -->
+![](img/ferris_wheel.png){height=430}
+
+::: aside
+Example of when PCA fails (red lines). (a) Tracking a person on a ferris wheel (black dots). All dynamics can be described
+by the phase of the wheel θ, a non-linear combination of the naive
+basis. (b) Non-Gaussian distributed data and
+non-orthogonal axes causes PCA to fail. The axes with the largest
+variance do not correspond to the appropriate answer.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Loss function
+It can be proved that under a common loss function, mean squared error ($L_2$ norm), PCA provides the optimal reduced representation of the data. 
+
+This means that selecting orthogonal directions for principal components is the best solution to predicting the original data. 
+:::
+
+:::{.callout-note icon=false}
+## Kernel PCA
+Decorrelation is removing second-order dependencies.
+
+Higher-order dependencies:  if prior knowledge is known about the problem, then a nonlinearity (i.e. **kernel**) might be applied to the data to transform the data to a more appropriate naive basis. This parametric approach is often termed **kernel PCA**.
+:::
+
+# Latent semantic analysis
+
+## LSA
+:::{.callout-tip icon=false}
+## Basic concepts: LSA (latent semantic analysis)
+SVD is applied to a term-document matrix (each cell weighted by log frequency and normalized by entropy), and then the first e.g. 300 dimensions are used as the LSA embedding.
+
+Alternatively, this is **PCA applied to NLP data**.
+:::
+
+## LSA
+:::{.callout-warning icon=false}
+## Issues with TF-IDF
+
+- focus on spelling and word usage
+- lemmatization might group some words, but synonyms will be handled separately
+- TF-IDF assumes that frequency is the only thing that matters
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Use **topics** - aggregated words. 
+:::
+
+# PCA in Python
+<!-- %Python guide (beginners guide to PCA) -->
+
+## PCA
+:::{.callout-tip icon=false}
+## Basic concepts
+
+- **Data preprocessing**: Before applying PCA, it is important to preprocess the data by removing any missing values and scaling the features to have zero mean and unit variance.
+- **Covariance matrix**: PCA starts by computing a covariance matrix, which is a matrix that contains the pairwise covariances between all the features in the dataset.
+- **Eigenvectors and eigenvalues**: The eigenvectors of the covariance matrix are the principal components (PCs), and the corresponding eigenvalues are the variance explained by each PC.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Basic concepts
+
+- **Dimensionality reduction**: The data can then be projected onto the chosen PCs by multiplying the original data matrix with the matrix of PCs. This results in a lower-dimensional representation of the data.
+- **Reconstruction**: If needed, the reduced data can be reconstructed back to the original space by multiplying the reduced data matrix with the transpose of the matrix of PCs.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## What is a principal component: recap
+In principal component analysis, a principal component is a new feature that is constructed from a linear combination of the original features in a dataset.
+
+- The principal components are ordered such that the first principal component has the highest possible variance (i.e., the greatest amount of spread or dispersion in the data)
+- each subsequent component in turn has the highest variance possible under the constraint that it is orthogonal (i.e., uncorrelated) to the previous components.
+:::
+
+:::{.callout-note icon=false}
+## Idea behind PCA
+Reduce the dimensionality of a dataset by projecting the data onto a lower-dimensional space, while still preserving as much of the variance in the data as possible.
+:::
+
+## PCA
+:::{.callout-tip icon=false}
+## Making sense of principal components
+
+PCs are the directions in which the data varies the most. To make sense of the PCs, you can consider the following:
+
+- **Variance explained**: The PCs are ranked in order of the variance they explain. The first PC explains the most variance, the second PC explains the second most variance, and so on. You can check the percentage of variance explained by each PC to understand how much information each PC captures.
+- **Loadings**: Loadings are the coefficients that describe the relationship between the original features and the PCs. You can check the loadings of each feature to see which features contribute the most to each PC.
+:::
+
+## PCA
+
+:::{.callout-tip icon=false}
+## PCA items
+
+- **Components**: The PCs are linear combinations of the original features. The components of each PC tell you which features contribute the most to each PC.
+- **Data visualization**: You can also use data visualization like scatter plots or biplots to understand the PCs. Scatter plots can show you how the data is distributed along each PC, and biplots can show you the relationship between the original features and the PCs.
+:::
+
+## PCA math summary
+
+:::{.callout-important icon=false}
+## Preliminary
+Before applying PCA, missing values need to be removed from the dataset and each variable should be scaled to have zero mean and unit variance.
+:::
+
+:::{.callout-tip icon=false}
+## Compute
+
+- $\text{Covariance matrix} = (1/n) \cdot X^T \cdot X$,
+where $X$ is the data matrix with $n$ samples and $p$ features.
+
+- Then eigenvectors and eigenvalues are obtained by solving the following equation:
+$$
+\text{Covariance matrix} \cdot v = \lambda \cdot v
+$$
+where $v$ is the eigenvector and $\lambda$ is the corresponding eigenvalue.
+:::
+
+## PCA math summary
+:::{.callout-tip icon=false}
+## Compute
+
+- To complete the dimensionality reduction, data can then be projected onto the chosen PCs by multiplying the original data matrix with the matrix of PCs:
+     $$
+     X_{reduced} = X \cdot PCs
+     $$
+- To reconstruct the reduced data back to the original space, we multiply the reduced data matrix with the transpose of the matrix of PCs:
+     $$
+     X_{reconstructed} = X_{reduced} * {PCs}^T
+     $$
+:::
+
+
+## PCA in Python
+```python
+ # Import libraries 
+import numpy as np
+
+import matplotlib.pyplot as plt
+
+# Load data
+data = np.loadtxt('data.txt')
+
+# Normalize data
+mean = np.mean(data, axis=0)
+std = np.std(data, axis=0)
+data = (data - mean) / std
+```
+
+## PCA in Python
+```python
+  # Compute covariance matrix
+  cov_matrix = np.cov(data, rowvar=False)
+
+  # Compute eigenvectors and eigenvalues
+  eigenvalues, eigenvectors = np.linalg.eig(cov_matrix)
+
+  # Sort in descending order
+  idx = np.argsort(-eigenvalues)
+  eigenvalues = eigenvalues[idx]
+  eigenvectors = eigenvectors[:,idx]
+
+  # Select top principal components
+  k = 2
+  eigenvectors = eigenvectors[:,:k]
+```
+
+## PCA in Python
+```python
+  # Project the data onto the principal components
+  projected_data = np.dot(data, eigenvectors.T)
+  # Visualize the results using scatter from matplotlib
+  plt.scatter(projected_data[:,0], projected)
+```
+
+# Non-linear reduction methods
+<!-- % Visualizing your embeddings article -->
+
+## Neighbor graph algorithms
+:::{.callout-tip icon=false}
+## Common steps
+
+- Compute high dimensional probabilities $p$.
+- Compute low dimensional probabilities $q$.
+- Calculate the difference between the probabilities by a given cost function $C(p,q)$.
+- Minimize the cost function. 
+:::
+
+
+## SNE
+:::{.callout-tip icon=false}
+## Definition
+**Stochastic Neighbor Embedding (SNE)** tries to place the objects in a low-dimensional space so as to optimally preserve neighborhood identity, and can be naturally extended to allow multiple different low-d images of each object.
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Step 1.
+
+**High-dimensional probabilities**.
+
+Compute probability that that object $i$ would pick $j$ as neighbor:
+$$
+p_{ij} = \dfrac{exp\left(-d_{ij}^2\right)}{\sum\limits_{k \neq i} exp\left(-d_{ik}^2\right)}
+$$
+Values $d_{ij}$ represent \textit{dissimilarity} between points $i$ and $j$:
+$$
+d_{ij}^2 = \dfrac{\|\bb{x}_i-\bb{x}_j\|^2}{2\sigma_i^2}
+$$
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Step 1.
+What is the meaning of $\sigma_i$? It is found by a binary search that makes the Shannon entropy of the distribution over neighbors equal to $log_2 k$, where $k$ is the effective number of local neighbors or \textit{perplexity}.
+
+We compute entropy via:
+\begin{align*}
+&H = -\sum\limits_j p_{ij} log_2 p_{ij} = log_2 k,\\
+&k = 2^{-\sum\limits_j p_{ij} log_2 p_{ij}}
+\end{align*}
+By tuning $\sigma_i$ we try to match the value of $k$ set by the user.
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Step 1.
+The higher the effective number of local neighbors (perplexity), the higher $\sigma_i$ and the wider the Gaussian function used in the dissimilarities.
+:::
+:::{.callout-note icon=false}
+## Intuition
+Mathematical intuition: The higher the perplexity, the more likely it is to consider points that are far away as neighbors.
+:::
+
+::: aside
+**Advice**: The authors of SNE and t-SNE use perplexity values between 5 and 50.
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Step 2.
+
+**Low-dimensional probabilities**.
+
+Now that we have the high-dimensional probabilities, we move on to calculate the low dimensional ones, which depend on where the data points are mapped in the low dimensional space. 
+
+<!-- %Fortunately, these are easier to compute since SNE also uses Gaussian neighborhoods but with fixed variance (no perplexity parameter), -->
+
+In the low-dimensional space we also use Gaussian neighborhoods but with a fixed variance (which we set without loss of generality to be $\dfrac{1}{2}$) so the **induced probability** $q_{ij}$ that point $i$ picks point $j$ as its neighbor is a function of the low-dimensional images $y_i$ of all the objects and is given by expression:
+$$
+q_{ij} = \dfrac{exp\left(-\|\bb{y}_i-\bb{y}_j\|^2\right)}{\sum\limits_{k \neq i} exp\left(-\|\bb{y}_i-\bb{y}_k\|^2\right)}
+$$
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Step 3.
+
+**Choice of cost function**.
+
+If the points $Y_i$ are placed correctly in the low-dimensional space, the conditional probabilities $p$ and $q$ will be very similar. To measure the mismatch between both probabilities, SNE uses the \textit{Kullback-Leibler divergence} as a loss function for each point. Each point in both high and low dimensional space has a conditional probability to call another point its neighbor. Hence, we have as many loss functions as we have data points. We define the cost function as the sum of the KL divergences over all data points,
+$$
+C = \sum\limits_i \sum\limits_j p_{ij} log\dfrac{p_{ij}}{q_{ij}} = \sum\limits_i KL(P_i \| Q_I).
+$$
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Kullback-Leibler Divergence
+The KL divergence, which is closely related to relative entropy, information divergence, and information for discrimination, is a non-symmetric measure of the difference between two probability distributions $p(x)$ and $q(x)$.      
+
+
+Specifically, the KL divergence of $q(x)$ from $p(x)$, denoted DKL(p(x),q(x)), is a measure of the information lost when $q(x)$ is used to approximate $p(x)$.
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Kullback-Leibler Divergence
+Let $p(x)$ and $q(x)$ are two probability distributions of a discrete random variable $x$. That is, both $p(x)$ and $q(x)$ sum up to $1$, and $p(x) > 0$ and $q(x) > 0$ $\forall x \in X$. 
+
+KL divergence is defined as:
+$$
+KL(p(x) \| q(x)) = \sum\limits_{x \in X} p(x) ln \dfrac{p(x)}{q(x)}.
+$$
+Continuous version:
+$$
+KL(p(x) \| q(x)) = \int\limits_{-\infty}^{\infty} p(x) ln \dfrac{p(x)}{q(x)}dx.
+$$
+:::
+
+## SNE
+:::{.callout-tip icon=false}
+## Differentiation of the cost function
+$$
+\dfrac{\partial C}{\partial \bb{y}_i} = 2\sum\limits_j (\bb{y}_i-\bb{y}_j)(p_{ij}-q_{ij}+p_{ji}-q_{ij}).
+$$
+:::
+
+:::{.callout-note icon=false}
+## Interpretation
+A sum of forces pulling toward or pushing it away depending on whether is observed to be a neighbor more or less often than desired.
+:::
+
+## SNE
+
+<!-- %It’s worth developing some intuition about the loss function used. The algorithm’s creators state that “while SNE emphasizes local distances, its cost function cleanly enforces both keeping the images of nearby objects nearby and keeping the images of widely separated objects relatively far apart.” Let’s see if this is true using the next figure where we see the KL divergence for the high and low dimensional probabilities p and q, respectively. -->
+![](img/divergence.png){height=500}
+
+::: aside
+The algorithm starts by placing all the $y_i$ in random locations very close to the origin, and then is trained minimizing the cost function $C$ using gradient descent. 
+:::
+
+<!-- ## SNE -->
+<!-- If two points are close together in high dimensional space, their dissimilarities are low and the probability $p$ should be high ($p ~ 1$). Then, if they were mapped far away, the low dimensional probability would be low ($q ~ 0$). In this scenario we can see that the loss function takes very high values, severely penalizing that mistake. --> 
+
+<!-- On the other hand, if two points are far from each other in high dimensional space, their dissimilarities are high and the probability $p$ should be low ($p ~ 0$). Then, if they were mapped near each other, the low dimensional probability would be high ($q ~ 1$). We can see that the KL divergence is not penalizing this mistake as much as we would want. %This is a key issue that will be solved by UMAP. -->
+
+## SNE
+![](img/sne.png){height=500}
+
+::: aside
+The result of running the SNE algorithm on 3000 256-dimensional grayscale images of handwritten digits.
+:::
+
+## SNE
+![](img/nips_sne.png){height=550}
+
+::: aside
+Embedding of NIPS authors in 2D (red dots are authors who published 6+ papers).
+:::
+
+## t-SNE
+:::{.callout-important icon=false}
+## Problems
+
+- cost function is very difficult to optimize
+- a crowding problem 
+:::
+
+:::{.callout-note icon=false}
+## Solutions
+
+- Symmetrization
+- use of t-distributions for the low-dimensional probabilities
+:::
+
+## t-SNE
+:::{.callout-tip icon=false}
+## Symmetric SNE.
+
+The probability of point $x_i$ to consider point $x_j$ as its neighbor is not the same probability that point $x_j$ would consider point $x_i$ as a neighbor. We symmetrize pairwise probabilities in high dimensional space by defining
+$$
+\tilde{p}_{ij} = \dfrac{p_{ij}+p_{ji}}{2n}
+$$
+:::
+
+## t-SNE
+:::{.callout-warning icon=false}
+## The Crowding Problem
+
+If we want to correctly project close distances between points, the moderate distances are distorted and appear as huge distances in the low dimensional space. 
+<!-- %According to the authors of t-SNE, this is because “the area of the two-dimensional map that is available to accommodate moderately distant data points will not be nearly large enough compared with the area available to accommodate nearby data points.” -->
+
+To solve this, use the Student t-Distribution (which is what gives the ‘t’ to t-SNE) with one degree of freedom for the low-dimensional probabilities:
+$$
+q_{ij} = \dfrac{\left(1+\|y_i-y_j\|^2\right)^{-1}}{\sum\limits_{k \neq l} \left(1+\|y_k-y_l\|^2\right)^{-1}}
+$$
+
+Now $p_{ij}=p_{ji}$ and $q_{ij}=q_{ji}$, and the gradient of the cost function
+$$
+C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
+$$
+is easier to compute.
+:::
+
+## t-SNE
+:::{.callout-tip icon=false}
+## Local structure
+Since t-SNE also uses KL divergence as its loss function, it also carries the problems discussed in the previous section. This is not to say that it is completely ignored, but the main takeaway is that t-SNE severely prioritizes the conservation of the local structure.
+:::
+
+:::{.callout-note icon=false}
+## Global structure
+Since the KL divergence function does not penalize the misplacement in low dimensional space of points that are far away in high dimensional space, we can conclude that the global structure is not well preserved. t-SNE will group similar data points together into clusters, but distances between clusters might not mean anything.
+:::
+
+
+## t-SNE
+
+```python
+from sklearn.manifold import TSNE
+import matplotlib.pyplot as plt
+
+def read_glove(file_path):
+    with open(file_path) as f:
+        for i, line in enumerate(f):
+            fields = line.rstrip().split(' ')
+            vec = [float(x) for x in fields[1:]]
+            word = fields[0]
+            yield (word, vec)
+words = []
+vectors = []
+for word, vec in read_glove('data/glove/glove.42B.300d.txt'):
+    words.append(word)
+    vectors.append(vec)
+model = TSNE(n_components=2, init='pca', random_state=0) coordinates = model.fit_transform(vectors)
+plt.figure(figsize=(8, 8))
+for word, xy in zip(words, coordinates):
+    plt.scatter(xy[0], xy[1])
+    plt.annotate(word,
+plt.xlim(25, 55)
+plt.ylim(-15, 15)
+plt.show()
+```
+
+## t-SNE
+![GloVe embeddings visualized by t-SNE](img/glove_sne.png)
+
+
+# Python PCA/t-SNE Visualization
+<!-- % https://builtin.com/data-science/tsne-python -->
+
+
+## Python PCA Visualization
+
+### Use MNIST data set.
+:::{.callout-tip icon=false}
+## Get libraries
+```python
+  from __future__ import print_function
+  import time
+
+  import numpy as np
+  import pandas as pd
+
+  from sklearn.datasets import fetch_mldata
+  from sklearn.decomposition import PCA
+  from sklearn.manifold import TSNE
+
+  %matplotlib inline
+  import matplotlib.pyplot as plt
+  from mpl_toolkits.mplot3d import Axes3D
+
+  import seaborn as sns
+```
+:::
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Load data
+```python
+   mnist = fetch_mldata("MNIST original")
+   X = mnist.data / 255.0
+   y = mnist.target
+
+   print(X.shape, y.shape)
+
+   [out] (70000, 784) (70000,) 
+```
+:::
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Convert to Pandas and randomize
+```python
+    feat_cols = [ 'pixel'+str(i) for i in range(X.shape[1]) ]
+
+    df = pd.DataFrame(X,columns=feat_cols)
+    df['y'] = y
+    df['label'] = df['y'].apply(lambda i: str(i))
+
+    X, y = None, None
+
+    print('Size of the dataframe: {}'.format(df.shape))
+
+    [out] Size of the dataframe: (70000, 785)
+
+    # For reproducibility of the results
+    np.random.seed(42)
+
+    rndperm = np.random.permutation(df.shape[0])
+```
+:::
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Check some numbers
+```python
+    plt.gray()
+    fig = plt.figure( figsize=(16,7) )
+    for i in range(0,15):
+        ax = fig.add_subplot(3,5,i+1, title="Digit: {}".format(str(df.loc[rndperm[i],'label'])) )
+    ax.matshow(df.loc[rndperm[i],feat_cols].values.reshape((28,28)).astype(float))
+    plt.show()
+```
+:::
+
+![](img/digits_mnist.png)
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Use Scikit-learn for PCA
+```python
+    pca = PCA(n_components=3)
+    pca_result = pca.fit_transform(df[feat_cols].values)
+
+    df['pca-one'] = pca_result[:,0]
+    df['pca-two'] = pca_result[:,1] 
+    df['pca-three'] = pca_result[:,2]
+
+    print('Explained variation per principal component: {}'.format(pca.explained_variance_ratio_))
+
+    Explained variation per principal component: [0.09746116 0.07155445 0.06149531]
+```
+:::
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Scatterplot of first 2 PCs
+```python
+    plt.figure(figsize=(16,10))
+    sns.scatterplot(
+        x="pca-one", y="pca-two",
+        hue="y",
+        palette=sns.color_palette("hls", 10),
+        data=df.loc[rndperm,:],
+        legend="full",
+        alpha=0.3
+    )
+```
+:::
+
+## Python PCA Visualization
+![](img/2d_pca_plot.jpg)
+
+## Python PCA Visualization
+:::{.callout-tip icon=false}
+## Scatterplot of first 2 PCs in 3D
+```python
+    ax = plt.figure(figsize=(16,10)).gca(projection='3d')
+    ax.scatter(
+        xs=df.loc[rndperm,:]["pca-one"], 
+        ys=df.loc[rndperm,:]["pca-two"], 
+        zs=df.loc[rndperm,:]["pca-three"], 
+        c=df.loc[rndperm,:]["y"], 
+        cmap='tab10'
+    )
+    ax.set_xlabel('pca-one')
+    ax.set_ylabel('pca-two')
+    ax.set_zlabel('pca-three')
+    plt.show()
+```
+:::
+
+## Python PCA Visualization
+![](img/3d_pca_plot.jpg)
+
+## Python t-SNE Visualization
+:::{.callout-tip icon=false}
+## Run PCA
+```python
+    N = 10000
+    df_subset = df.loc[rndperm[:N],:].copy()
+    data_subset = df_subset[feat_cols].values
+
+    pca = PCA(n_components=3)
+    pca_result = pca.fit_transform(data_subset)
+
+    df_subset['pca-one'] = pca_result[:,0]
+    df_subset['pca-two'] = pca_result[:,1] 
+    df_subset['pca-three'] = pca_result[:,2]
+
+    print('Explained variation per principal component: {}'.format(pca.explained_variance_ratio_))
+
+    [out] Explained variation per principal component: [0.09730166 0.07135901 0.06183721]
+```
+:::
+
+## Python t-SNE Visualization
+:::{.callout-note icon=false}
+## Run t-SNE
+```python
+    time_start = time.time()
+    tsne = TSNE(n_components=2, verbose=1, perplexity=40, n_iter=300)
+    tsne_results = tsne.fit_transform(data_subset)
+    print('t-SNE done! Time elapsed: {} seconds'.format(time.time()-time_start))
+
+    [out] [t-SNE] Computing 121 nearest neighbors...
+    [t-SNE] Indexed 10000 samples in 0.564s...
+    [t-SNE] Computed neighbors for 10000 samples in 121.191s...
+    [t-SNE] Computed conditional probabilities for sample 1000 / 10000
+    ...
+    [t-SNE] Mean sigma: 2.129023
+    [t-SNE] KL divergence after 300 iterations: 2.823509
+    t-SNE done! Time elapsed: 157.3975932598114 seconds
+```
+:::
+
+## Python t-SNE Visualization
+:::{.callout-tip icon=false}
+## Plot t-SNE
+```python
+    df_subset['tsne-2d-one'] = tsne_results[:,0]
+    df_subset['tsne-2d-two'] = tsne_results[:,1]
+
+    plt.figure(figsize=(16,10))
+    sns.scatterplot(
+        x="tsne-2d-one", y="tsne-2d-two",
+        hue="y",
+        palette=sns.color_palette("hls", 10),
+        data=df_subset,
+        legend="full",
+        alpha=0.3
+    )
+```
+:::
+
+## Python t-SNE Visualization
+![Plot t-SNE](img/tsne_plot.jpg)
