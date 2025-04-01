@@ -35,11 +35,51 @@ format:
     theme: default
     multiplex:
       url: 'https://mplex.vitv.ly'
-      secret: '9eea8372bd1d5b26e533c9f62ac3ded8'
-      id: 'dfeb146abfa7566d06e3260dc51741a028c92925d9a164cf153da95cae43b4f3'
+      secret: '249106d17b05b018bbab9bb83ba24c69'
+      id: '0e14951a469e61530632f161ec4824840d93005b3f76e31b0f686d92dcb69278'
 ---
+
+## History {.smaller}
+
+:::{.callout-tip icon=false}
+## Torch (2002)
+A Lua-based framework
+
+![](img/torch_logo.png)
+:::
+:::{.callout-tip icon=false}
+## PyTorch (2016)
+Python impl based on Torch
+
+![](img/pytorch_logo.png)
+:::
+
+## Lua
+```lua
+-- defines a factorial function
+function fact (n)
+  if n == 0 then
+    return 1
+  else
+    return n * fact(n-1)
+  end
+end
+
+print("enter a number:")
+a = io.read("*number")        -- read a number
+print(fact(a))
+```
+## Tensors
+
+:::{.callout-tip}
+## What is it?
+Tensors are the PyTorch equivalent to Numpy arrays, with the addition to also have support for **GPU acceleration**. A vector is a 1-D tensor, and a matrix a 2-D tensor. When working with neural networks, we use tensors of various shapes and number of dimensions.
+:::
+
 ## Imports
 
+:::{.callout-tip icon=false}
+## Generic
 ```{python}
 ## Standard libraries
 import os
@@ -59,13 +99,15 @@ sns.set()
 ## Progress bar
 from tqdm.notebook import tqdm
 ```
-
+:::
+:::{.callout-note icon=false}
 ## Basic PyTorch import
 
 ```{python}
 import torch
 print("Using torch", torch.__version__)
 ```
+:::
 
 ## Set the seed
 
@@ -75,20 +117,14 @@ torch.manual_seed(42) # Setting the seed
 
 ## Tensors
 
-Tensors
-
-Tensors are the PyTorch equivalent to Numpy arrays, with the addition to also have support for GPU acceleration (more on that later). The name "tensor" is a generalization of concepts you already know. For instance, a vector is a 1-D tensor, and a matrix a 2-D tensor. When working with neural networks, we will use tensors of various shapes and number of dimensions.
-
-Most common functions you know from numpy can be used on tensors as well. Actually, since numpy arrays are so similar to tensors, we can convert most tensors to numpy arrays (and back) but we don't need it too often.
-
-## Tensors
-
 ```{python}
 x = torch.Tensor(2, 3, 4)
 print(x)
 ```
 
 ## Tensors
+:::{.callout-tip icon=false}
+## Creation
 The function `torch.Tensor` allocates memory for the desired tensor, but reuses any values that have already been in the memory. To directly assign values to the tensor during initialization, there are many alternatives including:
 
 * `torch.zeros`: Creates a tensor filled with zeros
@@ -97,7 +133,7 @@ The function `torch.Tensor` allocates memory for the desired tensor, but reuses 
 * `torch.randn`: Creates a tensor with random values sampled from a normal distribution with mean 0 and variance 1
 * `torch.arange`: Creates a tensor containing the values $N,N+1,N+2,...,M$
 * `torch.Tensor` (input list): Creates a tensor from the list elements you provide
-
+:::
 
 
 ## Tensors
@@ -140,7 +176,7 @@ tensor = torch.from_numpy(np_arr)
 print("Numpy array:", np_arr)
 print("PyTorch tensor:", tensor)
 ```
-To transform a PyTorch tensor back to a numpy array, we can use the function .numpy() on tensors:
+<!-- To transform a PyTorch tensor back to a numpy array, we can use the function .numpy() on tensors: -->
 
 ```{python}
 tensor = torch.arange(4)
@@ -152,12 +188,10 @@ print("Numpy array:", np_arr)
 :::
 
 :::{.callout-note}
-The conversion of tensors to numpy require the tensor to be on the CPU, and not the GPU (more on GPU support in a later section). In case you have a tensor on GPU, you need to call `.cpu()` on the tensor beforehand. Hence, you get a line like `np_arr = tensor.cpu().numpy()`.
+The conversion of tensors to numpy require the tensor to be on the CPU, and not the GPU. In case you have a tensor on GPU, then: `np_arr = tensor.cpu().numpy()`.
 :::
 
 ## Operations
-Most operations that exist in numpy, also exist in PyTorch. A full list of operations can be found in the [PyTorch documentation](https://pytorch.org/docs/stable/tensors.html#), but we will review the most important ones here.
-
 :::{.callout-tip icon=false}
 ## Addition
 
@@ -180,7 +214,6 @@ Calling x1 + x2 creates a **new** tensor containing the sum of the two inputs.
 :::{.callout-note icon=false}
 ## In-place
 
-We can also use in-place operations that are applied directly on the memory of a tensor. We therefore change the values of x2 without the chance to re-accessing the values of x2 before the operation.
 
 ```{python}
 x1 = torch.rand(2, 3)
@@ -286,11 +319,9 @@ print(x[1:3, :]) # Middle two rows
 
 - PyTorch automatically gives us **gradients/derivatives** of functions that we define. 
 
-- if our neural network would output a single scalar value, we would talk about taking the **derivative**, but you will see that quite often we will have **multiple** output variables ("values"); in that case we talk about **gradients**.
+- given an input $\mathbf{x}$, we define our function by **manipulating** that input, usually by matrix-multiplications with weight matrices and additions with so-called bias vectors. As we manipulate our input, we are automatically creating a **computational graph**.
 
-- given an input $\mathbf{x}$, we define our function by **manipulating** that input, usually by matrix-multiplications with weight matrices and additions with so-called bias vectors. As we manipulate our input, we are automatically creating a **computational graph**. This graph shows how to arrive at our output from our input. 
-
-- PyTorch is a **define-by-run** framework; this means that we can just do our manipulations, and PyTorch will keep track of that graph for us. Thus, we create a dynamic computation graph along the way.
+- PyTorch is a **define-by-run** framework; this means that we can just do our manipulations, and PyTorch will keep track of that graph for us.
 
 - the only thing we have to do is to compute the **output**, and then we can ask PyTorch to automatically get the **gradients**. 
 :::
@@ -308,7 +339,7 @@ print(x.requires_grad)
 
 :::{.callout-warning icon=false}
 ## Gradients: enabling
-We can change this for an existing tensor using the function `requires_grad_()` (underscore indicating that this is a in-place operation). Alternatively, when creating a tensor, you can pass the argument requires_grad=True to most initializers we have seen above.
+We can change this for an existing tensor using the function `requires_grad_()` (underscore indicating that this is a in-place operation). Alternatively, when creating a tensor, you can pass the argument `requires_grad=True` to most initializers we have seen above.
 ```{python}
 x.requires_grad_(True)
 print(x.requires_grad)
@@ -323,7 +354,9 @@ In order to get familiar with the concept of a computation graph, we will create
 
 $$y = \frac{1}{\ell(x)}\sum_i \left[(x_i + 2)^2 + 3\right],$$
 
-where we use $\ell(x)$ to denote the number of elements in $x$. In other words, we are taking a mean here over the operation within the sum. You could imagine that $x$ are our parameters, and we want to optimize (either maximize or minimize) the output $y$. For this, we want to obtain the gradients $\partial y / \partial \mathbf{x}$. For our example, we'll use $\mathbf{x}=[0,1,2]$ as our input.
+where we use $\ell(x)$ to denote the number of elements in $x$.
+
+We want to optimize (either maximize or minimize) the output $y$. For this, we want to obtain the gradients $\partial y / \partial \mathbf{x}$. For our example, we'll use $\mathbf{x}=[0,1,2]$ as our input.
 ```{python}
 x = torch.arange(3, dtype=torch.float32, requires_grad=True) # Only float tensors can have gradients
 print("X", x)
@@ -334,7 +367,7 @@ print("X", x)
 
 :::{.callout-tip icon=false}
 ## Computation graph: example
-Now let's build the computation graph step by step.
+<!-- Now let's build the computation graph step by step. -->
 ```{python}
 a = x + 2
 b = a ** 2
@@ -448,9 +481,8 @@ The zero next to `mps` indicates that this is the zero-th GPU device on your com
 ## GPU support
 :::{.callout-tip icon=false}
 ## GPU-to-CPU comparison
-We can compare the runtime of a large matrix multiplication on the CPU with a operation on the GPU:
 ```{python}
-x = torch.randn(1000, 1000)
+x = torch.randn(5000, 5000)
 
 ## CPU version
 start_time = time.time()
@@ -477,7 +509,7 @@ print(f"GPU time: {0.001 * start.elapsed_time(end):6.5f}s")  # Milliseconds to s
 ## GPU: seed sync
 When generating random numbers, the seed between CPU and GPU is **not synchronized**.
 
-Hence, we need to set the seed on the GPU separately to ensure a **reproducible** code. Hence, we also set the seed on the GPU:
+Hence, we need to set the seed on the GPU separately to ensure a **reproducible** code.
 ```{python}
 # GPU operations have a separate seed we also want to set
 if torch.mps.is_available():
@@ -492,7 +524,7 @@ torch.backends.mps.benchmark = False
 :::
 
 ## Continuous XOR example
-:::{.callout-tip icon=false}
+:::{.callout-warning icon=false}
 ## Manual way
 If we want to build a neural network in PyTorch, we could specify all our parameters (weight matrices, bias vectors) using `Tensors` (with `requires_grad=True`), ask PyTorch to calculate the gradients and then adjust the parameters.
 
@@ -519,7 +551,7 @@ The example became famous by the fact that a **single neuron**, i.e. a linear cl
 ## Continuous XOR example
 :::{.callout-tip icon=false}
 ## Model
-The package `torch.nn` defines a series of useful classes like linear networks layers, activation functions, loss functions etc. A full list can be found [here](https://pytorch.org/docs/stable/nn.html). In case you need a certain network layer, check the documentation of the package first before writing the layer yourself as the package likely contains the code for it already. We import it below:
+The package `torch.nn` defines a series of useful classes like linear networks layers, activation functions, loss functions etc. A full list can be found [here](https://pytorch.org/docs/stable/nn.html). 
 
 ```{python}
 import torch.nn as nn
@@ -551,7 +583,7 @@ class MyModule(nn.Module):
 :::
 
 :::{.callout-note}
-The forward function is where the computation of the module is taken place, and is executed when you call the module (`nn = MyModule(); nn(x)`). In the init function, we usually create the parameters of the module, using `nn.Parameter`, or defining other modules that are used in the forward function. The backward calculation is done automatically, but could be overwritten as well if wanted.
+The forward function is where the computation of the module is taken place, and is executed when you call the module (`nn = MyModule(); nn(x)`). The backward calculation is done automatically, but could be overwritten as well if wanted.
 :::
 
 ## Continuous XOR example
@@ -741,6 +773,11 @@ We can configure our data loader with the following input arguments:
 
 * `batch_size`: Number of samples to stack per batch
 * `shuffle`: If True, the data is returned in a random order. This is important during training for introducing stochasticity. 
+:::
+
+## Continuous XOR example {.scrollable}
+:::{.callout-tip icon=false}
+## The data loader class
 * `num_workers`: Number of subprocesses to use for data loading. The default, 0, means that the data will be loaded in the main process which can slow down training for datasets where loading a data point takes a considerable amount of time (e.g. large images). More workers are recommended for those, but can cause issues on Windows computers. For tiny datasets as ours, 0 workers are usually faster.
 * `pin_memory`: If True, the data loader will copy Tensors into CUDA pinned memory before returning them. This can save some time for large data points on GPUs. Usually a good practice to use for a training set, but not necessarily for validation and test to save memory on the GPU.
 * `drop_last`: If True, the last batch is dropped in case it is smaller than the specified batch size. This occurs when the dataset size is not a multiple of the batch size. Only potentially helpful during training to keep a consistent batch size.
@@ -842,7 +879,7 @@ The optimizer provides two useful functions:
 :::
 
 :::{.callout-important}
-`zero_grad()` is a crucial pre-step before performing backpropagation. If we call the `backward` function on the loss while the parameter gradients are non-zero from the previous batch, the new gradients would actually be added to the previous ones instead of overwriting them. This is done because a parameter might occur multiple times in a computation graph, and we need to sum the gradients in this case instead of replacing them.
+`zero_grad()` is a crucial pre-step before performing backpropagation. If we call the `backward` function on the loss while the parameter gradients are non-zero from the previous batch, the new gradients would actually be added to the previous ones instead of overwriting them. 
 :::
 
 ## Continuous XOR example
@@ -921,7 +958,7 @@ torch.save(state_dict, "our_model.tar")
 ```
 :::
 
-## Continuous XOR example
+## Continuous XOR example {.scrollable}
 :::{.callout-tip icon=false}
 ## Training: load a model
 To load a model from a state dict, we use the function torch.load to load the state dict from the disk, and the module function load_state_dict to overwrite our parameters with the new values:
@@ -960,7 +997,7 @@ where TP are the true positives, TN true negatives, FP false positives, and FN t
 ## Evaluation
 
 - we don't need to keep track of the computation graph as we don't intend to calculate the gradients. In PyTorch this is done via `with torch.no_grad(): ...`.
-- remember to additionally set the model to eval mode.
+- remember to additionally set the model to `eval` mode.
 
 ```{python}
 def eval_model(model, data_loader):
@@ -1139,20 +1176,19 @@ train_model_with_logger(model, optimizer, train_data_loader, loss_module, val_da
 :::
 
 ## Additional features
-:::{.callout-tip icon=false}
-## Tensorboard
-The TensorBoard file in the folder `runs/our_experiment` now contains a loss curve, the computation graph of our network, and a visualization of the learned predictions over number of epochs. 
+<!-- The TensorBoard file in the folder `runs/our_experiment` now contains a loss curve, the computation graph of our network, and a visualization of the learned predictions over number of epochs. --> 
 ```{python}
 #| eval: false
 %tensorboard --logdir runs/our_experiment
 ```
-:::
 ![](img/tensorboard_screenshot.png)
 
 # Activation functions
 
 ## Activation functions
 
+::: {.panel-tabset}
+### Setup
 ```{python}
 # Path to the folder where the datasets are/should be downloaded (e.g. MNIST)
 DATASET_PATH = "./data"
@@ -1168,7 +1204,7 @@ def set_seed(seed):
         #torch.cuda.manual_seed_all(seed)
 set_seed(42)
 ```
-
+### Data fetch
 ```{python}
 #| eval: false
 
@@ -1197,6 +1233,7 @@ for file_name in pretrained_files:
         except HTTPError as e:
             print("Something went wrong. Please try to download the file from the GDrive folder, or contact the author with the full output including the following error:\n", e)
 ```
+:::
 
 ## Activation functions
 :::{.callout-tip icon=false}
@@ -1210,7 +1247,11 @@ class ActivationFunction(nn.Module):
         self.name = self.__class__.__name__
         self.config = {"name": self.name}
 ```
+:::
 
+## Activation functions
+:::{.callout-tip icon=false}
+## Basic funcs:
 ```{python}
 ##############################
 
@@ -1231,7 +1272,7 @@ class Tanh(ActivationFunction):
 ```
 :::
 
-## Activation functions
+## Activation functions {.scrollable}
 :::{.callout-tip icon=false}
 ## Activation functions: RELU and friend
 ```{python}
@@ -1697,12 +1738,14 @@ for i, act_fn_name in enumerate(act_fn_by_name):
 :::
 
 ## Activation functions {.scrollable}
-:::{.callout-tip icon=false}
+:::{.callout-note}
 ## Dead neurons
 One known drawback of the ReLU activation is the occurrence of "dead neurons", i.e. neurons with no gradient for any training input.
+
 For dead neurons to happen, the output value of a specific neuron of the linear layer before the ReLU has to be negative for all input images.
 :::
 
+## Activation functions {.scrollable}
 ::: {.panel-tabset}
 ### Definition
 ```{python}
@@ -1730,19 +1773,19 @@ def measure_number_dead_neurons(net):
     print("Number of dead neurons:", number_neurons_dead)
     print("In percentage:", ", ".join([f"{(100.0 * num_dead / tens.shape[0]):4.2f}%" for tens, num_dead in zip(neurons_dead, number_neurons_dead)]))
 ```
-### Untrained network
+### Untrained
 ```{python}
 set_seed(42)
 net_relu = BaseNetwork(act_fn=ReLU()).to(device)
 measure_number_dead_neurons(net_relu)
 ```
-### Trained network
+### Trained
 ```{python}
 net_relu = load_model(model_path=CHECKPOINT_PATH, model_name="FashionMNIST_relu").to(device)
 measure_number_dead_neurons(net_relu)
 ```
 
-### Depending on layer count
+### Inc. layer depth
 ```{python}
 set_seed(42)
 net_relu = BaseNetwork(act_fn=ReLU(), hidden_sizes=[256, 256, 256, 256, 256, 128, 128, 128, 128, 128]).to(device)
