@@ -1,0 +1,1633 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tutorial 5 (JAX): Inception, ResNet and DenseNet – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#trainer-module" id="toc-trainer-module" class="nav-link active" data-scroll-target="#trainer-module">Trainer Module</a></li>
+  <li><a href="#inception" id="toc-inception" class="nav-link" data-scroll-target="#inception">Inception</a>
+  <ul class="collapse">
+  <li><a href="#tensorboard-log" id="toc-tensorboard-log" class="nav-link" data-scroll-target="#tensorboard-log">Tensorboard log</a></li>
+  </ul></li>
+  <li><a href="#resnet" id="toc-resnet" class="nav-link" data-scroll-target="#resnet">ResNet</a>
+  <ul class="collapse">
+  <li><a href="#tensorboard-log-1" id="toc-tensorboard-log-1" class="nav-link" data-scroll-target="#tensorboard-log-1">Tensorboard log</a></li>
+  </ul></li>
+  <li><a href="#densenet" id="toc-densenet" class="nav-link" data-scroll-target="#densenet">DenseNet</a>
+  <ul class="collapse">
+  <li><a href="#tensorboard-log-2" id="toc-tensorboard-log-2" class="nav-link" data-scroll-target="#tensorboard-log-2">Tensorboard log</a></li>
+  </ul></li>
+  <li><a href="#conclusion-and-comparison" id="toc-conclusion-and-comparison" class="nav-link" data-scroll-target="#conclusion-and-comparison">Conclusion and Comparison</a>
+  <ul class="collapse">
+  <li><a href="#which-model-should-i-choose-for-my-task" id="toc-which-model-should-i-choose-for-my-task" class="nav-link" data-scroll-target="#which-model-should-i-choose-for-my-task">Which model should I choose for my task?</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tutorial 5 (JAX): Inception, ResNet and DenseNet</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://img.shields.io/static/v1.svg?label=Status&amp;message=Finished&amp;color=green" class="img-fluid figure-img"></p>
+<figcaption>Status</figcaption>
+</figure>
+</div>
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/JAX/tutorial5/Inception_ResNet_DenseNet.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View on Github"></a> <a href="https://colab.research.google.com/github/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/JAX/tutorial5/Inception_ResNet_DenseNet.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Collab"></a><br>
+<strong>Pre-trained models:</strong> <a href="https://github.com/phlippe/saved_models/tree/main/JAX/tutorial5"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View files on Github"></a><br>
+<strong>PyTorch version:</strong> <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html"><img src="https://img.shields.io/static/v1.svg?logo=readthedocs&amp;label=RTD&amp;message=View%20On%20RTD&amp;color=8CA1AF" class="img-fluid" alt="View on RTD"></a><br>
+<strong>Author:</strong> Phillip Lippe</p>
+<div class="alert alert-info">
+<p><strong>Note:</strong> This notebook is written in JAX+Flax. It is a 1-to-1 translation of the original notebook written in PyTorch+PyTorch Lightning with almost identical results. For an introduction to JAX, check out our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial2/Introduction_to_JAX.html">Tutorial 2 (JAX): Introduction to JAX+Flax</a>. Further, throughout the notebook, we comment on major differences to the PyTorch version and provide explanations for the major parts of the JAX code.</p>
+</div>
+<hr>
+<p><strong>Speed comparison</strong>: We note the training times for all models in the PyTorch and the JAX implementation below (PyTorch v1.11, JAX v0.3.13). The models were trained on the same hardware (NVIDIA RTX3090, 24 core CPU) and we slightly adjusted the tutorials to use the exact same training settings (200 epochs, data loading parameters, evaluation schedule, etc.). Overall, the JAX implementation is about <em>2.5-3.4x faster</em> than PyTorch! However, with larger models, larger batch sizes, or smaller GPUs, the speed up is expected to become considerably smaller.</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Models</th>
+<th style="text-align: center;">PyTorch</th>
+<th style="text-align: center;">JAX</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GoogleNet</td>
+<td style="text-align: center;">53min 50sec</td>
+<td style="text-align: center;">16min 10sec</td>
+</tr>
+<tr class="even">
+<td>ResNet</td>
+<td style="text-align: center;">20min 47sec</td>
+<td style="text-align: center;">7min 51sec</td>
+</tr>
+<tr class="odd">
+<td>Pre-Activation ResNet</td>
+<td style="text-align: center;">20min 57sec</td>
+<td style="text-align: center;">8min 25sec</td>
+</tr>
+<tr class="even">
+<td>DenseNet</td>
+<td style="text-align: center;">49min 23sec</td>
+<td style="text-align: center;">20min 1sec</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<p>In this tutorial, we will implement and discuss variants of modern CNN architectures. There have been many different architectures been proposed over the past few years. Some of the most impactful ones, and still relevant today, are the following: <a href="https://arxiv.org/abs/1409.4842">GoogleNet</a>/Inception architecture (winner of ILSVRC 2014), <a href="https://arxiv.org/abs/1512.03385">ResNet</a> (winner of ILSVRC 2015), and <a href="https://arxiv.org/abs/1608.06993">DenseNet</a> (best paper award CVPR 2017). All of them were state-of-the-art models when being proposed, and the core ideas of these networks are the foundations for most current state-of-the-art architectures. Thus, it is important to understand these architectures in detail and learn how to implement them.</p>
+<p>Let’s start with importing our standard libraries here.</p>
+<div id="cell-5" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Standard libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> PIL <span class="im">import</span> Image</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Any</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">## Imports for plotting</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline </span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>set_matplotlib_formats(<span class="st">'svg'</span>, <span class="st">'pdf'</span>) <span class="co"># For export</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>matplotlib.rcParams[<span class="st">'lines.linewidth'</span>] <span class="op">=</span> <span class="fl">2.0</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>sns.reset_orig()</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co">## Progress bar</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm.auto <span class="im">import</span> tqdm</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co">## To run JAX on TPU in Google Colab, uncomment the two lines below</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="co"># import jax.tools.colab_tpu</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="co"># jax.tools.colab_tpu.setup_tpu()</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">## JAX</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> random</span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Seeding for random operations</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>main_rng <span class="op">=</span> random.PRNGKey(<span class="dv">42</span>)</span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="co">## Flax (NN in JAX)</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> flax</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ModuleNotFoundError</span>: <span class="co"># Install flax if missing</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">--</span>quiet flax</span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> flax</span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> linen <span class="im">as</span> nn</span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax.training <span class="im">import</span> train_state, checkpoints</span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a><span class="co">## Optax (Optimizers in JAX)</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> optax</span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ModuleNotFoundError</span>: <span class="co"># Install optax if missing</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">--</span>quiet optax</span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> optax</span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a><span class="co">## PyTorch</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.utils.data <span class="im">as</span> data</span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.tensorboard <span class="im">import</span> SummaryWriter</span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torchvision</span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision <span class="im">import</span> transforms</span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torchvision.datasets <span class="im">import</span> CIFAR10</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will use the same path variables <code>DATASET_PATH</code> and <code>CHECKPOINT_PATH</code> as in the previous tutorials. Adjust the paths if necessary.</p>
+<div id="cell-7" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>DATASET_PATH <span class="op">=</span> <span class="st">"../../data"</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Path to the folder where the pretrained models are saved</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>CHECKPOINT_PATH <span class="op">=</span> <span class="st">"../../saved_models/tutorial5_jax"</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Device:"</span>, jax.devices()[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Device: gpu:0</code></pre>
+</div>
+</div>
+<p>We also have pretrained models and TensorBoards (more on this later) for this tutorial, and download them below.</p>
+<div id="cell-9" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Github URL where saved models are stored for this tutorial</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/phlippe/saved_models/main/JAX/tutorial5/"</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Files to download</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>pretrained_files <span class="op">=</span> [<span class="st">"GoogleNet.ckpt"</span>, <span class="st">"ResNet.ckpt"</span>, <span class="st">"PreActResNet.ckpt"</span>, <span class="st">"DenseNet.ckpt"</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"tensorboards/GoogleNet/events.out.tfevents.googlenet"</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"tensorboards/ResNet/events.out.tfevents.resnet"</span>,</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"tensorboards/PreActResNet/events.out.tfevents.preactresnet"</span>,</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                    <span class="st">"tensorboards/DenseNet/events.out.tfevents.densenet"</span>]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># Create checkpoint path if it doesn't exist yet</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>os.makedirs(CHECKPOINT_PATH, exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># For each file, check whether it already exists. If not, try downloading it.</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file_name <span class="kw">in</span> pretrained_files:</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    file_path <span class="op">=</span> os.path.join(CHECKPOINT_PATH, file_name)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"/"</span> <span class="kw">in</span> file_name:</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        os.makedirs(file_path.rsplit(<span class="st">"/"</span>,<span class="dv">1</span>)[<span class="dv">0</span>], exist_ok<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(file_path):</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>        file_url <span class="op">=</span> base_url <span class="op">+</span> file_name</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>file_url<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>            urllib.request.urlretrieve(file_url, file_path)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> HTTPError <span class="im">as</span> e:</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">"Something went wrong. Please try to download the file from the GDrive folder, or contact the author with the full output including the following error:</span><span class="ch">\n</span><span class="st">"</span>, e)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Throughout this tutorial, we will train and evaluate the models on the CIFAR10 dataset. This allows you to compare the results obtained here with the model you have implemented in the first assignment. As we have learned from the previous tutorial about initialization, it is important to have the data preprocessed with a zero mean. Therefore, as a first step, we will calculate the mean and standard deviation of the CIFAR dataset:</p>
+<div id="cell-11" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>train_dataset <span class="op">=</span> CIFAR10(root<span class="op">=</span>DATASET_PATH, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>DATA_MEANS <span class="op">=</span> (train_dataset.data <span class="op">/</span> <span class="fl">255.0</span>).mean(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>DATA_STD <span class="op">=</span> (train_dataset.data <span class="op">/</span> <span class="fl">255.0</span>).std(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data mean"</span>, DATA_MEANS)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data std"</span>, DATA_STD)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Files already downloaded and verified
+Data mean [0.49139968 0.48215841 0.44653091]
+Data std [0.24703223 0.24348513 0.26158784]</code></pre>
+</div>
+</div>
+<p>We will use this information to normalize our data accordingly. Additionally, we will use transformations from the package <code>torchvision</code> to implement data augmentations during training. This reduces the risk of overfitting and helps CNNs to generalize better. Specifically, we will apply two random augmentations.</p>
+<p>First, we will flip each image horizontally by a chance of 50% (<code>transforms.RandomHorizontalFlip</code>). The object class usually does not change when flipping an image, and we don’t expect any image information to be dependent on the horizontal orientation. This would be however different if we would try to detect digits or letters in an image, as those have a certain orientation.</p>
+<p>The second augmentation we use is called <code>transforms.RandomResizedCrop</code>. This transformation crops the image in a small range, eventually changing the aspect ratio, and scaling it back afterward to the previous size. Therefore, the actual pixel values change while the content or overall semantics of the image stays the same.</p>
+<p>We will randomly split the training dataset into a training and a validation set. The validation set will be used for determining early stopping. After finishing the training, we test the models on the CIFAR test set.</p>
+<div id="cell-13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Transformations applied on each image =&gt; bring them into a numpy array</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> image_to_numpy(img):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    img <span class="op">=</span> np.array(img, dtype<span class="op">=</span>np.float32)</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    img <span class="op">=</span> (img <span class="op">/</span> <span class="fl">255.</span> <span class="op">-</span> DATA_MEANS) <span class="op">/</span> DATA_STD</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> img</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># We need to stack the batch elements</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> numpy_collate(batch):</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(batch[<span class="dv">0</span>], np.ndarray):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.stack(batch)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="bu">isinstance</span>(batch[<span class="dv">0</span>], (<span class="bu">tuple</span>,<span class="bu">list</span>)):</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        transposed <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>batch)</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> [numpy_collate(samples) <span class="cf">for</span> samples <span class="kw">in</span> transposed]</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(batch)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>test_transform <span class="op">=</span> image_to_numpy</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># For training, we add some augmentation. Networks are too powerful and would overfit.</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>train_transform <span class="op">=</span> transforms.Compose([transforms.RandomHorizontalFlip(),</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>                                      transforms.RandomResizedCrop((<span class="dv">32</span>,<span class="dv">32</span>),scale<span class="op">=</span>(<span class="fl">0.8</span>,<span class="fl">1.0</span>),ratio<span class="op">=</span>(<span class="fl">0.9</span>,<span class="fl">1.1</span>)),</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>                                      image_to_numpy</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>                                     ])</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the training dataset. We need to split it into a training and validation part</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a><span class="co"># We need to do a little trick because the validation set should not use the augmentation.</span></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>train_dataset <span class="op">=</span> CIFAR10(root<span class="op">=</span>DATASET_PATH, train<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>train_transform, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>val_dataset <span class="op">=</span> CIFAR10(root<span class="op">=</span>DATASET_PATH, train<span class="op">=</span><span class="va">True</span>, transform<span class="op">=</span>test_transform, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>train_set, _ <span class="op">=</span> torch.utils.data.random_split(train_dataset, [<span class="dv">45000</span>, <span class="dv">5000</span>], generator<span class="op">=</span>torch.Generator().manual_seed(<span class="dv">42</span>))</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>_, val_set <span class="op">=</span> torch.utils.data.random_split(val_dataset, [<span class="dv">45000</span>, <span class="dv">5000</span>], generator<span class="op">=</span>torch.Generator().manual_seed(<span class="dv">42</span>))</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a><span class="co"># Loading the test set</span></span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>test_set <span class="op">=</span> CIFAR10(root<span class="op">=</span>DATASET_PATH, train<span class="op">=</span><span class="va">False</span>, transform<span class="op">=</span>test_transform, download<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a><span class="co"># We define a set of data loaders that we can use for training and validation</span></span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>train_loader <span class="op">=</span> data.DataLoader(train_set, </span>
+<span id="cb7-36"><a href="#cb7-36" aria-hidden="true" tabindex="-1"></a>                               batch_size<span class="op">=</span><span class="dv">128</span>, </span>
+<span id="cb7-37"><a href="#cb7-37" aria-hidden="true" tabindex="-1"></a>                               shuffle<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb7-38"><a href="#cb7-38" aria-hidden="true" tabindex="-1"></a>                               drop_last<span class="op">=</span><span class="va">True</span>, </span>
+<span id="cb7-39"><a href="#cb7-39" aria-hidden="true" tabindex="-1"></a>                               collate_fn<span class="op">=</span>numpy_collate, </span>
+<span id="cb7-40"><a href="#cb7-40" aria-hidden="true" tabindex="-1"></a>                               num_workers<span class="op">=</span><span class="dv">8</span>,</span>
+<span id="cb7-41"><a href="#cb7-41" aria-hidden="true" tabindex="-1"></a>                               persistent_workers<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-42"><a href="#cb7-42" aria-hidden="true" tabindex="-1"></a>val_loader   <span class="op">=</span> data.DataLoader(val_set, </span>
+<span id="cb7-43"><a href="#cb7-43" aria-hidden="true" tabindex="-1"></a>                               batch_size<span class="op">=</span><span class="dv">128</span>, </span>
+<span id="cb7-44"><a href="#cb7-44" aria-hidden="true" tabindex="-1"></a>                               shuffle<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb7-45"><a href="#cb7-45" aria-hidden="true" tabindex="-1"></a>                               drop_last<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb7-46"><a href="#cb7-46" aria-hidden="true" tabindex="-1"></a>                               collate_fn<span class="op">=</span>numpy_collate, </span>
+<span id="cb7-47"><a href="#cb7-47" aria-hidden="true" tabindex="-1"></a>                               num_workers<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb7-48"><a href="#cb7-48" aria-hidden="true" tabindex="-1"></a>                               persistent_workers<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb7-49"><a href="#cb7-49" aria-hidden="true" tabindex="-1"></a>test_loader  <span class="op">=</span> data.DataLoader(test_set, </span>
+<span id="cb7-50"><a href="#cb7-50" aria-hidden="true" tabindex="-1"></a>                               batch_size<span class="op">=</span><span class="dv">128</span>, </span>
+<span id="cb7-51"><a href="#cb7-51" aria-hidden="true" tabindex="-1"></a>                               shuffle<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb7-52"><a href="#cb7-52" aria-hidden="true" tabindex="-1"></a>                               drop_last<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb7-53"><a href="#cb7-53" aria-hidden="true" tabindex="-1"></a>                               collate_fn<span class="op">=</span>numpy_collate, </span>
+<span id="cb7-54"><a href="#cb7-54" aria-hidden="true" tabindex="-1"></a>                               num_workers<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb7-55"><a href="#cb7-55" aria-hidden="true" tabindex="-1"></a>                               persistent_workers<span class="op">=</span><span class="va">True</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Files already downloaded and verified
+Files already downloaded and verified
+Files already downloaded and verified</code></pre>
+</div>
+</div>
+<p>To verify that our normalization works, we can print out the mean and standard deviation of the single batch. The mean should be close to 0 and the standard deviation close to 1 for each channel:</p>
+<div id="cell-15" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>imgs, _ <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Batch mean"</span>, imgs.mean(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>)))</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Batch std"</span>, imgs.std(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Batch mean [-0.05225317 -0.06281322 -0.11905593]
+Batch std [0.95375352 0.92699525 0.91463391]</code></pre>
+</div>
+</div>
+<p>Finally, let’s visualize a few images from the training set, and how they look like after random data augmentation:</p>
+<div id="cell-17" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>NUM_IMAGES <span class="op">=</span> <span class="dv">4</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>images <span class="op">=</span> [train_dataset[idx][<span class="dv">0</span>] <span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(NUM_IMAGES)]</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>orig_images <span class="op">=</span> [Image.fromarray(train_dataset.data[idx]) <span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(NUM_IMAGES)]</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>orig_images <span class="op">=</span> [test_transform(img) <span class="cf">for</span> img <span class="kw">in</span> orig_images]</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>imgs <span class="op">=</span> np.stack(images <span class="op">+</span> orig_images, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>imgs <span class="op">=</span> torch.from_numpy(imgs).permute(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="dv">2</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>img_grid <span class="op">=</span> torchvision.utils.make_grid(imgs, nrow<span class="op">=</span><span class="dv">4</span>, normalize<span class="op">=</span><span class="va">True</span>, pad_value<span class="op">=</span><span class="fl">0.5</span>)</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>img_grid <span class="op">=</span> img_grid.permute(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">0</span>)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">8</span>,<span class="dv">8</span>))</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Augmentation examples on CIFAR10 (Top: augmented, bottom: original)"</span>)</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>plt.imshow(img_grid)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>plt.axis(<span class="st">'off'</span>)</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>plt.close()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Inception_ResNet_DenseNet_files/figure-html/cell-8-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<section id="trainer-module" class="level2">
+<h2 class="anchored" data-anchor-id="trainer-module">Trainer Module</h2>
+<p>In the <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html">PyTorch version</a> of this tutorial, we would now introduce the framework <a href="https://www.pytorchlightning.ai/">PyTorch Lightning</a> which simplifies the overall training of a model. So far (June 2022), there is no clear equivalent of it for JAX. Some basic training functionalities are implemented in <code>flax.training</code> (<a href="https://flax.readthedocs.io/en/latest/flax.training.html">documentation</a>), and predefined training modules are implemented in <code>trax</code> (<a href="https://trax-ml.readthedocs.io/en/latest/">documentation</a>), but neither provide a complete, flexible training package yet like PyTorch Lightning. Hence, we need to write our own small training loop.</p>
+<p>For this, we take inspiration from PyTorch Lightning and build a trainer module/object with the following main functionalities:</p>
+<ol type="1">
+<li><em>Storing model and parameters</em>: In order to train multiple models with different hyperparameters, the trainer module creates an instance of the model class, and keeps the parameters in the same class. This way, we can easily apply a model with its parameters on new inputs.</li>
+<li><em>Initialization of model and training state</em>: During initialization of the trainer, we initialize the model parameters and a new train state, which includes the optimizer and possible learning rate schedulers.</li>
+<li><em>Training, validation and test loops</em>: Similar to PyTorch Lightning, we implement simple training, validation and test loops, where subclasses of this trainer could overwrite the respective training, validation or test steps. Since in this tutorial, all models will have the same objective, i.e.&nbsp;classification on CIFAR10, we will pre-specify them in the trainer module below.</li>
+<li><em>Logging, saving and loading of models</em>: To keep track of the training, we implement functionalities to log the training progress and save the best model on the validation set. Afterwards, this model can be loaded from the disk.</li>
+</ol>
+<p>Before starting to implement a trainer module with these functionalities, we need to take one prior step. The networks we will implement in this tutorial use BatchNormalization, which carries an exponential average of the prior batch statistics (mean and std) to apply during evaluation. In PyTorch, this is simply tracked by an object attribute of an object of the class <code>nn.BatchNorm2d</code>, but in JAX, we only work with functions. Hence, we need to take care of the batch statistics ourselves, similar to the parameters, and enter them during every forward pass. To simplify this a little, we overwrite the <code>train_state.TrainState</code> class of Flax by adding a field for the batch statistics:</p>
+<div id="cell-19" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TrainState(train_state.TrainState):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># A simple extension of TrainState to also include batch statistics</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    batch_stats: Any</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this, the training state contains both the training parameters and the batch statistics, which makes it easier to keep everything in one place.</p>
+<p>Now that the batch statistics are sorted out, we can implement our full training module:</p>
+<div id="cell-21" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TrainerModule:</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, </span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                 model_name : <span class="bu">str</span>, </span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                 model_class : nn.Module, </span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                 model_hparams : <span class="bu">dict</span>, </span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                 optimizer_name : <span class="bu">str</span>, </span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                 optimizer_hparams : <span class="bu">dict</span>, </span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>                 exmp_imgs : Any, </span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>                 seed<span class="op">=</span><span class="dv">42</span>):</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="co">        Module for summarizing all training functionalities for classification on CIFAR10.</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="co">        </span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co">        Inputs:</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="co">            model_name - String of the class name, used for logging and saving</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co">            model_class - Class implementing the neural network</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="co">            model_hparams - Hyperparameters of the model, used as input to model constructor</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co">            optimizer_name - String of the optimizer name, supporting ['sgd', 'adam', 'adamw']</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="co">            optimizer_hparams - Hyperparameters of the optimizer, including learning rate as 'lr'</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a><span class="co">            exmp_imgs - Example imgs, used as input to initialize the model</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="co">            seed - Seed to use in the model initialization</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model_name <span class="op">=</span> model_name</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model_class <span class="op">=</span> model_class</span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model_hparams <span class="op">=</span> model_hparams</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.optimizer_name <span class="op">=</span> optimizer_name</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.optimizer_hparams <span class="op">=</span> optimizer_hparams</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.seed <span class="op">=</span> seed</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create empty model. Note: no parameters yet</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.model <span class="op">=</span> <span class="va">self</span>.model_class(<span class="op">**</span><span class="va">self</span>.model_hparams)</span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Prepare logging</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.log_dir <span class="op">=</span> os.path.join(CHECKPOINT_PATH, <span class="va">self</span>.model_name)</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.logger <span class="op">=</span> SummaryWriter(log_dir<span class="op">=</span><span class="va">self</span>.log_dir)</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create jitted training and eval functions</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.create_functions()</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initialize model</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.init_model(exmp_imgs)</span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> create_functions(<span class="va">self</span>):</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Function to calculate the classification loss and accuracy for a model</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> calculate_loss(params, batch_stats, batch, train):</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>            imgs, labels <span class="op">=</span> batch</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Run model. During training, we need to update the BatchNorm statistics.</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>            outs <span class="op">=</span> <span class="va">self</span>.model.<span class="bu">apply</span>({<span class="st">'params'</span>: params, <span class="st">'batch_stats'</span>: batch_stats}, </span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>                                    imgs,</span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>                                    train<span class="op">=</span>train,</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>                                    mutable<span class="op">=</span>[<span class="st">'batch_stats'</span>] <span class="cf">if</span> train <span class="cf">else</span> <span class="va">False</span>)</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>            logits, new_model_state <span class="op">=</span> outs <span class="cf">if</span> train <span class="cf">else</span> (outs, <span class="va">None</span>)</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>            loss <span class="op">=</span> optax.softmax_cross_entropy_with_integer_labels(logits, labels).mean()</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>            acc <span class="op">=</span> (logits.argmax(axis<span class="op">=-</span><span class="dv">1</span>) <span class="op">==</span> labels).mean()</span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> loss, (acc, new_model_state)</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Training function</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> train_step(state, batch):</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>            loss_fn <span class="op">=</span> <span class="kw">lambda</span> params: calculate_loss(params, state.batch_stats, batch, train<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Get loss, gradients for loss, and other outputs of loss function</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>            ret, grads <span class="op">=</span> jax.value_and_grad(loss_fn, has_aux<span class="op">=</span><span class="va">True</span>)(state.params)  </span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>            loss, acc, new_model_state <span class="op">=</span> ret[<span class="dv">0</span>], <span class="op">*</span>ret[<span class="dv">1</span>]</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Update parameters and batch statistics</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>            state <span class="op">=</span> state.apply_gradients(grads<span class="op">=</span>grads, batch_stats<span class="op">=</span>new_model_state[<span class="st">'batch_stats'</span>])</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> state, loss, acc</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Eval function</span></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> eval_step(state, batch):</span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Return the accuracy for a single batch</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>            _, (acc, _) <span class="op">=</span> calculate_loss(state.params, state.batch_stats, batch, train<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> acc</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>        <span class="co"># jit for efficiency</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.train_step <span class="op">=</span> jax.jit(train_step)</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.eval_step <span class="op">=</span> jax.jit(eval_step)</span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init_model(<span class="va">self</span>, exmp_imgs):</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initialize model</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>        init_rng <span class="op">=</span> jax.random.PRNGKey(<span class="va">self</span>.seed)</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>        variables <span class="op">=</span> <span class="va">self</span>.model.init(init_rng, exmp_imgs, train<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.init_params, <span class="va">self</span>.init_batch_stats <span class="op">=</span> variables[<span class="st">'params'</span>], variables[<span class="st">'batch_stats'</span>]</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.state <span class="op">=</span> <span class="va">None</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> init_optimizer(<span class="va">self</span>, num_epochs, num_steps_per_epoch):</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initialize learning rate schedule and optimizer</span></span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.optimizer_name.lower() <span class="op">==</span> <span class="st">'adam'</span>:</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>            opt_class <span class="op">=</span> optax.adam</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="va">self</span>.optimizer_name.lower() <span class="op">==</span> <span class="st">'adamw'</span>:</span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a>            opt_class <span class="op">=</span> optax.adamw</span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> <span class="va">self</span>.optimizer_name.lower() <span class="op">==</span> <span class="st">'sgd'</span>:</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>            opt_class <span class="op">=</span> optax.sgd</span>
+<span id="cb13-86"><a href="#cb13-86" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb13-87"><a href="#cb13-87" aria-hidden="true" tabindex="-1"></a>            <span class="cf">assert</span> <span class="va">False</span>, <span class="ss">f'Unknown optimizer "</span><span class="sc">{</span>opt_class<span class="sc">}</span><span class="ss">"'</span></span>
+<span id="cb13-88"><a href="#cb13-88" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We decrease the learning rate by a factor of 0.1 after 60% and 85% of the training</span></span>
+<span id="cb13-89"><a href="#cb13-89" aria-hidden="true" tabindex="-1"></a>        lr_schedule <span class="op">=</span> optax.piecewise_constant_schedule(</span>
+<span id="cb13-90"><a href="#cb13-90" aria-hidden="true" tabindex="-1"></a>            init_value<span class="op">=</span><span class="va">self</span>.optimizer_hparams.pop(<span class="st">'lr'</span>),</span>
+<span id="cb13-91"><a href="#cb13-91" aria-hidden="true" tabindex="-1"></a>            boundaries_and_scales<span class="op">=</span></span>
+<span id="cb13-92"><a href="#cb13-92" aria-hidden="true" tabindex="-1"></a>                {<span class="bu">int</span>(num_steps_per_epoch<span class="op">*</span>num_epochs<span class="op">*</span><span class="fl">0.6</span>): <span class="fl">0.1</span>,</span>
+<span id="cb13-93"><a href="#cb13-93" aria-hidden="true" tabindex="-1"></a>                 <span class="bu">int</span>(num_steps_per_epoch<span class="op">*</span>num_epochs<span class="op">*</span><span class="fl">0.85</span>): <span class="fl">0.1</span>}</span>
+<span id="cb13-94"><a href="#cb13-94" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb13-95"><a href="#cb13-95" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Clip gradients at max value, and evt. apply weight decay</span></span>
+<span id="cb13-96"><a href="#cb13-96" aria-hidden="true" tabindex="-1"></a>        transf <span class="op">=</span> [optax.clip(<span class="fl">1.0</span>)]</span>
+<span id="cb13-97"><a href="#cb13-97" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> opt_class <span class="op">==</span> optax.sgd <span class="kw">and</span> <span class="st">'weight_decay'</span> <span class="kw">in</span> <span class="va">self</span>.optimizer_hparams:  <span class="co"># wd is integrated in adamw</span></span>
+<span id="cb13-98"><a href="#cb13-98" aria-hidden="true" tabindex="-1"></a>            transf.append(optax.add_decayed_weights(<span class="va">self</span>.optimizer_hparams.pop(<span class="st">'weight_decay'</span>)))</span>
+<span id="cb13-99"><a href="#cb13-99" aria-hidden="true" tabindex="-1"></a>        optimizer <span class="op">=</span> optax.chain(</span>
+<span id="cb13-100"><a href="#cb13-100" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span>transf,</span>
+<span id="cb13-101"><a href="#cb13-101" aria-hidden="true" tabindex="-1"></a>            opt_class(lr_schedule, <span class="op">**</span><span class="va">self</span>.optimizer_hparams)</span>
+<span id="cb13-102"><a href="#cb13-102" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb13-103"><a href="#cb13-103" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Initialize training state</span></span>
+<span id="cb13-104"><a href="#cb13-104" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.state <span class="op">=</span> TrainState.create(apply_fn<span class="op">=</span><span class="va">self</span>.model.<span class="bu">apply</span>, </span>
+<span id="cb13-105"><a href="#cb13-105" aria-hidden="true" tabindex="-1"></a>                                       params<span class="op">=</span><span class="va">self</span>.init_params <span class="cf">if</span> <span class="va">self</span>.state <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">self</span>.state.params,</span>
+<span id="cb13-106"><a href="#cb13-106" aria-hidden="true" tabindex="-1"></a>                                       batch_stats<span class="op">=</span><span class="va">self</span>.init_batch_stats <span class="cf">if</span> <span class="va">self</span>.state <span class="kw">is</span> <span class="va">None</span> <span class="cf">else</span> <span class="va">self</span>.state.batch_stats,</span>
+<span id="cb13-107"><a href="#cb13-107" aria-hidden="true" tabindex="-1"></a>                                       tx<span class="op">=</span>optimizer)</span>
+<span id="cb13-108"><a href="#cb13-108" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-109"><a href="#cb13-109" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> train_model(<span class="va">self</span>, train_loader, val_loader, num_epochs<span class="op">=</span><span class="dv">200</span>):</span>
+<span id="cb13-110"><a href="#cb13-110" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Train model for defined number of epochs</span></span>
+<span id="cb13-111"><a href="#cb13-111" aria-hidden="true" tabindex="-1"></a>        <span class="co"># We first need to create optimizer and the scheduler for the given number of epochs</span></span>
+<span id="cb13-112"><a href="#cb13-112" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.init_optimizer(num_epochs, <span class="bu">len</span>(train_loader))</span>
+<span id="cb13-113"><a href="#cb13-113" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Track best eval accuracy</span></span>
+<span id="cb13-114"><a href="#cb13-114" aria-hidden="true" tabindex="-1"></a>        best_eval <span class="op">=</span> <span class="fl">0.0</span></span>
+<span id="cb13-115"><a href="#cb13-115" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> epoch_idx <span class="kw">in</span> tqdm(<span class="bu">range</span>(<span class="dv">1</span>, num_epochs<span class="op">+</span><span class="dv">1</span>)):</span>
+<span id="cb13-116"><a href="#cb13-116" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.train_epoch(train_loader, epoch<span class="op">=</span>epoch_idx)</span>
+<span id="cb13-117"><a href="#cb13-117" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> epoch_idx <span class="op">%</span> <span class="dv">2</span> <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb13-118"><a href="#cb13-118" aria-hidden="true" tabindex="-1"></a>                eval_acc <span class="op">=</span> <span class="va">self</span>.eval_model(val_loader)</span>
+<span id="cb13-119"><a href="#cb13-119" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.logger.add_scalar(<span class="st">'val/acc'</span>, eval_acc, global_step<span class="op">=</span>epoch_idx)</span>
+<span id="cb13-120"><a href="#cb13-120" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> eval_acc <span class="op">&gt;=</span> best_eval:</span>
+<span id="cb13-121"><a href="#cb13-121" aria-hidden="true" tabindex="-1"></a>                    best_eval <span class="op">=</span> eval_acc</span>
+<span id="cb13-122"><a href="#cb13-122" aria-hidden="true" tabindex="-1"></a>                    <span class="va">self</span>.save_model(step<span class="op">=</span>epoch_idx)</span>
+<span id="cb13-123"><a href="#cb13-123" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.logger.flush()</span>
+<span id="cb13-124"><a href="#cb13-124" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-125"><a href="#cb13-125" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> train_epoch(<span class="va">self</span>, train_loader, epoch):</span>
+<span id="cb13-126"><a href="#cb13-126" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Train model for one epoch, and log avg loss and accuracy</span></span>
+<span id="cb13-127"><a href="#cb13-127" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> defaultdict(<span class="bu">list</span>)</span>
+<span id="cb13-128"><a href="#cb13-128" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> batch <span class="kw">in</span> tqdm(train_loader, desc<span class="op">=</span><span class="st">'Training'</span>, leave<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb13-129"><a href="#cb13-129" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.state, loss, acc <span class="op">=</span> <span class="va">self</span>.train_step(<span class="va">self</span>.state, batch)</span>
+<span id="cb13-130"><a href="#cb13-130" aria-hidden="true" tabindex="-1"></a>            metrics[<span class="st">'loss'</span>].append(loss)</span>
+<span id="cb13-131"><a href="#cb13-131" aria-hidden="true" tabindex="-1"></a>            metrics[<span class="st">'acc'</span>].append(acc)</span>
+<span id="cb13-132"><a href="#cb13-132" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> key <span class="kw">in</span> metrics:</span>
+<span id="cb13-133"><a href="#cb13-133" aria-hidden="true" tabindex="-1"></a>            avg_val <span class="op">=</span> np.stack(jax.device_get(metrics[key])).mean()</span>
+<span id="cb13-134"><a href="#cb13-134" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.logger.add_scalar(<span class="st">'train/'</span><span class="op">+</span>key, avg_val, global_step<span class="op">=</span>epoch)</span>
+<span id="cb13-135"><a href="#cb13-135" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-136"><a href="#cb13-136" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> eval_model(<span class="va">self</span>, data_loader):</span>
+<span id="cb13-137"><a href="#cb13-137" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Test model on all images of a data loader and return avg loss</span></span>
+<span id="cb13-138"><a href="#cb13-138" aria-hidden="true" tabindex="-1"></a>        correct_class, count <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb13-139"><a href="#cb13-139" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> batch <span class="kw">in</span> data_loader:</span>
+<span id="cb13-140"><a href="#cb13-140" aria-hidden="true" tabindex="-1"></a>            acc <span class="op">=</span> <span class="va">self</span>.eval_step(<span class="va">self</span>.state, batch)</span>
+<span id="cb13-141"><a href="#cb13-141" aria-hidden="true" tabindex="-1"></a>            correct_class <span class="op">+=</span> acc <span class="op">*</span> batch[<span class="dv">0</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb13-142"><a href="#cb13-142" aria-hidden="true" tabindex="-1"></a>            count <span class="op">+=</span> batch[<span class="dv">0</span>].shape[<span class="dv">0</span>]</span>
+<span id="cb13-143"><a href="#cb13-143" aria-hidden="true" tabindex="-1"></a>        eval_acc <span class="op">=</span> (correct_class <span class="op">/</span> count).item()</span>
+<span id="cb13-144"><a href="#cb13-144" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> eval_acc</span>
+<span id="cb13-145"><a href="#cb13-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-146"><a href="#cb13-146" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> save_model(<span class="va">self</span>, step<span class="op">=</span><span class="dv">0</span>):</span>
+<span id="cb13-147"><a href="#cb13-147" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Save current model at certain training iteration</span></span>
+<span id="cb13-148"><a href="#cb13-148" aria-hidden="true" tabindex="-1"></a>        checkpoints.save_checkpoint(ckpt_dir<span class="op">=</span><span class="va">self</span>.log_dir, </span>
+<span id="cb13-149"><a href="#cb13-149" aria-hidden="true" tabindex="-1"></a>                                    target<span class="op">=</span>{<span class="st">'params'</span>: <span class="va">self</span>.state.params, </span>
+<span id="cb13-150"><a href="#cb13-150" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">'batch_stats'</span>: <span class="va">self</span>.state.batch_stats}, </span>
+<span id="cb13-151"><a href="#cb13-151" aria-hidden="true" tabindex="-1"></a>                                    step<span class="op">=</span>step,</span>
+<span id="cb13-152"><a href="#cb13-152" aria-hidden="true" tabindex="-1"></a>                                   overwrite<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-153"><a href="#cb13-153" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-154"><a href="#cb13-154" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> load_model(<span class="va">self</span>, pretrained<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb13-155"><a href="#cb13-155" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Load model. We use different checkpoint for pretrained models</span></span>
+<span id="cb13-156"><a href="#cb13-156" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> pretrained:</span>
+<span id="cb13-157"><a href="#cb13-157" aria-hidden="true" tabindex="-1"></a>            state_dict <span class="op">=</span> checkpoints.restore_checkpoint(ckpt_dir<span class="op">=</span><span class="va">self</span>.log_dir, target<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb13-158"><a href="#cb13-158" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb13-159"><a href="#cb13-159" aria-hidden="true" tabindex="-1"></a>            state_dict <span class="op">=</span> checkpoints.restore_checkpoint(ckpt_dir<span class="op">=</span>os.path.join(CHECKPOINT_PATH, <span class="ss">f'</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>model_name<span class="sc">}</span><span class="ss">.ckpt'</span>), target<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb13-160"><a href="#cb13-160" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.state <span class="op">=</span> TrainState.create(apply_fn<span class="op">=</span><span class="va">self</span>.model.<span class="bu">apply</span>, </span>
+<span id="cb13-161"><a href="#cb13-161" aria-hidden="true" tabindex="-1"></a>                                       params<span class="op">=</span>state_dict[<span class="st">'params'</span>],</span>
+<span id="cb13-162"><a href="#cb13-162" aria-hidden="true" tabindex="-1"></a>                                       batch_stats<span class="op">=</span>state_dict[<span class="st">'batch_stats'</span>],</span>
+<span id="cb13-163"><a href="#cb13-163" aria-hidden="true" tabindex="-1"></a>                                       tx<span class="op">=</span><span class="va">self</span>.state.tx <span class="cf">if</span> <span class="va">self</span>.state <span class="cf">else</span> optax.sgd(<span class="fl">0.1</span>)   <span class="co"># Default optimizer</span></span>
+<span id="cb13-164"><a href="#cb13-164" aria-hidden="true" tabindex="-1"></a>                                      )</span>
+<span id="cb13-165"><a href="#cb13-165" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-166"><a href="#cb13-166" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> checkpoint_exists(<span class="va">self</span>):</span>
+<span id="cb13-167"><a href="#cb13-167" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Check whether a pretrained model exist for this autoencoder</span></span>
+<span id="cb13-168"><a href="#cb13-168" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> os.path.isfile(os.path.join(CHECKPOINT_PATH, <span class="ss">f'</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>model_name<span class="sc">}</span><span class="ss">.ckpt'</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Next, we can use this trainer module to create a compact training function:</p>
+<div id="cell-23" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_classifier(<span class="op">*</span>args, num_epochs<span class="op">=</span><span class="dv">200</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a trainer module with specified hyperparameters</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    trainer <span class="op">=</span> TrainerModule(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> trainer.checkpoint_exists():  <span class="co"># Skip training if pretrained model exists</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        trainer.train_model(train_loader, val_loader, num_epochs<span class="op">=</span>num_epochs)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>        trainer.load_model()</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>        trainer.load_model(pretrained<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Test trained model</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    val_acc <span class="op">=</span> trainer.eval_model(val_loader)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    test_acc <span class="op">=</span> trainer.eval_model(test_loader)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> trainer, {<span class="st">'val'</span>: val_acc, <span class="st">'test'</span>: test_acc}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can focus on the Convolutional Neural Networks we want to implement today: GoogleNet, ResNet, and DenseNet.</p>
+</section>
+<section id="inception" class="level2">
+<h2 class="anchored" data-anchor-id="inception">Inception</h2>
+<p>The <a href="https://arxiv.org/abs/1409.4842">GoogleNet</a>, proposed in 2014, won the ImageNet Challenge because of its usage of the Inception modules. In general, we will mainly focus on the concept of Inception in this tutorial instead of the specifics of the GoogleNet, as based on Inception, there have been many follow-up works (<a href="https://arxiv.org/abs/1512.00567">Inception-v2</a>, <a href="https://arxiv.org/abs/1512.00567">Inception-v3</a>, <a href="https://arxiv.org/abs/1602.07261">Inception-v4</a>, <a href="https://arxiv.org/abs/1602.07261">Inception-ResNet</a>,…). The follow-up works mainly focus on increasing efficiency and enabling very deep Inception networks. However, for a fundamental understanding, it is sufficient to look at the original Inception block.</p>
+<p>An Inception block applies four convolution blocks separately on the same feature map: a 1x1, 3x3, and 5x5 convolution, and a max pool operation. This allows the network to look at the same data with different receptive fields. Of course, learning only 5x5 convolution would be theoretically more powerful. However, this is not only more computation and memory heavy but also tends to overfit much easier. The overall inception block looks like below (figure credit - <a href="https://arxiv.org/abs/1409.4842">Szegedy et al.</a>):</p>
+<center width="100%">
+<img src="../../tutorial5/inception_block.svg" style="display: block; margin-left: auto; margin-right: auto;" width="500px">
+</center>
+<p>The additional 1x1 convolutions before the 3x3 and 5x5 convolutions are used for dimensionality reduction. This is especially crucial as the feature maps of all branches are merged afterward, and we don’t want any explosion of feature size. As 5x5 convolutions are 25 times more expensive than 1x1 convolutions, we can save a lot of computation and parameters by reducing the dimensionality before the large convolutions.</p>
+<p>We can now try to implement the Inception Block ourselves:</p>
+<div id="cell-26" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>googlenet_kernel_init <span class="op">=</span> nn.initializers.kaiming_normal()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> InceptionBlock(nn.Module):</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    c_red : <span class="bu">dict</span>  <span class="co"># Dictionary of reduced dimensionalities with keys "1x1", "3x3", "5x5", and "max"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    c_out : <span class="bu">dict</span>  <span class="co"># Dictionary of output feature sizes with keys "1x1", "3x3", "5x5", and "max"</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span>   <span class="co"># Activation function</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 1x1 convolution branch</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>        x_1x1 <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out[<span class="st">"1x1"</span>], kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>        x_1x1 <span class="op">=</span> nn.BatchNorm()(x_1x1, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>        x_1x1 <span class="op">=</span> <span class="va">self</span>.act_fn(x_1x1)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 3x3 convolution branch</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_red[<span class="st">"3x3"</span>], kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> nn.BatchNorm()(x_3x3, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> <span class="va">self</span>.act_fn(x_3x3)</span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out[<span class="st">"3x3"</span>], kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x_3x3)</span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> nn.BatchNorm()(x_3x3, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>        x_3x3 <span class="op">=</span> <span class="va">self</span>.act_fn(x_3x3)</span>
+<span id="cb15-22"><a href="#cb15-22" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-23"><a href="#cb15-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 5x5 convolution branch</span></span>
+<span id="cb15-24"><a href="#cb15-24" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_red[<span class="st">"5x5"</span>], kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb15-25"><a href="#cb15-25" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> nn.BatchNorm()(x_5x5, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-26"><a href="#cb15-26" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> <span class="va">self</span>.act_fn(x_5x5)</span>
+<span id="cb15-27"><a href="#cb15-27" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out[<span class="st">"5x5"</span>], kernel_size<span class="op">=</span>(<span class="dv">5</span>, <span class="dv">5</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x_5x5)</span>
+<span id="cb15-28"><a href="#cb15-28" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> nn.BatchNorm()(x_5x5, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-29"><a href="#cb15-29" aria-hidden="true" tabindex="-1"></a>        x_5x5 <span class="op">=</span> <span class="va">self</span>.act_fn(x_5x5)</span>
+<span id="cb15-30"><a href="#cb15-30" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-31"><a href="#cb15-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Max-pool branch</span></span>
+<span id="cb15-32"><a href="#cb15-32" aria-hidden="true" tabindex="-1"></a>        x_max <span class="op">=</span> nn.max_pool(x, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb15-33"><a href="#cb15-33" aria-hidden="true" tabindex="-1"></a>        x_max <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out[<span class="st">"max"</span>], kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb15-34"><a href="#cb15-34" aria-hidden="true" tabindex="-1"></a>        x_max <span class="op">=</span> nn.BatchNorm()(x_max, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb15-35"><a href="#cb15-35" aria-hidden="true" tabindex="-1"></a>        x_max <span class="op">=</span> <span class="va">self</span>.act_fn(x_max)</span>
+<span id="cb15-36"><a href="#cb15-36" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb15-37"><a href="#cb15-37" aria-hidden="true" tabindex="-1"></a>        x_out <span class="op">=</span> jnp.concatenate([x_1x1, x_3x3, x_5x5, x_max], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb15-38"><a href="#cb15-38" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The GoogleNet architecture consists of stacking multiple Inception blocks with occasional max pooling to reduce the height and width of the feature maps. The original GoogleNet was designed for image sizes of ImageNet (224x224 pixels) and had almost 7 million parameters. As we train on CIFAR10 with image sizes of 32x32, we don’t require such a heavy architecture, and instead, apply a reduced version. The number of channels for dimensionality reduction and output per filter (1x1, 3x3, 5x5, and max pooling) need to be manually specified and can be changed if interested. The general intuition is to have the most filters for the 3x3 convolutions, as they are powerful enough to take the context into account while requiring almost a third of the parameters of the 5x5 convolution.</p>
+<div id="cell-28" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> GoogleNet(nn.Module):</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    num_classes : <span class="bu">int</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># A first convolution on the original image to scale up the channel size</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Conv(<span class="dv">64</span>, kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), kernel_init<span class="op">=</span>googlenet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.act_fn(x)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Stacking inception blocks</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        inception_blocks <span class="op">=</span> [</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">16</span>, <span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">8</span>, <span class="st">"max"</span>: <span class="dv">8</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">24</span>, <span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">12</span>, <span class="st">"max"</span>: <span class="dv">12</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> inp: nn.max_pool(inp, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>)),  <span class="co"># 32x32 =&gt; 16x16</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">24</span>, <span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">12</span>, <span class="st">"max"</span>: <span class="dv">12</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">16</span>, <span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>, <span class="st">"max"</span>: <span class="dv">16</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">16</span>, <span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>, <span class="st">"max"</span>: <span class="dv">16</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">32</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">32</span>, <span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">24</span>, <span class="st">"max"</span>: <span class="dv">24</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> inp: nn.max_pool(inp, (<span class="dv">3</span>, <span class="dv">3</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>)),  <span class="co"># 16x16 =&gt; 8x8</span></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">32</span>, <span class="st">"3x3"</span>: <span class="dv">64</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>, <span class="st">"max"</span>: <span class="dv">16</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn),</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>            InceptionBlock(c_red<span class="op">=</span>{<span class="st">"3x3"</span>: <span class="dv">48</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>}, c_out<span class="op">=</span>{<span class="st">"1x1"</span>: <span class="dv">32</span>, <span class="st">"3x3"</span>: <span class="dv">64</span>, <span class="st">"5x5"</span>: <span class="dv">16</span>, <span class="st">"max"</span>: <span class="dv">16</span>}, act_fn<span class="op">=</span><span class="va">self</span>.act_fn)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        ]</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> block <span class="kw">in</span> inception_blocks:</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> block(x, train<span class="op">=</span>train) <span class="cf">if</span> <span class="bu">isinstance</span>(block, InceptionBlock) <span class="cf">else</span> block(x)</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mapping to classification output</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.mean(axis<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(<span class="va">self</span>.num_classes)(x)</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The training of the model is handled by our previously implemented training function, and we just have to define the command to start. Note that we train for 200 epochs, which takes about 15mins on a RTX3090. We would recommend using the saved models and train your own model if you are interested.</p>
+<div id="cell-30" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>googlenet_trainer, googlenet_results <span class="op">=</span> train_classifier(model_class<span class="op">=</span>GoogleNet,</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                                                        model_name<span class="op">=</span><span class="st">"GoogleNet"</span>,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                                                        model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                                                       <span class="st">"act_fn"</span>: nn.relu},</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                                        optimizer_name<span class="op">=</span><span class="st">"adamw"</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                                                        optimizer_hparams<span class="op">=</span>{<span class="st">"lr"</span>: <span class="fl">1e-3</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>                                                                           <span class="st">"weight_decay"</span>: <span class="fl">1e-4</span>},</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>                                                        exmp_imgs<span class="op">=</span>jax.device_put(</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>                                                            <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))[<span class="dv">0</span>]),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                                                        num_epochs<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We will compare the results later in the notebooks, but we can already print them here for a first glance:</p>
+<div id="cell-32" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"GoogleNet Results"</span>, googlenet_results)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>GoogleNet Results {'val': 0.9022000432014465, 'test': 0.8911000490188599}</code></pre>
+</div>
+</div>
+<section id="tensorboard-log" class="level3">
+<h3 class="anchored" data-anchor-id="tensorboard-log">Tensorboard log</h3>
+<p>For logging our results, we have used TensorBoard. To give you a better intuition of what TensorBoard can be used for, we can look at the board that our training of the GoogleNet has generated. TensorBoard provides an inline functionality for Jupyter notebooks, and we use it here:</p>
+<div id="cell-34" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load tensorboard extension</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>load_ext tensorboard</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-35" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Opens tensorboard in notebook.</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>tensorboard <span class="op">--</span>logdir $CHECKPOINT_PATH<span class="op">/</span>tensorboards<span class="op">/</span>GoogleNet<span class="op">/</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<center width="100%">
+<img src="tensorboard_screenshot_GoogleNet.png" width="1000px">
+</center>
+<p>TensorBoard is organized in multiple tabs. The main tab is the scalar tab where we can log the development of single numbers. For example, we have plotted the training loss, accuracy, learning rate, etc. If we look at the training or validation accuracy, we can really see the impact of using a learning rate scheduler. Reducing the learning rate gives our model a nice increase in training performance. Similarly, when looking at the training loss, we see a sudden decrease at this point. However, the high numbers on the training set compared to validation indicate that our model was overfitting which is inevitable for such large networks.</p>
+</section>
+</section>
+<section id="resnet" class="level2">
+<h2 class="anchored" data-anchor-id="resnet">ResNet</h2>
+<p>The <a href="https://arxiv.org/abs/1512.03385">ResNet</a> paper is one of the <a href="https://www.natureindex.com/news-blog/google-scholar-reveals-most-influential-papers-research-citations-twenty-twenty">most cited AI papers</a>, and has been the foundation for neural networks with more than 1,000 layers. Despite its simplicity, the idea of residual connections is highly effective as it supports stable gradient propagation through the network. Instead of modeling <span class="math inline">\(x_{l+1}=F(x_{l})\)</span>, we model <span class="math inline">\(x_{l+1}=x_{l}+F(x_{l})\)</span> where <span class="math inline">\(F\)</span> is a non-linear mapping (usually a sequence of NN modules likes convolutions, activation functions, and normalizations). If we do backpropagation on such residual connections, we obtain:</p>
+<p><span class="math display">\[\frac{\partial x_{l+1}}{\partial x_{l}} = \mathbf{I} + \frac{\partial F(x_{l})}{\partial x_{l}}\]</span></p>
+<p>The bias towards the identity matrix guarantees a stable gradient propagation being less effected by <span class="math inline">\(F\)</span> itself. There have been many variants of ResNet proposed, which mostly concern the function <span class="math inline">\(F\)</span>, or operations applied on the sum. In this tutorial, we look at two of them: the original ResNet block, and the <a href="https://arxiv.org/abs/1603.05027">Pre-Activation ResNet block</a>. We visually compare the blocks below (figure credit - <a href="https://arxiv.org/abs/1603.05027">He et al.</a>):</p>
+<center width="100%">
+<img src="../../tutorial5/resnet_block.svg" style="display: block; margin-left: auto; margin-right: auto;" width="300px">
+</center>
+<p>The original ResNet block applies a non-linear activation function, usually ReLU, after the skip connection. In contrast, the pre-activation ResNet block applies the non-linearity at the beginning of <span class="math inline">\(F\)</span>. Both have their advantages and disadvantages. For very deep network, however, the pre-activation ResNet has shown to perform better as the gradient flow is guaranteed to have the identity matrix as calculated above, and is not harmed by any non-linear activation applied to it. For comparison, in this notebook, we implement both ResNet types as shallow networks.</p>
+<p>Let’s start with the original ResNet block. The visualization above already shows what layers are included in <span class="math inline">\(F\)</span>. One special case we have to handle is when we want to reduce the image dimensions in terms of width and height. The basic ResNet block requires <span class="math inline">\(F(x_{l})\)</span> to be of the same shape as <span class="math inline">\(x_{l}\)</span>. Thus, we need to change the dimensionality of <span class="math inline">\(x_{l}\)</span> as well before adding to <span class="math inline">\(F(x_{l})\)</span>. The original implementation used an identity mapping with stride 2 and padded additional feature dimensions with 0. However, the more common implementation is to use a 1x1 convolution with stride 2 as it allows us to change the feature dimensionality while being efficient in parameter and computation cost. The code for the ResNet block is relatively simple, and shown below:</p>
+<div id="cell-38" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Conv initialized with kaiming int, but uses fan-out instead of fan-in mode</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Fan-out focuses on the gradient distribution, and is commonly used in ResNets</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>resnet_kernel_init <span class="op">=</span> nn.initializers.variance_scaling(<span class="fl">2.0</span>, mode<span class="op">=</span><span class="st">'fan_out'</span>, distribution<span class="op">=</span><span class="st">'normal'</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ResNetBlock(nn.Module):</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span>  <span class="co"># Activation function</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    c_out : <span class="bu">int</span>   <span class="co"># Output feature size</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>    subsample : <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>  <span class="co"># If True, we apply a stride inside F</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Network representing F</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                    strides<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.subsample <span class="cf">else</span> (<span class="dv">2</span>, <span class="dv">2</span>), </span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>resnet_kernel_init,</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(z, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.act_fn(z)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>resnet_kernel_init,</span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(z)</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(z, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.subsample:</span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), kernel_init<span class="op">=</span>resnet_kernel_init)(x)</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>        x_out <span class="op">=</span> <span class="va">self</span>.act_fn(z <span class="op">+</span> x)</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The second block we implement is the pre-activation ResNet block. For this, we have to change the order of layers, and do not apply an activation function on the output. Additionally, the downsampling operation has to apply a non-linearity as well as the input, <span class="math inline">\(x_l\)</span>, has not been processed by a non-linearity yet. Hence, the block looks as follows:</p>
+<div id="cell-40" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> PreActResNetBlock(ResNetBlock):</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Network representing F</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.act_fn(z)</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                    strides<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>) <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.subsample <span class="cf">else</span> (<span class="dv">2</span>, <span class="dv">2</span>), </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>resnet_kernel_init,</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(z)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(z, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.act_fn(z)</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>resnet_kernel_init,</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(z)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.subsample:</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="va">self</span>.act_fn(x)</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, </span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>                        kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a>                        strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>), </span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>                        kernel_init<span class="op">=</span>resnet_kernel_init,</span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>                        use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb23-26"><a href="#cb23-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb23-27"><a href="#cb23-27" aria-hidden="true" tabindex="-1"></a>        x_out <span class="op">=</span> z <span class="op">+</span> x</span>
+<span id="cb23-28"><a href="#cb23-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The overall ResNet architecture consists of stacking multiple ResNet blocks, of which some are downsampling the input. When talking about ResNet blocks in the whole network, we usually group them by the same output shape. Hence, if we say the ResNet has <code>[3,3,3]</code> blocks, it means that we have 3 times a group of 3 ResNet blocks, where a subsampling is taking place in the fourth and seventh block. The ResNet with <code>[3,3,3]</code> blocks on CIFAR10 is visualized below.</p>
+<center width="100%">
+<img src="../../tutorial5/resnet_notation.svg" width="500px">
+</center>
+<p>The three groups operate on the resolutions <span class="math inline">\(32\times32\)</span>, <span class="math inline">\(16\times16\)</span> and <span class="math inline">\(8\times8\)</span> respectively. The blocks in orange denote ResNet blocks with downsampling. The same notation is used by many other implementations such as in the <a href="https://pytorch.org/docs/stable/_modules/torchvision/models/resnet.html#resnet18">torchvision library</a> from PyTorch or <a href="https://github.com/matthias-wright/flaxmodels">flaxmodels</a> (pretrained ResNets and more for JAX). Thus, our code looks as follows:</p>
+<div id="cell-42" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ResNet(nn.Module):</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    num_classes : <span class="bu">int</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    block_class : nn.Module</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    num_blocks : <span class="bu">tuple</span> <span class="op">=</span> (<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    c_hidden : <span class="bu">tuple</span> <span class="op">=</span> (<span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>        <span class="co"># A first convolution on the original image to scale up the channel size</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_hidden[<span class="dv">0</span>], kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), kernel_init<span class="op">=</span>resnet_kernel_init, use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.block_class <span class="op">==</span> ResNetBlock:  <span class="co"># If pre-activation block, we do not apply non-linearities yet</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="va">self</span>.act_fn(x)</span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Creating the ResNet blocks</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> block_idx, block_count <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.num_blocks):</span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> bc <span class="kw">in</span> <span class="bu">range</span>(block_count):</span>
+<span id="cb24-19"><a href="#cb24-19" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Subsample the first block of each group, except the very first one.</span></span>
+<span id="cb24-20"><a href="#cb24-20" aria-hidden="true" tabindex="-1"></a>                subsample <span class="op">=</span> (bc <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> block_idx <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb24-21"><a href="#cb24-21" aria-hidden="true" tabindex="-1"></a>                <span class="co"># ResNet block</span></span>
+<span id="cb24-22"><a href="#cb24-22" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> <span class="va">self</span>.block_class(c_out<span class="op">=</span><span class="va">self</span>.c_hidden[block_idx],</span>
+<span id="cb24-23"><a href="#cb24-23" aria-hidden="true" tabindex="-1"></a>                                     act_fn<span class="op">=</span><span class="va">self</span>.act_fn,</span>
+<span id="cb24-24"><a href="#cb24-24" aria-hidden="true" tabindex="-1"></a>                                     subsample<span class="op">=</span>subsample)(x, train<span class="op">=</span>train)</span>
+<span id="cb24-25"><a href="#cb24-25" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb24-26"><a href="#cb24-26" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Mapping to classification output</span></span>
+<span id="cb24-27"><a href="#cb24-27" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.mean(axis<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb24-28"><a href="#cb24-28" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(<span class="va">self</span>.num_classes)(x)</span>
+<span id="cb24-29"><a href="#cb24-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can train our ResNet models. One difference to the GoogleNet training is that we explicitly use SGD with Momentum as optimizer instead of Adam. Adam often leads to a slightly worse accuracy on plain, shallow ResNets. It is not 100% clear why Adam performs worse in this context, but one possible explanation is related to ResNet’s loss surface. ResNet has been shown to produce smoother loss surfaces than networks without skip connection (see <a href="https://arxiv.org/pdf/1712.09913.pdf">Li et al., 2018</a> for details). A possible visualization of the loss surface with/out skip connections is below (figure credit - <a href="https://arxiv.org/pdf/1712.09913.pdf">Li et al.</a>):</p>
+<center width="100%">
+<img src="../../tutorial5/resnet_loss_surface.svg" style="display: block; margin-left: auto; margin-right: auto;" width="600px">
+</center>
+<p>The <span class="math inline">\(x\)</span> and <span class="math inline">\(y\)</span> axis shows a projection of the parameter space, and the <span class="math inline">\(z\)</span> axis shows the loss values achieved by different parameter values. On smooth surfaces like the one on the right, we might not require an adaptive learning rate as Adam provides. Instead, Adam can get stuck in local optima while SGD finds the wider minima that tend to generalize better. However, to answer this question in detail, we would need an extra tutorial because it is not easy to answer. For now, we conclude: for ResNet architectures, consider the optimizer to be an important hyperparameter, and try training with both Adam and SGD. Let’s train the model below with SGD:</p>
+<div id="cell-44" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>resnet_trainer, resnet_results <span class="op">=</span> train_classifier(model_name<span class="op">=</span><span class="st">"ResNet"</span>,</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>                                                  model_class<span class="op">=</span>ResNet,</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                                                  model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">"c_hidden"</span>: (<span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>),</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">"num_blocks"</span>: (<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">"act_fn"</span>: nn.relu,</span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>                                                                 <span class="st">"block_class"</span>: ResNetBlock},</span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>                                                  optimizer_name<span class="op">=</span><span class="st">"SGD"</span>,</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                                                  optimizer_hparams<span class="op">=</span>{<span class="st">"lr"</span>: <span class="fl">0.1</span>,</span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"momentum"</span>: <span class="fl">0.9</span>,</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"weight_decay"</span>: <span class="fl">1e-4</span>},</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>                                                  exmp_imgs<span class="op">=</span>jax.device_put(</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>                                                      <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))[<span class="dv">0</span>]),</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>                                                  num_epochs<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s also train the pre-activation ResNet as comparison:</p>
+<div id="cell-46" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>preactresnet_trainer, preactresnet_results <span class="op">=</span> train_classifier(model_name<span class="op">=</span><span class="st">"PreActResNet"</span>,</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>                                                              model_class<span class="op">=</span>ResNet,</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                                                              model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"c_hidden"</span>: (<span class="dv">16</span>, <span class="dv">32</span>, <span class="dv">64</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"num_blocks"</span>: (<span class="dv">3</span>, <span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"act_fn"</span>: nn.relu,</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>                                                                             <span class="st">"block_class"</span>: PreActResNetBlock},</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>                                                              optimizer_name<span class="op">=</span><span class="st">"SGD"</span>,</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>                                                              optimizer_hparams<span class="op">=</span>{<span class="st">"lr"</span>: <span class="fl">0.1</span>,</span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"momentum"</span>: <span class="fl">0.9</span>,</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                                                                                 <span class="st">"weight_decay"</span>: <span class="fl">1e-4</span>},</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>                                                              exmp_imgs<span class="op">=</span>jax.device_put(</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a>                                                                  <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))[<span class="dv">0</span>]),</span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>                                                              num_epochs<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tensorboard-log-1" class="level3">
+<h3 class="anchored" data-anchor-id="tensorboard-log-1">Tensorboard log</h3>
+<p>Similarly to our GoogleNet model, we also have a TensorBoard log for the ResNet model. We can open it below.</p>
+<div id="cell-48" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Opens tensorboard in notebook. Feel free to change "ResNet" to "PreActResNet"</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>tensorboard <span class="op">--</span>logdir $CHECKPOINT_PATH<span class="op">/</span>tensorboards<span class="op">/</span>ResNet<span class="op">/</span> <span class="op">--</span>port <span class="dv">6007</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<center width="100%">
+<img src="tensorboard_screenshot_ResNet.png" width="1000px">
+</center>
+<p>Feel free to explore the TensorBoard yourself, including the computation graph. In general, we can see that with SGD, the ResNet has a higher training loss than the GoogleNet in the first stage of the training. After reducing the learning rate however, the model achieves even higher validation accuracies. We compare the precise scores at the end of the notebook.</p>
+</section>
+</section>
+<section id="densenet" class="level2">
+<h2 class="anchored" data-anchor-id="densenet">DenseNet</h2>
+<p><a href="https://arxiv.org/abs/1608.06993">DenseNet</a> is another architecture for enabling very deep neural networks and takes a slightly different perspective on residual connections. Instead of modeling the difference between layers, DenseNet considers residual connections as a possible way to reuse features across layers, removing any necessity to learn redundant feature maps. If we go deeper into the network, the model learns abstract features to recognize patterns. However, some complex patterns consist of a combination of abstract features (e.g.&nbsp;hand, face, etc.), and low-level features (e.g.&nbsp;edges, basic color, etc.). To find these low-level features in the deep layers, standard CNNs have to learn copy such feature maps, which wastes a lot of parameter complexity. DenseNet provides an efficient way of reusing features by having each convolution depends on all previous input features, but add only a small amount of filters to it. See the figure below for an illustration (figure credit - <a href="https://arxiv.org/abs/1608.06993">Hu et al.</a>):</p>
+<center width="100%">
+<img src="../../tutorial5/densenet_block.svg" style="display: block; margin-left: auto; margin-right: auto;" width="500px">
+</center>
+<p>The last layer, called the transition layer, is responsible for reducing the dimensionality of the feature maps in height, width, and channel size. Although those technically break the identity backpropagation, there are only a few in a network so that it doesn’t affect the gradient flow much.</p>
+<p>We split the implementation of the layers in DenseNet into three parts: a <code>DenseLayer</code>, and a <code>DenseBlock</code>, and a <code>TransitionLayer</code>. The module <code>DenseLayer</code> implements a single layer inside a dense block. It applies a 1x1 convolution for dimensionality reduction with a subsequential 3x3 convolution. The output channels are concatenated to the originals and returned. Note that we apply the Batch Normalization as the first layer of each block. This allows slightly different activations for the same features to different layers, depending on what is needed. Overall, we can implement it as follows:</p>
+<div id="cell-51" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>densenet_kernel_init <span class="op">=</span> nn.initializers.kaiming_normal()</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DenseLayer(nn.Module):</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    bn_size : <span class="bu">int</span>  <span class="co"># Bottleneck size (factor of growth rate) for the output of the 1x1 convolution</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    growth_rate : <span class="bu">int</span>  <span class="co"># Number of output channels of the 3x3 convolution</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span>  <span class="co"># Activation function</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.act_fn(z)</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.bn_size <span class="op">*</span> <span class="va">self</span>.growth_rate, </span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>                    kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>densenet_kernel_init, </span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(z)</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.BatchNorm()(z, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> <span class="va">self</span>.act_fn(z)</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>        z <span class="op">=</span> nn.Conv(<span class="va">self</span>.growth_rate, </span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>                    kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>), </span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>densenet_kernel_init, </span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(z)</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>        x_out <span class="op">=</span> jnp.concatenate([x, z], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb28-23"><a href="#cb28-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x_out</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The module <code>DenseBlock</code> summarizes multiple dense layers applied in sequence. Each dense layer takes as input the original input concatenated with all previous layers’ feature maps:</p>
+<div id="cell-53" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DenseBlock(nn.Module):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    num_layers : <span class="bu">int</span>  <span class="co"># Number of dense layers to apply in the block</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>    bn_size : <span class="bu">int</span>  <span class="co"># Bottleneck size to use in the dense layers</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    growth_rate : <span class="bu">int</span>  <span class="co"># Growth rate to use in the dense layers</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span>  <span class="co"># Activation function to use in the dense layers</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="va">self</span>.num_layers):</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> DenseLayer(bn_size<span class="op">=</span><span class="va">self</span>.bn_size,</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>                           growth_rate<span class="op">=</span><span class="va">self</span>.growth_rate,</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>                           act_fn<span class="op">=</span><span class="va">self</span>.act_fn)(x, train<span class="op">=</span>train)</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, the <code>TransitionLayer</code> takes as input the final output of a dense block and reduces its channel dimensionality using a 1x1 convolution. To reduce the height and width dimension, we take a slightly different approach than in ResNet and apply an average pooling with kernel size 2 and stride 2. This is because we don’t have an additional connection to the output that would consider the full 2x2 patch instead of a single value. Besides, it is more parameter efficient than using a 3x3 convolution with stride 2. Thus, the layer is implemented as follows:</p>
+<div id="cell-55" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TransitionLayer(nn.Module):</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    c_out : <span class="bu">int</span>  <span class="co"># Output feature size</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span>  <span class="co"># Activation function</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.act_fn(x)</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Conv(<span class="va">self</span>.c_out, </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>                    kernel_size<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">1</span>), </span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>densenet_kernel_init,</span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>                    use_bias<span class="op">=</span><span class="va">False</span>)(x)</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.avg_pool(x, (<span class="dv">2</span>, <span class="dv">2</span>), strides<span class="op">=</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now we can put everything together and create our DenseNet. To specify the number of layers, we use a similar notation as in ResNets and pass on a list of ints representing the number of layers per block. After each dense block except the last one, we apply a transition layer to reduce the dimensionality by 2.</p>
+<div id="cell-57" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DenseNet(nn.Module):</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    num_classes : <span class="bu">int</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    act_fn : <span class="bu">callable</span> <span class="op">=</span> nn.relu</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    num_layers : <span class="bu">tuple</span> <span class="op">=</span> (<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    bn_size : <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    growth_rate : <span class="bu">int</span> <span class="op">=</span> <span class="dv">16</span></span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x, train<span class="op">=</span><span class="va">True</span>):</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>        c_hidden <span class="op">=</span> <span class="va">self</span>.growth_rate <span class="op">*</span> <span class="va">self</span>.bn_size  <span class="co"># The start number of hidden channels</span></span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Conv(c_hidden,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>                    kernel_size<span class="op">=</span>(<span class="dv">3</span>, <span class="dv">3</span>),</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>                    kernel_init<span class="op">=</span>densenet_kernel_init)(x)</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> block_idx, num_layers <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="va">self</span>.num_layers):</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> DenseBlock(num_layers<span class="op">=</span>num_layers,</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>                           bn_size<span class="op">=</span><span class="va">self</span>.bn_size,</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>                           growth_rate<span class="op">=</span><span class="va">self</span>.growth_rate,</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>                           act_fn<span class="op">=</span><span class="va">self</span>.act_fn)(x, train<span class="op">=</span>train)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>            c_hidden <span class="op">+=</span> num_layers <span class="op">*</span> <span class="va">self</span>.growth_rate</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> block_idx <span class="op">&lt;</span> <span class="bu">len</span>(<span class="va">self</span>.num_layers)<span class="op">-</span><span class="dv">1</span>:  <span class="co"># Don't apply transition layer on last block</span></span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> TransitionLayer(c_out<span class="op">=</span>c_hidden<span class="op">//</span><span class="dv">2</span>,</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>                                    act_fn<span class="op">=</span><span class="va">self</span>.act_fn)(x, train<span class="op">=</span>train)</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>                c_hidden <span class="op">//=</span> <span class="dv">2</span></span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.BatchNorm()(x, use_running_average<span class="op">=</span><span class="kw">not</span> train)</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.act_fn(x)</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.mean(axis<span class="op">=</span>(<span class="dv">1</span>, <span class="dv">2</span>))</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(<span class="va">self</span>.num_classes)(x)</span>
+<span id="cb31-31"><a href="#cb31-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Lastly, we train our network. In contrast to ResNet, DenseNet does not show any issues with Adam, and hence we train it with this optimizer. The other hyperparameters are chosen to result in a network with a similar parameter size as the ResNet and GoogleNet. Commonly, when designing very deep networks, DenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.</p>
+<div id="cell-59" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>densenet_trainer, densenet_results <span class="op">=</span> train_classifier(model_name<span class="op">=</span><span class="st">"DenseNet"</span>,</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>                                                      model_class<span class="op">=</span>DenseNet,</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>                                                      model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"num_layers"</span>: [<span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>, <span class="dv">6</span>],</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"bn_size"</span>: <span class="dv">2</span>,</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"growth_rate"</span>: <span class="dv">16</span>,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>                                                                     <span class="st">"act_fn"</span>: nn.relu},</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>                                                      optimizer_name<span class="op">=</span><span class="st">"adamw"</span>,</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>                                                      optimizer_hparams<span class="op">=</span>{<span class="st">"lr"</span>: <span class="fl">1e-3</span>,</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>                                                                         <span class="st">"weight_decay"</span>: <span class="fl">1e-4</span>},</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>                                                      exmp_imgs<span class="op">=</span>jax.device_put(</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>                                                          <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))[<span class="dv">0</span>]),</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>                                                      num_epochs<span class="op">=</span><span class="dv">200</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="tensorboard-log-2" class="level3">
+<h3 class="anchored" data-anchor-id="tensorboard-log-2">Tensorboard log</h3>
+<p>Finally, we also have another TensorBoard for the DenseNet training. We take a look at it below:</p>
+<div id="cell-61" class="cell" data-scrolled="false" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Opens tensorboard in notebook.</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>tensorboard <span class="op">--</span>logdir $CHECKPOINT_PATH<span class="op">/</span>tensorboards<span class="op">/</span>DenseNet<span class="op">/</span> <span class="op">--</span>port <span class="dv">6008</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<center width="100%">
+<img src="tensorboard_screenshot_DenseNet.png" width="1000px">
+</center>
+<p>The overall course of the validation accuracy and training loss resemble the training of GoogleNet, which is also related to training the network with Adam. Feel free to explore the training metrics yourself.</p>
+</section>
+</section>
+<section id="conclusion-and-comparison" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion-and-comparison">Conclusion and Comparison</h2>
+<p>After discussing each model separately, and training all of them, we can finally compare them. First, let’s organize the results of all models in a table:</p>
+<div id="cell-64" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>html</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;!--</span> Some HTML code to increase font size <span class="kw">in</span> the following table <span class="op">--&gt;</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>style<span class="op">&gt;</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>th {font<span class="op">-</span>size: <span class="dv">120</span><span class="op">%;</span>}</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>td {font<span class="op">-</span>size: <span class="dv">120</span><span class="op">%;</span>}</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;/</span>style<span class="op">&gt;</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<!-- Some HTML code to increase font size in the following table -->
+<style>
+th {font-size: 120%;}
+td {font-size: 120%;}
+</style>
+</div>
+</div>
+<div id="cell-65" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> tabulate</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> display, HTML</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>all_models <span class="op">=</span> [</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"GoogleNet"</span>, googlenet_results, googlenet_trainer),</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"ResNet"</span>, resnet_results, resnet_trainer),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"PreActResNet"</span>, preactresnet_results, preactresnet_trainer),</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    (<span class="st">"DenseNet"</span>, densenet_results, densenet_trainer)</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>table <span class="op">=</span> [[model_name,</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span><span class="fl">100.0</span><span class="op">*</span>model_results[<span class="st">'val'</span>]<span class="sc">:4.2f}</span><span class="ss">%"</span>,</span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>          <span class="ss">f"</span><span class="sc">{</span><span class="fl">100.0</span><span class="op">*</span>model_results[<span class="st">'test'</span>]<span class="sc">:4.2f}</span><span class="ss">%"</span>,</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>          <span class="st">"</span><span class="sc">{:,}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">sum</span>([np.prod(p.shape) <span class="cf">for</span> p <span class="kw">in</span> jax.tree_leaves(model.state.params)]))]</span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>         <span class="cf">for</span> model_name, model_results, model <span class="kw">in</span> all_models]</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>display(HTML(tabulate.tabulate(table, tablefmt<span class="op">=</span><span class="st">'html'</span>, headers<span class="op">=</span>[<span class="st">"Model"</span>, <span class="st">"Val Accuracy"</span>, <span class="st">"Test Accuracy"</span>, <span class="st">"Num Parameters"</span>])))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<table class="caption-top table table-sm table-striped small" data-quarto-postprocess="true">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">Model</th>
+<th data-quarto-table-cell-role="th">Val Accuracy</th>
+<th data-quarto-table-cell-role="th">Test Accuracy</th>
+<th data-quarto-table-cell-role="th">Num Parameters</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GoogleNet</td>
+<td>90.22%</td>
+<td>89.11%</td>
+<td>259,338</td>
+</tr>
+<tr class="even">
+<td>ResNet</td>
+<td>91.84%</td>
+<td>91.00%</td>
+<td>272,378</td>
+</tr>
+<tr class="odd">
+<td>PreActResNet</td>
+<td>91.76%</td>
+<td>90.65%</td>
+<td>272,250</td>
+</tr>
+<tr class="even">
+<td>DenseNet</td>
+<td>90.62%</td>
+<td>90.43%</td>
+<td>239,146</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<p>First of all, we see that all models are performing reasonably well. Simple models as you have implemented them in the practical achieve considerably lower performance, which is beside the lower number of parameters also attributed to the architecture design choice. GoogleNet is the model to obtain the lowest performance on the validation and test set, although it is very close to DenseNet. A proper hyperparameter search over all the channel sizes in GoogleNet would likely improve the accuracy of the model to a similar level, but this is also expensive given a large number of hyperparameters. ResNet outperforms both DenseNet and GoogleNet by more than 1% on the validation set, while there is a minor difference between both versions, original and pre-activation. We can conclude that for shallow networks, the place of the activation function does not seem to be crucial, although papers have reported the contrary for very deep networks (e.g.&nbsp;<a href="https://arxiv.org/abs/1603.05027">He et al.</a>).</p>
+<p>In general, we can conclude that ResNet is a simple, but powerful architecture. If we would apply the models on more complex tasks with larger images and more layers inside the networks, we would likely see a bigger gap between GoogleNet and skip-connection architectures like ResNet and DenseNet. A comparison with deeper models on CIFAR10 can be for example found <a href="https://github.com/kuangliu/pytorch-cifar">here</a>. Interestingly, DenseNet outperforms the original ResNet on their setup but comes closely behind the Pre-Activation ResNet. The best model, a Dual Path Network (<a href="https://arxiv.org/abs/1707.01629">Chen et. al</a>), is actually a combination of ResNet and DenseNet showing that both offer different advantages.</p>
+<section id="which-model-should-i-choose-for-my-task" class="level3">
+<h3 class="anchored" data-anchor-id="which-model-should-i-choose-for-my-task">Which model should I choose for my task?</h3>
+<p>We have reviewed four different models. So, which one should we choose if have given a new task? Usually, starting with a ResNet is a good idea given the superior performance of the CIFAR dataset and its simple implementation. Besides, for the parameter number we have chosen here, ResNet is the fastest as DenseNet and GoogleNet have many more layers that are applied in sequence in our primitive implementation. However, if you have a really difficult task, such as semantic segmentation on HD images, more complex variants of ResNet and DenseNet are recommended.</p>
+<hr>
+<p><a href="https://github.com/phlippe/uvadlc_notebooks/"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=⭐&amp;message=Star%20Our%20Repository&amp;color=yellow" class="img-fluid" alt="Star our repository"></a> If you found this tutorial helpful, consider ⭐-ing our repository.<br>
+<a href="https://github.com/phlippe/uvadlc_notebooks/issues"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=❔&amp;message=Ask%20Questions&amp;color=9cf" class="img-fluid" alt="Ask questions"></a> For any questions, typos, or bugs that you found, please raise an issue on GitHub.</p>
+<hr>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

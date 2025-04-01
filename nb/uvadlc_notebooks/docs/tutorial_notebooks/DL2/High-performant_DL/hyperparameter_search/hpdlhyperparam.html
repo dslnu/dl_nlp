@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>HDL - Introduction to HyperParameter Tuning – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="../../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../../">
+<script src="../../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#introduction" id="toc-introduction" class="nav-link active" data-scroll-target="#introduction">Introduction</a></li>
+  <li><a href="#the-structure" id="toc-the-structure" class="nav-link" data-scroll-target="#the-structure">The structure</a></li>
+  <li><a href="#hydra" id="toc-hydra" class="nav-link" data-scroll-target="#hydra">Hydra</a>
+  <ul class="collapse">
+  <li><a href="#some-observations" id="toc-some-observations" class="nav-link" data-scroll-target="#some-observations">Some observations</a></li>
+  </ul></li>
+  <li><a href="#mlflow" id="toc-mlflow" class="nav-link" data-scroll-target="#mlflow">MLFlow</a>
+  <ul class="collapse">
+  <li><a href="#some-observations-1" id="toc-some-observations-1" class="nav-link" data-scroll-target="#some-observations-1">Some observations</a></li>
+  </ul></li>
+  <li><a href="#hyperparameter-search" id="toc-hyperparameter-search" class="nav-link" data-scroll-target="#hyperparameter-search">Hyperparameter Search</a>
+  <ul class="collapse">
+  <li><a href="#some-observations-2" id="toc-some-observations-2" class="nav-link" data-scroll-target="#some-observations-2">Some observations</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a>
+  <ul class="collapse">
+  <li><a href="#references" id="toc-references" class="nav-link" data-scroll-target="#references">References</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">HDL - Introduction to HyperParameter Tuning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/DL2/High-performant_DL/hyperparameter_search/hpdlhyperparam.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View on Github"></a><br>
+<strong>Hyper-parameter tuning repository:</strong> <a href="https://github.com/NKI-AI/hyperparameter-search-template"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View repository on Github"></a><br>
+<strong>Authors:</strong> Samuele Papa</p>
+<section id="introduction" class="level2">
+<h2 class="anchored" data-anchor-id="introduction">Introduction</h2>
+<p>This tutorial is meant as a description of the structure and features of the template GitHub repository to perform large scale hyperparameter tuning on a SLURM-based cluster using a combination of Pytorch Lightning, Hydra, Ax, MLFlow and Submitit.</p>
+<p>The template is not meant to be the definitive way hyperparameter tuning should be performed. Instead, it is meant to be a very good example from which to pick the elements and the structure that make most sense for your own future projects. For example, MLFlow is not very good at comparing images from multiple runs, and if a qualitative evaluation is necessary, then it would be a good idea to include Tensorboard as an additional logging library. The use of SLURM was dictated by the popularity of the system and the fact that it is in use on the surfsara cluster, but the same template would work for other systems. Many more considerations and adaptations could be made at the discretion of the researcher.</p>
+</section>
+<section id="the-structure" class="level2">
+<h2 class="anchored" data-anchor-id="the-structure">The structure</h2>
+<pre><code>.
+├── hyperparameter_searcher
+│&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; ├── config
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── data
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── mnist_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── launcher
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── launcher_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── logging
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── logging_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── model
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── mnist_module_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── sweeper
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── sweeper_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── trainer
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── trainer_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── train_bayesian_config.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── train_grid_config.py
+│&nbsp;&nbsp; ├── data
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── dataloaders.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── mnist_datamodule.py
+│&nbsp;&nbsp; ├── loggers
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── loggers.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── mlflow_utils.py
+│&nbsp;&nbsp; ├── networks
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── components
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; │&nbsp;&nbsp; └── simple_dense_net.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── mnist_lightning_module.py
+│&nbsp;&nbsp; ├── utils
+│&nbsp;&nbsp; │&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; │&nbsp;&nbsp; └── io_utils.py
+│&nbsp;&nbsp; └── training_pipeline.py
+├── scripts
+│&nbsp;&nbsp; ├── README.md
+│&nbsp;&nbsp; ├── hyperparameter_blueprint_bayesian.sh
+│&nbsp;&nbsp; └── hyperparameter_blueprint_grid.sh
+├── tests
+│&nbsp;&nbsp; ├── __init__.py
+│&nbsp;&nbsp; └── tests_utils
+│&nbsp;&nbsp;     ├── __init__.py
+│&nbsp;&nbsp;     └── test_io_utils.py
+├── environment.yml
+├── .env
+└── train.py</code></pre>
+<p>The main file of the whole repository is <code>train.py</code> in the root folder. From here the training procedure can run, and this is also the primary point that will be used for debugging the code. In the <code>tests</code> folder the eventual tests for the code being written will be placed, the <code>scripts</code> folder contains the scripts that we will be using for the hyperparameter search, and the <code>hyperparameter-searcher</code> folder is where the source code for all our experiments resides.</p>
+<p>In this template, the source code for the experiments is divided into Python modules, that can be thought of as building components used to run the entire thing. Besides the modules, there is a file called <code>training_pipeline.py</code> which is where the training is defined, and that will be the only entry point to use the various modules from. In this template, only this file is present, however, often we will want to perform some additional analysis to our models after training, say creating nice visualizations with samples if we have a generative model, or computing a downstream task using the representations obtained. When this is the case, we will just need to add a new file, e.g.&nbsp;called <code>evaluation.py</code>, that will benefit from the already-defined modules and be used to load the model and run the evaluation.</p>
+<p><strong>The modules</strong>. In the experiment source code we have several modules. We can think of them as independent (as much as reasonable) packages that are used to perform a specific and complex task that can be re-used more than once or that is completely logically separate from other modules. This modular approach that separates based on function and not based on experiment, forces us to think of code that can be used immediately by all experiments we will be running, and is easier to maintain in the future.</p>
+<p>Next, we will be discussing the different components that we are using for config management, logging and hyperparameter tuning.</p>
+</section>
+<section id="hydra" class="level2">
+<h2 class="anchored" data-anchor-id="hydra">Hydra</h2>
+<p>Hydra configurations are usually defined through <code>.yaml</code> files. However, we can also define them manually using Python. By using Python-based config files we have more freedom in the definition of the configurations and in the re-usability of the code. The trade-off is more complexity in the management of the code, as all the configuration needs to be defined manually.</p>
+<p>Hydra interfaces with your scripts using a decorator to the main function. This defines where to get the configs from, and which primary config file should be used to parse the arguments. In the case of this repository, the configuration is done through Python, so we don’t need the <code>config_path</code>:</p>
+<pre><code>@hydra.main(config_path=None, config_name=os.environ["MAIN_CONFIG"])</code></pre>
+<p>The primary config file is the entry point for your configuration. Here, you define the command line parameters that you support and which default configurations are to be used. A default configuration, as the name suggests, is a file that contains some default arguments. In our case, these will be handy for defining default configurations of the various datasets and models that we support.</p>
+<p>From command line, all already-define parameters can be changed, as well as new ones added. By default, you need to explicitly ask for an argument to be added, if this is not already defined in the config.</p>
+<p>Overall, using Hydra is a very straightforward way to neatly organize you configurations and get closer to reproducible results.</p>
+<section id="some-observations" class="level3">
+<h3 class="anchored" data-anchor-id="some-observations">Some observations</h3>
+<p>Hydra is used to manage the configuration of your experiments. All command line arguments and their processing can be handled through it. The are several advantages over using the traditional argument parser from Python. The first one is that we can more easily store and restore argument configurations. Another is that target classes can be defined directly in the configuration. A target class can then be initialized with the arguments given in the configuration. Think of what would happen if you wanted to switch between using <code>model_A</code> and <code>model_B</code> which are defined with the class <code>ModelA</code> and <code>ModelB</code>. From the config, you would say <code>model=model_A</code> and then in the code you would need a long if statement chain to select which class to launch with the given configuration, which in this case would be <code>ModelA</code>. Then, there would be several default parameters for this class that we would want to use, but would be hidden in the code. Instead, with Hydra you can more simply define the target class directly in the config file, which will be automatically selected when <code>model=model_A</code> is called in the command line. This will come automatically with all the parameters defined explicitly in the config file.</p>
+<p>This only makes sense because the modular approach to config management allows for simple parameter switching when testing different models, datasets or when running different experiments entirely. Having modular configuration management simplifies the entire file structure as well, removing the need for separating different experiments in different folders, which can quickly become difficult to maintain as time goes on. Instead, each part of your project can be seen as a different packages, one dedicated for data handling, one for model definition, one for the logging, another for visualization and maybe also one for all the metrics that you want to test your models with. Such modularity would be very difficult without also having modular configurations, which Hydra handles very easily.</p>
+<p>One thing that is important to highlight is that Hydra is not some magical wand that we can use to solve all our problems. Instead, Hydra takes its root in the elegant configuration management that <a href="https://omegaconf.readthedocs.io/en/2.1_branch/">Omegaconf</a> already provides. Hydra is a handy extension of Omegaconf, with some features tailored for machine learning. When more complicated things need to be done, do not hesitate to put your hands on what Hydra is doing and add your own code to make your workflow faster. Often, trying to work around the issue and use only the features available in the library slows you down more than you think.</p>
+</section>
+</section>
+<section id="mlflow" class="level2">
+<h2 class="anchored" data-anchor-id="mlflow">MLFlow</h2>
+<p>MLFlow is a logging library, which is characterized by centralization of the logging, as to ease the process when multiple nodes are being used. Additionally, it provides a simplified way to compare the parameters that have been changed between runs, to get a quick overview of which change has made the most decise impact in the performance of the model.</p>
+<p>MLFlow interfaces with the code through PyTorch Lightning. When the <code>Trainer</code> is instantiated, among the loggers passed is MLFlow. In the code, this will seem a bit opaque, as the initialization of the loggers is done through Hydra’s instantiate (in file <code>training_pipeline.py</code>):</p>
+<pre><code>mlflow_logger = hydra.utils.instantiate(logger)
+loggers.append(mlflow_logger)</code></pre>
+<p>Another important aspect is the <strong>checkpoint</strong>, which allows to store useful information and the model’s weights through MLFlow as well. Using MLFlow in the checkpointing process is useful to centralize all the information (in file <code>training_pipeline.py</code>):</p>
+<pre><code>callbacks.append(
+    hydra.utils.instantiate(callback, mlflow_logger=mlflow_logger)
+)</code></pre>
+<section id="some-observations-1" class="level3">
+<h3 class="anchored" data-anchor-id="some-observations-1">Some observations</h3>
+<p>MLFlow is an excellent logging tool to keep track of your experiments. Where MLFlow shines is in its ability to quickly compare multiple runs of an hyperparameter search. Also, it centralizes everything, putting all of the things you need in a single location, which is extremely handy when running large scale experiments.</p>
+<p>There are a few downsides to MLFlow, as it is not excellent with image logging and is overall lacking in the ability to compare different metrics and the qualitative performance of different models. When this is necessary for your models (which is the often the case for computer vision tasks) MLFlow needs to be supported by additional loggers, such as Tensorboard. This is easily done with Pythorch Lightning, just asking for multiple loggers in the Trainer.</p>
+</section>
+</section>
+<section id="hyperparameter-search" class="level2">
+<h2 class="anchored" data-anchor-id="hyperparameter-search">Hyperparameter Search</h2>
+<p>Here, we will be using <strong>Hydra</strong> (with the <a href="https://hydra.cc/docs/next/plugins/ax_sweeper/">Ax plugin</a>) and <strong>Submitit</strong> to generate the jobs and submit them to the SLURM cluster.</p>
+<p>These are the most fundamental parameters that need to be configured based on how many resources you have available to perform the search, that will be defined from the <code>.sh</code> script (code from <code>launcher_config.py</code> file):</p>
+<pre><code>@dataclass
+class SlurmConfig(SlurmQueueConf):
+    partition: str = "gpu_titanrtx_shared"
+    gpus_per_node: int = 1
+    tasks_per_node: int = 1
+    cpus_per_task: int = 6
+    mem_gb: int = 60
+    nodes: int = 1
+    timeout_min: int = 1200  # how long can the job run
+    array_parallelism: int = 2  # how many jobs can run simultaneously</code></pre>
+<p>The actual parameter search itself can be done in a <em>grid</em> or <em>bayesian</em> form. In the grid form, all combinations of the parameters are searched through, while in the bayesian form, the <strong>Ax</strong> sweeper will look for the best parameters to optimize a given metric, defined in the <code>optimized_metric</code> parameter. The syntax for defining what parameters should be <em>sweep</em>ed can be found in this <a href="https://hydra.cc/docs/advanced/override_grammar/extended/#sweeps">Hydra documentation</a>. The most fundamental ones are the following:</p>
+<p><strong>Choice</strong>. Select one between different options (here the example is different activation functions):</p>
+<pre><code>activation=choice(linear,relu)</code></pre>
+<p><strong>Range</strong>. Sweeps the defined range based on the given step (here the example is a different lambda weight for regularization):</p>
+<pre><code>lambda=range(start=0,stop=10,step=2)  # 0,2,4,6,8</code></pre>
+<section id="some-observations-2" class="level3">
+<h3 class="anchored" data-anchor-id="some-observations-2">Some observations</h3>
+<p>Hyperparameter tuning is a task that requires an incredible amounts of resources. Always consider the computing time and available resources before starting large computational studies. Try with smaller tests, trying to understand if the model is working and what is the rough range of parameters before continuing.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>We have seen how we have used a combination of Hydra, MLFlow, SubmitIt, and the Ax plugin in Hydra to perform bayesian or grid hyperparameter searches in a SLURM-based cluster. We have seen how it interfaces with a simple project and have observed some of the strength and pitfalls of the methods.</p>
+<p>It is crucial to remember that this setup is meant as a guide, to introduce the useful tools that you may want to use and how they interface together. Ultimately, the best fit for any case will be determined by the specific circumstances that you are facing.</p>
+<section id="references" class="level3">
+<h3 class="anchored" data-anchor-id="references">References</h3>
+<p>Reference Repository. https://github.com/NKI-AI/hyperparameter-search-template</p>
+<p>Hydra. https://hydra.cc/</p>
+<p>MLFlow. https://www.mlflow.org/docs/latest/index.html</p>
+<p>Pytorch Lightning. https://www.pytorchlightning.ai/</p>
+<p>Ax Sweeper. https://hydra.cc/docs/next/plugins/ax_sweeper/=</p>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

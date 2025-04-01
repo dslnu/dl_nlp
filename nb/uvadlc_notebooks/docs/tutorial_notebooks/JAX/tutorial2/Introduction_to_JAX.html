@@ -1,0 +1,1729 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Tutorial 2 (JAX): Introduction to JAX+Flax – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+<script src="https://unpkg.com/@jupyter-widgets/html-manager@*/dist/embed-amd.js" crossorigin="anonymous"></script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#jax-as-numpy-on-accelerators" id="toc-jax-as-numpy-on-accelerators" class="nav-link active" data-scroll-target="#jax-as-numpy-on-accelerators">JAX as NumPy on accelerators</a>
+  <ul class="collapse">
+  <li><a href="#device-arrays" id="toc-device-arrays" class="nav-link" data-scroll-target="#device-arrays">Device Arrays</a></li>
+  <li><a href="#immutable-tensors" id="toc-immutable-tensors" class="nav-link" data-scroll-target="#immutable-tensors">Immutable tensors</a></li>
+  <li><a href="#pseudo-random-numbers-in-jax" id="toc-pseudo-random-numbers-in-jax" class="nav-link" data-scroll-target="#pseudo-random-numbers-in-jax">Pseudo Random Numbers in JAX</a></li>
+  </ul></li>
+  <li><a href="#function-transformations-with-jaxpr" id="toc-function-transformations-with-jaxpr" class="nav-link" data-scroll-target="#function-transformations-with-jaxpr">Function transformations with Jaxpr</a>
+  <ul class="collapse">
+  <li><a href="#automatic-differentiation" id="toc-automatic-differentiation" class="nav-link" data-scroll-target="#automatic-differentiation">Automatic differentiation</a></li>
+  <li><a href="#speeding-up-computation-with-just-in-time-compilation" id="toc-speeding-up-computation-with-just-in-time-compilation" class="nav-link" data-scroll-target="#speeding-up-computation-with-just-in-time-compilation">Speeding up computation with Just-In-Time compilation</a></li>
+  </ul></li>
+  <li><a href="#implementing-a-neural-network-with-flax" id="toc-implementing-a-neural-network-with-flax" class="nav-link" data-scroll-target="#implementing-a-neural-network-with-flax">Implementing a Neural Network with Flax</a>
+  <ul class="collapse">
+  <li><a href="#the-model" id="toc-the-model" class="nav-link" data-scroll-target="#the-model">The model</a></li>
+  <li><a href="#the-data" id="toc-the-data" class="nav-link" data-scroll-target="#the-data">The data</a></li>
+  <li><a href="#optimization" id="toc-optimization" class="nav-link" data-scroll-target="#optimization">Optimization</a></li>
+  <li><a href="#creating-an-efficient-training-and-validation-step" id="toc-creating-an-efficient-training-and-validation-step" class="nav-link" data-scroll-target="#creating-an-efficient-training-and-validation-step">Creating an efficient training and validation step</a></li>
+  <li><a href="#training" id="toc-training" class="nav-link" data-scroll-target="#training">Training</a></li>
+  <li><a href="#evaluation" id="toc-evaluation" class="nav-link" data-scroll-target="#evaluation">Evaluation</a></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  </ul></li>
+  <li><a href="#the-fancy-bits" id="toc-the-fancy-bits" class="nav-link" data-scroll-target="#the-fancy-bits">✨ The Fancy Bits ✨</a>
+  <ul class="collapse">
+  <li><a href="#automatic-vectorization-with-vmap" id="toc-automatic-vectorization-with-vmap" class="nav-link" data-scroll-target="#automatic-vectorization-with-vmap">Automatic Vectorization with vmap</a></li>
+  <li><a href="#parallel-evaluation-with-pmap" id="toc-parallel-evaluation-with-pmap" class="nav-link" data-scroll-target="#parallel-evaluation-with-pmap">Parallel evaluation with pmap</a></li>
+  <li><a href="#working-with-pytrees" id="toc-working-with-pytrees" class="nav-link" data-scroll-target="#working-with-pytrees">Working with PyTrees</a></li>
+  </ul></li>
+  <li><a href="#the-sharp-bits" id="toc-the-sharp-bits" class="nav-link" data-scroll-target="#the-sharp-bits">🔪 The Sharp Bits 🔪</a>
+  <ul class="collapse">
+  <li><a href="#dynamic-shapes" id="toc-dynamic-shapes" class="nav-link" data-scroll-target="#dynamic-shapes">Dynamic shapes</a></li>
+  <li><a href="#debugging-in-jitted-functions" id="toc-debugging-in-jitted-functions" class="nav-link" data-scroll-target="#debugging-in-jitted-functions">Debugging in jitted functions</a></li>
+  <li><a href="#modules-with-different-train-and-evaluation-functions" id="toc-modules-with-different-train-and-evaluation-functions" class="nav-link" data-scroll-target="#modules-with-different-train-and-evaluation-functions">Modules with different train and evaluation functions</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Tutorial 2 (JAX): Introduction to JAX+Flax</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="https://img.shields.io/static/v1.svg?label=Status&amp;message=Finished&amp;color=green" class="img-fluid figure-img"></p>
+<figcaption>Status</figcaption>
+</figure>
+</div>
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/JAX/tutorial2/Introduction_to_JAX.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View filled on Github"></a> <a href="https://colab.research.google.com/github/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/JAX/tutorial2/Introduction_to_JAX.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open filled In Collab"></a><br>
+<strong>Author:</strong> Phillip Lippe</p>
+<p>Welcome to our JAX tutorial for the Deep Learning course at the University of Amsterdam! The following notebook is meant to give a short introduction to JAX, including writing and training your own neural networks with <a href="https://flax.readthedocs.io/en/latest/">Flax</a>. But why should you learn JAX, if there are already so many other deep learning frameworks like <a href="https://pytorch.org/">PyTorch</a> and <a href="https://www.tensorflow.org/">TensorFlow</a>? The short answer: because it can be extremely fast. For instance, a small GoogleNet on CIFAR10, which we discuss in detail in <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial5/Inception_ResNet_DenseNet.html">Tutorial 5</a>, can be trained in JAX 3x faster than in PyTorch with a similar setup. Note that for larger models, larger batch sizes, or smaller GPUs, a considerably smaller speedup is expected, and the code has not been designed for benchmarking. Nonetheless, JAX enables this speedup by compiling functions and numerical programs for accelerators (GPU/TPU) <em>just in time</em>, finding the optimal utilization of the hardware. Frameworks with dynamic computation graphs like PyTorch cannot achieve the same efficiency, since they cannot anticipate the next operations before the user calls them. For example, in an Inception block of GoogleNet, we apply multiple convolutional layers in parallel on the same input. JAX can optimize the execution of this layer by compiling the whole forward pass for the available accelerator and fusing operations where possible, reducing memory access and speeding up execution. In contrast, when calling the first convolutional layer in PyTorch, the framework does not know that multiple convolutions on the same feature map will follow. It sends each operation one by one to the GPU, and can only adapt the execution after seeing the next Python calls. Hence, JAX can make more efficient use of the GPU than, for instance, PyTorch.</p>
+<p>However, everything comes with a price. In order to efficiently compile programs just-in-time in JAX, the functions need to be written with certain constraints. Firstly, the functions are not allowed to have side-effects, meaning that they are not allowed to affect any variable outside of their namespaces. For instance, in-place operations affect a variable even outside of the function. Moreover, stochastic operations such as <code>torch.rand(...)</code> change the global state of pseudo random number generators, which is not allowed in functional JAX (we will see later how JAX handles random number generation). Secondly, JAX compiles the functions based on anticipated shapes of all arrays/tensors in the function. This becomes problematic if the shapes or the program flow within the function depends on the values of the tensor. For instance, in the operation <code>y = x[x&gt;3]</code>, the shape of <code>y</code> depends on how many values of <code>x</code> are greater than 3. We will discuss more of these constraints in this notebook. Still, in most common cases of training neural networks, it is straightforward to write functions within these constraints.</p>
+<p>This tutorial is heavily inspired by many great JAX tutorials before, and a (non-exclusive) list of them are:</p>
+<ul>
+<li><a href="https://jax.readthedocs.io/en/latest/jax-101/index.html">JAX 101</a> with many subtutorials on individual parts of JAX</li>
+<li><a href="https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html">JAX - The Sharp Bits</a> discusses the constraints of JAX and how to overcome them</li>
+<li><a href="https://flax.readthedocs.io/en/latest/notebooks/jax_for_the_impatient.html">Jax for the Impatient</a> for a quick intro to JAX with focus on deep learning</li>
+<li><a href="https://flax.readthedocs.io/en/latest/notebooks/flax_basics.html">Flax Basics</a> as introduction to the Flax framework</li>
+</ul>
+<p>Throughout this tutorial, we will draw comparisons to PyTorch and also use its data loading library (see our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html">PyTorch tutorial</a> for a refresher). JAX is not meant to ‘redefine the wheel’, so we can combine it framework-agnostic parts from PyTorch (e.g., data loading) and TensorFlow (e.g., logging in TensorBoard). Further, we use <a href="https://flax.readthedocs.io/en/latest/">Flax</a> as a neural network library in JAX, and <a href="https://optax.readthedocs.io/en/latest/index.html">Optax</a> to implement common deep learning optimizers. More on them later in the notebook. First, let’s get started with some basic JAX operations.</p>
+<div id="cell-3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">## Standard libraries</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> math</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">## Imports for plotting</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline </span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> IPython.display <span class="im">import</span> set_matplotlib_formats</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>set_matplotlib_formats(<span class="st">'svg'</span>, <span class="st">'pdf'</span>) <span class="co"># For export</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib.colors <span class="im">import</span> to_rgba</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>sns.<span class="bu">set</span>()</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co">## Progress bar</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm.auto <span class="im">import</span> tqdm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="jax-as-numpy-on-accelerators" class="level2">
+<h2 class="anchored" data-anchor-id="jax-as-numpy-on-accelerators">JAX as NumPy on accelerators</h2>
+<p>Every deep learning framework has its own API for dealing with data arrays. For example, PyTorch uses <code>torch.Tensor</code> as data arrays on which it defines several operations like matrix multiplication, taking the mean of the elements, etc. In JAX, this basic API strongly resembles the one of <a href="https://numpy.org/">NumPy</a>, and even has the same name in JAX (<code>jax.numpy</code>). So, for now, let’s think of JAX as NumPy that runs on accelerators. As a first step, let’s import JAX and its NumPy API:</p>
+<div id="cell-5" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Using jax"</span>, jax.__version__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Using jax 0.3.13</code></pre>
+</div>
+</div>
+<p>At the current time of writing (June 2022), the newest JAX version is <code>0.3.13</code> which supports most of the common NumPy functionalities. The NumPy API of JAX is usually imported as <code>jnp</code>, to keep a resemblance to NumPy’s import as <code>np</code>. In the following subsections, we will discuss the main differences between the classical NumPy API and the one of JAX.</p>
+<section id="device-arrays" class="level3">
+<h3 class="anchored" data-anchor-id="device-arrays">Device Arrays</h3>
+<p>As a first test, let’s create some arbitrary arrays like we would do in NumPy. For instance, let’s create an array of zeros with shape <code>[2,5]</code>:</p>
+<div id="cell-8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>a <span class="op">=</span> jnp.zeros((<span class="dv">2</span>, <span class="dv">5</span>), dtype<span class="op">=</span>jnp.float32)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(a)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[[0. 0. 0. 0. 0.]
+ [0. 0. 0. 0. 0.]]</code></pre>
+</div>
+</div>
+<p>Similarly, we can create an array with values of 0 to 5 by using <code>arange</code>:</p>
+<div id="cell-10" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>b <span class="op">=</span> jnp.arange(<span class="dv">6</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[0 1 2 3 4 5]</code></pre>
+</div>
+</div>
+<p>You might now wonder whether the arrays <code>a</code> and <code>b</code> are simply NumPy arrays. To check that, let’s print out the class of <code>b</code>:</p>
+<div id="cell-12" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>b.__class__</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>jaxlib.xla_extension.DeviceArray</code></pre>
+</div>
+</div>
+<p>Instead of a simple NumPy array, it shows the type <code>DeviceArray</code> which is what JAX uses to represent arrays. In contrast to NumPy, JAX can execute the same code on different backends – CPU, GPU and TPU. A <code>DeviceArray</code> therefore represents an array which is on one of the backends. Similar to PyTorch, we can check the device of an array by calling <code>.device()</code>:</p>
+<div id="cell-14" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>b.device()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<pre><code>GpuDevice(id=0, process_index=0)</code></pre>
+</div>
+</div>
+<p>As you can see, the array <code>b</code> is already natively on a GPU although we did not specify this explicitly as you would do in PyTorch (on Colab, remember to select a GPU in your runtime environment). In order to change the device of an array, we can use <code>jax.device_get</code>:</p>
+<div id="cell-16" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>b_cpu <span class="op">=</span> jax.device_get(b)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(b_cpu.__class__)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;class 'numpy.ndarray'&gt;</code></pre>
+</div>
+</div>
+<p>Unsurprisingly, a simple CPU-based array is nothing else than a NumPy array, which allows for a simple conversion between the two frameworks! To explicitly push a NumPy array to the accelerator, you can use <code>jax.device_put</code>:</p>
+<div id="cell-18" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>b_gpu <span class="op">=</span> jax.device_put(b_cpu)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Device put: </span><span class="sc">{</span>b_gpu<span class="sc">.</span>__class__<span class="sc">}</span><span class="ss"> on </span><span class="sc">{</span>b_gpu<span class="sc">.</span>device()<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Device put: &lt;class 'jaxlib.xla_extension.DeviceArray'&gt; on gpu:0</code></pre>
+</div>
+</div>
+<p>Nicely enough, JAX will handle any device clash itself when you try to perform operations on a NumPy array and a DeviceArray by modeling the output as DeviceArray again:</p>
+<div id="cell-20" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>b_cpu <span class="op">+</span> b_gpu</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>DeviceArray([ 0,  2,  4,  6,  8, 10], dtype=int32)</code></pre>
+</div>
+</div>
+<p>Finally, we can also print all our available devices using <code>jax.devices()</code>:</p>
+<div id="cell-22" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>jax.devices()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>[GpuDevice(id=0, process_index=0), GpuDevice(id=1, process_index=0)]</code></pre>
+</div>
+</div>
+<p>A technical detail of running operations on DeviceArrays is that when a JAX function is called, the corresponding operation takes place asynchronously on the accelerator when possible. For instance, if we call <code>out = jnp.matmul(b, b)</code>, JAX first returns a placeholder array for <code>out</code> which may not be filled with the values as soon as the function calls finishes. This way, Python will not block the execution of follow-up statements, but instead only does it whenever we strictly need the value of <code>out</code>, for instance for printing or putting it on CPU. PyTorch uses a very similar principle to allow asynchronous computation. For more details, see <a href="https://jax.readthedocs.io/en/latest/async_dispatch.html">JAX - Asynchronous Dispatch</a>.</p>
+</section>
+<section id="immutable-tensors" class="level3">
+<h3 class="anchored" data-anchor-id="immutable-tensors">Immutable tensors</h3>
+<p>When we would like to change a NumPy array in-place, like replacing the first element of <code>b</code> with <code>1</code> instead of <code>0</code>, we could simply write <code>b[0]=1</code>. However, in JAX, this is not possible. A <code>DeviceArray</code> object is <em>immutable</em>, which means that no in-place operations are possible. The reason for this goes back to our discussion in the introduction: JAX requires programs to be “pure” functions, i.e.&nbsp;no effects on variables outside of the function are allowed. Allowing in-place operations of variables would make the program analysis for JAX’s just-in-time compilation difficult. Instead, we can use the expression <code>b.at[0].set(1)</code> which, analogous to the in-place operation, returns a new array which is identical to <code>b</code>, except that its value at the first position is 1. Let’s try that out below:</p>
+<div id="cell-25" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>b_new <span class="op">=</span> b.at[<span class="dv">0</span>].<span class="bu">set</span>(<span class="dv">1</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Original array:'</span>, b)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Changed array:'</span>, b_new)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Original array: [0 1 2 3 4 5]
+Changed array: [1 1 2 3 4 5]</code></pre>
+</div>
+</div>
+<p>However, we said that JAX is very efficient. Isn’t creating a new array in this case the opposite? While it is indeed less efficient, it can made much more efficient with JAX’s just-in-time compilation. The compiler can recognize unnecessary array duplications, and replace them with in-place operations again. More on the just-in-time compilation later!</p>
+</section>
+<section id="pseudo-random-numbers-in-jax" class="level3">
+<h3 class="anchored" data-anchor-id="pseudo-random-numbers-in-jax">Pseudo Random Numbers in JAX</h3>
+<p>In machine learning, we come across several situations where we need to generate pseudo random numbers: randomly shuffling a dataset, sampling a dropout mask for regularization, training a VAE by sampling from the approximate posterior, etc. In libraries like NumPy and PyTorch, the random number generator are controlled by a seed, which we set initially to obtain the same samples every time we run the code (this is why the numbers are not truly random, hence “pseudo”-random). However, if we call <code>np.random.normal()</code> 5 times consecutively, we will get 5 different numbers since every execution changes the state/seed of the pseudo random number generation (PRNG). In JAX, if we would try to generate a random number with this approach, a function creating pseudo-random number would have an effect outside of it. To prevent this, JAX takes a different approach by explicitly passing and iterating the PRNG state. First, let’s create a PRNG for the seed 42:</p>
+<div id="cell-28" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> jax.random.PRNGKey(<span class="dv">42</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we can use this PRNG state to generate random numbers. Since with this state, the random number generation becomes deterministic, we sample the same number every time. This is not the case in NumPy if we set the seed once before both operations:</p>
+<div id="cell-30" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># A non-desirable way of generating pseudo-random numbers...</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>jax_random_number_1 <span class="op">=</span> jax.random.normal(rng)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>jax_random_number_2 <span class="op">=</span> jax.random.normal(rng)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'JAX - Random number 1:'</span>, jax_random_number_1)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'JAX - Random number 2:'</span>, jax_random_number_2)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Typical random numbers in NumPy</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>np.random.seed(<span class="dv">42</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>np_random_number_1 <span class="op">=</span> np.random.normal()</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>np_random_number_2 <span class="op">=</span> np.random.normal()</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'NumPy - Random number 1:'</span>, np_random_number_1)</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'NumPy - Random number 2:'</span>, np_random_number_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX - Random number 1: -0.18471177
+JAX - Random number 2: -0.18471177
+NumPy - Random number 1: 0.4967141530112327
+NumPy - Random number 2: -0.13826430117118466</code></pre>
+</div>
+</div>
+<p>Usually, we want to have a behavior like NumPy where we get a different random number every time we sample. To achieve this, we can <em>split</em> the PRNG state to get usable subkeys every time we need a new pseudo-random number. We can do this with <code>jax.random.split(...)</code>:</p>
+<div id="cell-32" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>rng, subkey1, subkey2 <span class="op">=</span> jax.random.split(rng, num<span class="op">=</span><span class="dv">3</span>)  <span class="co"># We create 3 new keys</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>jax_random_number_1 <span class="op">=</span> jax.random.normal(subkey1)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>jax_random_number_2 <span class="op">=</span> jax.random.normal(subkey2)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'JAX new - Random number 1:'</span>, jax_random_number_1)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'JAX new - Random number 2:'</span>, jax_random_number_2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>JAX new - Random number 1: 0.107961535
+JAX new - Random number 2: -1.2226542</code></pre>
+</div>
+</div>
+<p>Every time you run this cell, you will obtain different random numbers for both operations since we create new PRNG states before sampling. In general, you want to split the PRNG key every time before generating a pseudo-number, to prevent accidentally obtaining the exact same numbers (for instance, sampling the exact same dropout mask every time you run the network makes dropout itself quite useless…). For a deeper dive into the ideas behind the random number generation in JAX, see JAX’s tutorial on <a href="https://jax.readthedocs.io/en/latest/jax-101/05-random-numbers.html">Pseudo Random Numbers</a>.</p>
+</section>
+</section>
+<section id="function-transformations-with-jaxpr" class="level2">
+<h2 class="anchored" data-anchor-id="function-transformations-with-jaxpr">Function transformations with Jaxpr</h2>
+<p>Rosalia Schneider and Vladimir Mikulik summarize the key points of JAX in the <a href="https://jax.readthedocs.io/en/latest/jax-101/01-jax-basics.html">JAX 101 tutorial</a> as follows:</p>
+<blockquote class="blockquote">
+<p>The most important difference, and in some sense the root of all the rest, is that JAX is designed to be functional, as in functional programming. The reason behind this is that the kinds of program transformations that JAX enables are much more feasible in functional-style programs. […] The important feature of functional programming to grok when working with JAX is very simple: don’t write code with side-effects.</p>
+</blockquote>
+<p>Essentially, we want to write our main code of JAX in functions that do not affect anything else besides its outputs. For instance, we do not want to change input arrays in-place, or access global variables. While this might seem limiting at first, you get used to this quite quickly and most JAX functions that need to fulfill these constraints can be written this way without problems. Note that not all possible functions in training a neural network need to fulfill the constraints. For instance, loading or saving of models, the logging, or the data generation can be done in naive functions. Only the network execution, which we want to do very efficiently on our accelerator (GPU or TPU), should strictly follow these constraints.</p>
+<p>What does make JAX functions so special, and how can we think about them? A good way of gaining understanding in how JAX handles function is to understand its intermediate representation: jaxpr. Conceptually, you can think of any operation that JAX does on a function, as first trace-specializing the Python function to be transformed into a small and well-behaved intermediate form. This means that we check which operations are performed on which array, and what shapes the arrays are. Based on this representation, JAX then interprets the function with transformation-specific interpretation rules, which includes automatic differentiation or compiling a function in XLA to efficiently use the accelerator.</p>
+<p>To illustrate this intermediate representation, let’s consider the same simple function we used in the <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html">PyTorch tutorial</a> to discuss the concept of dynamic computation graphs:</p>
+<p><span class="math display">\[ y = \frac{1}{|x|}\sum_{i}\left[\left(x_i+2\right)^2+3\right]\]</span></p>
+<p>Using common NumPy operations in JAX, we can write it as follows:</p>
+<div id="cell-35" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simple_graph(x):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">+</span> <span class="dv">3</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    y <span class="op">=</span> x.mean()</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> y</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>inp <span class="op">=</span> jnp.arange(<span class="dv">3</span>, dtype<span class="op">=</span>jnp.float32)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Input'</span>, inp)</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Output'</span>, simple_graph(inp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Input [0. 1. 2.]
+Output 12.666667</code></pre>
+</div>
+</div>
+<p>To view the jaxpr representation of this function, we can use <code>jax.make_jaxpr</code>. Since the tracing depends on the shape of the input, we need to pass an input to the function (here of shape <code>[3]</code>):</p>
+<div id="cell-37" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>jax.make_jaxpr(simple_graph)(inp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>{ lambda ; a:f32[3]. let
+    b:f32[3] = add a 2.0
+    c:f32[3] = integer_pow[y=2] b
+    d:f32[3] = add c 3.0
+    e:f32[] = reduce_sum[axes=(0,)] d
+    f:f32[] = div e 3.0
+  in (f,) }</code></pre>
+</div>
+</div>
+<p>A jaxpr representation follows the structure:</p>
+<div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>jaxpr :<span class="op">:=</span> { <span class="kw">lambda</span> Var<span class="op">*</span> <span class="op">;</span> Var<span class="op">+</span>.</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>            let Eqn<span class="op">*</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>            <span class="kw">in</span>  [Expr<span class="op">+</span>] }</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>where <code>Var*</code> are constants and <code>Var+</code> are input arguments. In the cell above, this is <code>a:f32[3]</code>, i.e.&nbsp;an array of shape 3 with type <code>jnp.float32</code> (<code>inp</code>). The list of equations, <code>Eqn*</code>, define the intermediate results of the function. You can see that each operation in <code>simple_graph</code> is translated to a corresponding equation, like <code>x = x + 2</code> is translated to <code>b:f32[3] = add a 2.0</code>. Furthermore, you see the specialization of the operations on the input shape, like <code>x.mean()</code> being replacing in <code>e</code> and <code>f</code> with summing and dividing by 3. Finally, <code>Expr+</code> in the jaxpr representation are the outputs of the functions. In the example, this is <code>f</code>, i.e.&nbsp;the final result of the function. Based on these atomic operations, JAX offers all kind of function transformations, of which we will discuss the most important ones later in this section. Hence, you can consider the jaxpr representation is an intermediate compilation stage of JAX. What happens if we actually try to look at the jaxpr representation of a function with side-effect? Let’s consider the following function, which, as an illustrative example, appends the input to a global list:</p>
+<div id="cell-39" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>global_list <span class="op">=</span> []</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Invalid function with side-effect</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> norm(x):</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    global_list.append(x)</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    x <span class="op">=</span> x <span class="op">**</span> <span class="dv">2</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> x.<span class="bu">sum</span>()</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    n <span class="op">=</span> jnp.sqrt(n)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> n</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>jax.make_jaxpr(norm)(inp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>{ lambda ; a:f32[3]. let
+    b:f32[3] = integer_pow[y=2] a
+    c:f32[] = reduce_sum[axes=(0,)] b
+    d:f32[] = sqrt c
+  in (d,) }</code></pre>
+</div>
+</div>
+<p>As you can see, the jaxpr representation of the function does not contain any operation for <code>global_list.append(x)</code>. This is because jaxpr only understand side-effect-free code, and cannot represent such effects. Thus, we need to stick with pure functions without any side effects, to prevent any unwanted errors in our functions. If you are interested in learning more about the jaxpr representation, check out the JAX <a href="https://jax.readthedocs.io/en/latest/jaxpr.html">documentation</a> on it. But for this tutorial, we just need the basics as discussed above.</p>
+<section id="automatic-differentiation" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-differentiation">Automatic differentiation</h3>
+<p>The intermediate jaxpr representation defines a computation graph, on which we can perform an essential operation of deep learning framework: automatic differentiation. In frameworks like PyTorch with a dynamic computation graph, we would compute the gradients based on the loss tensor itself, e.g.&nbsp;by calling <code>loss.backward()</code>. However, JAX directly works with functions. Instead of backpropagating gradients through tensors, JAX takes as input a function, and outputs another function which directly calculates the gradients for it. While this might seem quite different to what you are used to from other frameworks, it is quite intuitive: your gradient of parameters is really a function of parameters and data.</p>
+<p>The transformation that allows us to do this is <code>jax.grad</code>, which takes as input the function, and returns another function representing the gradient calculation of the (first) input with respect to the output:</p>
+<div id="cell-42" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>grad_function <span class="op">=</span> jax.grad(simple_graph)</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>gradients <span class="op">=</span> grad_function(inp)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Gradient'</span>, gradients)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Gradient [1.3333334 2.        2.6666667]</code></pre>
+</div>
+</div>
+<p>The gradient we get here is exactly the one we would obtain when doing the calculation by hand. Moreover, we can also print the jaxpr representation of the gradient function:</p>
+<div id="cell-44" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>jax.make_jaxpr(grad_function)(inp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>{ lambda ; a:f32[3]. let
+    b:f32[3] = add a 2.0
+    c:f32[3] = integer_pow[y=2] b
+    d:f32[3] = integer_pow[y=1] b
+    e:f32[3] = mul 2.0 d
+    f:f32[3] = add c 3.0
+    g:f32[] = reduce_sum[axes=(0,)] f
+    _:f32[] = div g 3.0
+    h:f32[] = div 1.0 3.0
+    i:f32[3] = broadcast_in_dim[broadcast_dimensions=() shape=(3,)] h
+    j:f32[3] = mul i e
+  in (j,) }</code></pre>
+</div>
+</div>
+<p>This shows an unique property of JAX: we can print out the exact computation graph for determining the gradients. Compared to the original function, you can see new equations like <code>d:f32[3] = integer_pow[y=1] b</code> and <code>e:f32[3] = mul 2.0 d</code>, which model the intermediate gradient of <span class="math inline">\(\partial b_i^2/\partial b_i = 2b_i\)</span>. Furthermore, the return value <code>j</code> is the multiplication of <code>e</code> with <span class="math inline">\(1/3\)</span>, which maps to the gradient being:</p>
+<p><span class="math display">\[ \frac{\partial y}{\partial x_i} = \frac{2}{3}(x_i + 2)\]</span></p>
+<p>Hence, we can not only use JAX to estimate the gradients at a certain input value, but actually return the analytical gradient function which is quite a nice feature and highlights the properties of JAX!</p>
+<p>Often, we do not only want the gradients, but also the actual output of the function, for instance for logging the loss. This can be efficiently done using <code>jax.value_and_grad</code>:</p>
+<div id="cell-47" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a>val_grad_function <span class="op">=</span> jax.value_and_grad(simple_graph)</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>val_grad_function(inp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="20">
+<pre><code>(DeviceArray(12.666667, dtype=float32),
+ DeviceArray([1.3333334, 2.       , 2.6666667], dtype=float32))</code></pre>
+</div>
+</div>
+<p>Further, we can specialize the gradient function to consider multiple input arguments, and add extra outputs that we may not want to differentiate (for instance the accuracy in classification). We will visit the most important ones in the network training later in this section, and refer to other great resources for more details (<a href="https://jax.readthedocs.io/en/latest/notebooks/quickstart.html#taking-derivatives-with-grad">JAX Quickstart</a>, <a href="https://jax.readthedocs.io/en/latest/notebooks/autodiff_cookbook.html">Autodiff cookbook</a>, <a href="https://jax.readthedocs.io/en/latest/jax-101/04-advanced-autodiff.html">Advanced autodiff</a>).</p>
+<p>To train neural networks, we need to determine the gradient for every parameter in the network with respect to the loss. Listing all parameters as input arguments quickly gets annoying and infeasible. JAX offers an elegant data structure to summarize all parameters: a pytree (<a href="https://jax.readthedocs.io/en/latest/pytrees.html">documentation</a>). A pytree is a container-like object which structures its elements as a tree. For instance, a linear neural network might have its parameters organized similar to:</p>
+<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">'linear1'</span>: {</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>        <span class="st">'weights'</span>: ...,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>        <span class="st">'bias'</span>: ...</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>    },</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>    ...</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>JAX offers functions to process pytrees efficiently, such as obtaining all leafs (i.e.&nbsp;all parameters in a network) or applying a function on each element. We will come back to these structures when training a full network.</p>
+</section>
+<section id="speeding-up-computation-with-just-in-time-compilation" class="level3">
+<h3 class="anchored" data-anchor-id="speeding-up-computation-with-just-in-time-compilation">Speeding up computation with Just-In-Time compilation</h3>
+<p>Interestingly, from the previous code cell, you can see in the jaxpr representation of the gradient function that calculating the array <code>f</code> and scalar <code>g</code> are unnecessary. Intuitively, the gradient of taking the mean is independent of the actual output of the mean, hence we could drop <code>f</code> and <code>g</code> without any drawback. Finding such cases to improve efficiency and optimizing the code to take full advantage of the available accelerator hardware is one of the big selling points of JAX. It achieves that by <em>compiling functions just-in-time</em> with <a href="https://www.tensorflow.org/xla">XLA</a> (Accelerated Linear Algebra), using their jaxpr representation. Thereby, XLA fuses operations to reduce execution time of short-lived operations and eliminates intermediate storage buffers where not needed. For more details, see the <a href="https://docs.w3cub.com/tensorflow~guide/performance/xla/index">XLA documentation</a>.</p>
+<p>To compile a function, JAX provides the <code>jax.jit</code> transformation. We can either apply the transformation directly on a function (as we will do in the next cell), or use the decorator <code>@jax.jit</code> before a function.</p>
+<div id="cell-50" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>jitted_function <span class="op">=</span> jax.jit(simple_graph)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>jitted_function</code> takes the same input arguments as the original function <code>simple_graph</code>. Since the jaxpr representation of a function depends on the input shape, the compilation is started once we put the first input in. However, note that this also means that for every different shape we want to run the function, a new XLA compilation is needed. This is why it is recommended to use padding in cases where your input shape strongly varies (we revisit this topic in the final section of this tutorial). For now, let’s create an array with 1000 random values, on which we apply the jitted function:</p>
+<div id="cell-52" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a new random subkey for generating new random values</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>rng, normal_rng <span class="op">=</span> jax.random.split(rng)</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>large_input <span class="op">=</span> jax.random.normal(normal_rng, (<span class="dv">1000</span>,))</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Run the jitted function once to start compilation</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> jitted_function(large_input)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output is not any different from what you would get from the non-jitted function. However, how is it about the runtime? Let’s time both the original and the jitted function. Due to the asynchronous execution on the GPU, we add <code>.block_until_ready()</code> on the output, which blocks the Python execution until the accelerator (here GPU) finished computing the result and hence get an accurate time estimate.</p>
+<div id="cell-54" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>simple_graph(large_input).block_until_ready()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>598 µs ± 104 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)</code></pre>
+</div>
+</div>
+<div id="cell-55" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>jitted_function(large_input).block_until_ready()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>19.5 µs ± 52.8 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)</code></pre>
+</div>
+</div>
+<p>We see that the compiled function is almost 10-15x faster! This is quite an improvement in performance, and shows the potential of compiling functions with XLA. Furthermore, we can also apply multiple transformations on the same function in JAX, such as applying <code>jax.jit</code> on a gradient function:</p>
+<div id="cell-57" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a>jitted_grad_function <span class="op">=</span> jax.jit(grad_function)</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> jitted_grad_function(large_input)  <span class="co"># Apply once to compile</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s time the functions once more:</p>
+<div id="cell-59" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>grad_function(large_input).block_until_ready()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>2.55 ms ± 190 µs per loop (mean ± std. dev. of 7 runs, 1 loop each)</code></pre>
+</div>
+</div>
+<div id="cell-60" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="op">%%</span>timeit</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>jitted_grad_function(large_input).block_until_ready()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>17.4 µs ± 60.6 ns per loop (mean ± std. dev. of 7 runs, 100000 loops each)</code></pre>
+</div>
+</div>
+<p>Once more, the jitted function is much faster than the original one. Intuitively, this shows the potential speed up we can gain by using <code>jax.jit</code> to compile the whole training step of a network. Generally, we want to jit the largest possible chunk of computation to give the compiler maximum freedom.</p>
+<p>There are situations in which applying jit to a function is not straight-forward, for instance, if an input argument cannot be traced, or you need to use loops that depend on input arguments. To keep the tutorial simple, and since most neural network training functions do not run into these issues, we do not discuss such special cases here. Instead, we refer to the section on just-in-time compilation in the great tutorials of <a href="https://jax.readthedocs.io/en/latest/jax-101/02-jitting.html">JAX 101 Tutorial</a>, <a href="https://jax.readthedocs.io/en/latest/notebooks/quickstart.html#using-jit-to-speed-up-functions">JAX Quickstart</a>, and <a href="https://jax.readthedocs.io/en/latest/notebooks/thinking_in_jax.html#to-jit-or-not-to-jit">Thinking in JAX</a>.</p>
+</section>
+</section>
+<section id="implementing-a-neural-network-with-flax" class="level2">
+<h2 class="anchored" data-anchor-id="implementing-a-neural-network-with-flax">Implementing a Neural Network with Flax</h2>
+<p>With having reviewed the basics of JAX, we are now ready to implement our own neural network. Technically, we could implement our own neural network from scratch with JAX (see <a href="https://jax.readthedocs.io/en/latest/notebooks/Neural_Network_and_Data_Loading.html">here</a> for an example), but we do not really want to do that every time. Similarly to PyTorch’s <code>torch.nn</code> package, there exist neural network libraries based on JAX which provide such basic functionality. A (non-exclusive) collection of them are:</p>
+<ul>
+<li><a href="https://flax.readthedocs.io/en/latest/index.html">Flax</a>, started by the Google Brain Team, focuses on flexibility and clarity.</li>
+<li><a href="https://dm-haiku.readthedocs.io/en/latest/">Haiku</a>, from DeepMind, focuses on simplicity and compositionality.</li>
+<li><a href="https://github.com/google/trax">Trax</a>, maintained by the Google Brain Team, provides solutions for common training tasks</li>
+<li><a href="https://github.com/patrick-kidger/equinox">Equinox</a>, created by Patrick Kidger and Cristian Garcia, implements neural networks as callable PyTrees</li>
+<li><a href="https://github.com/deepmind/jraph">Jraph</a>, from DeepMind, is a graph neural network library (similar to PyTorch Geometric)</li>
+</ul>
+<p>For this tutorial series, we will use Flax due to its flexibility, intuitive API, and larger community. However, this should not mean that the other libraries are necessarily worse, and we recommend giving them a try as well to find the best library for yourself!</p>
+<p>We will introduce the libraries and all additional parts you might need to train a neural network in Flax, using a simple example classifier on a simple yet well known example: XOR. Given two binary inputs <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span>, the label to predict is <span class="math inline">\(1\)</span> if either <span class="math inline">\(x_1\)</span> or <span class="math inline">\(x_2\)</span> is <span class="math inline">\(1\)</span> while the other is <span class="math inline">\(0\)</span>, or the label is <span class="math inline">\(0\)</span> in all other cases. The example became famous by the fact that a single neuron, i.e.&nbsp;a linear classifier, cannot learn this simple function. Hence, we will learn how to build a small neural network that can learn this function. To make it a little bit more interesting, we move the XOR into continuous space and introduce some gaussian noise on the binary inputs. Our desired separation of an XOR dataset could look as follows:</p>
+<center style="width: 100%">
+<img src="../../tutorial2/continuous_xor.svg" width="350px">
+</center>
+<section id="the-model" class="level3">
+<h3 class="anchored" data-anchor-id="the-model">The model</h3>
+<p>The package <code>flax.linen</code> defines a series of useful classes like linear networks layers, convolutions, activation functions etc. A full list can be found <a href="https://flax.readthedocs.io/en/latest/flax.linen.html">here</a>. In case you need a certain network layer, check the documentation of the package first before writing the layer yourself as the package likely contains the code for it already. We import it below:</p>
+<div id="cell-64" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> flax</span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ModuleNotFoundError</span>: <span class="co"># Install flax if missing</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">--</span>quiet flax</span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> flax</span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax <span class="im">import</span> linen <span class="im">as</span> nn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="nn.module" class="level4">
+<h4 class="anchored" data-anchor-id="nn.module">nn.Module</h4>
+<p>Similar to PyTorch, a neural network is built up out of modules. Modules can contain other modules, and a neural network is considered to be a module itself as well. The basic template of a module is as follows:</p>
+<div id="cell-66" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MyModule(nn.Module):</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Some dataclass attributes, like hidden dimension, number of layers, etc. of the form:</span></span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># varname : vartype</span></span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> setup(<span class="va">self</span>):</span>
+<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Flax uses "lazy" initialization. This function is called once before you</span></span>
+<span id="cb53-7"><a href="#cb53-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># call the model, or try to access attributes. In here, define your submodules etc.</span></span>
+<span id="cb53-8"><a href="#cb53-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span>
+<span id="cb53-9"><a href="#cb53-9" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb53-10"><a href="#cb53-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb53-11"><a href="#cb53-11" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Function for performing the calculation of the module.</span></span>
+<span id="cb53-12"><a href="#cb53-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">pass</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The main, obvious difference to PyTorch is that Flax uses lazy initialization. The function <code>setup</code> is called once on a module instance before any other methods are called, or when you try to access a attribute of <em>self</em> defined in setup. Additional object attributes are defined below the class name. However, in contrast to PyTorch, the parameters are not part of the module. Instead, we can create a set of parameters of the module by calling its <code>init()</code> function. This function takes as input a PRNG state for sampling pseudo-random numbers and an example input to the model, and returns a set of parameters for the module as a pytree. Further, since the init function requires an input to the network, we can infer the input shape for all modules and do not need to explicitly define it during the module creation. This becomes more clear in the example we show in a second.</p>
+<p>The <code>__call__</code> method represents the <code>forward</code> function in PyTorch, and performs the actual computation of the module. It can take additional arguments if needed, like whether we are training or validation.</p>
+</section>
+<section id="simple-classifier" class="level4">
+<h4 class="anchored" data-anchor-id="simple-classifier">Simple classifier</h4>
+<p>To get an intuition behind how we work with modules in Flax, let’s define our own small neural network. We will use a minimal network with a input layer, one hidden layer with tanh as activation function, and a output layer. In other words, our networks should look something like this:</p>
+<center width="100%">
+<img src="../../tutorial2/small_neural_network.svg" width="300px">
+</center>
+<p>The input neurons are shown in blue, which represent the coordinates <span class="math inline">\(x_1\)</span> and <span class="math inline">\(x_2\)</span> of a data point. The hidden neurons including a tanh activation are shown in white, and the output neuron in red. In Flax, we can define this as follows:</p>
+<div id="cell-69" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleClassifier(nn.Module):</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    num_hidden : <span class="bu">int</span>   <span class="co"># Number of hidden neurons</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    num_outputs : <span class="bu">int</span>  <span class="co"># Number of output neurons</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> setup(<span class="va">self</span>):</span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Create the modules we need to build the network</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># nn.Dense is a linear layer</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.linear1 <span class="op">=</span> nn.Dense(features<span class="op">=</span><span class="va">self</span>.num_hidden)</span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.linear2 <span class="op">=</span> nn.Dense(features<span class="op">=</span><span class="va">self</span>.num_outputs)</span>
+<span id="cb54-10"><a href="#cb54-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-11"><a href="#cb54-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb54-12"><a href="#cb54-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Perform the calculation of the model to determine the prediction</span></span>
+<span id="cb54-13"><a href="#cb54-13" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.linear1(x)</span>
+<span id="cb54-14"><a href="#cb54-14" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.tanh(x)</span>
+<span id="cb54-15"><a href="#cb54-15" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> <span class="va">self</span>.linear2(x)</span>
+<span id="cb54-16"><a href="#cb54-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>One thing you may notice is that usually, all layers that we define in <code>setup</code> are also used in the <code>__call__</code> function. To reduce the code overhead, Flax provides an alternative, more compact network creation with <code>nn.compact</code>. With that, we can remove the setup function and instead our model as:</p>
+<div id="cell-71" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleClassifierCompact(nn.Module):</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    num_hidden : <span class="bu">int</span>   <span class="co"># Number of hidden neurons</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    num_outputs : <span class="bu">int</span>  <span class="co"># Number of output neurons</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span>  <span class="co"># Tells Flax to look for defined submodules</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x):</span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Perform the calculation of the model to determine the prediction</span></span>
+<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># while defining necessary layers</span></span>
+<span id="cb55-9"><a href="#cb55-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(features<span class="op">=</span><span class="va">self</span>.num_hidden)(x)</span>
+<span id="cb55-10"><a href="#cb55-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.tanh(x)</span>
+<span id="cb55-11"><a href="#cb55-11" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(features<span class="op">=</span><span class="va">self</span>.num_outputs)(x)</span>
+<span id="cb55-12"><a href="#cb55-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The <code>nn.compact</code> annotation of the <code>__call__</code> method signals Flax to look for submodules that we define in the forward pass. These are automatically recognized as such, so that we can use them for initialization etc. Which of the two model definition you use is often up to you (see the <a href="https://flax.readthedocs.io/en/latest/design_notes/setup_or_nncompact.html">Flax documentation</a> for some pros and cons for both methods). In the following tutorials, we will mostly use the compact version, but occasionally come back to the explicit setup function where necessary. For instance, if we define more functions on a module besides <code>__call__</code> and want to reuse some modules, it is recommended to use the setup version.</p>
+<p>For the examples in this notebook, we will use a tiny neural network with two input neurons and eight hidden neurons. As we perform binary classification, we will use a single output neuron. Note that we do not apply a sigmoid on the output yet. This is because other functions, especially the loss, are more efficient and precise to calculate on the original outputs instead of the sigmoid output. We will discuss the detailed reason later.</p>
+<p>Now, let’s create an instance of this network:</p>
+<div id="cell-74" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> SimpleClassifier(num_hidden<span class="op">=</span><span class="dv">8</span>, num_outputs<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Printing the model shows its attributes</span></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>SimpleClassifier(
+    # attributes
+    num_hidden = 8
+    num_outputs = 1
+)</code></pre>
+</div>
+</div>
+<p>At this stage, the model has no parameters initialized. To do this, let’s create a random input of our dataset, and apply the init function:</p>
+<div id="cell-76" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a>rng, inp_rng, init_rng <span class="op">=</span> jax.random.split(rng, <span class="dv">3</span>)</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>inp <span class="op">=</span> jax.random.normal(inp_rng, (<span class="dv">8</span>, <span class="dv">2</span>))  <span class="co"># Batch size 8, input size 2</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize the model</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> model.init(init_rng, inp)</span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>FrozenDict({
+    params: {
+        linear1: {
+            kernel: DeviceArray([[ 0.31476864, -0.4647768 , -0.7862042 , -0.48842615,
+                          -0.65373844,  0.3892545 ,  0.3038056 ,  0.04179859],
+                         [-0.3298236 ,  1.1110363 ,  0.54909396, -0.8168818 ,
+                           0.40057245, -0.8665987 ,  1.2087964 ,  1.0364622 ]],            dtype=float32),
+            bias: DeviceArray([0., 0., 0., 0., 0., 0., 0., 0.], dtype=float32),
+        },
+        linear2: {
+            kernel: DeviceArray([[-0.27971813],
+                         [-0.7466775 ],
+                         [ 0.29791608],
+                         [-0.26267236],
+                         [-0.5084385 ],
+                         [ 0.04573093],
+                         [-0.47257012],
+                         [ 0.50458497]], dtype=float32),
+            bias: DeviceArray([0.], dtype=float32),
+        },
+    },
+})</code></pre>
+</div>
+</div>
+<p>Now, we have parameters with which we can apply the network. We see that the parameters follow the same structure as defined in our module, and each linear layer contains one <code>kernel</code>, i.e.&nbsp;the weights, and a bias parameter. With this, we could apply the model on an input using the <code>apply</code> function:</p>
+<div id="cell-78" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb60"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">apply</span>(params, inp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="34">
+<pre><code>DeviceArray([[-0.48368204],
+             [ 0.04365474],
+             [ 0.06668529],
+             [-0.34203646],
+             [ 0.4835147 ],
+             [ 0.37424874],
+             [ 0.14232653],
+             [-0.5916512 ]], dtype=float32)</code></pre>
+</div>
+</div>
+<p>The model returns an output array of shape <code>[8,1]</code>, which corresponds to the one output neuron in the model for all 8 batch elements. With that, we now know how to initialize a model, and run a model. Next, let’s look at the data.</p>
+</section>
+</section>
+<section id="the-data" class="level3">
+<h3 class="anchored" data-anchor-id="the-data">The data</h3>
+<p>As mentioned before, JAX is not meant to ‘reinvent the wheel’ for every part of the deep learning pipeline. Hence, JAX and Flax do not natively provide a data loading functionality, but instead refer to other available libraries like Tensorflow and PyTorch. Here, let’s use again the package <code>torch.utils.data</code> library.</p>
+<div id="cell-81" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb62"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a href="#cb62-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.utils.data <span class="im">as</span> data</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The data package defines two classes which are the standard interface for handling data in PyTorch: <code>data.Dataset</code>, and <code>data.DataLoader</code>. The dataset class provides an uniform interface to access the training/test data, while the data loader makes sure to efficiently load and stack the data points from the dataset into batches during training.</p>
+<section id="the-dataset-class" class="level4">
+<h4 class="anchored" data-anchor-id="the-dataset-class">The dataset class</h4>
+<p>The dataset class summarizes the basic functionality of a dataset in a natural way. To define a dataset in PyTorch, we simply specify two functions: <code>__getitem__</code>, and <code>__len__</code>. The get-item function has to return the <span class="math inline">\(i\)</span>-th data point in the dataset, while the len function returns the size of the dataset. For the XOR dataset, we can define the dataset class as follows:</p>
+<div id="cell-84" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb63"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a href="#cb63-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> XORDataset(data.Dataset):</span>
+<span id="cb63-2"><a href="#cb63-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-3"><a href="#cb63-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, size, seed, std<span class="op">=</span><span class="fl">0.1</span>):</span>
+<span id="cb63-4"><a href="#cb63-4" aria-hidden="true" tabindex="-1"></a>        <span class="co">"""</span></span>
+<span id="cb63-5"><a href="#cb63-5" aria-hidden="true" tabindex="-1"></a><span class="co">        Inputs:</span></span>
+<span id="cb63-6"><a href="#cb63-6" aria-hidden="true" tabindex="-1"></a><span class="co">            size - Number of data points we want to generate</span></span>
+<span id="cb63-7"><a href="#cb63-7" aria-hidden="true" tabindex="-1"></a><span class="co">            seed - The seed to use to create the PRNG state with which we want to generate the data points</span></span>
+<span id="cb63-8"><a href="#cb63-8" aria-hidden="true" tabindex="-1"></a><span class="co">            std - Standard deviation of the noise (see generate_continuous_xor function)</span></span>
+<span id="cb63-9"><a href="#cb63-9" aria-hidden="true" tabindex="-1"></a><span class="co">        """</span></span>
+<span id="cb63-10"><a href="#cb63-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>()</span>
+<span id="cb63-11"><a href="#cb63-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.size <span class="op">=</span> size</span>
+<span id="cb63-12"><a href="#cb63-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.np_rng <span class="op">=</span> np.random.RandomState(seed<span class="op">=</span>seed)</span>
+<span id="cb63-13"><a href="#cb63-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.std <span class="op">=</span> std</span>
+<span id="cb63-14"><a href="#cb63-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.generate_continuous_xor()</span>
+<span id="cb63-15"><a href="#cb63-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-16"><a href="#cb63-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> generate_continuous_xor(<span class="va">self</span>):</span>
+<span id="cb63-17"><a href="#cb63-17" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Each data point in the XOR dataset has two variables, x and y, that can be either 0 or 1</span></span>
+<span id="cb63-18"><a href="#cb63-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># The label is their XOR combination, i.e. 1 if only x or only y is 1 while the other is 0.</span></span>
+<span id="cb63-19"><a href="#cb63-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If x=y, the label is 0.</span></span>
+<span id="cb63-20"><a href="#cb63-20" aria-hidden="true" tabindex="-1"></a>        data <span class="op">=</span> <span class="va">self</span>.np_rng.randint(low<span class="op">=</span><span class="dv">0</span>, high<span class="op">=</span><span class="dv">2</span>, size<span class="op">=</span>(<span class="va">self</span>.size, <span class="dv">2</span>)).astype(np.float32)</span>
+<span id="cb63-21"><a href="#cb63-21" aria-hidden="true" tabindex="-1"></a>        label <span class="op">=</span> (data.<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">1</span>) <span class="op">==</span> <span class="dv">1</span>).astype(np.int32)</span>
+<span id="cb63-22"><a href="#cb63-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># To make it slightly more challenging, we add a bit of gaussian noise to the data points.</span></span>
+<span id="cb63-23"><a href="#cb63-23" aria-hidden="true" tabindex="-1"></a>        data <span class="op">+=</span> <span class="va">self</span>.np_rng.normal(loc<span class="op">=</span><span class="fl">0.0</span>, scale<span class="op">=</span><span class="va">self</span>.std, size<span class="op">=</span>data.shape)</span>
+<span id="cb63-24"><a href="#cb63-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-25"><a href="#cb63-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data <span class="op">=</span> data</span>
+<span id="cb63-26"><a href="#cb63-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.label <span class="op">=</span> label</span>
+<span id="cb63-27"><a href="#cb63-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-28"><a href="#cb63-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__len__</span>(<span class="va">self</span>):</span>
+<span id="cb63-29"><a href="#cb63-29" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Number of data point we have. Alternatively self.data.shape[0], or self.label.shape[0]</span></span>
+<span id="cb63-30"><a href="#cb63-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.size</span>
+<span id="cb63-31"><a href="#cb63-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb63-32"><a href="#cb63-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__getitem__</span>(<span class="va">self</span>, idx):</span>
+<span id="cb63-33"><a href="#cb63-33" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Return the idx-th data point of the dataset</span></span>
+<span id="cb63-34"><a href="#cb63-34" aria-hidden="true" tabindex="-1"></a>        <span class="co"># If we have multiple things to return (data point and label), we can return them as tuple</span></span>
+<span id="cb63-35"><a href="#cb63-35" aria-hidden="true" tabindex="-1"></a>        data_point <span class="op">=</span> <span class="va">self</span>.data[idx]</span>
+<span id="cb63-36"><a href="#cb63-36" aria-hidden="true" tabindex="-1"></a>        data_label <span class="op">=</span> <span class="va">self</span>.label[idx]</span>
+<span id="cb63-37"><a href="#cb63-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> data_point, data_label</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that in contrast to our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html#The-data">PyTorch tutorial</a>, we use NumPy to generate the random data. Similar to JAX, NumPy also allows the pseudo-number generation based on a PRNG state. Hence, for better reproducibility, we are doing the same here. Let’s try to create such a dataset and inspect it:</p>
+<div id="cell-86" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb64"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a href="#cb64-1" aria-hidden="true" tabindex="-1"></a>dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">200</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb64-2"><a href="#cb64-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Size of dataset:"</span>, <span class="bu">len</span>(dataset))</span>
+<span id="cb64-3"><a href="#cb64-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data point 0:"</span>, dataset[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Size of dataset: 200
+Data point 0: (array([-0.06800247,  1.0232254 ], dtype=float32), 1)</code></pre>
+</div>
+</div>
+<p>To better relate to the dataset, we visualize the samples below.</p>
+<div id="cell-88" class="cell" data-execution_count="38">
+<div class="sourceCode cell-code" id="cb66"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a href="#cb66-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> visualize_samples(data, label):</span>
+<span id="cb66-2"><a href="#cb66-2" aria-hidden="true" tabindex="-1"></a>    data_0 <span class="op">=</span> data[label <span class="op">==</span> <span class="dv">0</span>]</span>
+<span id="cb66-3"><a href="#cb66-3" aria-hidden="true" tabindex="-1"></a>    data_1 <span class="op">=</span> data[label <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb66-4"><a href="#cb66-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb66-5"><a href="#cb66-5" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>))</span>
+<span id="cb66-6"><a href="#cb66-6" aria-hidden="true" tabindex="-1"></a>    plt.scatter(data_0[:,<span class="dv">0</span>], data_0[:,<span class="dv">1</span>], edgecolor<span class="op">=</span><span class="st">"#333"</span>, label<span class="op">=</span><span class="st">"Class 0"</span>)</span>
+<span id="cb66-7"><a href="#cb66-7" aria-hidden="true" tabindex="-1"></a>    plt.scatter(data_1[:,<span class="dv">0</span>], data_1[:,<span class="dv">1</span>], edgecolor<span class="op">=</span><span class="st">"#333"</span>, label<span class="op">=</span><span class="st">"Class 1"</span>)</span>
+<span id="cb66-8"><a href="#cb66-8" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Dataset samples"</span>)</span>
+<span id="cb66-9"><a href="#cb66-9" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="vs">r"$x_2$"</span>)</span>
+<span id="cb66-10"><a href="#cb66-10" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="vs">r"$x_1$"</span>)</span>
+<span id="cb66-11"><a href="#cb66-11" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-89" class="cell" data-execution_count="39">
+<div class="sourceCode cell-code" id="cb67"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a href="#cb67-1" aria-hidden="true" tabindex="-1"></a>visualize_samples(dataset.data, dataset.label)</span>
+<span id="cb67-2"><a href="#cb67-2" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Introduction_to_JAX_files/figure-html/cell-40-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="the-data-loader-class" class="level4">
+<h4 class="anchored" data-anchor-id="the-data-loader-class">The data loader class</h4>
+<p>The class <code>torch.utils.data.DataLoader</code> represents a Python iterable over a dataset with support for automatic batching, multi-process data loading and many more features. The data loader communicates with the dataset using the function <code>__getitem__</code>, and stacks its outputs as tensors over the first dimension to form a batch. In contrast to the dataset class, we usually don’t have to define our own data loader class, but can just create an object of it with the dataset as input. Additionally, we can configure our data loader with the following input arguments (only a selection, see full list <a href="https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader">here</a>):</p>
+<ul>
+<li><code>batch_size</code>: Number of samples to stack per batch</li>
+<li><code>shuffle</code>: If True, the data is returned in a random order. This is important during training for introducing stochasticity.</li>
+<li><code>num_workers</code>: Number of subprocesses to use for data loading. The default, 0, means that the data will be loaded in the main process which can slow down training for datasets where loading a data point takes a considerable amount of time (e.g.&nbsp;large images). More workers are recommended for those, but can cause issues on Windows computers. For tiny datasets as ours, 0 workers are usually faster.</li>
+<li><code>persistent_workers</code>: If True, workers will not be shutdown after an iteration over the dataset has finished. This can be useful if the time per epoch is small, or if you face issues with workers being killed during training.</li>
+<li><code>drop_last</code>: If True, the last batch is dropped in case it is smaller than the specified batch size. This occurs when the dataset size is not a multiple of the batch size. Only potentially helpful during training to keep a consistent batch size.</li>
+<li><code>collate_fn</code>: A function that defines how the elements per batch are combined. By default, PyTorch stacks them as PyTorch tensors. For JAX, we will change it to NumPy arrays.</li>
+</ul>
+<p>Let’s create a simple data loader below with a function that stacks batch elements as NumPy array instead of PyTorch Tensors:</p>
+<div id="cell-91" class="cell" data-execution_count="40">
+<div class="sourceCode cell-code" id="cb68"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a href="#cb68-1" aria-hidden="true" tabindex="-1"></a><span class="co"># This collate function is taken from the JAX tutorial with PyTorch Data Loading</span></span>
+<span id="cb68-2"><a href="#cb68-2" aria-hidden="true" tabindex="-1"></a><span class="co"># https://jax.readthedocs.io/en/latest/notebooks/Neural_Network_and_Data_Loading.html</span></span>
+<span id="cb68-3"><a href="#cb68-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> numpy_collate(batch):</span>
+<span id="cb68-4"><a href="#cb68-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(batch[<span class="dv">0</span>], np.ndarray):</span>
+<span id="cb68-5"><a href="#cb68-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.stack(batch)</span>
+<span id="cb68-6"><a href="#cb68-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> <span class="bu">isinstance</span>(batch[<span class="dv">0</span>], (<span class="bu">tuple</span>,<span class="bu">list</span>)):</span>
+<span id="cb68-7"><a href="#cb68-7" aria-hidden="true" tabindex="-1"></a>        transposed <span class="op">=</span> <span class="bu">zip</span>(<span class="op">*</span>batch)</span>
+<span id="cb68-8"><a href="#cb68-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> [numpy_collate(samples) <span class="cf">for</span> samples <span class="kw">in</span> transposed]</span>
+<span id="cb68-9"><a href="#cb68-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb68-10"><a href="#cb68-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.array(batch)</span>
+<span id="cb68-11"><a href="#cb68-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb68-12"><a href="#cb68-12" aria-hidden="true" tabindex="-1"></a>data_loader <span class="op">=</span> data.DataLoader(dataset, batch_size<span class="op">=</span><span class="dv">8</span>, shuffle<span class="op">=</span><span class="va">True</span>, collate_fn<span class="op">=</span>numpy_collate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-92" class="cell" data-execution_count="41">
+<div class="sourceCode cell-code" id="cb69"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a href="#cb69-1" aria-hidden="true" tabindex="-1"></a><span class="co"># next(iter(...)) catches the first batch of the data loader</span></span>
+<span id="cb69-2"><a href="#cb69-2" aria-hidden="true" tabindex="-1"></a><span class="co"># If shuffle is True, this will return a different batch every time we run this cell</span></span>
+<span id="cb69-3"><a href="#cb69-3" aria-hidden="true" tabindex="-1"></a><span class="co"># For iterating over the whole dataset, we can simple use "for batch in data_loader: ..."</span></span>
+<span id="cb69-4"><a href="#cb69-4" aria-hidden="true" tabindex="-1"></a>data_inputs, data_labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(data_loader))</span>
+<span id="cb69-5"><a href="#cb69-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb69-6"><a href="#cb69-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The shape of the outputs are [batch_size, d_1,...,d_N] where d_1,...,d_N are the </span></span>
+<span id="cb69-7"><a href="#cb69-7" aria-hidden="true" tabindex="-1"></a><span class="co"># dimensions of the data point returned from the dataset class</span></span>
+<span id="cb69-8"><a href="#cb69-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data inputs"</span>, data_inputs.shape, <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>, data_inputs)</span>
+<span id="cb69-9"><a href="#cb69-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Data labels"</span>, data_labels.shape, <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>, data_labels)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Data inputs (8, 2) 
+ [[ 1.0504987   1.0865755 ]
+ [ 0.02809919 -0.06226995]
+ [ 0.06141667  1.0757508 ]
+ [ 0.08356921 -0.11297069]
+ [ 1.0324166  -0.01301431]
+ [ 1.0024511   0.04979983]
+ [ 0.3078881   0.11195749]
+ [ 1.0371146   0.9396015 ]]
+Data labels (8,) 
+ [0 0 1 0 1 1 0 0]</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="optimization" class="level3">
+<h3 class="anchored" data-anchor-id="optimization">Optimization</h3>
+<p>After defining the model and the dataset, it is time to prepare the optimization of the model. During training, we will perform the following steps:</p>
+<ol type="1">
+<li>Get a batch from the data loader</li>
+<li>Obtain the predictions from the model for the batch</li>
+<li>Calculate the loss based on the difference between predictions and labels</li>
+<li>Backpropagation: calculate the gradients for every parameter with respect to the loss</li>
+<li>Update the parameters of the model in the direction of the gradients</li>
+</ol>
+<p>We have seen how we can do step 1, 2 and 4 in JAX and Flax. Now, we will look at step 3 and 5.</p>
+<section id="stochastic-gradient-descent" class="level4">
+<h4 class="anchored" data-anchor-id="stochastic-gradient-descent">Stochastic Gradient Descent</h4>
+<p>For updating the parameters, Flax does not directly provide support for optimizers, but instead refers to another package called <code>optax</code> (<a href="https://optax.readthedocs.io/en/latest/index.html">documentation</a>). Optax is an optimization library for JAX, which offers most common deep learning optimizers (SGD, Adam, Adagrad, RMSProp, etc.) and utilities (gradient clipping, weight decay, etc.).</p>
+<div id="cell-95" class="cell" data-execution_count="42">
+<div class="sourceCode cell-code" id="cb71"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a href="#cb71-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb71-2"><a href="#cb71-2" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> optax</span>
+<span id="cb71-3"><a href="#cb71-3" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> <span class="pp">ModuleNotFoundError</span>: <span class="co"># Install optax if missing</span></span>
+<span id="cb71-4"><a href="#cb71-4" aria-hidden="true" tabindex="-1"></a>    <span class="op">!</span>pip install <span class="op">--</span>quiet optax</span>
+<span id="cb71-5"><a href="#cb71-5" aria-hidden="true" tabindex="-1"></a>    <span class="im">import</span> optax</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For now, we will use the simplest optimizer, namely <code>optax.sgd</code>. Stochastic Gradient Descent updates parameters by multiplying the gradients with a small constant, called learning rate, and subtracting those from the parameters (hence minimizing the loss). Therefore, we slowly move towards the direction of minimizing the loss. A good default value of the learning rate for a small network as ours is 0.1. Remember that we again aim to write functional code. Hence, the optimizer does not take as input the parameters, but only the optimizer hyperparameters.</p>
+<div id="cell-97" class="cell" data-execution_count="43">
+<div class="sourceCode cell-code" id="cb72"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a href="#cb72-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Input to the optimizer are optimizer settings like learning rate</span></span>
+<span id="cb72-2"><a href="#cb72-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optax.sgd(learning_rate<span class="op">=</span><span class="fl">0.1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Since JAX calculates gradients via function transformations, we do not have functions like <code>backward()</code>, <code>optimizer.step()</code> or <code>optimizer.backward()</code> as in PyTorch. Instead, a optimizer is a function on the parameters and gradients. To simplify this step and bundle important parts of the training procedure, Flax offers the <code>flax.training</code> package. As a first step, we can create a <code>TrainState</code> which bundles the parameters, the optimizer, and the forward step of the model:</p>
+<div id="cell-99" class="cell" data-execution_count="44">
+<div class="sourceCode cell-code" id="cb73"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a href="#cb73-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax.training <span class="im">import</span> train_state</span>
+<span id="cb73-2"><a href="#cb73-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb73-3"><a href="#cb73-3" aria-hidden="true" tabindex="-1"></a>model_state <span class="op">=</span> train_state.TrainState.create(apply_fn<span class="op">=</span>model.<span class="bu">apply</span>,</span>
+<span id="cb73-4"><a href="#cb73-4" aria-hidden="true" tabindex="-1"></a>                                            params<span class="op">=</span>params,</span>
+<span id="cb73-5"><a href="#cb73-5" aria-hidden="true" tabindex="-1"></a>                                            tx<span class="op">=</span>optimizer)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With this state object, it is easier to handle the training.</p>
+</section>
+<section id="loss-function" class="level4">
+<h4 class="anchored" data-anchor-id="loss-function">Loss function</h4>
+<p>For performing gradient updates, we need a function that can calculate the loss for a batch. Afterwards, we can apply JAX’s gradient transformation to obtain a gradient function of it. In our setting, which is binary classification, we can use Binary Cross Entropy (BCE) which is defined as follows:</p>
+<p><span class="math display">\[\mathcal{L}_{BCE} = -\sum_i \left[ y_i \log x_i + (1 - y_i) \log (1 - x_i) \right]\]</span></p>
+<p>where <span class="math inline">\(y\)</span> are our labels, and <span class="math inline">\(x\)</span> our predictions, both in the range of <span class="math inline">\([0,1]\)</span>. Similar to PyTorch, Optax already provides a function for this: <code>optax.sigmoid_binary_cross_entropy(logits, labels)</code>. We calculate the loss on the logits instead of the sigmoid outputs for numerical stability. Let’s write a function that takes as input a state (for the forward function), parameters, and a batch, and return the binary cross entropy loss and accuracy:</p>
+<div id="cell-102" class="cell" data-execution_count="45">
+<div class="sourceCode cell-code" id="cb74"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a href="#cb74-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> calculate_loss_acc(state, params, batch):</span>
+<span id="cb74-2"><a href="#cb74-2" aria-hidden="true" tabindex="-1"></a>    data_input, labels <span class="op">=</span> batch</span>
+<span id="cb74-3"><a href="#cb74-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Obtain the logits and predictions of the model for the input data</span></span>
+<span id="cb74-4"><a href="#cb74-4" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> state.apply_fn(params, data_input).squeeze(axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb74-5"><a href="#cb74-5" aria-hidden="true" tabindex="-1"></a>    pred_labels <span class="op">=</span> (logits <span class="op">&gt;</span> <span class="dv">0</span>).astype(jnp.float32)</span>
+<span id="cb74-6"><a href="#cb74-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate the loss and accuracy</span></span>
+<span id="cb74-7"><a href="#cb74-7" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> optax.sigmoid_binary_cross_entropy(logits, labels).mean()</span>
+<span id="cb74-8"><a href="#cb74-8" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> (pred_labels <span class="op">==</span> labels).mean()</span>
+<span id="cb74-9"><a href="#cb74-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss, acc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that we explicitly add the parameters here as an input argument since we want to calculate the gradients with respect to them later. An example execution of the function would look like:</p>
+<div id="cell-104" class="cell" data-execution_count="46">
+<div class="sourceCode cell-code" id="cb75"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a href="#cb75-1" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(data_loader))</span>
+<span id="cb75-2"><a href="#cb75-2" aria-hidden="true" tabindex="-1"></a>calculate_loss_acc(model_state, model_state.params, batch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="46">
+<pre><code>(DeviceArray(0.6830494, dtype=float32), DeviceArray(0.625, dtype=float32))</code></pre>
+</div>
+</div>
+</section>
+</section>
+<section id="creating-an-efficient-training-and-validation-step" class="level3">
+<h3 class="anchored" data-anchor-id="creating-an-efficient-training-and-validation-step">Creating an efficient training and validation step</h3>
+<p>With this loss function and the optimizer, we are now ready to create an efficient training and validation/test step. First, let’s consider the training. As input to each training step, we have a training state and a batch. We then want to calculate the loss for the input and take the gradients of it. Finally, we update the parameters with our optimizer and return the new state. All this can be summarized in the following function:</p>
+<div id="cell-106" class="cell" data-execution_count="47">
+<div class="sourceCode cell-code" id="cb77"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a href="#cb77-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span>  <span class="co"># Jit the function for efficiency</span></span>
+<span id="cb77-2"><a href="#cb77-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step(state, batch):</span>
+<span id="cb77-3"><a href="#cb77-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Gradient function</span></span>
+<span id="cb77-4"><a href="#cb77-4" aria-hidden="true" tabindex="-1"></a>    grad_fn <span class="op">=</span> jax.value_and_grad(calculate_loss_acc,  <span class="co"># Function to calculate the loss</span></span>
+<span id="cb77-5"><a href="#cb77-5" aria-hidden="true" tabindex="-1"></a>                                 argnums<span class="op">=</span><span class="dv">1</span>,  <span class="co"># Parameters are second argument of the function</span></span>
+<span id="cb77-6"><a href="#cb77-6" aria-hidden="true" tabindex="-1"></a>                                 has_aux<span class="op">=</span><span class="va">True</span>  <span class="co"># Function has additional outputs, here accuracy</span></span>
+<span id="cb77-7"><a href="#cb77-7" aria-hidden="true" tabindex="-1"></a>                                )</span>
+<span id="cb77-8"><a href="#cb77-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determine gradients for current model, parameters and batch</span></span>
+<span id="cb77-9"><a href="#cb77-9" aria-hidden="true" tabindex="-1"></a>    (loss, acc), grads <span class="op">=</span> grad_fn(state, state.params, batch)</span>
+<span id="cb77-10"><a href="#cb77-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Perform parameter update with gradients and optimizer</span></span>
+<span id="cb77-11"><a href="#cb77-11" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> state.apply_gradients(grads<span class="op">=</span>grads)</span>
+<span id="cb77-12"><a href="#cb77-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Return state and any other value we might want</span></span>
+<span id="cb77-13"><a href="#cb77-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state, loss, acc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>By using the transformation <code>jax.jit</code>, the whole gradient calculation and application is optimized in XLA, providing an efficient function for updating the model.</p>
+<p>Next, let’s look at the evaluation function. Here, we do not need to calculate gradients, but only want to get the accuracy of the model for the batch. This becomes a simpler version of the training step:</p>
+<div id="cell-108" class="cell" data-execution_count="48">
+<div class="sourceCode cell-code" id="cb78"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a href="#cb78-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.jit</span>  <span class="co"># Jit the function for efficiency</span></span>
+<span id="cb78-2"><a href="#cb78-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_step(state, batch):</span>
+<span id="cb78-3"><a href="#cb78-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Determine the accuracy</span></span>
+<span id="cb78-4"><a href="#cb78-4" aria-hidden="true" tabindex="-1"></a>    _, acc <span class="op">=</span> calculate_loss_acc(state, state.params, batch)</span>
+<span id="cb78-5"><a href="#cb78-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> acc</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>These two functions provide us now efficient utilities to train our model.</p>
+</section>
+<section id="training" class="level3">
+<h3 class="anchored" data-anchor-id="training">Training</h3>
+<p>Finally, we are ready to train our model. As a first step, we create a slightly larger dataset and specify a data loader with a larger batch size.</p>
+<div id="cell-111" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb79"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a href="#cb79-1" aria-hidden="true" tabindex="-1"></a>train_dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">2500</span>, seed<span class="op">=</span><span class="dv">42</span>)</span>
+<span id="cb79-2"><a href="#cb79-2" aria-hidden="true" tabindex="-1"></a>train_data_loader <span class="op">=</span> data.DataLoader(train_dataset, batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">True</span>, collate_fn<span class="op">=</span>numpy_collate)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now, we can write a small training function. In contrast to PyTorch, we do not need to explicitly push our model to GPU, since the parameters are already automatically created on GPU. Further, since the model itself is stateless, we do not have a <code>train()</code> or <code>eval()</code> function to switch between modes of e.g.&nbsp;dropout. When necessary, we can add an argument <code>train : bool</code> to the model forward pass. For this simple network here, however, this is not necessary.</p>
+<p>Following the PyTorch tutorial, let’s write a function here that trains a model for several epochs:</p>
+<div id="cell-113" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb80"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a href="#cb80-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_model(state, data_loader, num_epochs<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb80-2"><a href="#cb80-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Training loop</span></span>
+<span id="cb80-3"><a href="#cb80-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> epoch <span class="kw">in</span> tqdm(<span class="bu">range</span>(num_epochs)):</span>
+<span id="cb80-4"><a href="#cb80-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> batch <span class="kw">in</span> data_loader:</span>
+<span id="cb80-5"><a href="#cb80-5" aria-hidden="true" tabindex="-1"></a>            state, loss, acc <span class="op">=</span> train_step(state, batch)</span>
+<span id="cb80-6"><a href="#cb80-6" aria-hidden="true" tabindex="-1"></a>            <span class="co"># We could use the loss and accuracy for logging here, e.g. in TensorBoard</span></span>
+<span id="cb80-7"><a href="#cb80-7" aria-hidden="true" tabindex="-1"></a>            <span class="co"># For simplicity, we skip this part here</span></span>
+<span id="cb80-8"><a href="#cb80-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-114" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb81"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a href="#cb81-1" aria-hidden="true" tabindex="-1"></a>trained_model_state <span class="op">=</span> train_model(model_state, train_data_loader, num_epochs<span class="op">=</span><span class="dv">100</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id":"c9ddb028438c41c48d19fb9f532175b0","version_major":2,"version_minor":0,"quarto_mimetype":"application/vnd.jupyter.widget-view+json"}
+</script>
+</div>
+</div>
+<p>Training this model for 100 epochs does take barely a second… This shows the impressive speed JAX can reach, especially for small models!</p>
+<section id="saving-a-model" class="level4">
+<h4 class="anchored" data-anchor-id="saving-a-model">Saving a model</h4>
+<p>After we finished training a model, we save the model to disk so that we can load the same weights at a later time. In JAX, this means we want to save the <code>state.params</code> dictionary. Luckily, the <code>flax.training</code> package again provides us with nice utilities for that, which uses TensorFlow as underlying framework.</p>
+<div id="cell-117" class="cell" data-execution_count="52">
+<div class="sourceCode cell-code" id="cb82"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a href="#cb82-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> flax.training <span class="im">import</span> checkpoints</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>To save the whole model state, we can write:</p>
+<div id="cell-119" class="cell" data-execution_count="53">
+<div class="sourceCode cell-code" id="cb83"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a href="#cb83-1" aria-hidden="true" tabindex="-1"></a>checkpoints.save_checkpoint(ckpt_dir<span class="op">=</span><span class="st">'my_checkpoints/'</span>,  <span class="co"># Folder to save checkpoint in</span></span>
+<span id="cb83-2"><a href="#cb83-2" aria-hidden="true" tabindex="-1"></a>                            target<span class="op">=</span>trained_model_state,  <span class="co"># What to save. To only save parameters, use model_state.params</span></span>
+<span id="cb83-3"><a href="#cb83-3" aria-hidden="true" tabindex="-1"></a>                            step<span class="op">=</span><span class="dv">100</span>,  <span class="co"># Training step or other metric to save best model on</span></span>
+<span id="cb83-4"><a href="#cb83-4" aria-hidden="true" tabindex="-1"></a>                            prefix<span class="op">=</span><span class="st">'my_model'</span>,  <span class="co"># Checkpoint file name prefix</span></span>
+<span id="cb83-5"><a href="#cb83-5" aria-hidden="true" tabindex="-1"></a>                            overwrite<span class="op">=</span><span class="va">True</span>   <span class="co"># Overwrite existing checkpoint files</span></span>
+<span id="cb83-6"><a href="#cb83-6" aria-hidden="true" tabindex="-1"></a>                           )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="53">
+<pre><code>'my_checkpoints/my_model100'</code></pre>
+</div>
+</div>
+<p>To load this state dict again, we can use <code>checkpoints.restore_checkpoint</code>:</p>
+<div id="cell-121" class="cell" data-execution_count="54">
+<div class="sourceCode cell-code" id="cb85"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a href="#cb85-1" aria-hidden="true" tabindex="-1"></a>loaded_model_state <span class="op">=</span> checkpoints.restore_checkpoint(</span>
+<span id="cb85-2"><a href="#cb85-2" aria-hidden="true" tabindex="-1"></a>                                             ckpt_dir<span class="op">=</span><span class="st">'my_checkpoints/'</span>,   <span class="co"># Folder with the checkpoints</span></span>
+<span id="cb85-3"><a href="#cb85-3" aria-hidden="true" tabindex="-1"></a>                                             target<span class="op">=</span>model_state,   <span class="co"># (optional) matching object to rebuild state in</span></span>
+<span id="cb85-4"><a href="#cb85-4" aria-hidden="true" tabindex="-1"></a>                                             prefix<span class="op">=</span><span class="st">'my_model'</span>  <span class="co"># Checkpoint file name prefix</span></span>
+<span id="cb85-5"><a href="#cb85-5" aria-hidden="true" tabindex="-1"></a>                                            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The states <code>loaded_model_state</code> and <code>trained_model_state</code> have the identical parameter values.</p>
+</section>
+</section>
+<section id="evaluation" class="level3">
+<h3 class="anchored" data-anchor-id="evaluation">Evaluation</h3>
+<p>Once we have trained a model, it is time to evaluate it on a held-out test set. As our dataset consist of randomly generated data points, we need to first create a test set with a corresponding data loader.</p>
+<div id="cell-124" class="cell" data-execution_count="55">
+<div class="sourceCode cell-code" id="cb86"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a href="#cb86-1" aria-hidden="true" tabindex="-1"></a>test_dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">500</span>, seed<span class="op">=</span><span class="dv">123</span>)</span>
+<span id="cb86-2"><a href="#cb86-2" aria-hidden="true" tabindex="-1"></a><span class="co"># drop_last -&gt; Don't drop the last batch although it is smaller than 128</span></span>
+<span id="cb86-3"><a href="#cb86-3" aria-hidden="true" tabindex="-1"></a>test_data_loader <span class="op">=</span> data.DataLoader(test_dataset, </span>
+<span id="cb86-4"><a href="#cb86-4" aria-hidden="true" tabindex="-1"></a>                                   batch_size<span class="op">=</span><span class="dv">128</span>, </span>
+<span id="cb86-5"><a href="#cb86-5" aria-hidden="true" tabindex="-1"></a>                                   shuffle<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb86-6"><a href="#cb86-6" aria-hidden="true" tabindex="-1"></a>                                   drop_last<span class="op">=</span><span class="va">False</span>, </span>
+<span id="cb86-7"><a href="#cb86-7" aria-hidden="true" tabindex="-1"></a>                                   collate_fn<span class="op">=</span>numpy_collate) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can use our <code>eval_step</code> function to efficiently evaluate our model:</p>
+<div id="cell-126" class="cell" data-execution_count="56">
+<div class="sourceCode cell-code" id="cb87"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb87-1"><a href="#cb87-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> eval_model(state, data_loader):</span>
+<span id="cb87-2"><a href="#cb87-2" aria-hidden="true" tabindex="-1"></a>    all_accs, batch_sizes <span class="op">=</span> [], []</span>
+<span id="cb87-3"><a href="#cb87-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> batch <span class="kw">in</span> data_loader:</span>
+<span id="cb87-4"><a href="#cb87-4" aria-hidden="true" tabindex="-1"></a>        batch_acc <span class="op">=</span> eval_step(state, batch)</span>
+<span id="cb87-5"><a href="#cb87-5" aria-hidden="true" tabindex="-1"></a>        all_accs.append(batch_acc)</span>
+<span id="cb87-6"><a href="#cb87-6" aria-hidden="true" tabindex="-1"></a>        batch_sizes.append(batch[<span class="dv">0</span>].shape[<span class="dv">0</span>])</span>
+<span id="cb87-7"><a href="#cb87-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Weighted average since some batches might be smaller</span></span>
+<span id="cb87-8"><a href="#cb87-8" aria-hidden="true" tabindex="-1"></a>    acc <span class="op">=</span> <span class="bu">sum</span>([a<span class="op">*</span>b <span class="cf">for</span> a,b <span class="kw">in</span> <span class="bu">zip</span>(all_accs, batch_sizes)]) <span class="op">/</span> <span class="bu">sum</span>(batch_sizes)</span>
+<span id="cb87-9"><a href="#cb87-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Accuracy of the model: </span><span class="sc">{</span><span class="fl">100.0</span><span class="op">*</span>acc<span class="sc">:4.2f}</span><span class="ss">%"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-127" class="cell" data-execution_count="57">
+<div class="sourceCode cell-code" id="cb88"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb88-1"><a href="#cb88-1" aria-hidden="true" tabindex="-1"></a>eval_model(trained_model_state, test_data_loader)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Accuracy of the model: 100.00%</code></pre>
+</div>
+</div>
+<p>If we trained our model correctly, we should see a score close to 100% accuracy. However, this is only possible because of our simple task, and unfortunately, we usually don’t get such high scores on test sets of more complex tasks.</p>
+<section id="binding-model-parameters" class="level4">
+<h4 class="anchored" data-anchor-id="binding-model-parameters">Binding model parameters</h4>
+<p>Once we have trained the model, we might want to do multiple application of the same model and parameters. It can get a bit annoying to always write <code>model.apply(params, ...)</code> and keep track of the model and parameters separately. To prevent this, Flax’s module can be bound to specific parameters to simplify our application. Specifically, we can bind the instance <code>model</code> of our <code>SimpleClassifier</code> class to our trained parameter as follows:</p>
+<div id="cell-130" class="cell" data-execution_count="58">
+<div class="sourceCode cell-code" id="cb90"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb90-1"><a href="#cb90-1" aria-hidden="true" tabindex="-1"></a>trained_model <span class="op">=</span> model.bind(trained_model_state.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the model being binded to the parameters, we can use it as we would any PyTorch module. For instance, to apply it to an input array, we can simply run:</p>
+<div id="cell-132" class="cell" data-execution_count="59">
+<div class="sourceCode cell-code" id="cb91"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb91-1"><a href="#cb91-1" aria-hidden="true" tabindex="-1"></a>data_input, labels <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(data_loader))</span>
+<span id="cb91-2"><a href="#cb91-2" aria-hidden="true" tabindex="-1"></a>out <span class="op">=</span> trained_model(data_input)  <span class="co"># No explicit parameter passing necessary anymore</span></span>
+<span id="cb91-3"><a href="#cb91-3" aria-hidden="true" tabindex="-1"></a>out.shape</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="59">
+<pre><code>(8, 1)</code></pre>
+</div>
+</div>
+<p>This can simplify the analysis of models, and provide a more familiar interface to PyTorch users.</p>
+</section>
+<section id="visualizing-classification-boundaries" class="level4">
+<h4 class="anchored" data-anchor-id="visualizing-classification-boundaries">Visualizing classification boundaries</h4>
+<p>To visualize what our model has learned, we can perform a prediction for every data point in a range of <span class="math inline">\([-0.5, 1.5]\)</span>, and visualize the predicted class as in the sample figure at the beginning of this section. This shows where the model has created decision boundaries, and which points would be classified as <span class="math inline">\(0\)</span>, and which as <span class="math inline">\(1\)</span>. We therefore get a background image out of blue (class 0) and orange (class 1). The spots where the model is uncertain we will see a blurry overlap. The specific code is less relevant compared to the output figure which should hopefully show us a clear separation of classes:</p>
+<div id="cell-135" class="cell" data-scrolled="false" data-execution_count="60">
+<div class="sourceCode cell-code" id="cb93"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb93-1"><a href="#cb93-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> visualize_classification(model, data, label):</span>
+<span id="cb93-2"><a href="#cb93-2" aria-hidden="true" tabindex="-1"></a>    data_0 <span class="op">=</span> data[label <span class="op">==</span> <span class="dv">0</span>]</span>
+<span id="cb93-3"><a href="#cb93-3" aria-hidden="true" tabindex="-1"></a>    data_1 <span class="op">=</span> data[label <span class="op">==</span> <span class="dv">1</span>]</span>
+<span id="cb93-4"><a href="#cb93-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb93-5"><a href="#cb93-5" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">4</span>,<span class="dv">4</span>), dpi<span class="op">=</span><span class="dv">500</span>)</span>
+<span id="cb93-6"><a href="#cb93-6" aria-hidden="true" tabindex="-1"></a>    plt.scatter(data_0[:,<span class="dv">0</span>], data_0[:,<span class="dv">1</span>], edgecolor<span class="op">=</span><span class="st">"#333"</span>, label<span class="op">=</span><span class="st">"Class 0"</span>)</span>
+<span id="cb93-7"><a href="#cb93-7" aria-hidden="true" tabindex="-1"></a>    plt.scatter(data_1[:,<span class="dv">0</span>], data_1[:,<span class="dv">1</span>], edgecolor<span class="op">=</span><span class="st">"#333"</span>, label<span class="op">=</span><span class="st">"Class 1"</span>)</span>
+<span id="cb93-8"><a href="#cb93-8" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="st">"Dataset samples"</span>)</span>
+<span id="cb93-9"><a href="#cb93-9" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="vs">r"$x_2$"</span>)</span>
+<span id="cb93-10"><a href="#cb93-10" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="vs">r"$x_1$"</span>)</span>
+<span id="cb93-11"><a href="#cb93-11" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb93-12"><a href="#cb93-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb93-13"><a href="#cb93-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Let's make use of a lot of operations we have learned above</span></span>
+<span id="cb93-14"><a href="#cb93-14" aria-hidden="true" tabindex="-1"></a>    c0 <span class="op">=</span> np.array(to_rgba(<span class="st">"C0"</span>))</span>
+<span id="cb93-15"><a href="#cb93-15" aria-hidden="true" tabindex="-1"></a>    c1 <span class="op">=</span> np.array(to_rgba(<span class="st">"C1"</span>))</span>
+<span id="cb93-16"><a href="#cb93-16" aria-hidden="true" tabindex="-1"></a>    x1 <span class="op">=</span> jnp.arange(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, step<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb93-17"><a href="#cb93-17" aria-hidden="true" tabindex="-1"></a>    x2 <span class="op">=</span> jnp.arange(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, step<span class="op">=</span><span class="fl">0.01</span>)</span>
+<span id="cb93-18"><a href="#cb93-18" aria-hidden="true" tabindex="-1"></a>    xx1, xx2 <span class="op">=</span> jnp.meshgrid(x1, x2, indexing<span class="op">=</span><span class="st">'ij'</span>)  <span class="co"># Meshgrid function as in numpy</span></span>
+<span id="cb93-19"><a href="#cb93-19" aria-hidden="true" tabindex="-1"></a>    model_inputs <span class="op">=</span> np.stack([xx1, xx2], axis<span class="op">=-</span><span class="dv">1</span>)</span>
+<span id="cb93-20"><a href="#cb93-20" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> model(model_inputs)</span>
+<span id="cb93-21"><a href="#cb93-21" aria-hidden="true" tabindex="-1"></a>    preds <span class="op">=</span> nn.sigmoid(logits)</span>
+<span id="cb93-22"><a href="#cb93-22" aria-hidden="true" tabindex="-1"></a>    output_image <span class="op">=</span> (<span class="dv">1</span> <span class="op">-</span> preds) <span class="op">*</span> c0[<span class="va">None</span>,<span class="va">None</span>] <span class="op">+</span> preds <span class="op">*</span> c1[<span class="va">None</span>,<span class="va">None</span>]  <span class="co"># Specifying "None" in a dimension creates a new one</span></span>
+<span id="cb93-23"><a href="#cb93-23" aria-hidden="true" tabindex="-1"></a>    output_image <span class="op">=</span> jax.device_get(output_image)  <span class="co"># Convert to numpy array. This only works for tensors on CPU, hence first push to CPU</span></span>
+<span id="cb93-24"><a href="#cb93-24" aria-hidden="true" tabindex="-1"></a>    plt.imshow(output_image, origin<span class="op">=</span><span class="st">'lower'</span>, extent<span class="op">=</span>(<span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="fl">1.5</span>))</span>
+<span id="cb93-25"><a href="#cb93-25" aria-hidden="true" tabindex="-1"></a>    plt.grid(<span class="va">False</span>)</span>
+<span id="cb93-26"><a href="#cb93-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> fig</span>
+<span id="cb93-27"><a href="#cb93-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb93-28"><a href="#cb93-28" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> visualize_classification(trained_model, dataset.data, dataset.label)</span>
+<span id="cb93-29"><a href="#cb93-29" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Introduction_to_JAX_files/figure-html/cell-61-output-1.svg" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>The decision boundaries might not look exactly as in the figure in the preamble of this section, since this has been created with the PyTorch version of the tutorial. Nevertheless, the result on the accuracy metric should be the approximately the same.</p>
+</section>
+</section>
+<section id="conclusion" class="level3">
+<h3 class="anchored" data-anchor-id="conclusion">Conclusion</h3>
+<p>This concludes our tutorial on training a neural network with JAX. While the functional programming perspective of JAX may seem very different to PyTorch at first, it enables a considerable speedup in training, not only for tiny models like here. If you are interested in seeing more practical use cases of JAX, we recommend checking out our other JAX Tutorials, such as:</p>
+<ul>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial5/Inception_ResNet_DenseNet.html">Tutorial 5 (JAX): Inception, ResNet and DenseNet</a> gives an intro to training convolutional classifiers on CIFAR10;</li>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial6/Transformers_and_MHAttention.html">Tutorial 6 (JAX): Transformers and Multi-Head Attention</a> builds a Transformer from scratch with Flax;</li>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial7/GNN_overview.html">Tutorial 7 (JAX): Graph Neural Networks</a> implements basic Graph Neural Network layers;</li>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial9/AE_CIFAR10.html">Tutorial 9 (JAX): Deep Autoencoders</a> shows how to train autoencoders on CIFAR10;</li>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial11/NF_image_modeling.html">Tutorial 11 (JAX): Normalizing Flows for image modeling</a> discusses Normalizing Flows as generative model on images;</li>
+<li><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial15/Vision_Transformer.html">Tutorial 15 (JAX): Vision Transformers</a> trains a Transformer on image classification for CIFAR10.</li>
+</ul>
+</section>
+</section>
+<section id="the-fancy-bits" class="level2">
+<h2 class="anchored" data-anchor-id="the-fancy-bits">✨ The Fancy Bits ✨</h2>
+<p>After reading this tutorial, you might wonder why we left out some key advertisement points of JAX: automatic vectorization, easy parallelization on multiple accelerators, etc. The reason why we did not include them in our previous discuss is that for building simple networks, and actual most models in our tutorials, you do not really need these methods. However, since they can be handy at some times, for instance, if you have access to a large cluster or are faced with functions that are annoying to vectorize, we review them here in a separate section: the Fancy Bits of JAX (the title is inspired by JAX’s tutorial <a href="https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html">🔪 JAX - The Sharp Bits 🔪</a>).</p>
+<section id="automatic-vectorization-with-vmap" class="level3">
+<h3 class="anchored" data-anchor-id="automatic-vectorization-with-vmap">Automatic Vectorization with vmap</h3>
+<p>In machine learning, we often vectorize methods to efficiently process multiple inputs or batch elements at the same time. Usually, we have to write the code ourselves to support additional dimensions to vectorize over. However, since JAX can already transform functions to run efficiently on accelerators or calculate gradients, it can also automatically vectorize a function. For instance, let’s consider a simple linear layer where we write a function for a single input <code>x</code> of shape <code>[c_in]</code>, a weight matrix <code>[c_in, c_out]</code>, and a bias vector <code>[c_out]</code>:</p>
+<div id="cell-140" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb94"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb94-1"><a href="#cb94-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> simple_linear(x, w, b):</span>
+<span id="cb94-2"><a href="#cb94-2" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We could already vectorize this function with matmul, but as an example,</span></span>
+<span id="cb94-3"><a href="#cb94-3" aria-hidden="true" tabindex="-1"></a>    <span class="co"># let us use a non-vectorized function with same output</span></span>
+<span id="cb94-4"><a href="#cb94-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> (x[:,<span class="va">None</span>] <span class="op">*</span> w).<span class="bu">sum</span>(axis<span class="op">=</span><span class="dv">0</span>) <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-141" class="cell" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb95"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb95-1"><a href="#cb95-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Example inputs</span></span>
+<span id="cb95-2"><a href="#cb95-2" aria-hidden="true" tabindex="-1"></a>rng, x_rng, w_rng, b_rng <span class="op">=</span> jax.random.split(rng, <span class="dv">4</span>)</span>
+<span id="cb95-3"><a href="#cb95-3" aria-hidden="true" tabindex="-1"></a>x_in <span class="op">=</span> jax.random.normal(x_rng, (<span class="dv">4</span>,))</span>
+<span id="cb95-4"><a href="#cb95-4" aria-hidden="true" tabindex="-1"></a>w_in <span class="op">=</span> jax.random.normal(w_rng, (<span class="dv">4</span>, <span class="dv">3</span>))</span>
+<span id="cb95-5"><a href="#cb95-5" aria-hidden="true" tabindex="-1"></a>b_in <span class="op">=</span> jax.random.normal(b_rng, (<span class="dv">3</span>,))</span>
+<span id="cb95-6"><a href="#cb95-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb95-7"><a href="#cb95-7" aria-hidden="true" tabindex="-1"></a>simple_linear(x_in, w_in, b_in)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="62">
+<pre><code>DeviceArray([-0.5393317,  1.4906642,  0.7108946], dtype=float32)</code></pre>
+</div>
+</div>
+<p>Now, we would like the function to support a batch dimension on <code>x</code>, i.e.&nbsp;<code>[batch, c_in]</code>. Our naive implementation above does not support this, since we specialized the axis we sum over. So, let’s make JAX do the work for us and vectorize the function by using <code>jax.vmap</code>:</p>
+<div id="cell-143" class="cell" data-execution_count="63">
+<div class="sourceCode cell-code" id="cb97"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb97-1"><a href="#cb97-1" aria-hidden="true" tabindex="-1"></a>vectorized_linear <span class="op">=</span> jax.vmap(simple_linear,</span>
+<span id="cb97-2"><a href="#cb97-2" aria-hidden="true" tabindex="-1"></a>                             in_axes<span class="op">=</span>(<span class="dv">0</span>, <span class="va">None</span>, <span class="va">None</span>),  <span class="co"># Which axes to vectorize for each input</span></span>
+<span id="cb97-3"><a href="#cb97-3" aria-hidden="true" tabindex="-1"></a>                             out_axes<span class="op">=</span><span class="dv">0</span>  <span class="co"># Which axes to map to in the output</span></span>
+<span id="cb97-4"><a href="#cb97-4" aria-hidden="true" tabindex="-1"></a>                            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Specifying <code>None</code> for the in-axes of the input arguments <code>w</code> and <code>b</code> means that we do not want to vectorize any of their input dimensions. With this vmap specification, the function <code>vectorized_linear</code> now supports an extra batch dimension in <code>x</code>! Let’s try it out:</p>
+<div id="cell-145" class="cell" data-execution_count="64">
+<div class="sourceCode cell-code" id="cb98"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb98-1"><a href="#cb98-1" aria-hidden="true" tabindex="-1"></a>x_vec_in <span class="op">=</span> jnp.stack([x_in]<span class="op">*</span><span class="dv">5</span>, axis<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb98-2"><a href="#cb98-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb98-3"><a href="#cb98-3" aria-hidden="true" tabindex="-1"></a>vectorized_linear(x_vec_in, w_in, b_in)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="64">
+<pre><code>DeviceArray([[-0.5393317,  1.4906642,  0.7108946],
+             [-0.5393317,  1.4906642,  0.7108946],
+             [-0.5393317,  1.4906642,  0.7108946],
+             [-0.5393317,  1.4906642,  0.7108946],
+             [-0.5393317,  1.4906642,  0.7108946]], dtype=float32)</code></pre>
+</div>
+</div>
+<p>The new function indeed vectorized our code, calculating <span class="math inline">\(N\)</span> applications of the weights and bias to the input. We can also vectorize the code to run multiple inputs <code>x</code> on multiple weights <code>w</code> and biases <code>b</code> by changing the input argument <code>in_axes</code> to <code>(0, 0, 0)</code>, or simply <code>0</code>. Morever, we can again stack multiple function transformations, such as jitting a vectorized function. Further details on <code>jax.vmap</code> can be found in this <a href="https://jax.readthedocs.io/en/latest/jax-101/03-vectorization.html">tutorial</a> and its <a href="https://jax.readthedocs.io/en/latest/_autosummary/jax.vmap.html?highlight=vmap">documentation</a>.</p>
+</section>
+<section id="parallel-evaluation-with-pmap" class="level3">
+<h3 class="anchored" data-anchor-id="parallel-evaluation-with-pmap">Parallel evaluation with pmap</h3>
+<p><code>jax.vmap</code> vectorizes a function on a single accelerator. But what if we have multiple GPUs or TPUs available? In PyTorch, we can parallelize a model over multiple GPUs using <code>nn.DistributedDataParallel</code>. In JAX, this is yet another function transformation: <code>jax.pmap</code>. Similar to <code>jax.vmap</code>, we can specify over which axes each input should be parallelized. In a network training, we usually want to parallelize over an extra batch dimension in the data, while the parameters are identical for all devices. For more details on <code>jax.pmap</code>, see <a href="https://jax.readthedocs.io/en/latest/jax-101/06-parallelism.html">Parallel Evaluation in JAX</a>.</p>
+</section>
+<section id="working-with-pytrees" class="level3">
+<h3 class="anchored" data-anchor-id="working-with-pytrees">Working with PyTrees</h3>
+<p>Network parameters in Flax are stored in a PyTree. We have visited them before, but what we haven’t discuss yet is JAX’s utilities to operate on pytrees! One common application is to obtain a list of all parameters in the network. This corresponds to extracting all leafs from a PyTree, for which JAX provides the function <code>jax.tree_leaves</code>:</p>
+<div id="cell-149" class="cell" data-execution_count="65">
+<div class="sourceCode cell-code" id="cb100"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb100-1"><a href="#cb100-1" aria-hidden="true" tabindex="-1"></a>parameters <span class="op">=</span> jax.tree_leaves(model_state.params)</span>
+<span id="cb100-2"><a href="#cb100-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'We have parameters with the following shapes:'</span>, <span class="st">', '</span>.join([<span class="bu">str</span>(p.shape) <span class="cf">for</span> p <span class="kw">in</span> parameters]))</span>
+<span id="cb100-3"><a href="#cb100-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Overall parameter count:'</span>, <span class="bu">sum</span>([np.prod(p.shape) <span class="cf">for</span> p <span class="kw">in</span> parameters]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>We have parameters with the following shapes: (8,), (2, 8), (1,), (8, 1)
+Overall parameter count: 33</code></pre>
+</div>
+</div>
+<p>We can also create new PyTrees that are the result of applying a function on all elements in the tree using <code>jax.tree_map</code>. For instance, let’s obtain a PyTree with all parameter shapes:</p>
+<div id="cell-151" class="cell" data-execution_count="66">
+<div class="sourceCode cell-code" id="cb102"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb102-1"><a href="#cb102-1" aria-hidden="true" tabindex="-1"></a>jax.tree_map(<span class="kw">lambda</span> p: p.shape, model_state.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="66">
+<pre><code>FrozenDict({
+    params: {
+        linear1: {
+            bias: (8,),
+            kernel: (2, 8),
+        },
+        linear2: {
+            bias: (1,),
+            kernel: (8, 1),
+        },
+    },
+})</code></pre>
+</div>
+</div>
+<p>The nodes of PyTrees do not necessarily need to be NumPy or JAX arrays, but can be arbitrary objects. Overall, PyTrees provide a simple, structured representation of data useful in many applications. More details can be found in JAX’s Tutorial <a href="https://jax.readthedocs.io/en/latest/jax-101/05.1-pytrees.html">Working with PyTrees</a>.</p>
+</section>
+</section>
+<section id="the-sharp-bits" class="level2">
+<h2 class="anchored" data-anchor-id="the-sharp-bits">🔪 The Sharp Bits 🔪</h2>
+<p>Since JAX functions need to be written with certain constraints, there are situations where this can get annoying or difficult. A great overview of those, why they are needed, and most importantly, what to do about them, can be found in the original JAX tutorial <a href="https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html">🔪 JAX - The Sharp Bits 🔪</a>. In this final section of the tutorial, we want to visit a few of those points we have not explicitly discussed yet. Furthermore, we also focus on the combination with Flax, and what can be annoying when training models.</p>
+<section id="dynamic-shapes" class="level3">
+<h3 class="anchored" data-anchor-id="dynamic-shapes">Dynamic shapes</h3>
+<p>JAX has the great advantage of providing just-in-time compilation of functions to speed up the computation. For this, it uses its intermediate representation jaxpr, which is specialized to the shapes of the input arguments. However, this also means that a jitted function is specialized to a certain shape, and running the jitted function with a different input shape requires recompiling the function. For instance, consider the following simple function:</p>
+<div id="cell-155" class="cell" data-execution_count="67">
+<div class="sourceCode cell-code" id="cb104"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb104-1"><a href="#cb104-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> my_function(x):</span>
+<span id="cb104-2"><a href="#cb104-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">'Running the function with shape'</span>, x.shape)</span>
+<span id="cb104-3"><a href="#cb104-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> x.mean()</span>
+<span id="cb104-4"><a href="#cb104-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb104-5"><a href="#cb104-5" aria-hidden="true" tabindex="-1"></a>jitted_function <span class="op">=</span> jax.jit(my_function)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The print statement is only executed once when the function is compiled, and for all consecutive function calls, this print statement will be ignored since it is not part of the jaxpr representation. Let’s run the function now with multiple different input shapes:</p>
+<div id="cell-157" class="cell" data-execution_count="68">
+<div class="sourceCode cell-code" id="cb105"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb105-1"><a href="#cb105-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb105-2"><a href="#cb105-2" aria-hidden="true" tabindex="-1"></a>    jitted_function(jnp.zeros(i<span class="op">+</span><span class="dv">1</span>,))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Running the function with shape (1,)
+Running the function with shape (2,)
+Running the function with shape (3,)
+Running the function with shape (4,)
+Running the function with shape (5,)
+Running the function with shape (6,)
+Running the function with shape (7,)
+Running the function with shape (8,)
+Running the function with shape (9,)
+Running the function with shape (10,)</code></pre>
+</div>
+</div>
+<p>As we can see, the function is compiled for every different input we give it. This can become inefficient if we actually work with many different shapes. However, running the function again with one of the previous input shapes will not require another compilation:</p>
+<div id="cell-159" class="cell" data-execution_count="69">
+<div class="sourceCode cell-code" id="cb107"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb107-1"><a href="#cb107-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Running the functions a second time will not print out anything since</span></span>
+<span id="cb107-2"><a href="#cb107-2" aria-hidden="true" tabindex="-1"></a><span class="co"># the functions are already jitted for the respective input shapes.</span></span>
+<span id="cb107-3"><a href="#cb107-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
+<span id="cb107-4"><a href="#cb107-4" aria-hidden="true" tabindex="-1"></a>    jitted_function(jnp.zeros(i<span class="op">+</span><span class="dv">1</span>,))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>If we have a very limited set of different shapes, we do not see a big performance difference. For instance, in our evaluation, the last batch size is smaller than the previous since we have a limited size of the evaluation dataset. However, for other applications, we might encounter this problem much more often: NLP and time series, and graphs. In these cases, it is recommend to pad the batches to prevent many re-compilations (see Flax’s <a href="https://flax.readthedocs.io/en/latest/howtos/full_eval.html">padding guide</a> for details). We briefly review the two scenarios below.</p>
+<section id="nlp-and-time-series" class="level4">
+<h4 class="anchored" data-anchor-id="nlp-and-time-series">NLP and time series</h4>
+<p>In Natural Language Processing, our data consist of sentences which greatly vary in size. Already for batching the elements, we need to apply padding, such that the shape of the batch is determined by the largest sentence in the batch. However, this largest length can vary between batches, especially when we shuffle the dataset before each epoch. In PyTorch, this is not a problem, since the dynamic computation graph allows us to stop the computation whenever we need to. In contrast, JAX would need to recompile the forward pass for every single largest sentence length, which can quickly become very expensive. Padding is needed to reduce the number of compilations, but at the same time introduces unnecessary computation. Hence, we have a tradeoff between number of compilations and extra compute per batch. In the extreme case, PyTorch may even become faster than JAX here.</p>
+</section>
+<section id="graphs" class="level4">
+<h4 class="anchored" data-anchor-id="graphs">Graphs</h4>
+<p>Similar to NLP, graphs can vary in their size. Often, graphs differ in their number of nodes, but especially in the number of edges. Furthermore, when we start batching the graphs, the variation of node sizes and edge count considerably increases. Again, padding is needed to reduce the number of compilations, and we will revisit this topic in Tutorial 7 (TBD).</p>
+</section>
+</section>
+<section id="debugging-in-jitted-functions" class="level3">
+<h3 class="anchored" data-anchor-id="debugging-in-jitted-functions">Debugging in jitted functions</h3>
+<p>During coding, we likely want to debug our model and sometimes print out intermediate values. In JAX, when jitting functions, this is not as straightforward. As we could see from the previous cells, a print statement is only executed once during compilation, and afterwards removed since it is not part of the jaxpr representation. Furthermore, there can be issues when tracking NaNs in your code (see the <a href="https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html#debugging-nans">sharp bits tutorial</a>), and errors like out-of-bounds indexing are silently handled on accelerators by returning -1 instead of an error (see the corresponding section in the <a href="https://jax.readthedocs.io/en/latest/notebooks/Common_Gotchas_in_JAX.html#out-of-bounds-indexing">sharp bits tutorial</a>). However, if necessary, one can either run the unjitted version of the forward pass first, and even introduce print statements to the jitted version where needed (see <a href="https://github.com/google/jax/issues/196">here</a> for a great explanation). Still, it is not as straight-forward as in PyTorch, for example.</p>
+</section>
+<section id="modules-with-different-train-and-evaluation-functions" class="level3">
+<h3 class="anchored" data-anchor-id="modules-with-different-train-and-evaluation-functions">Modules with different train and evaluation functions</h3>
+<p>Certain deep learning layers have different behaviors under evaluation than during training. For instance, dropout randomly masks out a number of neurons during training, but leaves the graph untouched during evaluation. In PyTorch, we can easily switch between the two states via <code>model.train()</code> and <code>model.eval()</code> without having to manually specify it in the dropout module instance. However, in JAX, we do not have global states in the model, and thus need to pass this information to every module in the forward pass that may need it. In our example above, this was not needed, since the forward pass of the simple classifier is identical during training and evaluation. Alternatively, since the parameters are not bound to a specific model during training, one can also create two models: one training model, and one evaluation model. Nonetheless, one still needs to add the information to every module with changing behaviors, which adds a certain overhead compared to PyTorch. We will discuss two common modules with such behaviors below: dropout and BatchNorm.</p>
+<section id="dropout" class="level4">
+<h4 class="anchored" data-anchor-id="dropout">Dropout</h4>
+<p>In Flax, <a href="https://flax.readthedocs.io/en/latest/_autosummary/flax.linen.Dropout.html">Dropout</a> has an argument <code>deterministic</code> which turns off dropout when True, and otherwise applies the random masking as intended during training. This deterministic switch can either be defined in the constructor, or in every forward call. Furthermore, dropout has the special case that it is a random operation during training, meaning that it also needs a PRNG state. Fortunately, we do not have to pass this state in every PRNG state, but instead, can simply pass <code>rngs={'dropout': dropout_rng}</code> with <code>dropout_rng</code> being the PRNG state. For an example, see our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial6/Transformers_and_MHAttention.html">Tutorial 6</a> on Transformers in which we use dropout in several occasions.</p>
+</section>
+<section id="batchnorm" class="level4">
+<h4 class="anchored" data-anchor-id="batchnorm">BatchNorm</h4>
+<p>Batch Normalization transforms the input in two different ways. During training, we determine the mean and standard deviation of the input, and normalize the data with it to a zero mean and standard deviation of one. During evaluation, on the other hand, we take a running statistic over the previous several batches, and use those to estimate the mean and standard deviation. This is necessary to keep the evaluation stable and invariant to the specific batches we choose. Still, in the Flax module (<a href="https://flax.readthedocs.io/en/latest/_autosummary/flax.linen.BatchNorm.html">documentation</a>), we need to give the argument <code>use_running_average</code> (bool) to either the constructor or each forward pass. Furthermore, BatchNorm has a specific property we haven’t discussed yet and is a bit tricky in JAX: keeping track of the running average. During every forward pass, we want to record the mean and standard deviation of the current batch, and update our current average over the past batches. However, this requires changing an input tensor, and returning this changed tensor again. In Flax, we can do this by defining the batch statistics as a mutable tensor. Check out our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial5/Inception_ResNet_DenseNet.html">Tutorial 5</a> to see BatchNorm being used in practice with Flax.</p>
+<hr>
+<p><a href="https://github.com/phlippe/uvadlc_notebooks/"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=⭐&amp;message=Star%20Our%20Repository&amp;color=yellow" class="img-fluid" alt="Star our repository"></a> If you found this tutorial helpful, consider ⭐-ing our repository.<br>
+<a href="https://github.com/phlippe/uvadlc_notebooks/issues"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=❔&amp;message=Ask%20Questions&amp;color=9cf" class="img-fluid" alt="Ask questions"></a> For any questions, typos, or bugs that you found, please raise an issue on GitHub.</p>
+<hr>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

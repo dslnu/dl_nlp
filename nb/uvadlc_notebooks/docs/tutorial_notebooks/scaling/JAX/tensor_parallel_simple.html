@@ -1,0 +1,1309 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Part 4.1: Tensor Parallelism – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#tensor-parallelism-for-linear-layers" id="toc-tensor-parallelism-for-linear-layers" class="nav-link" data-scroll-target="#tensor-parallelism-for-linear-layers">Tensor Parallelism for Linear Layers</a>
+  <ul class="collapse">
+  <li><a href="#mlp-block" id="toc-mlp-block" class="nav-link" data-scroll-target="#mlp-block">MLP Block</a></li>
+  <li><a href="#mlp-classifier" id="toc-mlp-classifier" class="nav-link" data-scroll-target="#mlp-classifier">MLP Classifier</a></li>
+  <li><a href="#initialization" id="toc-initialization" class="nav-link" data-scroll-target="#initialization">Initialization</a></li>
+  <li><a href="#training-with-tensor-parallelism" id="toc-training-with-tensor-parallelism" class="nav-link" data-scroll-target="#training-with-tensor-parallelism">Training with Tensor Parallelism</a></li>
+  <li><a href="#intermediate-summary" id="toc-intermediate-summary" class="nav-link" data-scroll-target="#intermediate-summary">Intermediate Summary</a></li>
+  </ul></li>
+  <li><a href="#references-and-resources" id="toc-references-and-resources" class="nav-link" data-scroll-target="#references-and-resources">References and Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Part 4.1: Tensor Parallelism</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/scaling/JAX/tensor_parallel_simple.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View filled on Github"></a> <a href="https://colab.research.google.com/github/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/scaling/JAX/tensor_parallel_simple.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open filled In Collab"></a></p>
+<p><strong>Author:</strong> <a href="https://phlippe.github.io/">Phillip Lippe</a></p>
+<p>In this tutorial, we will discuss tensor parallelism, another important parallelism strategy for training large-scale deep learning models. Similar to pipeline parallelism, tensor parallelism is a model parallelism strategy, which means that it focuses on parallelizing the model itself, rather than the data. The key difference between pipeline and tensor parallelism is how they split the model over devices. In pipeline parallelism, the model is split over devices along the sequence of layers (i.e.&nbsp;vertically), while in tensor parallelism, the model is split over devices along the feature dimensions (i.e.&nbsp;horizontally). Each device will then process a different subset of features, and the model’s forward and backward passes will be split over devices accordingly. A short overview of the parallelism strategies is shown below.</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/parallelism_strategies_overview.svg" width="1000px">
+</center>
+<p>Tensor parallelism can be applied on a per-module/per-layer basis. This gives more flexibility in how to split the model over devices than pipeline parallelism, and can even handle situations where a single layer is too big to fit on a single device. Furthermore, tensor parallelism does not suffer from the pipeline bubble problem, as all devices can work on the same batch of data at the same time. The key behind making tensor parallelism efficient will be, again, to overlap computation with communication, and to minimize the amount of communication required.</p>
+<p>Still, tensor parallelism relies on frequent communication between devices, such that it requires devices with high speed interconnects like TPUs or GPUs with <a href="https://www.nvidia.com/en-us/data-center/nvlink/">NVLink</a>, and is often restricted to devices within a node. For example, <a href="https://arxiv.org/abs/2312.11805">Gemini v1</a> was trained with model parallelism within a node (TPU superpod), but applies only data parallelism across nodes.</p>
+<p>In this tutorial, we will discuss the principles of tensor parallelism, and how to implement it in JAX. We will first start with an implementation on a simple MLP model. In <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/scaling/JAX/tensor_parallel_async.html">Part 4.2</a>, we discuss techniques from models like the <a href="https://arxiv.org/abs/2302.05442">ViT-22b</a> to maximize efficiency of tensor parallelism with compute-communication overlaps. Finally, in <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/scaling/JAX/tensor_parallel_transformer.html">Part 4.3</a>, we will discuss how to apply tensor parallelism to the transformer model specifically, and how to combine tensor parallelism with fully-sharded data parallelism.</p>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<p>First, let’s start with setting up the basic environment and utility functions we have seen from previous notebooks. We download the python scripts of the previous notebooks below. This is only needed when running on Google Colab, and local execution will skip this step automatically.</p>
+<div id="cell-4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Github URL where python scripts are stored.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/phlippe/uvadlc_notebooks/master/docs/tutorial_notebooks/scaling/JAX/"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Files to download.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>python_files <span class="op">=</span> [<span class="st">"single_gpu.py"</span>, <span class="st">"data_parallel.py"</span>, <span class="st">"pipeline_parallel.py"</span>, <span class="st">"utils.py"</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For each file, check whether it already exists. If not, try downloading it.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file_name <span class="kw">in</span> python_files:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(file_name):</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        file_url <span class="op">=</span> base_url <span class="op">+</span> file_name</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>file_url<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            urllib.request.urlretrieve(file_url, file_name)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> HTTPError <span class="im">as</span> e:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Something went wrong. Please try to download the file directly from the GitHub repository, or contact the author with the full output including the following error:</span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                e,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As before, we simulate 8 devices on CPU to demonstrate the parallelism without the need for multiple GPUs or TPUs. If you are running on your local machine and have multiple GPUs available, you can comment out the lines below.</p>
+<div id="cell-6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> simulate_CPU_devices</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>simulate_CPU_devices()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We now import our standard libraries.</p>
+<div id="cell-8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functools</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Any, Callable, Dict, Literal, Tuple</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> flax.linen <span class="im">as</span> nn</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.experimental.shard_map <span class="im">import</span> shard_map</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.sharding <span class="im">import</span> Mesh</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.sharding <span class="im">import</span> PartitionSpec <span class="im">as</span> P</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ml_collections <span class="im">import</span> ConfigDict</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>PyTree <span class="op">=</span> Any</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>Parameter <span class="op">=</span> jax.Array <span class="op">|</span> nn.Partitioned</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>Metrics <span class="op">=</span> Dict[<span class="bu">str</span>, Tuple[jax.Array, ...]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We also import the utility functions from the previous notebooks. Our notebook will rely on the <code>ModelParallelismWrapper</code> from the pipeline parallelism notebook. If you are not familiar with it, it is recommended to look at the implementation of this module before continuing.</p>
+<div id="cell-10" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> data_parallel <span class="im">import</span> fold_rng_over_axis, sync_gradients</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pipeline_parallel <span class="im">import</span> ModelParallelismWrapper</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> single_gpu <span class="im">import</span> Batch, TrainState, accumulate_gradients, print_metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="tensor-parallelism-for-linear-layers" class="level2">
+<h2 class="anchored" data-anchor-id="tensor-parallelism-for-linear-layers">Tensor Parallelism for Linear Layers</h2>
+<p>The key design principle behind tensor parallelism is to split the model over devices along the feature dimensions. For instance, consider a Transformer model with a hidden size of 1024, and we want to split the model over 4 devices. We would then split the hidden size over the devices, such that device 0 will process features 0-255, device 1 will process features 256-511, and so on. However, as we know from basic deep learning principles, the hidden dimensions are rarely independently processed. Thus, we need to design the model layers such that they communicate features or outputs between devices efficiently, whenever it is needed.</p>
+<p>As the most basic neural network operations, let’s consider a matrix multiplication as we would do it in an MLP. We can write it as <span class="math inline">\(Ax=y\)</span>, with <span class="math inline">\(A\in\mathbb{R}^{d_y\times d_x}\)</span> being the weight matrix, <span class="math inline">\(x\in\mathbb{R}^{d_x\times B}\)</span> the input (batch last for simplicity), and <span class="math inline">\(y\in\mathbb{R}^{d_y\times B}\)</span> the output. In tensor parallelism, each device will carry a subset of the input dimensions, e.g.&nbsp;<span class="math inline">\(x\)</span> is split into <span class="math inline">\(x_0, x_1, x_2, x_3\)</span> across devices. The goal is to end up with the same output <span class="math inline">\(y\)</span> as if we had computed it on a single device, but again partitioned across devices (<span class="math inline">\(y_0, y_1, y_2, y_3\)</span>). This is visualized below.</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/tensor_linear_basic_setup.svg" width="800px">
+</center>
+<p>The question is now how to split <span class="math inline">\(A\)</span> such that we can compute <span class="math inline">\(y\)</span> in a distributed manner. There are two main strategies we can follow are communicating the input (gather) or the output (scatter).</p>
+<p>In the <strong>gather</strong> strategy, we communicate the input <span class="math inline">\(x\)</span> to all devices, such that each device has the full <span class="math inline">\(x\)</span> (this communication type is called <a href="https://jax.readthedocs.io/en/latest/_autosummary/jax.lax.all_gather.html">all_gather</a>). Then, we can compute the output <span class="math inline">\(y\_i\)</span> on each device <span class="math inline">\(i\)</span> independently by: <span class="math inline">\(y_i = \sum_{j} A_{i,j} x_j\)</span>.</p>
+<p>In the <strong>scatter</strong> strategy, we compute the sub-result of each input <span class="math inline">\(x_i\)</span> on the output <span class="math inline">\(y\)</span> independently on each device: <span class="math inline">\(y^{(i)}_j=A_{i,j}x_{i}\)</span>. Afterwards, we communicate the results across devices and sum the needed result on each device: <span class="math inline">\(y_i = \sum_{j} y^{(j)}_i\)</span>. This communication type is called <a href="https://jax.readthedocs.io/en/latest/_autosummary/jax.lax.psum_scatter.html#jax.lax.psum_scatter">(psum) scatter</a>.</p>
+<p>In terms of the weight matrix <span class="math inline">\(A\)</span>, the two strategies differ in that the gather strategy splits the rows of <span class="math inline">\(A\)</span> across devices, while the scatter strategy splits the columns of <span class="math inline">\(A\)</span> across devices. We visualize the two strategies below (for simplicity, the communication is not explicitly visualized).</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/tensor_linear_gather_scatter.svg" width="800px">
+</center>
+<p>Which of the two strategies is more efficient depends on the size of the input and output dimensions. In general, we want to communicate as little data as possible, and thus the gather strategy is more efficient if the input dimension is much larger than the output dimension, and vice versa. Since the dimensions will be different for each layer, we will need to decide on a per-layer basis which strategy to use. For example, in an MLP block of a Transformer where we expand the hidden dimension by 4x, we will want to use the gather strategy for the first linear layer, and the scatter strategy for the second linear layer. This way, we avoid communicating the large hidden dimensionality.</p>
+<p>Let’s now implement the two strategies in JAX. In the gather strategy, each device will hold <span class="math inline">\(A_{i,:}\in\mathbb{R}^{d_y/4\times d_x}\)</span> of the weight matrix, and in the scatter strategy, each device will hold <span class="math inline">\(A_{:,i}\in\mathbb{R}^{d_y\times d_x/4}\)</span> of the weight matrix. This raises a small difficulty during initialization. Many initialization strategies depend on the shape of the full weight matrix, and we need to adjust them to the shape of the split weight matrix. As a simple trick, we will implement a wrapper around the init function that will scale the values by a specified constant. We then leave it up the user to adjust the constant such that the initialization is appropriate for the split weight matrix. For instance, if we use a fan-in initialization (e.g.&nbsp;<a href="https://arxiv.org/abs/1502.01852">He initialization</a>), we would scale the initialization by <span class="math inline">\(\sqrt{1/\text{num}\_\text{devices}}\)</span> for the scatter strategy to adjust for the <span class="math inline">\(1/\text{num}\_\text{devices}\)</span> smaller input dimension. For the gather strategy, we would not need to scale the initialization, since all devices will process the full input dimension. For more details on network initialization, see our <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/JAX/tutorial4/Optimization_and_Initialization.html">initialization tutorial</a>. As an alternative, we could implement our own initializer functions that directly take into account the split weight matrix dimensions (which may be tedious to support all initializations), or initialize the full weight matrix on each device and then split it. However, the latter would be less efficient and would potentially even fail if the weight matrix is too large to fit on a single device.</p>
+<div id="cell-13" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> scale_init(init_fn: Callable, scale_factor: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span>):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Scales the output of the given init function by the given factor.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">        init_fn: The init function to scale.</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co">        scale_factor: The factor to scale the output of the init function by.</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">        A new init function that scales the output of the given init function by the given factor.</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _init_fn(rng, <span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> scale_factor <span class="op">*</span> init_fn(rng, <span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> _init_fn</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We implement the tensor parallelism for the linear layer below in a wrapper module <code>TPDense</code>. It takes as input a constructor <code>dense_fn</code> to create the linear layer. The <code>TPDense</code> module will then split the weight matrix over the devices, and implement the gather and scatter strategies for the forward and backward passes. For some layers, we may need to implement custom communications. For instance, the very first layer of the model may already have the input gather over devices, since we can prefetch the batch from the host to all devices. Similarly, in the last layer of the module, we may not want to scatter the output, but rather gather it to a single device to compute the loss. We will implement these custom communications in the full model later, and for now support them via the keyword <code>skip_communication</code>.</p>
+<div id="cell-15" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TPDense(nn.Module):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Dense layer with Tensor Parallelism support.</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">    This layer can be used to perform a dense layer with Tensor Parallelism support.</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Attributes:</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">        dense_fn: Constructor function of the dense layer to use. Needs to support the keyword argument `kernel_init`.</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">        model_axis_name: The name of the model axis.</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">        tp_mode: The Tensor Parallelism mode to use. Can be "scatter", "gather", or "none".</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co">        skip_communication: Whether to skip communication in the Tensor Parallelism strategy. Useful for layers with custom communication or where input has been already gathered beforehand.</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co">        kernel_init: The initializer to use for the kernel of the dense layer.</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="co">        kernel_init_adjustment: The adjustment factor to use for the kernel initializer.</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co">        dense_name: The name of the dense layer module.</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    dense_fn: Any</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    model_axis_name: <span class="bu">str</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    tp_mode: Literal[<span class="st">"scatter"</span>, <span class="st">"gather"</span>, <span class="st">"none"</span>] <span class="op">=</span> <span class="st">"none"</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    skip_communication: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    kernel_init: Callable <span class="op">=</span> nn.initializers.lecun_normal()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    kernel_init_adjustment: <span class="bu">float</span> <span class="op">=</span> <span class="fl">1.0</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    dense_name: <span class="bu">str</span> <span class="op">=</span> <span class="st">"module"</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        tp_size <span class="op">=</span> jax.lax.psum(<span class="dv">1</span>, <span class="va">self</span>.model_axis_name)</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        tp_mode <span class="op">=</span> <span class="va">self</span>.tp_mode <span class="cf">if</span> tp_size <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">"none"</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Wrap the dense layer in a ModelParallelismWrapper to shard the parameters.</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        dense_fn <span class="op">=</span> functools.partial(</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>            ModelParallelismWrapper,</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>            model_axis_name<span class="op">=</span><span class="va">self</span>.model_axis_name,</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>            module_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.dense_fn,</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>                kernel_init<span class="op">=</span>scale_init(<span class="va">self</span>.kernel_init, <span class="va">self</span>.kernel_init_adjustment),</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="va">self</span>.dense_name,</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> tp_mode <span class="op">==</span> <span class="st">"none"</span>:</span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Vanilla dense layer.</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> <span class="va">self</span>.dense_fn(kernel_init<span class="op">=</span><span class="va">self</span>.kernel_init)(x)</span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> tp_mode <span class="op">==</span> <span class="st">"gather"</span>:</span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Gather strategy: communicate all the inputs to all the devices, then perform the dense layer.</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.skip_communication:</span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> jax.lax.all_gather(x, <span class="va">self</span>.model_axis_name, axis<span class="op">=-</span><span class="dv">1</span>, tiled<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> dense_fn()(x)</span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> tp_mode <span class="op">==</span> <span class="st">"scatter"</span>:</span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Scatter strategy: perform the dense layer on each device, then communicate the outputs to all the devices.</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> dense_fn()(x)</span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">not</span> <span class="va">self</span>.skip_communication:</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>                x <span class="op">=</span> jax.lax.psum_scatter(</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>                    x, axis_name<span class="op">=</span><span class="va">self</span>.model_axis_name, scatter_dimension<span class="op">=</span>x.ndim <span class="op">-</span> <span class="dv">1</span>, tiled<span class="op">=</span><span class="va">True</span></span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>                )</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>            <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="ss">f"Unknown Tensor Parallel mode: </span><span class="sc">{</span>tp_mode<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that one small difference we are skipping over for now is the bias term in the scatter strategy. In the current implementation, each device will hold a separate bias term, and we will sum the bias terms across devices in the forward pass. This gives the bias a four times higher learning rate, which may be undesirable. For simplicity, we will ignore this for now since this will not be our final module, but in later modules, we show how this is addressed.</p>
+<section id="mlp-block" class="level3">
+<h3 class="anchored" data-anchor-id="mlp-block">MLP Block</h3>
+<p>As an example network, we will implement an MLP block of the same form as used in Transformers. It consists of a normalization layer, a linear layer scaling up the hidden dimensionality, a non-linearity, and a linear layer scaling down the hidden dimensionality again. As discussed before, we will use the gather strategy for the first linear layer, and the scatter strategy for the second linear layer. The computation graph per device is visualized below.</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/tensor_mlp_block.svg" width="1200px">
+</center>
+<p>Here, <span class="math inline">\(h_0\)</span> are the intermediate features in the MLP (can be of different dimensions than <span class="math inline">\(x\)</span>), and <span class="math inline">\(y^0\)</span> the outputs calculated on <span class="math inline">\(h_0\)</span> alone. The gather and scatter operations are performed at the two ends of the MLP, such that no communication needs to performed within the MLP block, increasing efficiency.</p>
+<p>We start with implementing the input layer, which consists of the normalization and the first linear layer. Afterwards, we want to wrap this module in a <code>TPDense</code> module with the gather strategy. As an example, we use the <code>RMSNorm</code> layer which is used in several recent large models, including <a href="https://arxiv.org/abs/2302.05442">ViT-22b</a> and <a href="https://ai.google.dev/gemma/docs/model_card">Gemma</a>. Compared to LayerNorm, it does not center the input and does not apply a bias parameter, leading to a small speed gain without degrading model performance. More details are given in the <a href="https://arxiv.org/abs/1910.07467">paper</a>. Further, for simplicity and following common practice, we do not apply Dropout within the MLP block.</p>
+<div id="cell-18" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLPBlockInput(nn.Module):</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    features: <span class="bu">int</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    kernel_init: Callable <span class="op">=</span> nn.initializers.lecun_normal()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    use_bias: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    use_norm: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.use_norm:</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>            x <span class="op">=</span> nn.RMSNorm(dtype<span class="op">=</span><span class="va">self</span>.config.dtype, name<span class="op">=</span><span class="st">"pre_norm"</span>)(x)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.features,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>            kernel_init<span class="op">=</span><span class="va">self</span>.kernel_init,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>            use_bias<span class="op">=</span><span class="va">self</span>.use_bias,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"dense"</span>,</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The output layer will consist of the second linear layer and the non-linearity. We will wrap this module in a <code>TPDense</code> module with the scatter strategy. As an example, we use the <code>SiLU</code> non-linearity. Whether we apply the non-linearity in the output layer or input layer is a design choice in this case, since we use the gather strategy for the input layer. However, had we applied the scatter strategy for the input layer, we can only apply the non-linearity in the output layer, since we would have otherwise summed over the outputs of the activation function instead of the raw outputs in the scatter.</p>
+<div id="cell-20" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MLPBlockOutput(nn.Module):</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    features: <span class="bu">int</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    kernel_init: Callable <span class="op">=</span> nn.initializers.lecun_normal()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    use_bias: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.silu(x)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.features,</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>            kernel_init<span class="op">=</span><span class="va">self</span>.kernel_init,</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>            use_bias<span class="op">=</span><span class="va">self</span>.use_bias,</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"dense"</span>,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now combine the two modules in a single <code>MLPBlock</code> module. For the parallelism strategies to work correctly, we need to adjust the features count accordingly. Each device has <span class="math inline">\(1/\text{num}\_\text{devices}\)</span> of the hidden features, and outputs the full hidden features. As mentioned earlier, we also adjust the initialization of the scatter layer by scaling the initialization by <span class="math inline">\(\sqrt{1/\text{num}\_\text{devices}}\)</span>, since we use a fan-in initialization strategy.</p>
+<div id="cell-22" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TPMLPBlock(nn.Module):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    train: <span class="bu">bool</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        tp_size <span class="op">=</span> jax.lax.psum(<span class="dv">1</span>, <span class="va">self</span>.config.model_axis_name)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        input_features <span class="op">=</span> x.shape[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Input layer</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> TPDense(</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            dense_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                MLPBlockInput,</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>                config<span class="op">=</span><span class="va">self</span>.config,</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                features<span class="op">=</span><span class="va">self</span>.config.hidden_size <span class="op">*</span> <span class="va">self</span>.config.mlp_expansion <span class="op">//</span> tp_size,</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>            model_axis_name<span class="op">=</span><span class="va">self</span>.config.model_axis_name,</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>            tp_mode<span class="op">=</span><span class="st">"gather"</span>,</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"input"</span>,</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Output layer</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> TPDense(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>            dense_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                MLPBlockOutput,</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                config<span class="op">=</span><span class="va">self</span>.config,</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                features<span class="op">=</span>input_features <span class="op">*</span> tp_size,</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>            model_axis_name<span class="op">=</span><span class="va">self</span>.config.model_axis_name,</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>            tp_mode<span class="op">=</span><span class="st">"scatter"</span>,</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>            kernel_init_adjustment<span class="op">=</span>tp_size<span class="op">**-</span><span class="fl">0.5</span>,  <span class="co"># fan-in with tp_size fewer inputs.</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"output"</span>,</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="mlp-classifier" class="level3">
+<h3 class="anchored" data-anchor-id="mlp-classifier">MLP Classifier</h3>
+<p>Our example model will consists of a stack of MLP blocks. For this, we write below a simple wrapper around the <code>MLPBlock</code> to stack multiple blocks. For efficient compilation, we use a <code>nn.scan</code> to apply the same MLP block structure in all layers. The carry between the modules is the sharded features over the model axis.</p>
+<div id="cell-24" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TPMLPLayers(nn.Module):</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    train: <span class="bu">bool</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    block_class: Callable[..., nn.Module] <span class="op">=</span> TPMLPBlock</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        module <span class="op">=</span> <span class="va">self</span>.block_class(config<span class="op">=</span><span class="va">self</span>.config, train<span class="op">=</span><span class="va">self</span>.train, name<span class="op">=</span><span class="st">"block"</span>)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        x, _ <span class="op">=</span> nn.scan(</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> module, carry, _: (module(carry) <span class="op">+</span> carry, <span class="va">None</span>),</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>            variable_axes<span class="op">=</span>{<span class="st">"params"</span>: <span class="dv">0</span>},</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            split_rngs<span class="op">=</span>{<span class="st">"params"</span>: <span class="va">True</span>, <span class="st">"dropout"</span>: <span class="va">True</span>},</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            length<span class="op">=</span><span class="va">self</span>.config.num_layers,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>            metadata_params<span class="op">=</span>{</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>                <span class="st">"partition_name"</span>: <span class="va">None</span></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            },  <span class="co"># We do not need to partition the parameters over the layer axis.</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        )(module, x, ())</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we combine the MLP blocks with an input and output layer. We expect that the input to the model is duplicated over model devices and thus does not need to be gathered anymore. This is likely the best case for the input processing as well, since the batch can already be prefetched to all devices and we may not be able to split the input over model devices equally (e.g.&nbsp;text may be only single integers, so that we cannot split it over feature dimensions). If working with a mesh where the model axis goes across processes, we may want to split the input over model devices on the batch dimension as well, and gather it before applying the model. This ensures all model devices will start with the same input.</p>
+<p>The output layer will be a linear layer with the number of classes as output dimensions. We will wrap this layer in a <code>TPDense</code> module with the scatter strategy, but we will not scatter the output. Instead, to compute the loss, a device needs to have the full output features. Hence, we apply a <code>jax.lax.psum</code> to sum the final output over devices. Note that this gives all model devices the same tensor, and thus the same loss. We may want to then only calculate the loss on a single device, and broadcast it back to all devices via the <code>psum</code> operation. For models with large output sizes, this might be inefficient since a single device needs to be able to hold the entire output. For simplicity, we will ignore this for now here, but address it in the transformer model later. Finally, as usual, we convert the output to float32 to avoid numerical issues in the loss computation.</p>
+<div id="cell-26" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TPClassifier(nn.Module):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    block_class: Callable[..., nn.Module] <span class="op">=</span> TPMLPBlock</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array, train: <span class="bu">bool</span>) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        tp_size <span class="op">=</span> jax.lax.psum(<span class="dv">1</span>, <span class="va">self</span>.config.model_axis_name)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Input layer</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> TPDense(</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>            dense_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                nn.Dense,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                features<span class="op">=</span><span class="va">self</span>.config.hidden_size <span class="op">//</span> tp_size,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>                dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            model_axis_name<span class="op">=</span><span class="va">self</span>.config.model_axis_name,</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>            tp_mode<span class="op">=</span><span class="st">"gather"</span>,</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>            skip_communication<span class="op">=</span><span class="va">True</span>,  <span class="co"># Input already gathered.</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"input_layer"</span>,</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Backbone MLP blocks</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> TPMLPLayers(config<span class="op">=</span><span class="va">self</span>.config, train<span class="op">=</span>train, name<span class="op">=</span><span class="st">"mlp"</span>, block_class<span class="op">=</span><span class="va">self</span>.block_class)(</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>            x</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Output layer</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> TPDense(</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>            dense_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>                nn.Dense,</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>                features<span class="op">=</span><span class="va">self</span>.config.num_classes,</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>            ),</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>            model_axis_name<span class="op">=</span><span class="va">self</span>.config.model_axis_name,</span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>            tp_mode<span class="op">=</span><span class="st">"scatter"</span>,</span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>            skip_communication<span class="op">=</span><span class="va">True</span>,  <span class="co"># Manual communication.</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"output_layer"</span>,</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>            kernel_init_adjustment<span class="op">=</span>tp_size<span class="op">**-</span><span class="fl">0.5</span>,  <span class="co"># fan-in with tp_size fewer inputs.</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> jax.lax.psum(x, axis_name<span class="op">=</span><span class="va">self</span>.config.model_axis_name)</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.astype(jnp.float32)</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="initialization" class="level3">
+<h3 class="anchored" data-anchor-id="initialization">Initialization</h3>
+<p>With the model implemented, we can now initialize the model. We start with the config definition, which is similar to previous notebooks. We parallelize the model over 4 devices, and for simplicity, keep the MLP expansion factor at 1. Feel free to experiment with different configurations.</p>
+<div id="cell-28" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>data_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>        batch_size<span class="op">=</span><span class="dv">128</span>,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        num_classes<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>        input_size<span class="op">=</span><span class="dv">784</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>model_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        hidden_size<span class="op">=</span><span class="dv">512</span>,</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>        dropout_rate<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        mlp_expansion<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        num_layers<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        dtype<span class="op">=</span>jnp.bfloat16,</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        num_classes<span class="op">=</span>data_config.num_classes,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        data_axis_name<span class="op">=</span><span class="st">"data"</span>,</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>        model_axis_name<span class="op">=</span><span class="st">"model"</span>,</span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        model_axis_size<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>optimizer_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        learning_rate<span class="op">=</span><span class="fl">1e-3</span>,</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        num_minibatches<span class="op">=</span><span class="dv">1</span>,</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> ConfigDict(</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model_config,</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>optimizer_config,</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>data_config,</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        data_axis_name<span class="op">=</span>model_config.data_axis_name,</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        model_axis_name<span class="op">=</span>model_config.model_axis_name,</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        model_axis_size<span class="op">=</span>model_config.model_axis_size,</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The rest of the initialization is identical to the previous notebook on pipeline parallelism. We first create our mesh over data and model.</p>
+<div id="cell-30" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>device_array <span class="op">=</span> np.array(jax.devices()).reshape(<span class="op">-</span><span class="dv">1</span>, config.model_axis_size)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>mesh <span class="op">=</span> Mesh(device_array, (config.data_axis_name, config.model_axis_name))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-03-07 10:48:19.003795: E external/xla/xla/stream_executor/cuda/cuda_driver.cc:273] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+CUDA backend failed to initialize: FAILED_PRECONDITION: No visible GPU devices. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)</code></pre>
+</div>
+</div>
+<p>We then create the model object and the optimizer. We stick with simple Adam in this example, but feel free to change the optimizer setup.</p>
+<div id="cell-32" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model_tp <span class="op">=</span> TPClassifier(config<span class="op">=</span>config.model)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optax.adamw(</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span>config.optimizer.learning_rate,</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>For simplicity, we will train the model on a simple random data classification task. This is mainly to demonstrate the pipeline parallelism, and not to achieve state-of-the-art results. In practice, one would instead create a dataset and dataloader at this point, and setup the data prefetching.</p>
+<div id="cell-34" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> jax.random.PRNGKey(config.seed)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>model_init_rng, data_inputs_rng, data_labels_rng <span class="op">=</span> jax.random.split(rng, <span class="dv">3</span>)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> Batch(</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>jax.random.normal(data_inputs_rng, (config.data.batch_size, config.data.input_size)),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>jax.random.randint(</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>        data_labels_rng, (config.data.batch_size,), <span class="dv">0</span>, config.data.num_classes</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The initialization function follows the same principles as in the previous notebook, creating the parameters via <code>model.init</code> and the optimizer parameters in the <code>TrainState.create</code>.</p>
+<div id="cell-36" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> init_tp(rng: jax.random.PRNGKey, x: jax.Array, model: nn.Module) <span class="op">-&gt;</span> TrainState:</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    init_rng, rng <span class="op">=</span> jax.random.split(rng)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    variables <span class="op">=</span> model.init({<span class="st">"params"</span>: init_rng}, x, train<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> variables.pop(<span class="st">"params"</span>)</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> TrainState.create(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        apply_fn<span class="op">=</span>model.<span class="bu">apply</span>,</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        params<span class="op">=</span>params,</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        tx<span class="op">=</span>optimizer,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        rng<span class="op">=</span>rng,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before we can run the full initialization, we need to identify the partitioning of the parameters. Since we annotated the partitioning of all parameters via <code>nn.Partitioned</code> in the model, we can obtain the partitioning by calling <code>jax.eval_shape</code> on the init function. This will return the state shapes, as well as the <code>nn.Partitioned</code> parameter leafs. From those, we can read out the partitioning using <code>nn.get_partition_spec</code>. For the initial call, we can leave the <code>out_specs</code> of the shard map empty, since we do not create the actual parameters during shape evaluation.</p>
+<div id="cell-38" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>init_tp_fn <span class="op">=</span> shard_map(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    functools.partial(init_tp, model<span class="op">=</span>model_tp),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    mesh,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    in_specs<span class="op">=</span>(P(), P(config.data_axis_name)),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    out_specs<span class="op">=</span>P(),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>state_tp_shapes <span class="op">=</span> jax.eval_shape(init_tp_fn, model_init_rng, batch.inputs)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>state_tp_specs <span class="op">=</span> nn.get_partition_spec(state_tp_shapes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s investigate the partitioning of the parameters.</p>
+<div id="cell-40" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>pprint(state_tp_specs.params)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>{'input_layer': {'module': {'sharded': {'bias': PartitionSpec('model', None),
+                                        'kernel': PartitionSpec('model', None, None)}}},
+ 'mlp': {'block': {'input': {'module': {'sharded': {'dense': {'bias': PartitionSpec(None, 'model', None),
+                                                              'kernel': PartitionSpec(None, 'model', None, None)},
+                                                    'pre_norm': {'scale': PartitionSpec(None, 'model', None)}}}},
+                   'output': {'module': {'sharded': {'dense': {'bias': PartitionSpec(None, 'model', None),
+                                                               'kernel': PartitionSpec(None, 'model', None, None)}}}}}},
+ 'output_layer': {'module': {'sharded': {'bias': PartitionSpec('model', None),
+                                         'kernel': PartitionSpec('model', None, None)}}}}</code></pre>
+</div>
+</div>
+<p>All parameters in the model have a partitioning over the <code>model</code> axis. For the input and output layer, this is over the first dimension, while for the MLP blocks, this is over the second dimension. This is because the first dimension of the MLPs are the number of layer (i.e.&nbsp;the scan). This also demonstrates how our implementation works well under function transformations like scan, vmap, etc. Since we do not apply FSDP for now, the parameters are not partitioned over the data axis. The several sub-keys in the parameter PyTree are due to the stacking and wrapping of the modules (e.g.&nbsp;<code>sharded</code> introduced by <code>ModelParallelismWrapper</code>, <code>module</code> introduced by <code>TPDense</code>). Alternatively, some of these wrapper could be rewritten into functions to avoid the sub-keys.</p>
+<p>We can now continue with the initialization:</p>
+<div id="cell-42" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>init_tp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>        functools.partial(init_tp, model<span class="op">=</span>model_tp),</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(P(), P(config.data_axis_name)),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>state_tp_specs,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>state_tp <span class="op">=</span> init_tp_fn(model_init_rng, batch.inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We inspect the shapes of the parameters below.</p>
+<div id="cell-44" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"TP Parameters - Input Layer"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: x.shape, state_tp.params[<span class="st">"input_layer"</span>][<span class="st">"module"</span>][<span class="st">"sharded"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>TP Parameters - Input Layer
+{'bias': Partitioned(value=(4, 128), names=('model', None), mesh=None),
+ 'kernel': Partitioned(value=(4, 784, 128),
+                       names=('model', None, None),
+                       mesh=None)}</code></pre>
+</div>
+</div>
+<p>The input layer uses a gather strategy, such that its input size is the full feature size (784), but its output is split over model devices (<span class="math inline">\(512 / 4 = 128\)</span>).</p>
+<div id="cell-46" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"TP Parameters - MLP Layers Input"</span>)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>pprint(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    jax.tree_map(<span class="kw">lambda</span> x: x.shape, state_tp.params[<span class="st">"mlp"</span>][<span class="st">"block"</span>][<span class="st">"input"</span>][<span class="st">"module"</span>][<span class="st">"sharded"</span>])</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>()</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"TP Parameters - MLP Layers Output"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>pprint(</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    jax.tree_map(<span class="kw">lambda</span> x: x.shape, state_tp.params[<span class="st">"mlp"</span>][<span class="st">"block"</span>][<span class="st">"output"</span>][<span class="st">"module"</span>][<span class="st">"sharded"</span>])</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>TP Parameters - MLP Layers Input
+{'dense': {'bias': Partitioned(value=(3, 4, 128),
+                               names=(None, 'model', None),
+                               mesh=None),
+           'kernel': Partitioned(value=(3, 4, 512, 128),
+                                 names=(None, 'model', None, None),
+                                 mesh=None)},
+ 'pre_norm': {'scale': Partitioned(value=(3, 4, 512),
+                                   names=(None, 'model', None),
+                                   mesh=None)}}
+
+TP Parameters - MLP Layers Output
+{'dense': {'bias': Partitioned(value=(3, 4, 512),
+                               names=(None, 'model', None),
+                               mesh=None),
+           'kernel': Partitioned(value=(3, 4, 128, 512),
+                                 names=(None, 'model', None, None),
+                                 mesh=None)}}</code></pre>
+</div>
+</div>
+<p>The MLP input layer uses a gather strategy, such that it also has the full feature size as input, but its output is split over model devices (<span class="math inline">\(512 / 4 = 128\)</span>). Note that the norm layer has different scaling parameters for each device. This is usually not a problem, since the norm layer is usually followed by a linear layer, which allows for scaling of the weights. Still, it’s a difference to the single device case, which is important to keep in mind, and could be shared across devices if needed.</p>
+<p>The MLP output layer follows the scatter pattern, such that its input is split over model devices (<span class="math inline">\(512 / 4 = 128\)</span>), but its output is the full feature size.</p>
+<div id="cell-48" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"TP Parameters - Output Layer"</span>)</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: x.shape, state_tp.params[<span class="st">"output_layer"</span>][<span class="st">"module"</span>][<span class="st">"sharded"</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>TP Parameters - Output Layer
+{'bias': Partitioned(value=(4, 10), names=('model', None), mesh=None),
+ 'kernel': Partitioned(value=(4, 128, 10),
+                       names=('model', None, None),
+                       mesh=None)}</code></pre>
+</div>
+</div>
+<p>Finally, the final output layer follows the scatter pattern, such that its input is split over model devices (<span class="math inline">\(512 / 4 = 128\)</span>), but its output is the full number of classes. Note that whether we manually implement the communication or use the <code>TPDense</code> communication does not have an impact on the feature size.</p>
+<p>Another aspect to check is whether the initialization across devices works as expected. Since each device holds a different part of the weight matrix, we expect them to be initialized differently. We can check this by inspecting the parameters.</p>
+<div id="cell-50" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>state_tp.params[<span class="st">"mlp"</span>][<span class="st">"block"</span>][<span class="st">"input"</span>][<span class="st">"module"</span>][<span class="st">"sharded"</span>][<span class="st">"dense"</span>][<span class="st">"kernel"</span>].value[:, :, <span class="dv">0</span>, <span class="dv">0</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<pre><code>Array([[-0.06087485, -0.04099965,  0.04802493, -0.00385336],
+       [ 0.0586801 , -0.01241772, -0.00626128,  0.00607279],
+       [-0.05654007,  0.02550504, -0.02855512, -0.08177456]],      dtype=float32)</code></pre>
+</div>
+</div>
+<p>The above cell prints the kernel of the MLP input layer over the layer axis and devices. We can see that the parameters are indeed initialized differently across devices, and thus we can continue to train the model.</p>
+</section>
+<section id="training-with-tensor-parallelism" class="level3">
+<h3 class="anchored" data-anchor-id="training-with-tensor-parallelism">Training with Tensor Parallelism</h3>
+<p>The training loop is identical to the examples in the previous notebooks. The loss function is a simple cross-entropy loss, where we only calculate the loss for the first device.</p>
+<div id="cell-53" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss_fn_tp(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    params: PyTree,</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    apply_fn: Any,</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>    batch: Batch,</span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    rng: jax.Array,</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[jax.Array, Dict[<span class="bu">str</span>, Any]]:</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Since dropout masks vary across the batch dimension, we want each device to generate a</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># different mask. We can achieve this by folding the rng over the data axis, so that each</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># device gets a different rng and thus mask.</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>    dropout_rng <span class="op">=</span> fold_rng_over_axis(rng, (config.data_axis_name, config.model_axis_name))</span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remaining computation is the same as before for single device.</span></span>
+<span id="cb30-12"><a href="#cb30-12" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> apply_fn(</span>
+<span id="cb30-13"><a href="#cb30-13" aria-hidden="true" tabindex="-1"></a>        {<span class="st">"params"</span>: params},</span>
+<span id="cb30-14"><a href="#cb30-14" aria-hidden="true" tabindex="-1"></a>        batch.inputs,</span>
+<span id="cb30-15"><a href="#cb30-15" aria-hidden="true" tabindex="-1"></a>        train<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb30-16"><a href="#cb30-16" aria-hidden="true" tabindex="-1"></a>        rngs<span class="op">=</span>{<span class="st">"dropout"</span>: dropout_rng},</span>
+<span id="cb30-17"><a href="#cb30-17" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb30-18"><a href="#cb30-18" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> optax.softmax_cross_entropy_with_integer_labels(logits, batch.labels)</span>
+<span id="cb30-19"><a href="#cb30-19" aria-hidden="true" tabindex="-1"></a>    correct_pred <span class="op">=</span> jnp.equal(jnp.argmax(logits, axis<span class="op">=-</span><span class="dv">1</span>), batch.labels)</span>
+<span id="cb30-20"><a href="#cb30-20" aria-hidden="true" tabindex="-1"></a>    batch_size <span class="op">=</span> np.prod(batch.labels.shape)</span>
+<span id="cb30-21"><a href="#cb30-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Mask out loss and accuracy for model devices except first one.</span></span>
+<span id="cb30-22"><a href="#cb30-22" aria-hidden="true" tabindex="-1"></a>    model_idx <span class="op">=</span> jax.lax.axis_index(config.model_axis_name)</span>
+<span id="cb30-23"><a href="#cb30-23" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> jnp.where(model_idx <span class="op">!=</span> <span class="dv">0</span>, <span class="fl">0.0</span>, loss)</span>
+<span id="cb30-24"><a href="#cb30-24" aria-hidden="true" tabindex="-1"></a>    correct_pred <span class="op">=</span> jnp.where(model_idx <span class="op">!=</span> <span class="dv">0</span>, <span class="va">False</span>, correct_pred)</span>
+<span id="cb30-25"><a href="#cb30-25" aria-hidden="true" tabindex="-1"></a>    batch_size <span class="op">=</span> jnp.where(model_idx <span class="op">!=</span> <span class="dv">0</span>, <span class="dv">0</span>, batch_size)</span>
+<span id="cb30-26"><a href="#cb30-26" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Collect metrics and return loss.</span></span>
+<span id="cb30-27"><a href="#cb30-27" aria-hidden="true" tabindex="-1"></a>    step_metrics <span class="op">=</span> {</span>
+<span id="cb30-28"><a href="#cb30-28" aria-hidden="true" tabindex="-1"></a>        <span class="st">"loss"</span>: (loss.<span class="bu">sum</span>(), batch_size),</span>
+<span id="cb30-29"><a href="#cb30-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"accuracy"</span>: (correct_pred.<span class="bu">sum</span>(), batch_size),</span>
+<span id="cb30-30"><a href="#cb30-30" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb30-31"><a href="#cb30-31" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> loss.mean()</span>
+<span id="cb30-32"><a href="#cb30-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss, step_metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the training, we want to support 2D parallelism with (fully-sharded) data parallelism and tensor parallelism. Thus, after having determined the gradients per device, we need to sync them over the data axis accordingly. For this, we can reuse the <code>sync_gradients</code> functions from our fully-sharded data parallelism implementation. We then apply the optimizer update as usual.</p>
+<p>Finally, we can summarize all in the training step below. It is identical to the fully-sharded data parallelism training step up to syncing gradients over the data and model axis (which is now 2D). We then apply the optimizer update as usual.</p>
+<div id="cell-56" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step_tp(</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    state: TrainState,</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    metrics: Metrics <span class="op">|</span> <span class="va">None</span>,</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>    batch: Batch,</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>    loss_fn: Callable <span class="op">=</span> loss_fn_tp,</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[TrainState, Metrics]:</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>    rng, step_rng <span class="op">=</span> jax.random.split(state.rng)</span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a>    grads, step_metrics <span class="op">=</span> accumulate_gradients(</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>        state,</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>        batch,</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>        step_rng,</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a>        config.optimizer.num_minibatches,</span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>        loss_fn<span class="op">=</span>loss_fn,</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters. We need to sync the gradients across devices before updating.</span></span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_gradients"</span>):</span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a>        grads <span class="op">=</span> sync_gradients(grads, (config.data_axis_name, config.model_axis_name))</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    new_state <span class="op">=</span> state.apply_gradients(grads<span class="op">=</span>grads, rng<span class="op">=</span>rng)</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sum metrics across replicas. Alternatively, we could keep the metrics separate</span></span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and only synchronize them before logging. For simplicity, we sum them here.</span></span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_metrics"</span>):</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>        step_metrics <span class="op">=</span> jax.tree_map(</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> x: jax.lax.psum(x, axis_name<span class="op">=</span>(config.data_axis_name, config.model_axis_name)),</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>            step_metrics,</span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb31-27"><a href="#cb31-27" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> step_metrics</span>
+<span id="cb31-28"><a href="#cb31-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb31-29"><a href="#cb31-29" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> jax.tree_map(jnp.add, metrics, step_metrics)</span>
+<span id="cb31-30"><a href="#cb31-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_state, metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the training loop implemented, we can now train the model. We will train the model on a simple random data classification task, and expect the model to learn to classify the data with high accuracy. We will use a small batch size to run the model easily on a CPU-only system.</p>
+<div id="cell-58" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>train_step_tp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>        train_step_tp,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(state_tp_specs, P(), P(config.data_axis_name)),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>(state_tp_specs, P()),</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>    donate_argnames<span class="op">=</span>(<span class="st">"state"</span>, <span class="st">"metrics"</span>),</span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>state_shapes, metric_shapes <span class="op">=</span> jax.eval_shape(</span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>    train_step_tp_fn,</span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>    state_tp,</span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">None</span>,</span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    batch,</span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>metrics_tp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>state_tp, metrics_tp <span class="op">=</span> train_step_tp_fn(state_tp, metrics_tp, batch)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/plippe/anaconda3/envs/jax/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py:761: UserWarning: Some donated buffers were not usable: ShapedArray(float32[1,128]), ShapedArray(float32[1,784,128]), ShapedArray(float32[3,1,128]), ShapedArray(float32[3,1,512,128]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,128,512]), ShapedArray(float32[1,10]), ShapedArray(float32[1,128,10]), ShapedArray(float32[1,128]), ShapedArray(float32[1,784,128]), ShapedArray(float32[3,1,128]), ShapedArray(float32[3,1,512,128]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,128,512]), ShapedArray(float32[1,10]), ShapedArray(float32[1,128,10]), ShapedArray(float32[1,128]), ShapedArray(float32[1,784,128]), ShapedArray(float32[3,1,128]), ShapedArray(float32[3,1,512,128]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,512]), ShapedArray(float32[3,1,128,512]), ShapedArray(float32[1,10]), ShapedArray(float32[1,128,10]).
+See an explanation at https://jax.readthedocs.io/en/latest/faq.html#buffer-donation.
+  warnings.warn("Some donated buffers were not usable:"</code></pre>
+</div>
+</div>
+<p>We run the model for 15 steps and print the final loss and accuracy.</p>
+<div id="cell-60" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">15</span>):</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    state_tp, metrics_tp <span class="op">=</span> train_step_tp_fn(state_tp, metrics_tp, batch)</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>final_metrics_tp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>state_tp, final_metrics_tp <span class="op">=</span> train_step_tp_fn(state_tp, final_metrics_tp, batch)</span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>print_metrics(final_metrics_tp, title<span class="op">=</span><span class="st">"Final Metrics - Tensor Parallelism"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> Final Metrics - Tensor Parallelism 
+accuracy: 1.000000
+loss: 0.000030</code></pre>
+</div>
+</div>
+<p>As we expected, the model is able to learn the task with high accuracy. We can now continue to the next part, where we discuss a more efficient implementation exploiting the compute and communication overlap.</p>
+</section>
+<section id="intermediate-summary" class="level3">
+<h3 class="anchored" data-anchor-id="intermediate-summary">Intermediate Summary</h3>
+<p>In this part, we discussed the principles of tensor parallelism, and how to implement it in JAX. We implemented a simple MLP model with tensor parallelism, and trained it on a simple random data classification task. We also discussed the sharding of the parameters. In the next part, we will discuss how to maximize the efficiency of tensor parallelism with compute-communication overlaps.</p>
+</section>
+</section>
+<section id="references-and-resources" class="level2">
+<h2 class="anchored" data-anchor-id="references-and-resources">References and Resources</h2>
+<p>[Shoeybi et al., 2019] Shoeybi, M., Patwary, M., Puri, R., LeGresley, P., Casper, J. and Catanzaro, B., 2019. Megatron-lm: Training multi-billion parameter language models using model parallelism. arXiv preprint arXiv:1909.08053. <a href="https://arxiv.org/abs/1909.08053">Paper link</a></p>
+<p>[Wang and Komatsuzaki, 2021] Wang, B., and Komatsuzaki, A., 2021. Mesh transformer jax. <a href="https://github.com/kingoflolz/mesh-transformer-jax">GitHub link</a></p>
+<p>[Xu et al., 2021] Xu, Y., Lee, H., Chen, D., Hechtman, B., Huang, Y., Joshi, R., Krikun, M., Lepikhin, D., Ly, A., Maggioni, M. and Pang, R., 2021. GSPMD: general and scalable parallelization for ML computation graphs. arXiv preprint arXiv:2105.04663. <a href="https://arxiv.org/abs/2105.04663">Paper link</a></p>
+<p>[Dehghani et al., 2022] Dehghani, M., Gritsenko, A., Arnab, A., Minderer, M. and Tay, Y., 2022. Scenic: A JAX library for computer vision research and beyond. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (pp.&nbsp;21393-21398). <a href="https://openaccess.thecvf.com/content/CVPR2022/html/Dehghani_Scenic_A_JAX_Library_for_Computer_Vision_Research_and_Beyond_CVPR_2022_paper.html">Paper link</a></p>
+<p>[Yoo et al., 2022] Yoo, J., Perlin, K., Kamalakara, S.R. and Araújo, J.G., 2022. Scalable training of language models using JAX pjit and TPUv4. arXiv preprint arXiv:2204.06514. <a href="https://arxiv.org/abs/2204.06514">Paper link</a></p>
+<p>[Chowdhery et al., 2023] Chowdhery, A., Narang, S., Devlin, J., Bosma, M., Mishra, G., Roberts, A., Barham, P., Chung, H.W., Sutton, C., Gehrmann, S., Schuh, P., et al., 2023. Palm: Scaling language modeling with pathways. Journal of Machine Learning Research, 24(240), pp.1-113. <a href="https://arxiv.org/abs/2204.02311v5">Paper link</a></p>
+<p>[Anil et al., 2023] Anil, R., Dai, A.M., Firat, O., Johnson, M., Lepikhin, D., Passos, A., Shakeri, S., Taropa, E., Bailey, P., Chen, Z. and Chu, E., 2023. Palm 2 technical report. arXiv preprint arXiv:2305.10403. <a href="https://arxiv.org/abs/2305.10403">Paper link</a></p>
+<p>[Dehghani et al., 2023] Dehghani, M., Djolonga, J., Mustafa, B., Padlewski, P., Heek, J., Gilmer, J., Steiner, A.P., Caron, M., Geirhos, R., Alabdulmohsin, I., Jenatton, R., et al., 2023. Scaling vision transformers to 22 billion parameters. In International Conference on Machine Learning (pp.&nbsp;7480-7512). PMLR. <a href="https://arxiv.org/abs/2302.05442">Paper link</a></p>
+<p>[McKinney, 2023] McKinney, A., 2023. A Brief Overview of Parallelism Strategies in Deep Learning. <a href="https://afmck.in/posts/2023-02-26-parallelism/">Blog post link</a></p>
+<p>[Huggingface, 2024] Huggingface, 2024. Model Parallelism. <a href="https://huggingface.co/transformers/v4.9.2/parallelism.html">Documentation link</a></p>
+<p>[Google, 2024] JAX Team Google, 2024. SPMD multi-device parallelism with shard_map. <a href="https://jax.readthedocs.io/en/latest/notebooks/shard_map.html">Notebook link</a></p>
+<p>[OpenAI, 2024] OpenAI, 2024. GPT-4. <a href="https://arxiv.org/abs/2303.08774">Technical Report</a></p>
+<p>[Google, 2024] Gemini Team Google Deepmind, 2024. Gemini. <a href="https://arxiv.org/abs/2312.11805">Technical Report</a></p>
+<hr>
+<p><a href="https://github.com/phlippe/uvadlc_notebooks/"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=⭐&amp;message=Star%20Our%20Repository&amp;color=yellow" class="img-fluid" alt="Star our repository"></a> If you found this tutorial helpful, consider ⭐-ing our repository.<br>
+<a href="https://github.com/phlippe/uvadlc_notebooks/issues"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=❔&amp;message=Ask%20Questions&amp;color=9cf" class="img-fluid" alt="Ask questions"></a> For any questions, typos, or bugs that you found, please raise an issue on GitHub.</p>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -1,0 +1,1181 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>DNN - Tutorial 2 Part I: Physics inspired Machine Learning – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#what-do-we-mean-by-identifying-nonlinear-dynamics-from-data" id="toc-what-do-we-mean-by-identifying-nonlinear-dynamics-from-data" class="nav-link active" data-scroll-target="#what-do-we-mean-by-identifying-nonlinear-dynamics-from-data">What do we mean by <em>identifying</em> nonlinear dynamics from data?</a></li>
+  <li><a href="#why-do-we-want-sparsity" id="toc-why-do-we-want-sparsity" class="nav-link" data-scroll-target="#why-do-we-want-sparsity">Why do we want <em>sparsity</em>?</a></li>
+  <li><a href="#sindy-algorithm" id="toc-sindy-algorithm" class="nav-link" data-scroll-target="#sindy-algorithm">SINDy Algorithm</a></li>
+  <li><a href="#example-linear-dynamical-system" id="toc-example-linear-dynamical-system" class="nav-link" data-scroll-target="#example-linear-dynamical-system">Example: Linear Dynamical System</a></li>
+  <li><a href="#example-lorenz-attractor" id="toc-example-lorenz-attractor" class="nav-link" data-scroll-target="#example-lorenz-attractor">Example: Lorenz attractor</a></li>
+  <li><a href="#challenges" id="toc-challenges" class="nav-link" data-scroll-target="#challenges">Challenges</a>
+  <ul class="collapse">
+  <li><a href="#sources" id="toc-sources" class="nav-link" data-scroll-target="#sources">Sources</a></li>
+  </ul></li>
+  <li><a href="#reservoir-computing" id="toc-reservoir-computing" class="nav-link" data-scroll-target="#reservoir-computing">Reservoir Computing</a></li>
+  <li><a href="#example-lorenz-attractor-1" id="toc-example-lorenz-attractor-1" class="nav-link" data-scroll-target="#example-lorenz-attractor-1">Example: Lorenz Attractor</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">DNN - Tutorial 2 Part I: Physics inspired Machine Learning</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Sparse Identification of Nonlinear Dynamical Systems (SINDy)</strong></p>
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/DL2/Dynamical_Neural_Networks/Complete_DNN_2_1.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View on Github"></a> <a href="https://drive.google.com/file/d/1floNK3pbRWYkMYH3_pN-GKJ8pOMEDZV6/view?usp=sharing"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open In Collab"></a><br>
+<strong>Authors:</strong> Leonard Bereska and Ilze Amanda Auzina</p>
+<p>This section provides an overview of the Sparse Identification of Nonlinear Dynamical systems (SINDy) algorithm, which was first proposed in:</p>
+<blockquote class="blockquote">
+<p>Brunton, Steven L., Joshua L. Proctor, and J. Nathan Kutz. 2016. <em>“Discovering Governing Equations from Data by Sparse Identification of Nonlinear Dynamical Systems.”</em> Proceedings of the National Academy of Sciences 113 (15): 3932–37. https://doi.org/10.1073/pnas.1517384113.</p>
+</blockquote>
+<section id="what-do-we-mean-by-identifying-nonlinear-dynamics-from-data" class="level2">
+<h2 class="anchored" data-anchor-id="what-do-we-mean-by-identifying-nonlinear-dynamics-from-data">What do we mean by <em>identifying</em> nonlinear dynamics from data?</h2>
+<p>Suppose we have time-series data that originate from a (nonlinear) dynamical system.<br>
+- To identify a system means to infer the governing equations of that system based on the data. - That is, to find <span class="math inline">\(f\)</span> for dynamical systems equations <span class="math inline">\(\mathbf{\dot x} = f(\mathbf{x})\)</span> (where <span class="math inline">\(\mathbf{x}\)</span> may be vector-valued).</p>
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-7-1-Schermafbeelding 2022-03-29 om 16.13.40.png" class="img-fluid" alt="Schermafbeelding%202022-03-29%20om%2016.13.40.png"> For example for the Lorenz system, we want to learn the <strong>equations</strong> on the <em>right</em> from the time-series <strong>data</strong> visualized on the <em>left</em>.</p>
+</section>
+<section id="why-do-we-want-sparsity" class="level2">
+<h2 class="anchored" data-anchor-id="why-do-we-want-sparsity">Why do we want <em>sparsity</em>?</h2>
+<p>In this context, by sparse we mean a low number of terms in the governing equations. Sparsity is beneficial, because it is more: 1. <strong>Interpretible</strong>. Crucial, when understanding the variables and their interactions is needed, e.g.&nbsp;for applications with safety-critical guarantees. 2. <strong>Generalizable</strong>. If correct, the equations describe the dynamics accurately beyond the region of state space filled by the training data.</p>
+<p>In general, one can think of the models identified by SINDy as equations from physics as opposed to big, opaque, deep neural networks.</p>
+</section>
+<section id="sindy-algorithm" class="level2">
+<h2 class="anchored" data-anchor-id="sindy-algorithm">SINDy Algorithm</h2>
+<p>SINDy tries to find the dynamical system <span class="math inline">\(f\)</span> that suits the data <span class="math inline">\(\mathrm{\dot X} = f(\mathrm{X})\)</span>. This function approximation problem is formulated as linear regression <span class="math inline">\(\mathrm{\dot X} = \Theta(\mathrm{X})  \Xi\)</span>, with coefficients <span class="math inline">\(\Xi\)</span> and a library of regression terms <span class="math inline">\(\Theta(X)\)</span>. The algorithm proceeds in three steps:</p>
+<ol type="1">
+<li><p>Generate data <span class="math inline">\(X\)</span> from a dynamical system and compute derivatives <span class="math inline">\(\dot X\)</span>.</p></li>
+<li><p>Set up library of candidate terms <span class="math inline">\(\Theta(X)\)</span> as functions on <span class="math inline">\(X\)</span>.</p></li>
+<li><p>Sparsely regress the coefficients <span class="math inline">\(\Xi\)</span>, that best describe the data.</p></li>
+<li><p>SINDy assumes a time-series of <span class="math inline">\(n\)</span>-dimensional data points <span class="math inline">\(\mathbf{x}=(x_1, \ldots x_n)\)</span> measured at <span class="math inline">\(m\)</span> time steps <span class="math inline">\(t_1, \ldots,  t_m\)</span>, we define the data matrix <span class="math inline">\(X\)</span> as and derivatives matrix <span class="math inline">\(\dot X\)</span>:</p></li>
+</ol>
+<p><span class="math display">\[X = \begin{bmatrix}
+x_1(t_1) &amp; x_2(t_1) &amp; \dots &amp; x_n(t_1) \\
+x_1(t_2) &amp; x_2(t_2) &amp; \dots &amp; x_n(t_2) \\
+\vdots &amp; \vdots &amp; &amp; \vdots \\ x_1(t_m) &amp; x_2(t_m) &amp; \dots &amp; x_n(t_m)
+\end{bmatrix},
+\qquad
+\dot{X} = \begin{bmatrix} \dot{x_1}(t_1) &amp; \dot{x_2}(t_1) &amp; \dots &amp; \dot{x_n}(t_1) \\
+\dot{x_1}(t_2) &amp; \dot{x_2}(t_2) &amp; \dots &amp; \dot{x_n}(t_2) \\
+\vdots &amp; \vdots &amp; &amp; \vdots \\
+\dot{x_1}(t_m) &amp; \dot{x_2}(t_m) &amp; \dots &amp; \dot{x_n}(t_m)
+\end{bmatrix}.\]</span></p>
+<ol start="2" type="1">
+<li>Next, we define the library matrix <span class="math inline">\(\Theta(X)\)</span>, the columns of which are a set of basis functions <span class="math inline">\(\{\theta_l\}_{l=1,\ldots, L}\)</span> applied to the data:</li>
+</ol>
+<p><span class="math display">\[
+    \Theta(X) = \begin{bmatrix}
+        \mid &amp; \mid &amp; &amp; \mid \\
+        \theta_1(X) &amp; \theta_2(X) &amp; \dots &amp; \theta_\ell(X) \\
+        \mid &amp; \mid &amp; &amp; \mid
+    \end{bmatrix}.
+\]</span></p>
+<p>Simple examples are e.g.&nbsp;a basis of polynomials <span class="math inline">\(x_1, x_2, x_1^2, x_2^2, x_1 x_2, x_1^3 \ldots\)</span>, such as in the <em>Taylor expansion</em>, or trigonometric functions $(x_1), (x_1), (2 x_1), $, such as in a <em>Fourier expansion</em>. But, depending on the problem more complex basis may be appropriate, e.g.&nbsp;Bessel functions.</p>
+<ol start="3" type="1">
+<li>Lastly, we employ a sparse linear regression algorithm (such as e.g.&nbsp;LASSO) to find the coefficients <span class="math inline">\(\Xi\)</span>, <span class="math display">\[
+\Xi = \begin{bmatrix}
+     \mid &amp; \mid &amp; &amp; \mid \\
+     \xi_1 &amp; \xi_2 &amp; \dots &amp; \xi_n \\
+     \mid &amp; \mid &amp; &amp; \mid
+\end{bmatrix},
+\]</span></li>
+</ol>
+<p>such that</p>
+<p><span class="math display">\[\mathrm{\dot X} = \Theta(\mathrm{X})  \Xi.\]</span></p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-15-1-Schermafbeelding 2022-03-29 om 16.19.05.png" class="img-fluid figure-img"></p>
+<figcaption>Schermafbeelding%202022-03-29%20om%2016.19.05.png</figcaption>
+</figure>
+</div>
+</section>
+<section id="example-linear-dynamical-system" class="level2">
+<h2 class="anchored" data-anchor-id="example-linear-dynamical-system">Example: Linear Dynamical System</h2>
+<p>Suppose we measure a particle trajectory that is governed by the following dynamical system:</p>
+<p><span class="math display">\[
+    \frac{d}{dt} \begin{pmatrix} x \\ y \end{pmatrix}
+    = \begin{pmatrix} -2x \\ y \end{pmatrix}
+    = \begin{pmatrix} -2 &amp; 0 \\ 0 &amp; 1 \end{pmatrix}
+    \begin{pmatrix} x \\ y \end{pmatrix}
+\]</span></p>
+<p>With the initial conditions <span class="math inline">\(x_0 = 3\)</span> and <span class="math inline">\(y_0 = \tfrac{1}{2}\)</span>, we construct the data matrix <span class="math inline">\(X\)</span>:</p>
+<div id="cell-18" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pysindy <span class="im">as</span> ps</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>t <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>x <span class="op">=</span> <span class="dv">3</span> <span class="op">*</span> np.exp(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> t)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>y <span class="op">=</span> <span class="fl">0.5</span> <span class="op">*</span> np.exp(t)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>X <span class="op">=</span> np.stack((x, y), axis<span class="op">=-</span><span class="dv">1</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>When instantiating a SINDy model, we can choose the differentiation method, the library and the optimizer:</p>
+<p>Let’s first investigate a Fourier basis as a basis function</p>
+<div id="cell-20" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ps.SINDy(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    differentiation_method<span class="op">=</span>ps.FiniteDifference(order<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    feature_library<span class="op">=</span>ps.FourierLibrary(),</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>ps.STLSQ(threshold<span class="op">=</span><span class="fl">0.2</span>),</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    feature_names<span class="op">=</span>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>model.fit(X, t<span class="op">=</span>t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>SINDy(differentiation_method=FiniteDifference(),
+      feature_library=&lt;pysindy.feature_library.fourier_library.FourierLibrary object at 0x137889100&gt;,
+      feature_names=['x', 'y'], optimizer=STLSQ(threshold=0.2))</code></pre>
+</div>
+</div>
+<p>After fitting the model can be inspected with the <em>print</em> member function.</p>
+<div id="cell-22" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(x)' = 0.772 sin(1 x) + 2.097 cos(1 x) + -2.298 sin(1 y) + -3.115 cos(1 y)
+(y)' = 1.362 sin(1 y) + -0.222 cos(1 y)</code></pre>
+</div>
+</div>
+<p>Let us verify this on some test data:</p>
+<div id="cell-24" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_simulation(model, x0, y0):</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    t_test <span class="op">=</span> np.linspace(<span class="dv">0</span>, <span class="dv">1</span>, <span class="dv">100</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    x_test <span class="op">=</span> x0 <span class="op">*</span> np.exp(<span class="op">-</span><span class="dv">2</span> <span class="op">*</span> t_test)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    y_test <span class="op">=</span> y0 <span class="op">*</span> np.exp(t_test)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    sim <span class="op">=</span> model.simulate([x0, y0], t<span class="op">=</span>t_test)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    plt.plot(x_test, y_test, label<span class="op">=</span><span class="st">"Ground truth"</span>, linewidth<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    plt.plot(sim[:, <span class="dv">0</span>], sim[:, <span class="dv">1</span>], <span class="st">"--"</span>, label<span class="op">=</span><span class="st">"SINDy estimate"</span>, linewidth<span class="op">=</span><span class="dv">3</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    plt.plot(x0, y0, <span class="st">"ko"</span>, label<span class="op">=</span><span class="st">"Initial condition"</span>, markersize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"x"</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">"y"</span>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    plt.legend()</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-25" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>plot_simulation(model, x0,y0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-6-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we may have expected, a Fourier basis is not optimal for this problem. Let’s try a differetn basis function!</p>
+<p><strong>Exercise 1</strong> Let’s investigate what happens if we choose a different basis function.</p>
+<p>Implement a Sindy algorithm class with a Fourier basis by initializing <code>ps.SINDy()</code> with the <code>feature_library</code> attribute set to <code>ps.PolynomialLibrary()</code>. Fit the instantiated algorithm with the <code>.fit(X, t=t)</code> method.</p>
+<div id="cell-28" class="cell" data-execution_count="103">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model_1 <span class="op">=</span> ps.SINDy(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    differentiation_method<span class="op">=</span>ps.FiniteDifference(order<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    feature_library<span class="op">=</span>ps.PolynomialLibrary(degree<span class="op">=</span><span class="dv">1</span>),</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>ps.STLSQ(threshold<span class="op">=</span><span class="fl">0.2</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    feature_names<span class="op">=</span>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>model_1.fit(X, t<span class="op">=</span>t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="103">
+<pre><code>SINDy(differentiation_method=FiniteDifference(),
+      feature_library=PolynomialLibrary(degree=1), feature_names=['x', 'y'],
+      optimizer=STLSQ(threshold=0.2))</code></pre>
+</div>
+</div>
+<div id="cell-29" class="cell" data-execution_count="104">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model_1.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(x)' = -2.000 x
+(y)' = 1.000 y</code></pre>
+</div>
+</div>
+<div id="cell-30" class="cell" data-execution_count="105">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>plot_simulation(model_1, x0,y0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>As we can see in this (simple) case, the model has perfectly identified the underlying equation by using polynomial basis functions.</p>
+<p>Our problem was a first-order polynomial differential equation, so it is only natural that regression with exactly these model assumptions succeeds.</p>
+<p><strong>Exercise 1.1</strong> At which degree is SINDy not able anymore to correctly identify the equation? At which degree do the predictions on a test set diverge? Test this by successively increasing the <code>degree</code> of the polynomial.</p>
+<div id="cell-33" class="cell" data-execution_count="106">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>model_1 <span class="op">=</span> ps.SINDy(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    differentiation_method<span class="op">=</span>ps.FiniteDifference(order<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    feature_library<span class="op">=</span>ps.PolynomialLibrary(degree<span class="op">=</span><span class="dv">4</span>),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>ps.STLSQ(threshold<span class="op">=</span><span class="fl">0.2</span>),</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    feature_names<span class="op">=</span>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>model_1.fit(X, t<span class="op">=</span>t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="106">
+<pre><code>SINDy(differentiation_method=FiniteDifference(),
+      feature_library=PolynomialLibrary(degree=4), feature_names=['x', 'y'],
+      optimizer=STLSQ(threshold=0.2))</code></pre>
+</div>
+</div>
+<div id="cell-34" class="cell" data-execution_count="107">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>model_1.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(x)' = -1.280 x + -0.960 x^2 y^2
+(y)' = 1.000 y</code></pre>
+</div>
+</div>
+<div id="cell-35" class="cell" data-execution_count="108">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>plot_simulation(model_1, x0,y0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-12-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Exercise 1.2</strong> What happens if you set the threshold too low? What if it is too high?</p>
+<p><a href="https://deeptime-ml.github.io/trunk/api/generated/deeptime.sindy.STLSQ.html">STLSQ</a> : Attempts to minimize the objective function <span class="math inline">\(||y-Xw||_{2}^{2}+\alpha ||w||_{2}^{2}\)</span>​ by iteratively performing least squares and masking out elements of the weight that are below a given threshold.</p>
+<p><strong>threshold</strong> : minimum magnitude for a coefficient in the weight vector. Coefficients with magnitude below the threshold are set to zero.</p>
+<div id="cell-38" class="cell" data-execution_count="109">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model_1 <span class="op">=</span> ps.SINDy(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    differentiation_method<span class="op">=</span>ps.FiniteDifference(order<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    feature_library<span class="op">=</span>ps.PolynomialLibrary(degree<span class="op">=</span><span class="dv">4</span>),</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>ps.STLSQ(threshold<span class="op">=</span><span class="fl">0.1</span>),</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    feature_names<span class="op">=</span>[<span class="st">"x"</span>, <span class="st">"y"</span>]</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>model_1.fit(X, t<span class="op">=</span>t)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="109">
+<pre><code>SINDy(differentiation_method=FiniteDifference(),
+      feature_library=PolynomialLibrary(degree=4), feature_names=['x', 'y'],
+      optimizer=STLSQ())</code></pre>
+</div>
+</div>
+<div id="cell-39" class="cell" data-execution_count="110">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>model_1.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(x)' = -1.277 x + 0.001 x^2 + -0.002 x y + -0.005 x^2 y + -0.958 x^2 y^2
+(y)' = 3063674878.195 y + -4084899836.260 x y^3</code></pre>
+</div>
+</div>
+<div id="cell-40" class="cell" data-execution_count="111">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>x0 <span class="op">=</span> <span class="dv">6</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>y0 <span class="op">=</span> <span class="op">-</span><span class="fl">0.1</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>plot_simulation(model_1, x0,y0)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="example-lorenz-attractor" class="level2">
+<h2 class="anchored" data-anchor-id="example-lorenz-attractor">Example: Lorenz attractor</h2>
+<p>For testing SINDy on the Lorenz attractor we first simulate a trajectory from the ground truth equations:</p>
+<div id="cell-43" class="cell" data-execution_count="112">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy.integrate <span class="im">import</span> odeint</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>rho <span class="op">=</span> <span class="fl">28.0</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>sigma <span class="op">=</span> <span class="fl">10.0</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>beta <span class="op">=</span> <span class="fl">8.0</span> <span class="op">/</span> <span class="fl">3.0</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>dt <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> f(state, t):</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>    x, y, z <span class="op">=</span> state  </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> sigma <span class="op">*</span> (y <span class="op">-</span> x), x <span class="op">*</span> (rho <span class="op">-</span> z) <span class="op">-</span> y, x <span class="op">*</span> y <span class="op">-</span> beta <span class="op">*</span> z</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>state0 <span class="op">=</span> [<span class="fl">1.0</span>, <span class="fl">1.0</span>, <span class="fl">1.0</span>]</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>time_steps <span class="op">=</span> np.arange(<span class="fl">0.0</span>, <span class="fl">40.0</span>, dt)</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>x_train <span class="op">=</span> odeint(f, state0, time_steps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-44" class="cell" data-execution_count="113">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> ps.SINDy(</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    optimizer<span class="op">=</span>ps.STLSQ(threshold<span class="op">=</span><span class="fl">0.05</span>),</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    feature_library<span class="op">=</span>ps.PolynomialLibrary(degree<span class="op">=</span><span class="dv">2</span>),</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>model.fit(x_train, t<span class="op">=</span>dt)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>x_sim <span class="op">=</span> model.simulate(x_train[<span class="dv">0</span>], time_steps)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-45" class="cell" data-execution_count="114">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>model.<span class="bu">print</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>(x0)' = -9.977 x0 + 9.977 x1
+(x1)' = 27.806 x0 + -0.962 x1 + -0.995 x0 x2
+(x2)' = -2.659 x2 + 0.997 x0 x1</code></pre>
+</div>
+</div>
+<div id="cell-46" class="cell" data-execution_count="115">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>plt.plot(x_train[:, <span class="dv">0</span>], x_train[:, <span class="dv">2</span>], label<span class="op">=</span><span class="st">'Ground truth'</span>)</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>plt.plot(x_sim[:, <span class="dv">0</span>], x_sim[:, <span class="dv">2</span>], <span class="st">'--'</span>, label<span class="op">=</span><span class="st">'SINDy estimate'</span>)</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x_train[<span class="dv">0</span>, <span class="dv">0</span>], x_train[<span class="dv">0</span>, <span class="dv">2</span>], <span class="st">"ko"</span>, label<span class="op">=</span><span class="st">"Initial condition"</span>, markersize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>plt.draw()</span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-19-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-47" class="cell" data-execution_count="116">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_dimension(dim, name):</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    fig <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>,<span class="dv">2</span>))</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    ax <span class="op">=</span> fig.gca()</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    ax.plot(time_steps, x_train[:, dim])</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    ax.plot(time_steps, x_sim[:, dim], <span class="st">"--"</span>)</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">"time"</span>)</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(name)</span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">0</span>, <span class="st">'x'</span>)</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">1</span>, <span class="st">'y'</span>)</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">2</span>, <span class="st">'z'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-20-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-20-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-20-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>We can see that the prediction tracks the ground truth data very faithfully, until it diverges (which is inevitable by the chaotic nature of the system).</p>
+</section>
+<section id="challenges" class="level2">
+<h2 class="anchored" data-anchor-id="challenges">Challenges</h2>
+<p>The previous examples have been very basic with a lot of implicit assumptions. Applying SINDy to real-world data is more challenging on multiple fronts. The challenges arise from: 1. <strong>Data</strong>. How much and what quality of data is needed? Per default, SINDy relies on clean data, rapidly sampled in time, with little noise. Needs to be clean enough to compute derivatives. But these requirements can be traded off against each other: e.g., if the data is clean, little is fine. Conversely, for ample but noisy data, one can average out the noise by integration. 2. <strong>Coordinates</strong>. Which variables to measure? Use expert domain knowledge if possible. Alternatively, apply singular value decomposition to find most relevant variables. Or train a deep autoencoder in combination with SINDy: &gt;Champion, Kathleen, Bethany Lusch, J. Nathan Kutz, and Steven L. Brunton. 2019. “Data-Driven Discovery of Coordinates and Governing Equations.” Proceedings of the National Academy of Sciences of the United States of America 116 (45): 22445–51. https://doi.org/10.1073/pnas.1906995116.</p>
+<ol start="3" type="1">
+<li><strong>Library</strong>. What library terms capture the dynamics best? Practically, start simple, e.g.&nbsp;with linear terms, then quadratic etc.. One may also use domain knowledge. Be careful, to not expand the library too big, to avoid linear dependence of columns resulting in an ill-conditioned matrix <span class="math inline">\(\Theta(X)\)</span>. Prior knowledge on physics can yield symmetry constraints that cross out symmetry-incompatible terms in library.</li>
+<li><strong>Optimization</strong>. Which algorithm to use? How do I actually find sparse terms? Simplest is LASSO, in practice Sequential Threshold Least Squares (iteratively hard-thresholding coefficients) works better. Here, one may also incorporate <em>physics-informed</em> constraints: for example one can enforce energy conservation or global stability directly in the optimization.</li>
+</ol>
+<p>In the past years, a lot has been achieved in this regard and SINDy has been successful in a variety of real-world applications, including discovering equations for plasma fluid dynamics that previously had not been analytically formulated due to the complexity of the problem.</p>
+<section id="sources" class="level3">
+<h3 class="anchored" data-anchor-id="sources">Sources</h3>
+<ul>
+<li>https://pysindy.readthedocs.io/en/latest/#how-it-works</li>
+<li>https://pysindy.readthedocs.io/en/latest/examples/2_introduction_to_sindy.html</li>
+<li>Part 1: https://www.youtube.com/watch?v=NxAn0oglMVw</li>
+<li>Part 2: https://www.youtube.com/watch?v=8-hoWTJwmrE</li>
+<li>Part 3: https://www.youtube.com/watch?v=1vrsBg92Xzo</li>
+<li>Part 4: https://www.youtube.com/watch?v=MmMNQe_EtCw</li>
+<li>Part 5: https://www.youtube.com/watch?v=pY2iJnngk4g</li>
+</ul>
+</section>
+</section>
+<section id="reservoir-computing" class="level2">
+<h2 class="anchored" data-anchor-id="reservoir-computing">Reservoir Computing</h2>
+<p>Reservoir computing is a simple method for training recurrent neural networks without backpropagation through time and the associated notorious vanishing and exploding gradient problems. The basic steps are:</p>
+<ol type="1">
+<li>Randomly initialize recurrent neural network weights.</li>
+<li>Fix hidden connection weights.</li>
+<li>Train linear output layer with linear regression.</li>
+</ol>
+<p>More formally, the state of the recurrent neural network of <span class="math inline">\(M\)</span> neurons is given by its hidden activations <span class="math inline">\(\mathbf{h} \in \mathbb{R}^{M}\)</span>, which are connected by randomly initialized and fixed matrix <span class="math inline">\(\mathbf{W}_{\mathrm{h}}\)</span>. An input sequence <span class="math inline">\(\mathbf{X}_{1:\tau}\)</span> is embedded by a linear map <span class="math inline">\(\mathbf{W}_{\mathrm{i}}\)</span> to the state <span class="math inline">\(\mathbf{h}_\tau\)</span>:</p>
+<p><span class="math display">\[
+    \begin{split}
+        \mathbf{h}_1 &amp;= \sigma (\mathbf{W}_{\mathrm{h}} \mathbf{h}_0 +\mathbf{W}_{\mathrm{i}}\mathbf{x}_1) \\
+    \vdots &amp;\phantom{a}\hspace{1cm} \vdots\\
+    \mathbf{h}_\tau &amp;= \sigma (\mathbf{W}_{\mathrm{h}} \mathbf{h}_{\tau -1} + \mathbf{W}_{\mathrm{i}} \mathbf{x}_\tau).
+    \end{split}
+\]</span></p>
+<p>Then, the reservoir can linearly predict the next input <span class="math inline">\(\mathbf{x}_{\tau +1}\)</span>, based on the hidden state <span class="math inline">\(\mathbf{h}_\tau\)</span>:</p>
+<p><span class="math display">\[\begin{equation}
+    \mathbf{\hat {x}}_{\tau +1} = \mathbf{W}_{\mathrm{o}} \mathbf{h}_\tau,
+\end{equation}\]</span></p>
+<p>with <span class="math inline">\(\mathbf{W}_{\mathrm{o}}\)</span> mapping from hidden activation to output. Only the parameters of this output matrix <span class="math inline">\(\mathbf{W}_{\mathrm{o}}\)</span> are trained. Hence, the optimal values can be obtained analytically via ridge regression (with regularization parameter <span class="math inline">\(\lambda\)</span>) as:</p>
+<p><span class="math display">\[
+    \mathbf{W}_{\mathrm{o}} = (\mathbf{H}^T\mathbf{H} + \lambda \mathbf{I})^{-1} \mathbf{H}^T \mathbf{X},
+\]</span></p>
+<p>where <span class="math inline">\(\mathbf{H}\)</span> are the hidden states, <span class="math inline">\(\mathbf{I}\)</span> the identity matrix, and <span class="math inline">\(\mathbf{X}\)</span> the targets of the regression.</p>
+</section>
+<section id="example-lorenz-attractor-1" class="level2">
+<h2 class="anchored" data-anchor-id="example-lorenz-attractor-1">Example: Lorenz Attractor</h2>
+<div id="cell-57" class="cell" data-execution_count="117">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> scipy <span class="im">import</span> sparse</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>radius <span class="op">=</span> <span class="fl">0.6</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>sparsity <span class="op">=</span> <span class="fl">0.01</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>input_dim <span class="op">=</span> <span class="dv">3</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>reservoir_size <span class="op">=</span> <span class="dv">1000</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>n_steps_prerun <span class="op">=</span> <span class="dv">10</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>regularization <span class="op">=</span> <span class="fl">1e-2</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>sequence <span class="op">=</span> x_train</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Randomly initialize the network weights:</p>
+<div id="cell-59" class="cell" data-execution_count="118">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>weights_hidden <span class="op">=</span> sparse.random(reservoir_size, reservoir_size, density<span class="op">=</span>sparsity)</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>eigenvalues, _ <span class="op">=</span> sparse.linalg.eigs(weights_hidden)</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>weights_hidden <span class="op">=</span> weights_hidden <span class="op">/</span> np.<span class="bu">max</span>(np.<span class="bu">abs</span>(eigenvalues)) <span class="op">*</span> radius</span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>weights_input <span class="op">=</span> np.zeros((reservoir_size, input_dim))</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>q <span class="op">=</span> <span class="bu">int</span>(reservoir_size <span class="op">/</span> input_dim)</span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, input_dim):</span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>    weights_input[i <span class="op">*</span> q:(i <span class="op">+</span> <span class="dv">1</span>) <span class="op">*</span> q, i] <span class="op">=</span> <span class="dv">2</span> <span class="op">*</span> np.random.rand(q) <span class="op">-</span> <span class="dv">1</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>weights_output <span class="op">=</span> np.zeros((input_dim, reservoir_size))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Embed the sequence into the hidden state of the network:</p>
+<div id="cell-61" class="cell" data-execution_count="119">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_hidden(reservoir_size, n_steps_prerun, sequence):</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    hidden <span class="op">=</span> np.zeros((reservoir_size, <span class="dv">1</span>))</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_steps_prerun):</span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span> <span class="op">=</span> sequence[t].reshape(<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>)</span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> np.tanh(weights_hidden <span class="op">@</span> hidden <span class="op">+</span> weights_input <span class="op">@</span> <span class="bu">input</span>)</span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> hidden</span>
+<span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-8"><a href="#cb31-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> augment_hidden(hidden):</span>
+<span id="cb31-9"><a href="#cb31-9" aria-hidden="true" tabindex="-1"></a>    h_aug <span class="op">=</span> hidden.copy()</span>
+<span id="cb31-10"><a href="#cb31-10" aria-hidden="true" tabindex="-1"></a>    h_aug[::<span class="dv">2</span>] <span class="op">=</span> <span class="bu">pow</span>(h_aug[::<span class="dv">2</span>], <span class="fl">2.0</span>)</span>
+<span id="cb31-11"><a href="#cb31-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> h_aug</span>
+<span id="cb31-12"><a href="#cb31-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-13"><a href="#cb31-13" aria-hidden="true" tabindex="-1"></a>hidden <span class="op">=</span> initialize_hidden(reservoir_size, n_steps_prerun, sequence)</span>
+<span id="cb31-14"><a href="#cb31-14" aria-hidden="true" tabindex="-1"></a>hidden_states <span class="op">=</span> []</span>
+<span id="cb31-15"><a href="#cb31-15" aria-hidden="true" tabindex="-1"></a>targets <span class="op">=</span> []</span>
+<span id="cb31-16"><a href="#cb31-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-17"><a href="#cb31-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_steps_prerun, <span class="bu">len</span>(sequence) <span class="op">-</span> <span class="dv">1</span>):</span>
+<span id="cb31-18"><a href="#cb31-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span> <span class="op">=</span> np.reshape(sequence[t], (<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb31-19"><a href="#cb31-19" aria-hidden="true" tabindex="-1"></a>    target <span class="op">=</span> np.reshape(sequence[t <span class="op">+</span> <span class="dv">1</span>], (<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb31-20"><a href="#cb31-20" aria-hidden="true" tabindex="-1"></a>    hidden <span class="op">=</span> np.tanh(weights_hidden <span class="op">@</span> hidden <span class="op">+</span> weights_input <span class="op">@</span> <span class="bu">input</span>)</span>
+<span id="cb31-21"><a href="#cb31-21" aria-hidden="true" tabindex="-1"></a>    hidden <span class="op">=</span> augment_hidden(hidden)</span>
+<span id="cb31-22"><a href="#cb31-22" aria-hidden="true" tabindex="-1"></a>    hidden_states.append(hidden)</span>
+<span id="cb31-23"><a href="#cb31-23" aria-hidden="true" tabindex="-1"></a>    targets.append(target)</span>
+<span id="cb31-24"><a href="#cb31-24" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb31-25"><a href="#cb31-25" aria-hidden="true" tabindex="-1"></a>targets <span class="op">=</span> np.squeeze(np.array(targets))</span>
+<span id="cb31-26"><a href="#cb31-26" aria-hidden="true" tabindex="-1"></a>hidden_states <span class="op">=</span> np.squeeze(np.array(hidden_states))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Ridge regression to obtain the linear output layer weights:</p>
+<div id="cell-63" class="cell" data-execution_count="120">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>weights_output <span class="op">=</span> (np.linalg.inv(hidden_states.T<span class="op">@</span>hidden_states <span class="op">+</span> regularization <span class="op">*</span> np.eye(reservoir_size)) <span class="op">@</span> hidden_states.T<span class="op">@</span>targets).T</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-64" class="cell" data-execution_count="121">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(sequence, n_steps_predict):</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    hidden <span class="op">=</span> initialize_hidden(reservoir_size, n_steps_prerun, sequence)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    <span class="bu">input</span> <span class="op">=</span> sequence[n_steps_prerun].reshape((<span class="op">-</span><span class="dv">1</span>, <span class="dv">1</span>))</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    outputs <span class="op">=</span> []</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> t <span class="kw">in</span> <span class="bu">range</span>(n_steps_prerun, n_steps_prerun <span class="op">+</span> n_steps_predict):</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> np.tanh(weights_hidden <span class="op">@</span> hidden <span class="op">+</span> weights_input <span class="op">@</span> <span class="bu">input</span>)</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a>        hidden <span class="op">=</span> augment_hidden(hidden)</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a>        output <span class="op">=</span> weights_output <span class="op">@</span> hidden</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>        <span class="bu">input</span> <span class="op">=</span> output</span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a>        outputs.append(output)</span>
+<span id="cb33-12"><a href="#cb33-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(outputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-65" class="cell" data-execution_count="122">
+<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>x_sim <span class="op">=</span> predict(sequence, <span class="dv">4000</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cell-66" class="cell" data-execution_count="123">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">6</span>, <span class="dv">4</span>))</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>plt.plot(x_train[:<span class="dv">4000</span>, <span class="dv">0</span>], x_train[:<span class="dv">4000</span>, <span class="dv">2</span>], label<span class="op">=</span><span class="st">"Ground truth"</span>)</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>plt.plot(x_sim[:, <span class="dv">0</span>], x_sim[:, <span class="dv">2</span>],<span class="st">'--'</span>, label<span class="op">=</span><span class="st">"Reservoir computing estimate"</span>)</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>plt.plot(x_train[<span class="dv">0</span>, <span class="dv">0</span>], x_train[<span class="dv">0</span>, <span class="dv">2</span>], <span class="st">"ko"</span>, label<span class="op">=</span><span class="st">"Initial condition"</span>, markersize<span class="op">=</span><span class="dv">8</span>)</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-27-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cell-67" class="cell" data-execution_count="124">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">0</span>, <span class="st">'x'</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">1</span>, <span class="st">'y'</span>)</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>plot_dimension(<span class="dv">2</span>, <span class="st">'z'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-28-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-28-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Complete_DNN_2_1_files/figure-html/cell-28-output-3.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<p>A successful application of reservoir computing to data-driven estimation of nonlinear dynamical systems is for example:</p>
+<blockquote class="blockquote">
+<p>Jaideep Pathak et al., “Model-Free Prediction of Large Spatiotemporally Chaotic Systems from Data: A Reservoir Computing Approach,” Physical Review Letters 120, no. 2 (January 12, 2018): 024102, https://doi.org/10.1103/PhysRevLett.120.024102.</p>
+</blockquote>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

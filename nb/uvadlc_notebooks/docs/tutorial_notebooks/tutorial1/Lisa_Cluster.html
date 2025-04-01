@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Guide 1: Working with the Snellius cluster – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../">
+<script src="../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#the-snellius-cluster" id="toc-the-snellius-cluster" class="nav-link active" data-scroll-target="#the-snellius-cluster">The Snellius cluster</a>
+  <ul class="collapse">
+  <li><a href="#what-is-a-cluster-computer" id="toc-what-is-a-cluster-computer" class="nav-link" data-scroll-target="#what-is-a-cluster-computer">What is a cluster computer?</a></li>
+  <li><a href="#architecture-of-snellius" id="toc-architecture-of-snellius" class="nav-link" data-scroll-target="#architecture-of-snellius">Architecture of Snellius</a></li>
+  </ul></li>
+  <li><a href="#first-steps" id="toc-first-steps" class="nav-link" data-scroll-target="#first-steps">First steps</a>
+  <ul class="collapse">
+  <li><a href="#how-to-connect-to-snellius" id="toc-how-to-connect-to-snellius" class="nav-link" data-scroll-target="#how-to-connect-to-snellius">How to connect to Snellius</a></li>
+  <li><a href="#modules" id="toc-modules" class="nav-link" data-scroll-target="#modules">Modules</a></li>
+  <li><a href="#install-the-environment" id="toc-install-the-environment" class="nav-link" data-scroll-target="#install-the-environment">Install the environment</a></li>
+  </ul></li>
+  <li><a href="#the-slurm-scheduler" id="toc-the-slurm-scheduler" class="nav-link" data-scroll-target="#the-slurm-scheduler">The SLURM scheduler</a>
+  <ul class="collapse">
+  <li><a href="#job-files" id="toc-job-files" class="nav-link" data-scroll-target="#job-files">Job files</a></li>
+  <li><a href="#starting-and-organizing-jobs" id="toc-starting-and-organizing-jobs" class="nav-link" data-scroll-target="#starting-and-organizing-jobs">Starting and organizing jobs</a></li>
+  <li><a href="#interactive-sessions" id="toc-interactive-sessions" class="nav-link" data-scroll-target="#interactive-sessions">Interactive sessions</a></li>
+  </ul></li>
+  <li><a href="#troubleshooting" id="toc-troubleshooting" class="nav-link" data-scroll-target="#troubleshooting">Troubleshooting</a>
+  <ul class="collapse">
+  <li><a href="#snellius-is-refusing-connection" id="toc-snellius-is-refusing-connection" class="nav-link" data-scroll-target="#snellius-is-refusing-connection">Snellius is refusing connection</a></li>
+  <li><a href="#slurm-output-file-missing" id="toc-slurm-output-file-missing" class="nav-link" data-scroll-target="#slurm-output-file-missing">Slurm output file missing</a></li>
+  <li><a href="#slurm-output-file-is-empty-for-a-long-time" id="toc-slurm-output-file-is-empty-for-a-long-time" class="nav-link" data-scroll-target="#slurm-output-file-is-empty-for-a-long-time">Slurm output file is empty for a long time</a></li>
+  <li><a href="#all-my-jobs-are-pending" id="toc-all-my-jobs-are-pending" class="nav-link" data-scroll-target="#all-my-jobs-are-pending">All my jobs are pending</a></li>
+  <li><a href="#pytorch-or-other-packages-cannot-be-imported" id="toc-pytorch-or-other-packages-cannot-be-imported" class="nav-link" data-scroll-target="#pytorch-or-other-packages-cannot-be-imported">PyTorch or other packages cannot be imported</a></li>
+  <li><a href="#my-job-runs-very-slow" id="toc-my-job-runs-very-slow" class="nav-link" data-scroll-target="#my-job-runs-very-slow">My job runs very slow</a></li>
+  <li><a href="#i-am-not-able-to-use-snellius-at-all" id="toc-i-am-not-able-to-use-snellius-at-all" class="nav-link" data-scroll-target="#i-am-not-able-to-use-snellius-at-all">I am not able to use Snellius at all</a></li>
+  </ul></li>
+  <li><a href="#advanced-topics" id="toc-advanced-topics" class="nav-link" data-scroll-target="#advanced-topics">Advanced topics</a>
+  <ul class="collapse">
+  <li><a href="#password-less-login" id="toc-password-less-login" class="nav-link" data-scroll-target="#password-less-login">Password-less login</a></li>
+  <li><a href="#remote-development-with-vscode-or-pycharm" id="toc-remote-development-with-vscode-or-pycharm" class="nav-link" data-scroll-target="#remote-development-with-vscode-or-pycharm">Remote development with VSCode or PyCharm</a></li>
+  <li><a href="#tracking-gpu-stats" id="toc-tracking-gpu-stats" class="nav-link" data-scroll-target="#tracking-gpu-stats">Tracking GPU stats</a></li>
+  <li><a href="#job-arrays" id="toc-job-arrays" class="nav-link" data-scroll-target="#job-arrays">Job Arrays</a></li>
+  <li><a href="#additional-links" id="toc-additional-links" class="nav-link" data-scroll-target="#additional-links">Additional links</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Guide 1: Working with the Snellius cluster</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Authors:</strong> Phillip Lippe, Danilo de Goede</p>
+<p>This tutorial explains how to work with the Snellius cluster for the Deep Learning course at the University of Amsterdam. Every student will receive an account to have resources for training deep neural networks and get familiar with working on a cluster. It is recommended to have listened to the presentation by the SURF team or the TA team before going through this tutorial. Further, this tutorial assumes that you are familiar with using the terminal in Linux. If not, a crash course can be found <a href="https://ubuntu.com/tutorials/command-line-for-beginners">here</a>.</p>
+<section id="the-snellius-cluster" class="level2">
+<h2 class="anchored" data-anchor-id="the-snellius-cluster">The Snellius cluster</h2>
+<p>The following section gives a quick introduction to the Snellius cluster, and how it is build up. A detailed description of the system can be found in the SURF <a href="https://servicedesk.surf.nl/wiki/display/WIKI/System+details">user guide</a>.</p>
+<section id="what-is-a-cluster-computer" class="level3">
+<h3 class="anchored" data-anchor-id="what-is-a-cluster-computer">What is a cluster computer?</h3>
+<p>(Disclaimer: the following paragraph is an adapted version of the <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Generic+usage+guides">HPC user guide</a>. Credits: SURF team)</p>
+<p>You can imagine a cluster computer as a collection of regular computers (known as nodes), tied together with network cables that are similar to the network cables in your home or office (see the figure below - credit: SURF team). Each node has its own CPU, memory and disk space, in addition to which they generally have access to a shared file system. On a cluster computer, you can run hundreds of computational tasks simultaneously.</p>
+<center>
+<img src="lisa_simplified_figure.svg" width="500px">
+</center>
+<p>Interacting with a cluster computer is different from a normal computer. Normal computers are mostly used interactively, i.e.&nbsp;you type a command or click with your mouse, and your computer instantly responds by e.g.&nbsp;running a program. Cluster computers are mostly used non-interactively.</p>
+<p>A cluster computer such as Snellius mainly has two types of nodes: login nodes and compute nodes. You connect to Snellius through the login node (see next section). This is an interactive node: similar to your own PC, it immediately responds to the commands you type. There are only a few login nodes on a cluster computer, and you only use them for light tasks: adjusting your code, preparing your input data, writing job scripts, etc. Since the login nodes are only meant for light tasks, many users can be on the same login node at the same time. To prevent users from over-using the login node, any command that takes longer than 15 minutes will be killed.</p>
+<p>Your ‘big’ calculations such a neural network training will be done on the compute nodes. These perform what is known as batch jobs. A batch job is essentially a recipe of commands (put together in a job script) that you want the computer to execute. Calculations on the compute nodes are not performed right away. Instead, you submit your job script to the job queue. As soon as sufficient resources (i.e.&nbsp;compute nodes) are available for your job, the system will take your job from the queue, and send it to the compute nodes for execution.</p>
+</section>
+<section id="architecture-of-snellius" class="level3">
+<h3 class="anchored" data-anchor-id="architecture-of-snellius">Architecture of Snellius</h3>
+<p>A visual description of the Snellius architecture can be found below (figure credit - SURF team). You can connect to any login node of Snellius to interact with the system. Over the login nodes, you have access to the shared file system across nodes. The one you will mainly interact is <code>/home</code> where you can store your code, data, etc. You can access your files from any login node, as well as any compute node. You have a maximum disk space of 200GB which should be sufficient for the DL course.</p>
+<p>You do not directly interact with any compute node. Instead, you can request computational resources with a job script, and Snellius will assign a compute node to this job using a <a href="https://slurm.schedmd.com">SLURM job scheduler</a>. If all computational resources are occupied, your job will be placed in a queue, and scheduled when resources are available.</p>
+<p>Snellius has multiple sets of compute nodes with different computational resources, also called partitions. The one we will use for the Deep Learning course is called <code>gpu_mig</code> (MIG stands for Multi-Instance GPU), and provides us compute nodes with the following resources:</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 12%">
+<col style="width: 13%">
+<col style="width: 47%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: center;">Processor</th>
+<th style="text-align: center;">CPU Cores</th>
+<th style="text-align: center;">RAM Memory</th>
+<th style="text-align: center;">GPUs</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: center;">Platinum 8360Y (2.4GHz)</td>
+<td style="text-align: center;">72</td>
+<td style="text-align: center;">480 GB</td>
+<td style="text-align: center;">8x NVIDIA A100 MIG instances, 20 GB HBM2</td>
+</tr>
+</tbody>
+</table>
+<p>These computational resources are more than sufficient for the assignments in this course. For a job, we usually only use a single GPU MIG instance from a compute node, meaning that we would also use 1/8th of the other resources (9 CPU cores, 60GB RAM). The scheduler of Snellius will assign multiple jobs to the same node if its computational resources are not exhausted yet, thus not wasting any if we only use a single GPU.</p>
+<div class="alert alert-info">
+<p><strong>Note:</strong>: For the Deep Learning course, we also have access to the <code>gpu_a100</code> partition. Unlike the <code>gpu_mig</code> partition, which provides 8 NVIDIA A100 MIG instances, the <code>gpu_a100</code> partition offers 4 full NVIDIA A100 GPUs. On the <code>gpu_mig</code> partition, each A100 GPU is split into two instances, whereas on the <code>gpu_a100</code> partition, each GPU is used as a whole. Therefore, when using the <code>gpu_a100</code> partition, we would use 1/4th of the other resources (18 CPU cores, 120GB RAM). Please avoid using the <code>gpu_a100</code> partition for the course unless all <code>gpu_mig</code> resources are fully occupied, as the <code>gpu_a100</code> partition is more costly. More information can be found <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+partitions+and+accounting">here</a>.</p>
+</div>
+<center>
+<img src="lisa_login_nodes.svg" width="500px">
+</center>
+</section>
+</section>
+<section id="first-steps" class="level2">
+<h2 class="anchored" data-anchor-id="first-steps">First steps</h2>
+<p>After discussing the general architecture of Snellius, we are ready to discuss the practical aspects of how to use the Snellius cluster.</p>
+<p><strong>REMINDER</strong>: When you first receive your login data for Snellius, make sure to go to the <a href="https://portal.cua.surf.nl/">user portal</a> and change the password.</p>
+<section id="how-to-connect-to-snellius" class="level3">
+<h3 class="anchored" data-anchor-id="how-to-connect-to-snellius">How to connect to Snellius</h3>
+<p>You can login to Snellius’s login nodes using a secure shell (SSH):</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ssh</span> <span class="at">-X</span> scur____@snellius.surf.nl</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Replace <code>scur___</code> by your username. You will be connected to one of its login nodes, and have the view of a standard Linux system in your home directory. Note that you should only use the login node as an interface, and not as compute unit. Do not run any trainings on this node, as it will be killed after 15 minutes, and slows down the communication with Snellius for everyone. Instead, Snellius uses a SLURM scheduler to handle computational expensive jobs (see below).</p>
+<p>If you want to transfer files between Snellius and your local computer, you can use standard Unix commands such as <code>scp</code> or <code>rsync</code>, <a href="https://github.com/">GitHub</a>, or graphical interfaces such as <a href="https://filezilla-project.org/">FileZilla</a> (use port 22 in FileZilla) or <a href="https://winscp.net/eng/index.php">WinSCP</a> (for Windows PC). Note that using GitHub on Snellius requires <a href="https://docs.github.com/en/github-ae@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">adding the SSH key from Snellius to your GitHub account</a>.</p>
+<p>A copy operation from Snellius to your local computer with <code>rsync</code>, started from your local computer, could look as follows:</p>
+<pre><code>rsync -av scur___@snellius.surf.nl:~/source destination</code></pre>
+<p>Replace <code>scur___</code> by your username, <code>source</code> by the directory/file on Snellius you want to copy on your local machine, and <code>destination</code> by the directory/file it should be copied to. Note that <code>source</code> is referenced from your home directory on Snellius. If you want to copy a file from your local computer to Snellius, use:</p>
+<pre><code>rsync -av source scur___@snellius.surf.nl:~/destination</code></pre>
+<p>Again, replace <code>source</code> with the directory/file on your local computer you want to copy to Snellius, and <code>destination</code> by the directory/file it should be copied to.</p>
+</section>
+<section id="modules" class="level3">
+<h3 class="anchored" data-anchor-id="modules">Modules</h3>
+<p>Snellius uses modules to provide you various pre-installed software. This includes simple Python, but also the NVIDIA libraries CUDA and cuDNN that can be necessary to access GPUs. However, for our course, we only need the Anaconda module:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load 2023</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Anaconda3/2023.07-2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="alert alert-info">
+<p><strong>Note:</strong> Loading <code>Anaconda3/2023.07-2</code> may result in a warning about the potential for corruption in the user environment due to mixing Conda and module environments. Since we are only loading the <code>2023</code> and <code>Anaconda3/2023.07-2</code> modules, you can safely ignore this message. However, be aware that loading additional modules could cause issues.</p>
+</div>
+</section>
+<section id="install-the-environment" class="level3">
+<h3 class="anchored" data-anchor-id="install-the-environment">Install the environment</h3>
+<p>To run the Deep Learning assignments and other code like the notebooks on Snellius, you need to install the <a href="https://github.com/uvadlc/uvadlc_practicals_2024">provided environment for Snellius</a> (<code>dl2024_gpu.yml</code>). You can either download it locally and copy it to your Snellius account via rsync or scp as described before, or simply clone the <a href="https://github.com/uvadlc/uvadlc_practicals_2024">practicals github</a> on Snellius:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/uvadlc/uvadlc_practicals_2024.git</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note that you first need to <a href="https://docs.github.com/en/github-ae@latest/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account">add the SSH key from Snellius to your GitHub account</a> to be able to clone the repository directly on Snellius. Alternatively, you can download the repository locally and copy it to your Snellius account via <code>rsync</code> as discussed earlier.</p>
+<p>Snellius provides an Anaconda module, which you can load via <code>module load Anaconda3/2023.07-2</code> as mentioned before (remember to load the <code>2023</code> module beforehand). We recommend installing the package via a job file since the installation can take 20-30 minutes, and any command on the login node will be killed without warning after 15 minutes.</p>
+<p>To do that, save the following content into a file called <code>install_environment.job</code> in your home directory:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=gpu_mig</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gpus=1</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=InstallEnvironment</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=9</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=04:00:00</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=slurm_output_%A.out</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load 2023</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Anaconda3/2023.07-2</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$HOME</span>/uvadlc_practicals_2024/</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> dl2024_gpu.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>You can use e.g.&nbsp;<code>nano</code> to do that. If the environment file is not in the cloned repository or you haven’t cloned the repo, change the cd statement to the directory where it is stored. Once the file is saved, start the job with the command <code>sbatch install_environment.job</code>. The installation process is started on a compute node with a time limit of 4 hours, which should be sufficiently long. To see the job’s status, you can use <code>squeue</code>, where the column <code>ST</code> should show <code>PD</code> for pending initially, and then <code>R</code> for running once the job is started. If it takes longer than 10 seconds for the job to start, it is likely that the resources you are requesting are currently occupied by other jobs. Let’s look at the next section to understand what we have actually done here with respect to ‘job files’.</p>
+<section id="trouble-shooting" class="level4">
+<h4 class="anchored" data-anchor-id="trouble-shooting">Trouble shooting</h4>
+<p>If the installation via job file does not work, try to install the environment with the following command from the login node after navigating to the directory the environment file is in:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> dl2024_gpu.yml</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Note that the jobs on the login node on Snellius are limited to 15 minutes. This is often not enough to install the full environment. If the installation command is killed, you can simply restart it. If you get the error that a package is corrupted, go to <code>/home/scur___/.conda/pkgs/</code> under your home directory and remove the directory of the corrupted package. If you get the error that the environment dl2024 already exists, go to <code>/home/scur___/.conda/envs/</code>, and remove the folder ‘dl2024’.</p>
+<p>If you experience issues with the Anaconda module, you can also install Anaconda yourself (<a href="https://docs.anaconda.com/anaconda/install/linux/">download link</a>) or ask your TA for help.</p>
+</section>
+<section id="verifying-the-installation" class="level4">
+<h4 class="anchored" data-anchor-id="verifying-the-installation">Verifying the installation</h4>
+<p>When the installation process is completed, you can check if the process was successful by activating your environment on the login node via <code>source activate dl2024</code> (remember to have loaded the anaconda module beforehand), and starting a python console with executing <code>python</code>. It should say <code>Python 3.12.7 | packaged by conda-forge</code>. If you see a different python version, you might not have activated the environment correctly.</p>
+<p>In the python console, try to import pytorch via <code>import torch</code> and check the version: <code>torch.__version__</code>. It should say <code>2.5.0</code>. Finally, check whether PyTorch can access the GPU: <code>torch.cuda.is_available()</code>. Note that in most cases, this will return <code>False</code> because the login nodes on Snellius do not have GPUs. However, when you run the same command on a compute node (i.e., when submitting a job with <code>sbatch</code>), it should return <code>True</code>. To do this, save the following content into a file called <code>check_environment.job</code>, and start the job using <code>sbatch check_environment.job</code>.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=gpu_mig</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gpus=1</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=CheckEnvironment</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=9</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=00:05:00</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=slurm_output_%A.out</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load 2023</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Anaconda3/2023.07-2</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate your environment</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> activate dl2024</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Check whether the GPU is available</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> python <span class="at">-uc</span> <span class="st">"import torch; print('GPU available?', torch.cuda.is_available())"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>If the resulting slurm output contains the line <code>GPU available? True</code>, you should be all set.</p>
+</section>
+</section>
+</section>
+<section id="the-slurm-scheduler" class="level2">
+<h2 class="anchored" data-anchor-id="the-slurm-scheduler">The SLURM scheduler</h2>
+<p>Snellius relies on a SLURM scheduler to organize the jobs on the cluster. When logging into Snellius, you cannot just start a python script with your training, but instead submit a job to the scheduler. The scheduler will decide when and on which node to run your job, based on the number of nodes available and other jobs submitted. To get a deeper understanding of how the Snellius scheduler prioritizes jobs, please refer to <a href="https://servicedesk.surf.nl/wiki/display/WIKI/The+job+scheduler">job scheduler page</a> of the SURF wiki.</p>
+<section id="job-files" class="level3">
+<h3 class="anchored" data-anchor-id="job-files">Job files</h3>
+<p>We provide a template for a job file that you can use on Snellius. Create a file with any name you like, for example <code>template.job</code>, and start the job by executing the command <code>sbatch template.job</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=gpu_mig</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gpus=1</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=ExampleJob</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=9</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=04:00:00</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=slurm_output_%A.out</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load 2023</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Anaconda3/2023.07-2</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Your job starts in the directory where you call sbatch</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$HOME</span>/...</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate your environment</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> activate dl2024</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Run your code</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> python ...</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<section id="job-arguments" class="level4">
+<h4 class="anchored" data-anchor-id="job-arguments">Job arguments</h4>
+<p>You might have to change the <code>#SBATCH</code> arguments depending on your needs. We describe the arguments below:</p>
+<ul>
+<li><code>partition</code>: The partition of Snellius on which you want to run your job.</li>
+<li><code>gpus</code>: Number of GPUs you request from the nodes. If you haven’t designed your code to explicitly run on multiple GPUs, please use only one GPU (so no need to change what we have above).</li>
+<li><code>job-name</code>: Name of the job to pop up when you list your jobs with squeue (see below).</li>
+<li><code>ntasks</code>: Number of tasks to run with the job. In our case, we will always use 1 task.</li>
+<li><code>cpus-per-task</code>: Number of CPUs you request from the nodes. The gpu_mig partition restricts you to max. 9 CPUs per job/GPU.</li>
+<li><code>time</code>: Estimated time your job needs to finish. It is no problem if your job finishes earlier than the specified time. However, if your job takes longer, it will be instantaneously killed after the specified time. Still, don’t specify unnecessarily long times as this causes your job to be scheduled later (you need to wait longer in the queue if other people also want to use the cluster). A good rule of thumb is to specify ~20% more than what you would expect.</li>
+<li><code>output</code>: Output file to which the slurm output should be written. The tag “%A” is automatically replaced by the job ID. Note that if you specify the output file to be in a directory that does not exist, no output file will be created.</li>
+</ul>
+<p>SLURM allows you to specify many more arguments, but the ones above are the important ones for us. If you are interested in a full list, see <a href="https://slurm.schedmd.com/sbatch.html">here</a>.</p>
+</section>
+<section id="scratch" class="level4">
+<h4 class="anchored" data-anchor-id="scratch">Scratch</h4>
+<p>If you work with a lot of data, or a larger dataset, it is advised to copy your data to the <code>$TMPDIR</code> directory of the node (also known as ‘scratch-local’), which is tied to a much faster and larger (8TB instead of 200GB) file system than the home directory. When you store your datasets in your home directory, the read/write operation might become a bottleneck of your job. To use the scratch-local file system, simply use your copy operation of choice (e.g.&nbsp;<code>cp $HOME/input_file $TMPDIR</code>) to copy the data to the directory <code>$TMPDIR</code>. You should add this command to your job file before calling <code>srun ...</code>. Remember to point to this data when you are running your code. If you have a dataset that can be downloaded, you can also directly download it to the scratch (can sometimes be faster than copying). In case you also write something on the scratch, you need to copy it back to your home directory before finishing the job; otherwise, it will be deleted after 6 days. For more information, see the SURF wiki page about <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+filesystems">Snellius filesystems</a>.</p>
+<p><strong>Edit Dec.&nbsp;6, 2021</strong>: Due to internal changes to the SURF filesystems, it is required to <strong>use the scratch for any dataset</strong> such as CIFAR10. In PyTorch, the CIFAR10 dataset is structured into multiple large batches (usually 5), and only that batch is loaded which is currently needed. This is why during training, it requires a lot of reading operations on the disk which can slow down your training and constitutes a challenge when hundreds of students share the same filesystem. Hence, you have to use the scratch for such datasets. For most parts in the assignment, you can do this by specifying <code>--data_dir $TMPDIR</code> on the python command in your job file (check if the argument parser has this argument, otherwise you can add it yourself). This will download the dataset to the scratch and only load it from there. We recommend using this approach also for future course editions.</p>
+</section>
+</section>
+<section id="starting-and-organizing-jobs" class="level3">
+<h3 class="anchored" data-anchor-id="starting-and-organizing-jobs">Starting and organizing jobs</h3>
+<p>To start a job, you simply have to run <code>sbatch jobfile</code> where you replace <code>jobfile</code> by the filename of the job. Note that no specific file postfix like <code>.job</code> is necessary for the job (you can use <code>.txt</code> or any other you prefer). After your job has been submitted, it will be first placed into a waiting queue. The SLURM scheduler decides when to start your job based on the time of your job, all other jobs currently running or waiting, and available nodes.</p>
+<p>Besides <code>sbatch</code>, you can interact with the SLURM scheduler via the following commands:</p>
+<ul>
+<li><code>squeue</code>: Lists all jobs you have currently submitted to Snellius. See the <a href="https://slurm.schedmd.com/squeue.html">slurm documentation</a> for details.</li>
+<li><code>scancel JOBID</code>: Cancels and stops a job, independent of whether it is running or pending. The job ID can be found using <code>squeue</code>, and is printed when submitting the job via <code>sbatch</code>.</li>
+<li><code>scontrol show job JOBID</code>: Shows additional information of a specific job, like the estimated start time.</li>
+</ul>
+</section>
+<section id="interactive-sessions" class="level3">
+<h3 class="anchored" data-anchor-id="interactive-sessions">Interactive sessions</h3>
+<p>As alternative to running jobs via <code>sbatch</code>, you can request an interactive job session. In this format, you gain access to the node via the terminal/command line, and can interact with it as you would have connected via ssh directly to this compute node. Hence, you can debug your script much easier and have faster respond time. However, please keep in mind the following two disadvantages: 1. If you happen to disconnect from Snellius because of an instable connection or your computer going in stand-by mode, the job will be canceled. 2. Your job is not automatically terminated when your script has finished running, but you have to manually kill the job once you are done. If you forget it, you block the compute node for other students and waste credits that UvA payed for Hence, only use interactive sessions for short jobs/scripts, for example, if you want to debug whether your script starts running and train the model. Do not use interactive session to train a model for a long time.</p>
+<p>In order to start an interactive session on Snellius, you can use <code>srun</code> with the same input parameters as for the job file. For example:</p>
+<pre><code>srun --partition=gpu_mig --gpus=1 --ntasks=1 --cpus-per-task=9 --time=00:10:00 --pty bash -i</code></pre>
+<p>This will start an interactive session with a GPU for 10 minutes. Once resources have been allocated, you will see in your terminal that you are now on one of the compute nodes, for example, <code>gcn28</code>. As a first step, you need to load the modules (<code>module load 2023; module load Anaconda3/2023.07-2</code>) and activate your conda environment. Then, you are ready to run your script.</p>
+</section>
+</section>
+<section id="troubleshooting" class="level2">
+<h2 class="anchored" data-anchor-id="troubleshooting">Troubleshooting</h2>
+<p>It can happen that you encounter some issues when interacting with Snellius. A short FAQ is provided on the <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+FAQ">SURF website</a>, and here we provide a list of common questions/situations we have experienced from past students.</p>
+<section id="snellius-is-refusing-connection" class="level3">
+<h3 class="anchored" data-anchor-id="snellius-is-refusing-connection">Snellius is refusing connection</h3>
+<p>It can occasionally happen that Snellius refuses the connection when you try to ssh into it. If this happens, you can try to use the <a href="https://student.uva.nl/en/topics/vpn">UvA VPN</a> before connecting to Snellius. If this still does not work, then the connection issue is likely not on your side. The problem often resolves after 2-3 hours, and Snellius let’s you login after it again. If the problem doesn’t resolve after couple of hours, please contact your TA, and eventually the SURF helpdesk.</p>
+</section>
+<section id="slurm-output-file-missing" class="level3">
+<h3 class="anchored" data-anchor-id="slurm-output-file-missing">Slurm output file missing</h3>
+<p>If a job of yours is running, but no slurm output file is created, check whether the path to the output file specified in your job file actually exists. If the specified file points to a non-existing directory, no output file will be created. Note that this is not an issue by default, but you are running your job “blind” without seeing the stdout or stderr channels.</p>
+</section>
+<section id="slurm-output-file-is-empty-for-a-long-time" class="level3">
+<h3 class="anchored" data-anchor-id="slurm-output-file-is-empty-for-a-long-time">Slurm output file is empty for a long time</h3>
+<p>The slurm output file can lag behind in showing the outputs of your running job. If you are debugging and need to see the output faster, consider adding the <code>-u</code> flag to the python command in your job file (i.e.&nbsp;<code>python -u ...</code>). This flag makes the output unbuffered, and you should see the print statements in the slurm output file immediately. However, note that this puts a higher load on the network and should not be used for long running jobs.</p>
+<p>If your job is running for couple of minutes and you would have expected a few print statements to have happened, try to flush your stdout stream (<a href="https://stackoverflow.com/questions/230751/how-to-flush-output-of-print-function">how to flush the output in python</a>).</p>
+</section>
+<section id="all-my-jobs-are-pending" class="level3">
+<h3 class="anchored" data-anchor-id="all-my-jobs-are-pending">All my jobs are pending</h3>
+<p>With your student account, the SLURM scheduler restricts you to run only two jobs in parallel at a time. However, you can still queue more jobs that will run in sequence. This is done because with more than 200 students, Snellius could get crowded very fast if we don’t guarantee a fair share of resources. If all of your jobs are pending, you can check the reason for pending in the last column of <code>squeue</code>. All reasons are listed in the squeue <a href="https://slurm.schedmd.com/squeue.html">documentation</a> under <em>JOB REASON CODES</em>. The following ones are common:</p>
+<ul>
+<li><code>Priority</code>: There are other jobs on Snellius with a higher priority that are also waiting to be run. This means you just have to be patient.</li>
+<li><code>QOSResourceLimit</code>: The job is requesting more resources than allowed. Check your job file as you are only allowed to have at max. 4 GPUs, 72 CPU cores and 480GB RAM.</li>
+<li><code>Resources</code>: All nodes on Snellius are currently busy, yours will be scheduled soon.</li>
+</ul>
+<p>You can also see the estimated start time of a job by running <code>scontrol show job JOBID</code>. However, note that this is the “worst case” scenario for the current number of submitted jobs, as in if all currently running jobs would need their maximum runtime. At the same time, if more people would submit their job with higher priority, yours can fall back in the queue and get a later start time.</p>
+</section>
+<section id="pytorch-or-other-packages-cannot-be-imported" class="level3">
+<h3 class="anchored" data-anchor-id="pytorch-or-other-packages-cannot-be-imported">PyTorch or other packages cannot be imported</h3>
+<p>If you run a job and see the python error message in the slurm output file that a package is missing although you have installed it in the environment, there are two things to check. Firstly, make sure to not have the environment activated on the login node when submitting the job. This can lead to an error in the anaconda module such that packages are not found on the compute node. Secondly, check that you activate the environment correctly. To verify that the correct python version is used, you can add the command <code>which python</code> before your training file. This prints out the path of the python that will be used, in which you should see the anaconda version in the dl2024 environment.</p>
+</section>
+<section id="my-job-runs-very-slow" class="level3">
+<h3 class="anchored" data-anchor-id="my-job-runs-very-slow">My job runs very slow</h3>
+<p>If your job executes your script much slower than you expect, check for two things: (1) have you requested a GPU and are you using it, and (2) are you using the scratch for your dataset? Not using the scratch for your dataset can create a significant communication bottleneck, especially if multiple students do it at the same time. Make sure to download or copy your dataset to the scratch and load it from there.</p>
+</section>
+<section id="i-am-not-able-to-use-snellius-at-all" class="level3">
+<h3 class="anchored" data-anchor-id="i-am-not-able-to-use-snellius-at-all">I am not able to use Snellius at all</h3>
+<p>If during the course, there will be major issues with Snellius (e.g.&nbsp;cluster goes into maintenance for a long time, issues with the filesystem, etc.), you can make use of GoogleColab, as we do already for all notebook tutorials here. All assignments do not necessarily require large amount of compute, and can often be comfortably trained on a GPU provided by GoogleColab. For an introduction to GoogleColab, see this <a href="https://colab.research.google.com/">tutorial</a>.</p>
+</section>
+</section>
+<section id="advanced-topics" class="level2">
+<h2 class="anchored" data-anchor-id="advanced-topics">Advanced topics</h2>
+<section id="password-less-login" class="level3">
+<h3 class="anchored" data-anchor-id="password-less-login">Password-less login</h3>
+<p>Typing your password every time you connect to Snellius can become annoying. To enable a safe, password-less connection, you can add your public ssh key to the <a href="https://portal.cua.surf.nl/user/keys">SURF user portal</a>. Next time you login from your machine to Snellius, it will only check the ssh key and not ask you for the password anymore. Please check the <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Connecting+to+the+system#:~:text=You%20can%20use%20an%20RSA%20key%2Dpair">SURF documentation</a> for more details.</p>
+</section>
+<section id="remote-development-with-vscode-or-pycharm" class="level3">
+<h3 class="anchored" data-anchor-id="remote-development-with-vscode-or-pycharm">Remote development with VSCode or PyCharm</h3>
+<p>The common workflow with clusters is that you first code locally and test your implementation on short runs on the CPU or evt. a local GPU, then sync your code to the cluster (e.g.&nbsp;via git), and finally run the full training/process on a compute node of the cluster. If you prefer to directly code on Snellius, you can do so via remote connections in tools like VSCode or PyCharm. Essentially, these IDEs can connect via SSH to Snellius, so that it looks to you like you code locally, but all code you are editing is directly saved on Snellius. Note though that to run your code, you still need to create a job script and submit it via SLURM. The login nodes, on which these IDEs connect you to, are not meant for debugging or running code. Any process that takes longer than 15 minutes will be killed (this can sometimes also include the SSH connection of VSCode/PyCharm). For more details on remote development and how to set it up, see the SURF documentation on <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Visual+Studio+Code+for+remote+development">VSCode</a> and <a href="https://servicedesk.surf.nl/wiki/display/WIKI/PyCharm+and+other+JetBrains+IDEs+for+remote+development">PyCharm</a>.</p>
+</section>
+<section id="tracking-gpu-stats" class="level3">
+<h3 class="anchored" data-anchor-id="tracking-gpu-stats">Tracking GPU stats</h3>
+<p>If you are curious whether you use the GPU to its full capacity, you can monitor its utilization as follows. First, you submit your job and check its job ID via <code>squeue</code> or the ID that has been printed out after submitting the job via <code>sbatch</code>. Next, you can log into the node via <code>slurm_jobmonitor [jobid]</code> where you need your job ID. This gives you an interactive view on the node. Finally, you can run <code>nvtop</code> to track the GPU utilization. More details can be found <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Lisa%3A+Monitor+your+GPU+job">here</a>.</p>
+</section>
+<section id="job-arrays" class="level3">
+<h3 class="anchored" data-anchor-id="job-arrays">Job Arrays</h3>
+<p>You might come into the situation where you need to run a hyperparameter search over multiple values, and don’t want to write an endless number of job scripts. A much more elegant solution is a job array. Job arrays are created with two files: a job file, and a hyperparameter file. The job file will start multiple sub-jobs that each use a different set of hyperparameters, as specified in the hyperparameter file. In the job file, you need to add the argument <code>#SBATCH --array=...</code>. The argument specifies how many sub-jobs you want to start, how many to run in parallel (at maximum), and which lines to use from the hyperparameter file. For example, if we specify <code>#SBATCH --array=1-16%8</code>, this means that we start 16 jobs using the lines 1 to 16 in the hyperparameter file, and running at maximum 8 jobs in parallel at the same time. Note that the number of parallel jobs is there to limit yourself from blocking the whole cluster. However, with your student accounts, you will not be able to run more than 1 job in parallel anyways. The template job file <code>array_job.job</code> looks slightly different than the one we had before. The slurm output file is specified using <code>%A</code> and <code>%a</code>. <code>%A</code> is being automatically replaced with the job ID, while <code>%a</code> is the index of the job within the array (so 1 to 16 in our example above). Below, we also added a block for creating a checkpoint folder for the job array, and copying the job file including hyperparameters to that folder. This is good practice for ensuring reproducibility. Finally, in the training call, we specify the path checkpoint path (make sure to have implemented this argument in your argparse) with the addition of <code>experiment_${SLURM_ARRAY_TASK_ID}</code> which is a sub-folder in the checkpoint directory with the sub-job ID (1 to 16 in the example). The next line, <code>$(head -$SLURM_ARRAY_TASK_ID $HPARAMS_FILE | tail -1)</code>, copies the N-th line of the hyperparameter file to this job file, and hence submits the hyperparameter arguments to the training file.</p>
+<p>File <code>array_job.job</code>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/bash</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --partition=gpu_mig</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --gpus=1</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --job-name=ExampleArrayJob</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --ntasks=1</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --cpus-per-task=9</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --time=04:00:00</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --array=1-16%8</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co">#SBATCH --output=slurm_array_testing_%A_%a.out</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> purge</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load 2023</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="ex">module</span> load Anaconda3/2023.07-2</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Your job starts in the directory where you call sbatch</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$HOME</span>/...</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"># Activate your environment</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">source</span> activate ...</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="co"># Good practice: define your directory where to save the models, and copy the job file to it</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="va">JOB_FILE</span><span class="op">=</span><span class="va">$HOME</span>/.../array_job.job</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="va">HPARAMS_FILE</span><span class="op">=</span><span class="va">$HOME</span>/.../array_job_hyperparameters.txt</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a><span class="va">CHECKPOINTDIR</span><span class="op">=</span><span class="va">$HOME</span>/.../checkpoints/array_job_<span class="va">${SLURM_ARRAY_JOB_ID}</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="va">$CHECKPOINTDIR</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="va">$HPARAMS_FILE</span> <span class="va">$CHECKPOINTDIR</span>/</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a><span class="fu">rsync</span> <span class="va">$JOB_FILE</span> <span class="va">$CHECKPOINTDIR</span>/</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Run your code</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a><span class="ex">srun</span> python train.py <span class="dt">\</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>            <span class="at">--checkpoint_path</span> <span class="va">$CHECKPOINTDIR</span>/experiment_<span class="va">${SLURM_ARRAY_TASK_ID}</span> <span class="dt">\</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>            <span class="va">$(</span><span class="fu">head</span> <span class="at">-</span><span class="va">$SLURM_ARRAY_TASK_ID</span> <span class="va">$HPARAMS_FILE</span> <span class="kw">|</span> <span class="fu">tail</span> <span class="at">-1</span><span class="va">)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>The hyperparameter file is nothing else than a text file in which each line denotes one set of hyperparameters for which you want to run an experiment. There is no specific order in which you need to put the lines, and you can extend the lines with as many hyperparameter arguments as you want.</p>
+<p>File <code>array_job_hyperparameters.txt</code>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 42 <span class="at">--learning_rate</span> 1e-3</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 43 <span class="at">--learning_rate</span> 1e-3</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 44 <span class="at">--learning_rate</span> 1e-3</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 45 <span class="at">--learning_rate</span> 1e-3</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 42 <span class="at">--learning_rate</span> 2e-3</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 43 <span class="at">--learning_rate</span> 2e-3</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 44 <span class="at">--learning_rate</span> 2e-3</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 45 <span class="at">--learning_rate</span> 2e-3</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 42 <span class="at">--learning_rate</span> 4e-3</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 43 <span class="at">--learning_rate</span> 4e-3</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 44 <span class="at">--learning_rate</span> 4e-3</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 45 <span class="at">--learning_rate</span> 4e-3</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 42 <span class="at">--learning_rate</span> 1e-2</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 43 <span class="at">--learning_rate</span> 1e-2</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 44 <span class="at">--learning_rate</span> 1e-2</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="ex">--seed</span> 45 <span class="at">--learning_rate</span> 1e-2</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="additional-links" class="level3">
+<h3 class="anchored" data-anchor-id="additional-links">Additional links</h3>
+<p>Many more details on Snellius, SLURM, etc. can be found on the SURF wiki, as well as a different perspective on the aspects we have discussed in this tutorial. A (non-exclusive) list of useful links:</p>
+<ul>
+<li><a href="https://servicedesk.surf.nl/wiki/pages/viewpage.action?pageId=30660216">How to use SSH on Windows/Mac/Linux, authenticate with SSH keys instead of passwords, and transfer files with SCP or FTP</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Writing+a+job+script">How to write your own job script</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Interacting+with+the+job+queue">How to submit/cancel a job</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Monitoring+the+queue">How to see a job’s status in the queue</a></li>
+<li>How to do remote development with <a href="https://servicedesk.surf.nl/wiki/display/WIKI/Visual+Studio+Code+for+remote+development">VSCode</a> and <a href="https://servicedesk.surf.nl/wiki/display/WIKI/PyCharm+and+other+JetBrains+IDEs+for+remote+development">PyCharm</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+hardware">Snellius hardware</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+filesystems">Snellius filesystems</a></li>
+<li><a href="https://servicedesk.surf.nl/wiki/display/WIKI/Snellius+partitions+and+accounting">Snellius partitions and accounting</a></li>
+</ul>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

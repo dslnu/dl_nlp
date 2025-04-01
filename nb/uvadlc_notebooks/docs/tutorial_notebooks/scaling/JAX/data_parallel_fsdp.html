@@ -1,0 +1,1411 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.42">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Part 2.2: (Fully-Sharded) Data Parallelism – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../../../../">
+<script src="../../../../../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../../../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../../../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../../../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="../../../../../../styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#prerequisites" id="toc-prerequisites" class="nav-link active" data-scroll-target="#prerequisites">Prerequisites</a></li>
+  <li><a href="#data-parallelism" id="toc-data-parallelism" class="nav-link" data-scroll-target="#data-parallelism">Data Parallelism</a>
+  <ul class="collapse">
+  <li><a href="#initialization" id="toc-initialization" class="nav-link" data-scroll-target="#initialization">Initialization</a></li>
+  <li><a href="#train-step" id="toc-train-step" class="nav-link" data-scroll-target="#train-step">Train Step</a></li>
+  </ul></li>
+  <li><a href="#parameter-sharding" id="toc-parameter-sharding" class="nav-link" data-scroll-target="#parameter-sharding">Parameter Sharding</a>
+  <ul class="collapse">
+  <li><a href="#sharding-setup" id="toc-sharding-setup" class="nav-link" data-scroll-target="#sharding-setup">Sharding setup</a></li>
+  <li><a href="#initialization-1" id="toc-initialization-1" class="nav-link" data-scroll-target="#initialization-1">Initialization</a></li>
+  <li><a href="#train-step-1" id="toc-train-step-1" class="nav-link" data-scroll-target="#train-step-1">Train Step</a></li>
+  <li><a href="#verify-that-fsdp-gives-same-results-as-dp" id="toc-verify-that-fsdp-gives-same-results-as-dp" class="nav-link" data-scroll-target="#verify-that-fsdp-gives-same-results-as-dp">Verify that FSDP gives same results as DP</a></li>
+  </ul></li>
+  <li><a href="#conclusion" id="toc-conclusion" class="nav-link" data-scroll-target="#conclusion">Conclusion</a></li>
+  <li><a href="#references-and-resources" id="toc-references-and-resources" class="nav-link" data-scroll-target="#references-and-resources">References and Resources</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Part 2.2: (Fully-Sharded) Data Parallelism</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p><strong>Filled notebook:</strong> <a href="https://github.com/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/scaling/JAX/data_parallel_fsdp.ipynb"><img src="https://img.shields.io/static/v1.svg?logo=github&amp;label=Repo&amp;message=View%20On%20Github&amp;color=lightgrey" class="img-fluid" alt="View filled on Github"></a> <a href="https://colab.research.google.com/github/phlippe/uvadlc_notebooks/blob/master/docs/tutorial_notebooks/scaling/JAX/data_parallel_fsdp.ipynb"><img src="https://colab.research.google.com/assets/colab-badge.svg" class="img-fluid" alt="Open filled In Collab"></a></p>
+<p><strong>Author:</strong> <a href="https://phlippe.github.io/">Phillip Lippe</a></p>
+<p>In the following series of tutorials, we will explore different parallelism strategies for training large deep learning models. Our focus will be on three common parallelism strategies: data parallelism, pipeline parallelism, and tensor parallelism. Data parallelism, as the name suggests, focuses on parallelizing the data processing of the model. If we are given a very large batch, we divide the batch into smaller batches and distribute them across multiple devices. Each device will process a different batch of data in parallel. Afterwards, we will aggregate the results from each device to update the model. Data parallelism is the most common parallelism strategy used in deep learning and well supported in most frameworks. Thus, we will start with data parallelism in this tutorial. In later tutorials, we will explore pipeline and tensor parallelism which focus on parallelizing the computation of the model itself. A short overview of the three parallelism strategies is shown in the figure below.</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/parallelism_strategies_overview.svg" width="1000px">
+</center>
+<p>We will focus on implementing data parallelism in JAX, but a lot of the concepts can be easily transferred to other frameworks like PyTorch or TensorFlow. With distributed computing introduced in <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/scaling/JAX/data_parallel_intro.html">Part 2.1</a>, we can now implement a simple data parallelism strategy to train a small neural network on multiple devices. We then discuss fully-sharded data parallelism (FSDP), which distributes the model parameters across multiple devices and reduces memory consumption (also known as part of the <a href="https://arxiv.org/abs/1910.02054">ZeRO optimizer</a>).</p>
+<section id="prerequisites" class="level2">
+<h2 class="anchored" data-anchor-id="prerequisites">Prerequisites</h2>
+<p>First, let’s start with setting up the basic environment and utility functions we have seen from previous notebooks. We download the python scripts of the previous notebooks below. This is only needed when running on Google Colab, and local execution will skip this step automatically.</p>
+<div id="cell-4" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> urllib.request</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Github URL where python scripts are stored.</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>base_url <span class="op">=</span> <span class="st">"https://raw.githubusercontent.com/phlippe/uvadlc_notebooks/master/docs/tutorial_notebooks/scaling/JAX/"</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Files to download.</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>python_files <span class="op">=</span> [<span class="st">"single_gpu.py"</span>, <span class="st">"utils.py"</span>]</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># For each file, check whether it already exists. If not, try downloading it.</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> file_name <span class="kw">in</span> python_files:</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> os.path.isfile(file_name):</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>        file_url <span class="op">=</span> base_url <span class="op">+</span> file_name</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"Downloading </span><span class="sc">{</span>file_url<span class="sc">}</span><span class="ss">..."</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">try</span>:</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>            urllib.request.urlretrieve(file_url, file_name)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="cf">except</span> HTTPError <span class="im">as</span> e:</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                <span class="st">"Something went wrong. Please try to download the file directly from the GitHub repository, or contact the author with the full output including the following error:</span><span class="ch">\n</span><span class="st">"</span>,</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>                e,</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>            )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>As in the previous part, we set up the notebook such that it can be run on a CPU with 8 simulated devices and no expensive hardware is required. If you are running on Google Colab, you do not need to select a GPU runtime, as we will simulate multiple devices on a single CPU. If you are running on your local machine and have multiple GPUs available, you can comment out the line below and use <code>set_XLA_flags_gpu</code> instead to set the XLA flags we have seen in the previous parts.</p>
+<div id="cell-6" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> utils <span class="im">import</span> simulate_CPU_devices</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>simulate_CPU_devices()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>With the environment variables set, we can import our required libraries and start with the implementation.</p>
+<div id="cell-8" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> functools</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> pprint <span class="im">import</span> pprint</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Any, Callable, Dict, Sequence, Tuple</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> flax.linen <span class="im">as</span> nn</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> jax.numpy <span class="im">as</span> jnp</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> optax</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> absl <span class="im">import</span> logging</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax <span class="im">import</span> lax</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.experimental.shard_map <span class="im">import</span> shard_map</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.sharding <span class="im">import</span> Mesh</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> jax.sharding <span class="im">import</span> PartitionSpec <span class="im">as</span> P</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> ml_collections <span class="im">import</span> ConfigDict</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>PyTree <span class="op">=</span> Any</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>Metrics <span class="op">=</span> Dict[<span class="bu">str</span>, Tuple[jax.Array, ...]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We again use some small utilities from the previous notebook (<a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/scaling/JAX/single_gpu_techniques.html">Part 1.1</a>) to reduce the code duplication in this notebook.</p>
+<div id="cell-10" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> single_gpu <span class="im">import</span> Batch, TrainState, accumulate_gradients, print_metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Additionally, in Part 2.1, we have already implemented the <code>fold_rng_over_axis</code>, which allows us to create mesh-axis specific RNGs. In this notebook, we will use this utility in our data parallelism implementation.</p>
+<div id="cell-12" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> fold_rng_over_axis(rng: jax.random.PRNGKey, axis_name: <span class="bu">str</span>) <span class="op">-&gt;</span> jax.random.PRNGKey:</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Folds the random number generator over the given axis.</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">    This is useful for generating a different random number for each device</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co">    across a certain axis (e.g. the model axis).</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co">        rng: The random number generator.</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co">        axis_name: The axis name to fold the random number generator over.</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="co">        A new random number generator, different for each device index along the axis.</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    axis_index <span class="op">=</span> jax.lax.axis_index(axis_name)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.random.fold_in(rng, axis_index)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="data-parallelism" class="level2">
+<h2 class="anchored" data-anchor-id="data-parallelism">Data Parallelism</h2>
+<p>In data parallelism, we aim to use our multiple devices to increase our batch size. Each device will hold the same model and parameters, and process a different batch of data in parallel. After processing the data and obtaining the gradients for each batch, we aggregate the gradients over the devices and update our model. The main advantage of data parallelism is that it is easy to implement and scales well with the number of devices, since the devices need to communicate only once per batch. However, the main disadvantage is that the model size is limited by the memory of a single device, which can be a bottleneck for very large models and we will discuss how to overcome this in the next section.</p>
+<p>For now, let’s start with plain data parallelism. By using shard map, we can focus on writing single-device code and shard map will take care of the parallelization. Hence, we can simply write our model and training loop as if we would run it on a single device. We use our example, small classifier from the previous tutorial below:</p>
+<div id="cell-14" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DPClassifier(nn.Module):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array, train: <span class="bu">bool</span>) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.config.hidden_size,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"input_dense"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.silu(x)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dropout(rate<span class="op">=</span><span class="va">self</span>.config.dropout_rate, deterministic<span class="op">=</span><span class="kw">not</span> train)(x)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dense(</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.config.num_classes,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"output_dense"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.astype(jnp.float32)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We again specify all hyperparameters in a config. Feel free to adjust the hyperparameters to your needs. As only addition to the previous tutorial, we add the <code>data_axis_name</code> attribute, which will denote the mesh axis over which we want to perform data parallelism. We will use this attribute in the following sections to coordinate communications over the data axis.</p>
+<div id="cell-16" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>data_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>        batch_size<span class="op">=</span><span class="dv">128</span>,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>        num_classes<span class="op">=</span><span class="dv">10</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        input_size<span class="op">=</span><span class="dv">784</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>model_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>        hidden_size<span class="op">=</span><span class="dv">512</span>,</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>        dropout_rate<span class="op">=</span><span class="fl">0.1</span>,</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>        dtype<span class="op">=</span>jnp.bfloat16,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>        num_classes<span class="op">=</span>data_config.num_classes,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        data_axis_name<span class="op">=</span><span class="st">"data"</span>,</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>optimizer_config <span class="op">=</span> ConfigDict(</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>        learning_rate<span class="op">=</span><span class="fl">1e-3</span>,</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        num_minibatches<span class="op">=</span><span class="dv">4</span>,</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>config <span class="op">=</span> ConfigDict(</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">dict</span>(</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        model<span class="op">=</span>model_config,</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        optimizer<span class="op">=</span>optimizer_config,</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a>        data<span class="op">=</span>data_config,</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>        data_axis_name<span class="op">=</span>model_config.data_axis_name,</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>        seed<span class="op">=</span><span class="dv">42</span>,</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="initialization" class="level3">
+<h3 class="anchored" data-anchor-id="initialization">Initialization</h3>
+<p>We start by initializing the model and optimizer. Also here, we can continue to write the initialization as if we would run it on a single device. We create the objects below:</p>
+<div id="cell-18" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model_dp <span class="op">=</span> DPClassifier(config<span class="op">=</span>config.model)</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>optimizer <span class="op">=</span> optax.adamw(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    learning_rate<span class="op">=</span>config.optimizer.learning_rate,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We also create an example batch of data to test the model. Since shard map will take care of the parallelization and sharding of the inputs, we can simply create the batch as if we would run it on a single device:</p>
+<div id="cell-20" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>rng <span class="op">=</span> jax.random.PRNGKey(config.seed)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>model_init_rng, data_inputs_rng, data_labels_rng <span class="op">=</span> jax.random.split(rng, <span class="dv">3</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>batch <span class="op">=</span> Batch(</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    inputs<span class="op">=</span>jax.random.normal(data_inputs_rng, (config.data.batch_size, config.data.input_size)),</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    labels<span class="op">=</span>jax.random.randint(</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>        data_labels_rng, (config.data.batch_size,), <span class="dv">0</span>, config.data.num_classes</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>2024-03-07 10:46:28.299510: E external/xla/xla/stream_executor/cuda/cuda_driver.cc:273] failed call to cuInit: CUDA_ERROR_NO_DEVICE: no CUDA-capable device is detected
+CUDA backend failed to initialize: FAILED_PRECONDITION: No visible GPU devices. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)</code></pre>
+</div>
+</div>
+<p>Each device will process a batch size of <code>config.data.batch_size // num_devices</code>. In a full training run, you may want to prefetch the array to the devices in the correct sharding to avoid the initial transfer time. This can be done via <code>flax.jax_utils.prefetch_to_device</code>, which supports async placement of arrays on devices, and is especially useful for large arrays in a dataset. However, for the purpose of this tutorial, we will keep the array on the first device and let shard map take care of the transfer.</p>
+<p>We can now write an initialization function. Again, this is the same function as we have seen for single-device training:</p>
+<div id="cell-22" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> init_dp(rng: jax.random.PRNGKey, x: jax.Array, model: nn.Module) <span class="op">-&gt;</span> TrainState:</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    init_rng, rng <span class="op">=</span> jax.random.split(rng)</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    variables <span class="op">=</span> model.init({<span class="st">"params"</span>: init_rng}, x, train<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> variables.pop(<span class="st">"params"</span>)</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    state <span class="op">=</span> TrainState.create(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        apply_fn<span class="op">=</span>model.<span class="bu">apply</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        params<span class="op">=</span>params,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>        tx<span class="op">=</span>optimizer,</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>        rng<span class="op">=</span>rng,</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> state</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before we can execute the initialization, we need to define the mesh and wrap the initialization function with <code>shard_map</code>. We define the mesh below:</p>
+<div id="cell-24" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>device_array <span class="op">=</span> np.array(jax.devices())</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>mesh <span class="op">=</span> Mesh(device_array, (config.data_axis_name,))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We create a single-dimensional mesh, with all devices along the data axis. Hence, we will perform data parallelism over all devices.</p>
+<p>For wrapping the initialization function with <code>shard_map</code>, we need to specify the mesh and the sharding specifications for the input and output. For generating the parameters, we input an RNG which we want to replicate across all devices. This ensures that all devices have the same parameters. The input batch on the other hand will be sharded over the data axis. As an output, we expect a train state which is identical on all devices. We wrap the initialization function with <code>shard_map</code> below:</p>
+<div id="cell-26" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>init_dp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        functools.partial(init_dp, model<span class="op">=</span>model_dp),</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(P(), P(config.data_axis_name)),</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>P(),</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The jitting is optional, but may be necessary in models where we make use of <code>jax.lax.axis_index</code> or other operations that are only supported within a jitted function of shard map. We can now execute the initialization function and check the resulting train state:</p>
+<div id="cell-28" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>state_dp <span class="op">=</span> init_dp_fn(model_init_rng, batch.inputs)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"DP Parameters"</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: (x.shape, x.sharding), state_dp.params))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DP Parameters
+{'input_dense': {'bias': ((512,), GSPMDSharding({replicated})),
+                 'kernel': ((784, 512), GSPMDSharding({replicated}))},
+ 'output_dense': {'bias': ((10,), GSPMDSharding({replicated})),
+                  'kernel': ((512, 10), GSPMDSharding({replicated}))}}</code></pre>
+</div>
+</div>
+<p>We find all parameters have the expected shape and are replicated across all devices. We can now move on to the training loop.</p>
+</section>
+<section id="train-step" class="level3">
+<h3 class="anchored" data-anchor-id="train-step">Train Step</h3>
+<p>We can write the train step almost as if we would run it on a single device. The only difference is the dropout RNG. As mentioned before, we want each device to use a different dropout mask. However, the RNG in the train state is replicated across all devices. We can use our function <code>fold_rng_over_axis</code> to split the RNG key across devices on the data axis. This device-specific key can then be passed to the dropout layers. We implement the train step below:</p>
+<div id="cell-31" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> loss_fn(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    params: PyTree, apply_fn: Any, batch: Batch, rng: jax.Array</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[jax.Array, Dict[<span class="bu">str</span>, Any]]:</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Since dropout masks vary across the batch dimension, we want each device to generate a</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># different mask. We can achieve this by folding the rng over the data axis, so that each</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># device gets a different rng and thus mask.</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    dropout_rng <span class="op">=</span> fold_rng_over_axis(rng, config.data_axis_name)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remaining computation is the same as before for single device.</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    logits <span class="op">=</span> apply_fn({<span class="st">"params"</span>: params}, batch.inputs, train<span class="op">=</span><span class="va">True</span>, rngs<span class="op">=</span>{<span class="st">"dropout"</span>: dropout_rng})</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> optax.softmax_cross_entropy_with_integer_labels(logits, batch.labels)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    correct_pred <span class="op">=</span> jnp.equal(jnp.argmax(logits, axis<span class="op">=-</span><span class="dv">1</span>), batch.labels)</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    batch_size <span class="op">=</span> batch.inputs.shape[<span class="dv">0</span>]</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    step_metrics <span class="op">=</span> {<span class="st">"loss"</span>: (loss.<span class="bu">sum</span>(), batch_size), <span class="st">"accuracy"</span>: (correct_pred.<span class="bu">sum</span>(), batch_size)}</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    loss <span class="op">=</span> loss.mean()</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> loss, step_metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the previous tutorial, we explored the option of accumulating the gradients of multiple batches before updating the model, to reduce memory footprint. While in data parallelism, we usually can already run a much larger batch due to parallelization across multiple devices, we can still use this option to further increase the batch size. Since the forward step and backward pass do not require any communication between devices, we can use the same function <code>accumulate_gradients</code> as for the single-device training and scan over smaller splits of the batch per device. We can then accumulate the gradients over subbatches on each device, and only communicate the final aggregated gradients to update the model.</p>
+<p>In the train step, we need to communicate the gradients over the data axis. After obtaining the gradients and metrics per device, we want to average the gradients over all devices and update the model. We can use <code>jax.lax.pmean</code> to average the gradients over the data axis, and then apply the optimizer step to update the model on each device in parallel. Similarly, we use <code>jax.lax.psum</code> to sum the statistics in the metrics over the data axis. Alternatively, we could sync the metrics only before we want to log them, to reduce the communication overhead. However, since the metrics are usually just a few scalars compared to millions or billions of parameters, the communication overhead is usually negligible. The returned state and metrics will be the same on all devices, and we can use them to continue the training loop.</p>
+<div id="cell-34" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step_dp(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    state: TrainState,</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    metrics: Metrics <span class="op">|</span> <span class="va">None</span>,</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    batch: Batch,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[TrainState, Metrics]:</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    rng, step_rng <span class="op">=</span> jax.random.split(state.rng)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    grads, step_metrics <span class="op">=</span> accumulate_gradients(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        state,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        batch,</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        step_rng,</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        config.optimizer.num_minibatches,</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        loss_fn<span class="op">=</span>loss_fn,</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters. We need to sync the gradients across devices before updating.</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_gradients"</span>):</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        grads <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> g: jax.lax.pmean(g, axis_name<span class="op">=</span>config.data_axis_name), grads)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>    new_state <span class="op">=</span> state.apply_gradients(grads<span class="op">=</span>grads, rng<span class="op">=</span>rng)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sum metrics across replicas. Alternatively, we could keep the metrics separate</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and only synchronize them before logging. For simplicity, we sum them here.</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_metrics"</span>):</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        step_metrics <span class="op">=</span> jax.tree_map(</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> x: jax.lax.psum(x, axis_name<span class="op">=</span>config.data_axis_name), step_metrics</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> step_metrics</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> jax.tree_map(jnp.add, metrics, step_metrics)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_state, metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now wrap the train step with <code>shard_map</code> and jit it. We need to specify the mesh and the sharding specifications for the input and output. The input batch will be sharded over the data axis. All other arrays, i.e.&nbsp;the input/output train state and metrics, will be replicated across all devices. Further, we can specify the state and metrics as donatable to avoid unnecessary memory overhead. We wrap the train step with <code>shard_map</code> below:</p>
+<div id="cell-36" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>train_step_dp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>        train_step_dp,</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(P(), P(), P(config.data_axis_name)),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>(P(), P()),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    donate_argnames<span class="op">=</span>(<span class="st">"state"</span>, <span class="st">"metrics"</span>),</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Before running the training step, we want to find the shape and PyTree structure of the metrics. We use <code>jax.eval_shape</code> or <code>flax.jax_utils.partial_eval_by_shape</code> to find the shape of the metrics without running the full computation. Otherwise, we would need to compile the training step twice, once for the input metrics being None, and once for the input metrics being the correct shape. We avoid this overhead by the shape evaluation below:</p>
+<div id="cell-38" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>_, metric_shapes <span class="op">=</span> jax.eval_shape(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    train_step_dp_fn,</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    state_dp,</span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="va">None</span>,</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    batch,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>metrics_dp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Finally, we can run the training loop for a few steps and check the resulting metrics:</p>
+<div id="cell-40" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">15</span>):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    state_dp, metrics_dp <span class="op">=</span> train_step_dp_fn(state_dp, metrics_dp, batch)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>final_metrics_dp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>state_dp, final_metrics_dp <span class="op">=</span> train_step_dp_fn(state_dp, final_metrics_dp, batch)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>print_metrics(final_metrics_dp)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>accuracy: 1.000000
+loss: 0.003343</code></pre>
+</div>
+</div>
+<p>As we can see, the model is training as expected and is able to overfit on the single batch of data. Let’s once more check how the parameters are distributed across the devices:</p>
+<div id="cell-42" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"DP Parameters"</span>)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: (x.shape, x.sharding), state_dp.params))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Metrics"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: (x.shape, x.sharding), final_metrics_dp))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>DP Parameters
+{'input_dense': {'bias': ((512,), GSPMDSharding({replicated})),
+                 'kernel': ((784, 512), GSPMDSharding({replicated}))},
+ 'output_dense': {'bias': ((10,), GSPMDSharding({replicated})),
+                  'kernel': ((512, 10), GSPMDSharding({replicated}))}}
+Metrics
+{'accuracy': (((), GSPMDSharding({replicated})),
+              ((), GSPMDSharding({replicated}))),
+ 'loss': (((), GSPMDSharding({replicated})), ((), GSPMDSharding({replicated})))}</code></pre>
+</div>
+</div>
+<p>Both parameters and metrics are still replicated over all devices, suggesting our implementation works as expected. We can now move on to the next section.</p>
+</section>
+</section>
+<section id="parameter-sharding" class="level2">
+<h2 class="anchored" data-anchor-id="parameter-sharding">Parameter Sharding</h2>
+<p>So far, we have implemented data parallelism where the model parameters are replicated across all devices. This is a simple and effective way to parallelize the training of a model. However, as the model size continues to grow, the memory consumption of the model parameters can become a bottleneck. For instance, if we have a model with 1 billion parameters and 8 devices, each device would need to hold the full 1 billion parameters. With each parameter being in float32 and using an optimizer like Adam with two additional float32 values per parameter (first- and second-order momentum), the model itself already takes up 12GB of the device memory. This can be a problem for devices with limited memory, like taking already half the memory of an A5000 GPU with 24GB. To overcome this, we can shard the model parameters across multiple devices. This is known as fully-sharded data parallelism (FSDP) and is part of the <a href="https://arxiv.org/abs/1910.02054">ZeRO optimizer</a>. In FSDP, each device holds a different part of the model parameters and their optimizer state. Before executing a layer or module, we communicate the respective parameters across devices such that we can process the data in parallel. In the backward pass, we communicate the gradients back to the respective devices and update the model. This way, we can significantly reduce the memory consumption of the model parameters and scale to very large models. The ZeRO optimizer further extends this concept by allowing for different stages of sharding, such as only sharding the optimizer state (<span class="math inline">\(P_{os}\)</span>), sharding the gradients as well (<span class="math inline">\(P_{os+g}\)</span>), or sharding the model parameters as well (<span class="math inline">\(P_{os+g+p}\)</span>, FSDP). The figure below shows the different stages of ZeRO (figure credit: <a href="https://arxiv.org/abs/1910.02054">Rajbhandari et al., 2019</a>). Here, <span class="math inline">\(\Psi\)</span> represents the number of parameters in the model, and <span class="math inline">\(K\)</span> the number of bytes in the optimizer state per parameter. In the mixed precision training setup shown, we use bfloat16 for the model parameters (2 bytes) and the gradients (2 bytes), and float32 for the Adam optimizer state (8 bytes) with a float32 copy of the parameters (4 bytes). Thus, our memory is 16 bytes per parameter. By using different stages of ZeRO, we can reduce the memory consumption of the model parameters and optimizer state by up to <span class="math inline">\(1/N_d\)</span> where <span class="math inline">\(N_d\)</span> is the number of devices.</p>
+<center width="100%" style="padding: 10px">
+<img src="../figures/data_zero_optimizer.svg" width="800px">
+</center>
+<p>We will focus on the basic concept of FSDP in this tutorial, but the other ZeRO stages can also be implemented in similar ways. We will start by sharding the model parameters across multiple devices and then implement the forward and backward pass accordingly. We will also discuss the communication of the optimizer state and gradients in the backward pass.</p>
+<section id="sharding-setup" class="level3">
+<h3 class="anchored" data-anchor-id="sharding-setup">Sharding setup</h3>
+<p>We start by sharding the model parameters across multiple devices. The strategy we follow is as follows: - During initialization, we create the full parameters on each device. - We then use <code>jax.lax.axis_index</code> to split the parameters across devices and only keep a shard of the parameters on each device. - We annotate the parameters with the sharding specification, so we know how to put the parameters back together in the forward pass.</p>
+<p>For annotating the sharding specification of parameters, Flax provides a wrapper called <code>nn.Partitioned</code> (<a href="https://flax.readthedocs.io/en/latest/api_reference/flax.linen/_autosummary/flax.linen.Partitioned.html">docs</a>). This wrapper takes as input a parameter and a list of axis names, similar to the <code>PartitionSpec</code> we have seen before. We can then use the parameter as before, but can use the axis name specification to determine the communication needed between devices, the shard map specification, and more. Further, whenever we apply transformations on modules with partitioned parameters, e.g.&nbsp;vmap or scan, the partitioned parameters will be transformed accordingly and the annotated axis adjusted to the new shapes. From now on, we consider parameters to be either a <code>jax.Array</code> if fully replicated, or a <code>flax.linen.Partitioned</code> if sharded across devices. We create a small type annotation for this case below.</p>
+<div id="cell-46" class="cell" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>Parameter <span class="op">=</span> jax.Array <span class="op">|</span> nn.Partitioned</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We now need to write a function that shards the parameters across devices for FSDP. We can take as input a PyTree of parameters and a mesh axis name, and determine for each parameter the sharding specification. To keep the global shape of a parameter untouched, we look for an axis which can be equally split across the number of devices present. If multiple are present, we select the largest possible axis, to keep the sharding consistent when varying the number of devices. We then use this axis as the sharding axis, and wrap the parameter in a <code>nn.Partitioned</code> with the axis name and position. For some parameters that are very small, sharding may not be beneficial since the communication time may outweigh the memory costs. For instance, we are likely interested in sharding large weight matrices while the bias and scaling parameter in a normalization layer have negligible memory costs. We can specify a minimum size for sharding, and only shard parameters that are larger than this size. We implement the function below:</p>
+<div id="cell-48" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.named_scope</span>(<span class="st">"shard_params"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shard_params(params: PyTree, axis_name: <span class="bu">str</span>, min_weight_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span><span class="op">**</span><span class="dv">18</span>) <span class="op">-&gt;</span> PyTree:</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Shard parameters across the given mesh axis.</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="co">        params: The parameters to shard.</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">        axis_name: The axis to shard parameters across.</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">        min_weight_size: The minimum size of a parameter to shard. Parameters with fewer values will not be sharded.</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">        PyTree of same structure as params, but with leaves sharded over new axis if possible.</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    axis_idx <span class="op">=</span> jax.lax.axis_index(axis_name)</span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    axis_size <span class="op">=</span> jax.lax.psum(<span class="dv">1</span>, axis_name)</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _split(x: Parameter) <span class="op">-&gt;</span> Parameter:</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(x, nn.Partitioned):</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>            value, names <span class="op">=</span> x.value, x.names</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> x</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>            names <span class="op">=</span> (<span class="va">None</span>,) <span class="op">*</span> value.ndim</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> axis_name <span class="kw">in</span> names:</span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>            logging.warning(</span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"Parameter </span><span class="sc">{</span>value<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> with names </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss"> already sharded on axis </span><span class="sc">{</span>axis_name<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> x</span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> value.size <span class="op">&lt;=</span> min_weight_size:</span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>            logging.info(</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"Parameter </span><span class="sc">{</span>value<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> with names </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss"> too small to shard, size </span><span class="sc">{</span>value<span class="sc">.</span>size<span class="sc">}</span><span class="ss"> &lt; </span><span class="sc">{</span>min_weight_size<span class="sc">}</span><span class="ss">."</span></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> x</span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a>            shape <span class="op">=</span> value.shape</span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a>            idx <span class="op">=</span> np.argsort(shape)[::<span class="op">-</span><span class="dv">1</span>]  <span class="co"># Shard along largest possible axis.</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> i <span class="kw">in</span> idx:</span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> shape[i] <span class="op">%</span> axis_size <span class="op">==</span> <span class="dv">0</span> <span class="kw">and</span> names[i] <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a>                    split_size <span class="op">=</span> shape[i] <span class="op">//</span> axis_size</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a>                    p_sharded <span class="op">=</span> nn.Partitioned(</span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>                        value<span class="op">=</span>lax.dynamic_slice_in_dim(  <span class="co"># Shard to keep on present device.</span></span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>                            value, axis_idx <span class="op">*</span> split_size, split_size, axis<span class="op">=</span>i</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>                        ),</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>                        names<span class="op">=</span>names[:i] <span class="op">+</span> (axis_name,) <span class="op">+</span> names[i <span class="op">+</span> <span class="dv">1</span> :],</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>                    )</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>                    <span class="cf">return</span> p_sharded</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>            logging.warning(</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a>                <span class="ss">f"Could not shard </span><span class="sc">{</span>value<span class="sc">.</span>shape<span class="sc">}</span><span class="ss"> with names </span><span class="sc">{</span>names<span class="sc">}</span><span class="ss"> on axis </span><span class="sc">{</span>axis_name<span class="sc">}</span><span class="ss">, no suitable axis found."</span></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> x</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.tree_util.tree_map(</span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>        _split,</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>        params,</span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>        is_leaf<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">isinstance</span>(</span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>            x, nn.Partitioned</span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>        ),  <span class="co"># Consider a nn.Partitioned object as a leaf.</span></span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>In the split function, we check for each parameter wether it has been already sharded over the data axis. This case should usually not occur, since we cannot shard a parameter twice over the same mesh axis (otherwise information must get lost). However, it can occur if we shard a parameter over the data axis, and then want to shard it over another axis. Hence, we allow for <code>nn.Partitioned</code> objects with other axis names, and find a new axis to shard over. We then shard the parameter over the new axis and return the new <code>nn.Partitioned</code> object. Note that the logging statements are only evaluated during the first run of the function when jitted, and can give us a hint when something went wrong.</p>
+<p>With the parameters sharded, we now need to write a function to gather the parameters back to a single device. This is necessary for the forward pass, where we want to compute the output of the model on a single device. We can use <code>jax.lax.all_gather</code> to gather the parameters from all devices and concatenate them along the sharding axis. In the backward pass, we will use <code>jax.lax.psum_scatter</code> to scatter the gradients back to the respective devices. However, one subtle difference to a non-sharded parameter is that in our previous data parallelism training step, we averaged the gradients of different devices. The <code>jax.lax.psum_scatter</code> would instead sum the gradients over the devices. To keep the behavior consistent, we adjust the backward pass to average the gradients over the devices. We implement the adjusted gather operation below:</p>
+<div id="cell-50" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gather_array_with_mean_grads(x: jax.Array, axis: <span class="bu">int</span>, axis_name: <span class="bu">str</span>):</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Gathering with averaging gradients across replicas."""</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    axis_size <span class="op">=</span> jax.lax.psum(<span class="dv">1</span>, axis_name)</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define a custom gradient for the gather operation.</span></span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">@jax.custom_gradient</span></span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> f(x):</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> grad_fn(g):</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a>            <span class="co"># pmean_scatter</span></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> (</span>
+<span id="cb26-11"><a href="#cb26-11" aria-hidden="true" tabindex="-1"></a>                jax.lax.psum_scatter(g, axis_name, scatter_dimension<span class="op">=</span>axis, tiled<span class="op">=</span><span class="va">True</span>) <span class="op">/</span> axis_size</span>
+<span id="cb26-12"><a href="#cb26-12" aria-hidden="true" tabindex="-1"></a>            )</span>
+<span id="cb26-13"><a href="#cb26-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-14"><a href="#cb26-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> jax.lax.all_gather(x, axis_name, axis<span class="op">=</span>axis, tiled<span class="op">=</span><span class="va">True</span>), grad_fn</span>
+<span id="cb26-15"><a href="#cb26-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-16"><a href="#cb26-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> f(x)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now write a function that takes as input a PyTree of the sharded parameters and gathers them back to a single device. This will be our reverse operation of <code>shard_params</code> function. We implement the function below:</p>
+<div id="cell-52" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="at">@jax.named_scope</span>(<span class="st">"gather_params"</span>)</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> gather_params(params: PyTree, axis_name: <span class="bu">str</span>) <span class="op">-&gt;</span> PyTree:</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Gather parameters from all replicas across the given axis.</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="co">        params: The parameters to gather.</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co">        axis_name: The axis to gather parameters across.</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co">        PyTree of same structure as params, but with leaves gathered if they were a nn.Partitioned object.</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _gather(p: Parameter) <span class="op">-&gt;</span> Parameter:</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(p, nn.Partitioned) <span class="kw">and</span> axis_name <span class="kw">in</span> p.names:</span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>            param_shard <span class="op">=</span> p.names</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>            shard_axis <span class="op">=</span> param_shard.index(axis_name)</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>            value <span class="op">=</span> gather_array_with_mean_grads(p.value, axis<span class="op">=</span>shard_axis, axis_name<span class="op">=</span>axis_name)</span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>            <span class="co"># If there are any other axes that are sharded, we need to keep the partitioned structure.</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Otherwise, we can return the value directly.</span></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>            param_shard <span class="op">=</span> param_shard[:shard_axis] <span class="op">+</span> (<span class="va">None</span>,) <span class="op">+</span> param_shard[shard_axis <span class="op">+</span> <span class="dv">1</span> :]</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">any</span>([name <span class="kw">is</span> <span class="kw">not</span> <span class="va">None</span> <span class="cf">for</span> name <span class="kw">in</span> param_shard]):</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> nn.Partitioned(value, param_shard)</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> value</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> p</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.tree_util.tree_map(_gather, params, is_leaf<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">isinstance</span>(x, nn.Partitioned))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Whenever we call a module, we want to gather the parameters back to a single device, and then shard them again once the module is done computing (i.e.&nbsp;free the memory of the full parameters). For this, we wrap a module into a <code>nn.map_variables</code> transformation, which allows for transformations on the parameter before and after the module is called. We can use this to gather the parameters before the module is called, and shard them again after the module is done. We implement the function below:</p>
+<div id="cell-54" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> shard_module_params(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    target: nn.Module <span class="op">|</span> Callable, axis_name: <span class="bu">str</span>, min_weight_size: <span class="bu">int</span> <span class="op">=</span> <span class="dv">2</span><span class="op">**</span><span class="dv">18</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> nn.Module <span class="op">|</span> Callable:</span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Shard parameters of a module across replicas.</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="co">        target: The module to shard.</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a><span class="co">        axis_name: The axis name to shard parameters across.</span></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">        min_weight_size: The minimum size of a parameter to shard. Parameters with fewer values will not be sharded.</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a><span class="co">        The module with sharded parameters.</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb28-14"><a href="#cb28-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> nn.map_variables(</span>
+<span id="cb28-15"><a href="#cb28-15" aria-hidden="true" tabindex="-1"></a>        target,</span>
+<span id="cb28-16"><a href="#cb28-16" aria-hidden="true" tabindex="-1"></a>        trans_in_fn<span class="op">=</span>functools.partial(gather_params, axis_name<span class="op">=</span>axis_name),</span>
+<span id="cb28-17"><a href="#cb28-17" aria-hidden="true" tabindex="-1"></a>        trans_out_fn<span class="op">=</span>functools.partial(</span>
+<span id="cb28-18"><a href="#cb28-18" aria-hidden="true" tabindex="-1"></a>            shard_params, axis_name<span class="op">=</span>axis_name, min_weight_size<span class="op">=</span>min_weight_size</span>
+<span id="cb28-19"><a href="#cb28-19" aria-hidden="true" tabindex="-1"></a>        ),</span>
+<span id="cb28-20"><a href="#cb28-20" aria-hidden="true" tabindex="-1"></a>        mapped_collections<span class="op">=</span><span class="st">"params"</span>,</span>
+<span id="cb28-21"><a href="#cb28-21" aria-hidden="true" tabindex="-1"></a>        mutable<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb28-22"><a href="#cb28-22" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Another aspect in the design of FSDP is how we deal with the gathered parameters during the training step. If we use the function as is, we would gather the parameters and we keep the full parameters as intermediate arrays on a single device until the backward step is completed. We may have situations where the full parameters do not fit on a single device. In that case, we can remat the gather operation, such that after the forward pass of a module, we free up the memory of the full parameters of the module, and only keep the sharded parameters. We can then gather the parameters again before the backward pass, and scatter the gradients back to the respective devices. This can be done by using the <code>remat</code> transformation directly on <code>gather_params</code>, or by rematting the whole forward pass with a policy to remat all <code>all_gather</code> operations: <code>@partial(jax.remat, policy=lambda op, *_, **__: str(op) != 'all_gather')</code> (see <a href="https://jax.readthedocs.io/en/latest/notebooks/autodiff_remat.html#custom-policies-for-what-s-saveable">official documentation</a> for more details). The final option is to remat the whole module, which we have seen in the previous tutorial. In that case, it matters whether we shard the parameters of every individual module, or the global module, since in the individual case, we also remat the gather, while in the other case, we only remat the forward pass. All these options trade off memory and communication cost, and need to be chosen based on the hardware at hand. We will provide both options in our code, such that depending on the model size, the corresponding setup can be chosen.</p>
+<p>Let’s now use the sharding function to shard our simple classifier below:</p>
+<div id="cell-56" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> FSDPClassifier(nn.Module):</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    config: ConfigDict</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">@nn.compact</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__call__</span>(<span class="va">self</span>, x: jax.Array, train: <span class="bu">bool</span>) <span class="op">-&gt;</span> jax.Array:</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>        sharded_dense <span class="op">=</span> shard_module_params(</span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a>            nn.Dense,</span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>            axis_name<span class="op">=</span><span class="va">self</span>.config.data_axis_name,</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a>            min_weight_size<span class="op">=</span><span class="va">self</span>.config.min_weight_size,</span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> sharded_dense(</span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.config.hidden_size,</span>
+<span id="cb29-13"><a href="#cb29-13" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb29-14"><a href="#cb29-14" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"input_dense"</span>,</span>
+<span id="cb29-15"><a href="#cb29-15" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb29-16"><a href="#cb29-16" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.silu(x)</span>
+<span id="cb29-17"><a href="#cb29-17" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> nn.Dropout(rate<span class="op">=</span><span class="va">self</span>.config.dropout_rate, deterministic<span class="op">=</span><span class="kw">not</span> train)(x)</span>
+<span id="cb29-18"><a href="#cb29-18" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> sharded_dense(</span>
+<span id="cb29-19"><a href="#cb29-19" aria-hidden="true" tabindex="-1"></a>            features<span class="op">=</span><span class="va">self</span>.config.num_classes,</span>
+<span id="cb29-20"><a href="#cb29-20" aria-hidden="true" tabindex="-1"></a>            dtype<span class="op">=</span><span class="va">self</span>.config.dtype,</span>
+<span id="cb29-21"><a href="#cb29-21" aria-hidden="true" tabindex="-1"></a>            name<span class="op">=</span><span class="st">"output_dense"</span>,</span>
+<span id="cb29-22"><a href="#cb29-22" aria-hidden="true" tabindex="-1"></a>        )(x)</span>
+<span id="cb29-23"><a href="#cb29-23" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> x.astype(jnp.float32)</span>
+<span id="cb29-24"><a href="#cb29-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> x</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Note that we only shard the dense layers here, since all other layers (activation function, dropout) do not have any parameters.</p>
+</section>
+<section id="initialization-1" class="level3">
+<h3 class="anchored" data-anchor-id="initialization-1">Initialization</h3>
+<p>We can now initialize the model. First, we set the <code>min_weight_size</code> at which we want to shard the parameters. The original value of <span class="math inline">\(2^{18}\)</span> is chosen based on parameters being greater than 1MB (assuming 4 bytes per parameter), inspired by the <a href="https://github.com/google-research/big_vision/blob/main/big_vision/sharding.py#L58">Big Vision repository</a>. However, for demonstration purposes, we set it much lower here such that some weights are sharded for our small example model.</p>
+<div id="cell-59" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>config.model.min_weight_size <span class="op">=</span> <span class="dv">2</span><span class="op">**</span><span class="dv">4</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>The model is then created as usual. If we want to shard the parameters of the whole model, we would use <code>model_fsdp = shard_module_params(FSDPClassifier, axis_name=config.data_axis_name, min_weight_size=config.model.min_weight_size)(config.model)</code> instead.</p>
+<div id="cell-61" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>model_fsdp <span class="op">=</span> FSDPClassifier(config<span class="op">=</span>config.model)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>While we can reuse our initialization function, we need to adjust the shard map. This is because some parameters are now sharded across devices, and we need to specify the mesh and the sharding specifications for the input and output. The partitioning is determined within the model initialization, so we cannot manually specify it as before. Instead, we can first wrap the initialization function with <code>shard_map</code> and an unknown output specification (i.e.&nbsp;simply set to all replicated <code>P()</code> and <code>check_rep</code> to False), and evaluate the shapes which is independent of the output specification. Since the shapes are also determined for the partitioned parameters, we can then use the shapes to determine the sharding specification. An easy way of doing that is by using <code>nn.get_partition_spec</code> which returns the sharding specification of a PyTree with <code>nn.Partitioned</code> leafs. We can then use this specification to wrap the initialization function with <code>shard_map</code> and the correct output specification. We implement the function below:</p>
+<div id="cell-63" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>init_fsdp_fn <span class="op">=</span> shard_map(</span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    functools.partial(init_dp, model<span class="op">=</span>model_fsdp),</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    mesh,</span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    in_specs<span class="op">=</span>(P(), P(config.data_axis_name)),</span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    out_specs<span class="op">=</span>P(),</span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>state_fsdp_shapes <span class="op">=</span> jax.eval_shape(init_fsdp_fn, model_init_rng, batch.inputs)</span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>state_fsdp_specs <span class="op">=</span> nn.get_partition_spec(state_fsdp_shapes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can check the specification before plugging it into the <code>shard_map</code> function. Since the output of the initialization function is a train state, <code>state_fsdp_specs</code> is a train state as well, but with each element being a partition spec instead. We can print out the specs below.</p>
+<div id="cell-65" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"RNG"</span>, state_fsdp_specs.rng)</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Parameters"</span>)</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>pprint(state_fsdp_specs.params)</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">Optimizer state"</span>)</span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>pprint(state_fsdp_specs.opt_state[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>RNG PartitionSpec()
+
+Parameters
+{'input_dense': {'bias': PartitionSpec('data',),
+                 'kernel': PartitionSpec('data', None)},
+ 'output_dense': {'bias': PartitionSpec(),
+                  'kernel': PartitionSpec('data', None)}}
+
+Optimizer state
+ScaleByAdamState(count=PartitionSpec(), mu={'input_dense': {'bias': PartitionSpec('data',), 'kernel': PartitionSpec('data', None)}, 'output_dense': {'bias': PartitionSpec(), 'kernel': PartitionSpec('data', None)}}, nu={'input_dense': {'bias': PartitionSpec('data',), 'kernel': PartitionSpec('data', None)}, 'output_dense': {'bias': PartitionSpec(), 'kernel': PartitionSpec('data', None)}})</code></pre>
+</div>
+</div>
+<p>The random number generator is replicated across devices as before. The parameters have now different shardings. The kernels of both dense layers are sharded over the data axis, while the output bias is replicated across all devices due to its small size (only 10 parameters). Further, the optimizer state follows the same sharding as the parameters. The <code>mu</code> (first order momentum) and <code>nu</code> (second order momentum) are sharded over the data axis like the parameters, while the <code>step</code> (step counter) is replicated across all devices. We can now wrap the initialization function with the correct output specification and execute it.</p>
+<div id="cell-67" class="cell" data-execution_count="30">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a>init_fsdp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>        functools.partial(init_dp, model<span class="op">=</span>model_fsdp),</span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(P(), P(config.data_axis_name)),</span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>state_fsdp_specs,</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>state_fsdp <span class="op">=</span> init_fsdp_fn(model_init_rng, batch.inputs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We print the shapes of the parameters to verify that the sharding was successful and their global shape is as we expected.</p>
+<div id="cell-69" class="cell" data-execution_count="31">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"FSDP Parameters"</span>)</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>pprint(jax.tree_map(<span class="kw">lambda</span> x: x.shape, jax.device_get(state_fsdp.params)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>FSDP Parameters
+{'input_dense': {'bias': Partitioned(value=(512,), names=('data',), mesh=None),
+                 'kernel': Partitioned(value=(784, 512),
+                                       names=('data', None),
+                                       mesh=None)},
+ 'output_dense': {'bias': (10,),
+                  'kernel': Partitioned(value=(512, 10),
+                                        names=('data', None),
+                                        mesh=None)}}</code></pre>
+</div>
+</div>
+<p>All parameters have the expected global shape, and are sharded on their largest axis if they are larger than the minimum weight size. The <code>mesh</code> attribute in <code>nn.Partitioned</code> can be set to a different mesh if we do not want to shard over the global mesh, as set by the <code>shard_map</code>. In most cases, however, we want to shard over the global mesh, and can leave the <code>mesh</code> attribute as <code>None</code>. We can now move on to the training loop.</p>
+</section>
+<section id="train-step-1" class="level3">
+<h3 class="anchored" data-anchor-id="train-step-1">Train Step</h3>
+<p>In the training step, we need to adjust the synchronization of the gradients to take into account the parameter sharding. For a given parameter gradient in our PyTree, we want to average the gradients over a mesh axis if it was not partitioned over it, and leave it otherwise. We implement this strategy in the function below. Note that, in later tutorials, we will be dealing with multiple mesh axes. Hence, the function is written such that it can handle multiple mesh axes, and we can simply pass the mesh axis name over which we want to average the gradients.</p>
+<div id="cell-72" class="cell" data-execution_count="32">
+<div class="sourceCode cell-code" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> sync_gradients(</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>    grads: PyTree,</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    axis_names: Sequence[<span class="bu">str</span>],</span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> PyTree:</span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Synchronize gradients across devices.</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Gradients for parameters that are replicated over a given axis are averaged across devices.</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters that are partitioned over a given axis are considered to already have a mean of</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a><span class="co">    the gradients on each device, and hence do not need to be altered.</span></span>
+<span id="cb38-10"><a href="#cb38-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-11"><a href="#cb38-11" aria-hidden="true" tabindex="-1"></a><span class="co">    Args:</span></span>
+<span id="cb38-12"><a href="#cb38-12" aria-hidden="true" tabindex="-1"></a><span class="co">        grads: The gradients to synchronize.</span></span>
+<span id="cb38-13"><a href="#cb38-13" aria-hidden="true" tabindex="-1"></a><span class="co">        axis_names: The axis names to synchronize gradients across.</span></span>
+<span id="cb38-14"><a href="#cb38-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-15"><a href="#cb38-15" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb38-16"><a href="#cb38-16" aria-hidden="true" tabindex="-1"></a><span class="co">        The gradients averaged over the specified axes if they are replicated.</span></span>
+<span id="cb38-17"><a href="#cb38-17" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb38-18"><a href="#cb38-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-19"><a href="#cb38-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> sync_grad(g: Parameter) <span class="op">-&gt;</span> Parameter:</span>
+<span id="cb38-20"><a href="#cb38-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(g, nn.Partitioned):</span>
+<span id="cb38-21"><a href="#cb38-21" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Tree leaves for flattening potentially nested axis (multiple names can exist for single array axis).</span></span>
+<span id="cb38-22"><a href="#cb38-22" aria-hidden="true" tabindex="-1"></a>            replication_axis_names <span class="op">=</span> [</span>
+<span id="cb38-23"><a href="#cb38-23" aria-hidden="true" tabindex="-1"></a>                name <span class="cf">for</span> name <span class="kw">in</span> axis_names <span class="cf">if</span> name <span class="kw">not</span> <span class="kw">in</span> jax.tree_util.tree_leaves(g.names)</span>
+<span id="cb38-24"><a href="#cb38-24" aria-hidden="true" tabindex="-1"></a>            ]</span>
+<span id="cb38-25"><a href="#cb38-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="bu">len</span>(replication_axis_names) <span class="op">==</span> <span class="dv">0</span>:</span>
+<span id="cb38-26"><a href="#cb38-26" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Parameters partitioned over all axes.</span></span>
+<span id="cb38-27"><a href="#cb38-27" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> g</span>
+<span id="cb38-28"><a href="#cb38-28" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb38-29"><a href="#cb38-29" aria-hidden="true" tabindex="-1"></a>                <span class="co"># Average over remaining replicated axes.</span></span>
+<span id="cb38-30"><a href="#cb38-30" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> g.replace(value<span class="op">=</span>jax.lax.pmean(g.value, axis_name<span class="op">=</span>replication_axis_names))</span>
+<span id="cb38-31"><a href="#cb38-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb38-32"><a href="#cb38-32" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Parameters are replicated over all axes.</span></span>
+<span id="cb38-33"><a href="#cb38-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> jax.lax.pmean(g, axis_name<span class="op">=</span>axis_names)</span>
+<span id="cb38-34"><a href="#cb38-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb38-35"><a href="#cb38-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> jax.tree_map(sync_grad, grads, is_leaf<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">isinstance</span>(x, nn.Partitioned))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Besides the gradient averaging, we do not need to adjust anything else of our training step. One potential optimization is to cast the parameters to <code>bfloat16</code> before we execute the <code>apply_fn</code> in the <code>loss_fn</code>. This can reduce the communication overhead, since we only need to communicate half the amount of data. However, this only works if all parameters would need to be in <code>bfloat16</code>, and might be more tricky to handle if we have a mix of parameter precisions in our model. Hence, for simplicity, we will not implement this optimization here, and leave the loss function unchanged.</p>
+<div id="cell-74" class="cell" data-execution_count="33">
+<div class="sourceCode cell-code" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> train_step_fsdp(</span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>    state: TrainState,</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    metrics: Metrics,</span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    batch: Batch,</span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[TrainState, Metrics]:</span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    rng, step_rng <span class="op">=</span> jax.random.split(state.rng)</span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    grads, step_metrics <span class="op">=</span> accumulate_gradients(</span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>        state,</span>
+<span id="cb39-9"><a href="#cb39-9" aria-hidden="true" tabindex="-1"></a>        batch,</span>
+<span id="cb39-10"><a href="#cb39-10" aria-hidden="true" tabindex="-1"></a>        step_rng,</span>
+<span id="cb39-11"><a href="#cb39-11" aria-hidden="true" tabindex="-1"></a>        config.optimizer.num_minibatches,</span>
+<span id="cb39-12"><a href="#cb39-12" aria-hidden="true" tabindex="-1"></a>        loss_fn<span class="op">=</span>loss_fn,</span>
+<span id="cb39-13"><a href="#cb39-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb39-14"><a href="#cb39-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update parameters. We need to sync the gradients across devices before updating.</span></span>
+<span id="cb39-15"><a href="#cb39-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_gradients"</span>):</span>
+<span id="cb39-16"><a href="#cb39-16" aria-hidden="true" tabindex="-1"></a>        grads <span class="op">=</span> sync_gradients(grads, (config.data_axis_name,))</span>
+<span id="cb39-17"><a href="#cb39-17" aria-hidden="true" tabindex="-1"></a>    new_state <span class="op">=</span> state.apply_gradients(grads<span class="op">=</span>grads, rng<span class="op">=</span>rng)</span>
+<span id="cb39-18"><a href="#cb39-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Sum metrics across replicas. Alternatively, we could keep the metrics separate</span></span>
+<span id="cb39-19"><a href="#cb39-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># and only synchronize them before logging. For simplicity, we sum them here.</span></span>
+<span id="cb39-20"><a href="#cb39-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> jax.named_scope(<span class="st">"sync_metrics"</span>):</span>
+<span id="cb39-21"><a href="#cb39-21" aria-hidden="true" tabindex="-1"></a>        step_metrics <span class="op">=</span> jax.tree_map(</span>
+<span id="cb39-22"><a href="#cb39-22" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> x: jax.lax.psum(x, axis_name<span class="op">=</span>config.data_axis_name), step_metrics</span>
+<span id="cb39-23"><a href="#cb39-23" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb39-24"><a href="#cb39-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> metrics <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb39-25"><a href="#cb39-25" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> step_metrics</span>
+<span id="cb39-26"><a href="#cb39-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb39-27"><a href="#cb39-27" aria-hidden="true" tabindex="-1"></a>        metrics <span class="op">=</span> jax.tree_map(jnp.add, metrics, step_metrics)</span>
+<span id="cb39-28"><a href="#cb39-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> new_state, metrics</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>We can now wrap the train step with <code>shard_map</code> and jit it. We reuse our sharding specification of the train state, which we determined during the initialization, and specify the mesh and the sharding specifications for the metrics and batch as before.</p>
+<div id="cell-76" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a>train_step_fsdp_fn <span class="op">=</span> jax.jit(</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    shard_map(</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>        train_step_fsdp,</span>
+<span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>        mesh,</span>
+<span id="cb40-5"><a href="#cb40-5" aria-hidden="true" tabindex="-1"></a>        in_specs<span class="op">=</span>(state_fsdp_specs, P(), P(config.data_axis_name)),</span>
+<span id="cb40-6"><a href="#cb40-6" aria-hidden="true" tabindex="-1"></a>        out_specs<span class="op">=</span>(state_fsdp_specs, P()),</span>
+<span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a>        check_rep<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a>    donate_argnames<span class="op">=</span>(<span class="st">"state"</span>, <span class="st">"metrics"</span>),</span>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-11"><a href="#cb40-11" aria-hidden="true" tabindex="-1"></a>_, metric_shapes <span class="op">=</span> jax.eval_shape(</span>
+<span id="cb40-12"><a href="#cb40-12" aria-hidden="true" tabindex="-1"></a>    train_step_fsdp_fn,</span>
+<span id="cb40-13"><a href="#cb40-13" aria-hidden="true" tabindex="-1"></a>    state_fsdp,</span>
+<span id="cb40-14"><a href="#cb40-14" aria-hidden="true" tabindex="-1"></a>    <span class="va">None</span>,</span>
+<span id="cb40-15"><a href="#cb40-15" aria-hidden="true" tabindex="-1"></a>    batch,</span>
+<span id="cb40-16"><a href="#cb40-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb40-17"><a href="#cb40-17" aria-hidden="true" tabindex="-1"></a>metrics_fsdp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Let’s run it again for a few steps and check the resulting metrics:</p>
+<div id="cell-78" class="cell" data-execution_count="35">
+<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">15</span>):</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    state_fsdp, metrics_fsdp <span class="op">=</span> train_step_fsdp_fn(state_fsdp, metrics_fsdp, batch)</span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>final_metrics_fsdp <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x: jnp.zeros(x.shape, dtype<span class="op">=</span>x.dtype), metric_shapes)</span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>state_fsdp, final_metrics_fsdp <span class="op">=</span> train_step_fsdp_fn(state_fsdp, final_metrics_fsdp, batch)</span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>print_metrics(final_metrics_fsdp, <span class="st">"FSDP - Final metrics"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>/home/plippe/anaconda3/envs/jax/lib/python3.10/site-packages/jax/_src/interpreters/mlir.py:761: UserWarning: Some donated buffers were not usable: ShapedArray(float32[64]), ShapedArray(float32[98,512]), ShapedArray(float32[64,10]), ShapedArray(float32[64]), ShapedArray(float32[98,512]), ShapedArray(float32[64,10]), ShapedArray(float32[64]), ShapedArray(float32[98,512]), ShapedArray(float32[64,10]).
+See an explanation at https://jax.readthedocs.io/en/latest/faq.html#buffer-donation.
+  warnings.warn("Some donated buffers were not usable:"</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code> FSDP - Final metrics 
+accuracy: 1.000000
+loss: 0.003343</code></pre>
+</div>
+</div>
+<p>The model is training as expected and is able to overfit on the single batch of data.</p>
+</section>
+<section id="verify-that-fsdp-gives-same-results-as-dp" class="level3">
+<h3 class="anchored" data-anchor-id="verify-that-fsdp-gives-same-results-as-dp">Verify that FSDP gives same results as DP</h3>
+<p>Since the different parallelism strategies should result in the same model, we can verify that the FSDP model gives the same results as the data parallel model without sharding. Further, the initialization of the both models behave in the exact same way, such that in our example training runs above, they should have resulted in the same outputs. We can verify this by comparing the metrics of the FSDP and DP model below:</p>
+<div id="cell-81" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a>metrics_dp <span class="op">=</span> jax.device_get(metrics_dp)</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>metrics_fsdp <span class="op">=</span> jax.device_get(metrics_fsdp)</span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key <span class="kw">in</span> metrics_dp.keys():</span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>    val_dp <span class="op">=</span> metrics_dp[key][<span class="dv">0</span>] <span class="op">/</span> metrics_dp[key][<span class="dv">1</span>]</span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    val_fsdp <span class="op">=</span> metrics_fsdp[key][<span class="dv">0</span>] <span class="op">/</span> metrics_fsdp[key][<span class="dv">1</span>]</span>
+<span id="cb44-6"><a href="#cb44-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Metrics DP Avg </span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>val_dp<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-7"><a href="#cb44-7" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"Metrics FSDP Avg </span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>val_fsdp<span class="sc">:.4f}</span><span class="ss">"</span>)</span>
+<span id="cb44-8"><a href="#cb44-8" aria-hidden="true" tabindex="-1"></a>    np.testing.assert_allclose(val_dp, val_fsdp, atol<span class="op">=</span><span class="fl">1e-2</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Metrics DP Avg accuracy: 0.8844
+Metrics FSDP Avg accuracy: 0.8844
+Metrics DP Avg loss: 0.5102
+Metrics FSDP Avg loss: 0.5102</code></pre>
+</div>
+</div>
+<p>Both models have resulted in the same metrics, suggesting that the FSDP model is training as expected. We can also compare parameters and optimizer state to verify that they are the same.</p>
+<div id="cell-83" class="cell" data-execution_count="37">
+<div class="sourceCode cell-code" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a>params_dp <span class="op">=</span> jax.device_get({<span class="st">"params"</span>: state_dp.params, <span class="st">"opt_state"</span>: state_dp.opt_state})</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>params_fsdp <span class="op">=</span> jax.device_get({<span class="st">"params"</span>: state_fsdp.params, <span class="st">"opt_state"</span>: state_fsdp.opt_state})</span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>params_fsdp <span class="op">=</span> jax.tree_map(</span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">lambda</span> x: x.value <span class="cf">if</span> <span class="bu">isinstance</span>(x, nn.Partitioned) <span class="cf">else</span> x,</span>
+<span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>    params_fsdp,</span>
+<span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>    is_leaf<span class="op">=</span><span class="kw">lambda</span> x: <span class="bu">isinstance</span>(x, nn.Partitioned),</span>
+<span id="cb46-7"><a href="#cb46-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb46-8"><a href="#cb46-8" aria-hidden="true" tabindex="-1"></a>_ <span class="op">=</span> jax.tree_map(<span class="kw">lambda</span> x, y: np.testing.assert_allclose(x, y, atol<span class="op">=</span><span class="fl">1e-4</span>), params_dp, params_fsdp)</span>
+<span id="cb46-9"><a href="#cb46-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Parameters match between DP and FSDP"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Parameters match between DP and FSDP</code></pre>
+</div>
+</div>
+<p>We find that both methods result in the same output, verifying that we have implemented FSDP correctly. Note that very small differences can still occur due to different reductions in the gradient sync. However, these differences should be negligible and not affect the training of the model.</p>
+</section>
+</section>
+<section id="conclusion" class="level2">
+<h2 class="anchored" data-anchor-id="conclusion">Conclusion</h2>
+<p>In this tutorial, we have introduced the basic building blocks of distributed computing in JAX, and implemented data parallelism and fully-sharded data parallelism. In data parallelism, we shard the input batch over the data axis, and the model parameters are replicated across all devices. This allows for a larger batch size and faster training. For large models, we further improved the memory footprint by sharding the model parameters across devices. In this fully-sharded data parallelism (FSDP), we have seen how to shard the model parameters, and how to gather and scatter the parameters and gradients in the forward and backward pass. Data parallelism is one of the most common parallelism strategies in deep learning, and FSDP is a powerful tool to scale to very large models. Still, we may come to situations where the model size is limited by the memory of a single device, and we need expensive remat strategies to overcome this. Alternatively, we can look at other parallelism strategies which shard the model execution itself over devices. These strategies, also called model parallelism, will be the focus in the next tutorials, specifically pipeline parallelism and tensor parallelism. With these, we can scale to even larger models and train billion-parameter models efficiently.</p>
+</section>
+<section id="references-and-resources" class="level2">
+<h2 class="anchored" data-anchor-id="references-and-resources">References and Resources</h2>
+<p>[Rajbhandari et al., 2020] Rajbhandari, S., Rasley, J., Ruwase, O. and He, Y., 2020. Zero: Memory optimizations toward training trillion parameter models. In SC20: International Conference for High Performance Computing, Networking, Storage and Analysis (pp.&nbsp;1-16). <a href="https://arxiv.org/abs/1910.02054">Paper link</a></p>
+<p>[Wang and Komatsuzaki, 2021] Wang, B., and Komatsuzaki, A., 2021. Mesh transformer jax. <a href="https://github.com/kingoflolz/mesh-transformer-jax">GitHub link</a></p>
+<p>[Beyer et al., 2022] Beyer, L., Zhai, X., and Kolesnikov, A., 2022. Big Vision. <a href="https://github.com/google-research/big_vision/tree/main/">GitHub link</a></p>
+<p>[Google, 2024] JAX Team Google, 2024. Distributed arrays and automatic parallelization. <a href="https://jax.readthedocs.io/en/latest/notebooks/Distributed_arrays_and_automatic_parallelization.html">Notebook link</a></p>
+<p>[Google, 2024] JAX Team Google, 2024. SPMD multi-device parallelism with shard_map. <a href="https://jax.readthedocs.io/en/latest/notebooks/shard_map.html">Notebook link</a></p>
+<p>[Google, 2024] JAX Team Google, 2024. Using JAX in multi-host and multi-process environments. <a href="https://jax.readthedocs.io/en/latest/multi_process.html">Notebook link</a></p>
+<p>[DeepSpeed, 2024] DeepSpeed, 2024. Zero Redundancy Optimizer. <a href="https://www.deepspeed.ai/tutorials/zero/">Tutorial link</a></p>
+<hr>
+<p><a href="https://github.com/phlippe/uvadlc_notebooks/"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=⭐&amp;message=Star%20Our%20Repository&amp;color=yellow" class="img-fluid" alt="Star our repository"></a> If you found this tutorial helpful, consider ⭐-ing our repository.<br>
+<a href="https://github.com/phlippe/uvadlc_notebooks/issues"><img src="https://img.shields.io/static/v1.svg?logo=star&amp;label=❔&amp;message=Ask%20Questions&amp;color=9cf" class="img-fluid" alt="Ask questions"></a> For any questions, typos, or bugs that you found, please raise an issue on GitHub.</p>
+<hr>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
