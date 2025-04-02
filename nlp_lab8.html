@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Deep Learning – Deep Learning/NLP course</title>
+<title>NLP: Lab 8 (Word2vec) – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -93,7 +127,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./dl.html" aria-current="page"> 
+    <a class="nav-link" href="./dl.html"> 
 <span class="menu-text">Deep Learning</span></a>
   </li>  
   <li class="nav-item">
@@ -120,16 +154,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#lectures" id="toc-lectures" class="nav-link active" data-scroll-target="#lectures">Lectures</a>
+  <li><a href="#gensim-installation" id="toc-gensim-installation" class="nav-link active" data-scroll-target="#gensim-installation">Gensim installation</a></li>
+  <li><a href="#fetching-word-vectors" id="toc-fetching-word-vectors" class="nav-link" data-scroll-target="#fetching-word-vectors">Fetching word vectors</a>
   <ul class="collapse">
-  <li><a href="#lec-1" id="toc-lec-1" class="nav-link" data-scroll-target="#lec-1">Lec 1</a></li>
-  <li><a href="#lec-2" id="toc-lec-2" class="nav-link" data-scroll-target="#lec-2">Lec 2</a></li>
-  <li><a href="#lec-3" id="toc-lec-3" class="nav-link" data-scroll-target="#lec-3">Lec 3</a></li>
-  <li><a href="#lec-4" id="toc-lec-4" class="nav-link" data-scroll-target="#lec-4">Lec 4</a></li>
-  <li><a href="#lec-5" id="toc-lec-5" class="nav-link" data-scroll-target="#lec-5">Lec 5</a></li>
+  <li><a href="#train-your-own-word2vec" id="toc-train-your-own-word2vec" class="nav-link" data-scroll-target="#train-your-own-word2vec">Train your own word2vec</a></li>
+  <li><a href="#downloading-pre-trained" id="toc-downloading-pre-trained" class="nav-link" data-scroll-target="#downloading-pre-trained">Downloading pre-trained</a></li>
   </ul></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
-  <li><a href="#python-venv-info" id="toc-python-venv-info" class="nav-link" data-scroll-target="#python-venv-info">Python venv info</a></li>
+  <li><a href="#working-with-vectors" id="toc-working-with-vectors" class="nav-link" data-scroll-target="#working-with-vectors">Working with vectors</a>
+  <ul class="collapse">
+  <li><a href="#similarity" id="toc-similarity" class="nav-link" data-scroll-target="#similarity">Similarity</a></li>
+  <li><a href="#distance" id="toc-distance" class="nav-link" data-scroll-target="#distance">Distance</a></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
   </ul>
 </nav>
     </div>
@@ -138,7 +175,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Deep Learning</h1>
+<h1 class="title">NLP: Lab 8 (Word2vec)</h1>
 </div>
 
 
@@ -155,60 +192,130 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lectures" class="level2">
-<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
-<section id="lec-1" class="level3">
-<h3 class="anchored" data-anchor-id="lec-1">Lec 1</h3>
-<p><a href="./dl_lec1.html">Slides</a></p>
+<section id="gensim-installation" class="level1">
+<h1>Gensim installation</h1>
+<p>Install gensim:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install gensim</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pip install pot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="lec-2" class="level3">
-<h3 class="anchored" data-anchor-id="lec-2">Lec 2</h3>
-<p><a href="./dl_lec2.html">Slides</a></p>
+<section id="fetching-word-vectors" class="level1">
+<h1>Fetching word vectors</h1>
+<section id="train-your-own-word2vec" class="level2">
+<h2 class="anchored" data-anchor-id="train-your-own-word2vec">Train your own word2vec</h2>
+<div id="ea8f14ea" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.test.utils <span class="im">import</span> common_texts</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models <span class="im">import</span> Word2Vec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Check <code>common_texts</code>:</p>
+<div id="45f02b64" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>common_texts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="2">
+<pre><code>[['human', 'interface', 'computer'],
+ ['survey', 'user', 'computer', 'system', 'response', 'time'],
+ ['eps', 'user', 'interface', 'system'],
+ ['system', 'human', 'system', 'eps'],
+ ['user', 'response', 'time'],
+ ['trees'],
+ ['graph', 'trees'],
+ ['graph', 'minors', 'trees'],
+ ['graph', 'minors', 'survey']]</code></pre>
+</div>
+</div>
+<p>Train your model:</p>
+<div id="39199a1d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Word2Vec(sentences<span class="op">=</span>common_texts, vector_size<span class="op">=</span><span class="dv">100</span>, window<span class="op">=</span><span class="dv">5</span>, min_count<span class="op">=</span><span class="dv">1</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Now you have your vectors:</p>
+<div id="520d3283" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.wv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="4">
+<pre><code>&lt;gensim.models.keyedvectors.KeyedVectors at 0x1285048c0&gt;</code></pre>
+</div>
+</div>
 </section>
-<section id="lec-3" class="level3">
-<h3 class="anchored" data-anchor-id="lec-3">Lec 3</h3>
-<p><a href="./dl_lec3.html">Slides</a></p>
+<section id="downloading-pre-trained" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-pre-trained">Downloading pre-trained</h2>
+<p>First, check what models are available:</p>
+<div id="c16adfbe" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> gensim.downloader.info()[<span class="st">'models'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Download the light one:</p>
+<div id="d55221bc" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>glove_vectors <span class="op">=</span> gensim.downloader.load(<span class="st">'glove-wiki-gigaword-50'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><code>glove_vectors</code> will also be a <code>KeyedVectors</code> object.</p>
 </section>
-<section id="lec-4" class="level3">
-<h3 class="anchored" data-anchor-id="lec-4">Lec 4</h3>
-<p><a href="./dl_lec4.html">Slides</a></p>
 </section>
-<section id="lec-5" class="level3">
-<h3 class="anchored" data-anchor-id="lec-5">Lec 5</h3>
-<p><a href="./dl_lec5.html">Slides</a></p>
+<section id="working-with-vectors" class="level1">
+<h1>Working with vectors</h1>
+<p>What can one do with these vectors?</p>
+<section id="similarity" class="level2">
+<h2 class="anchored" data-anchor-id="similarity">Similarity</h2>
+<div id="70b49a59" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.wv.most_similar(<span class="st">'trees'</span>, topn<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>[('survey', 0.19912061095237732),
+ ('human', 0.17272791266441345),
+ ('minors', 0.17018885910511017),
+ ('time', 0.14595060050487518),
+ ('eps', 0.06408978998661041),
+ ('response', -0.00276578264310956),
+ ('user', -0.013535063713788986),
+ ('graph', -0.023671653121709824),
+ ('computer', -0.03284316137433052),
+ ('system', -0.05234672874212265)]</code></pre>
+</div>
+</div>
+<p>Between two words:</p>
+<div id="2012e2de" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.wv.similarity(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>-0.023671653</code></pre>
+</div>
+</div>
+<p>Odd ones:</p>
+<div id="a0a6fa0b" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.wv.doesnt_match([<span class="st">'minors'</span>, <span class="st">'human'</span>, <span class="st">'interface'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
+<pre><code>'minors'</code></pre>
+</div>
+</div>
+</section>
+<section id="distance" class="level2">
+<h2 class="anchored" data-anchor-id="distance">Distance</h2>
+<p>Between words:</p>
+<div id="b35c386b" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model.wv.distance(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>1.0236716531217098</code></pre>
+</div>
+</div>
+<p>Between documents:</p>
+<div id="4465587f" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model.wv.wmdistance([<span class="st">'trees'</span>], [<span class="st">'graph'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>1.4308540422347924</code></pre>
+</div>
+</div>
 </section>
 </section>
-<section id="labs" class="level2">
-<h2 class="anchored" data-anchor-id="labs">Labs</h2>
-<p><a href="./dl_lab1.html">Lab 1</a></p>
-<p><a href="./dl_lab2.html">Lab 2</a></p>
-<p><a href="./dl_lab3.html">Lab 3</a></p>
-<p><a href="./dl_lab4.html">Lab 4</a></p>
-<p><a href="./dl_lab5.html">Lab 5</a></p>
-<p><a href="./dl_lab6.html">Lab 6</a></p>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>Task 0</strong>. Train your word2vec model on an multi-document (for example) NLTK corpus.</p>
+<ul>
+<li>don’t forget to preprocess tokens first (lemmatization etc.)</li>
+</ul>
+<p><strong>Task 1</strong>. Practice using similarity/distance.</p>
+<p><strong>Task 2</strong>. Visualize document distances on a plot.</p>
 </section>
-<section id="python-venv-info" class="level2">
-<h2 class="anchored" data-anchor-id="python-venv-info">Python venv info</h2>
-<p>Instructions on how to create a virtual environment for DL course:</p>
-<ol type="1">
-<li>Launch Anaconda Prompt. In it execute:</li>
-</ol>
-<pre><code>python -m venv dl_venv</code></pre>
-<ol start="2" type="1">
-<li>Activate the environment:</li>
-</ol>
-<pre><code>dl_venv\Scripts\activate</code></pre>
-<ol start="3" type="1">
-<li>Install required packages:</li>
-</ol>
-<pre><code>pip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py</code></pre>
-<ol start="4" type="1">
-<li>Run Jupyter:</li>
-</ol>
-<pre><code>jupyter notebook</code></pre>
-<ol start="5" type="1">
-<li>Voila! (pardon my French)</li>
-</ol>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Gensim Word2vec documentation: https://radimrehurek.com/gensim/models/word2vec.html</li>
+<li>KeyedVectors docs: https://radimrehurek.com/gensim/models/keyedvectors.html</li>
+</ul>
 
 
 </section>

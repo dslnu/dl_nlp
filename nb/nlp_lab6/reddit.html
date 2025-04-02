@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Deep Learning – Deep Learning/NLP course</title>
+<title>reddit – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,25 +20,59 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/quarto-nav/headroom.min.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -68,7 +102,7 @@ ul.task-list li input[type="checkbox"] {
 }</script>
 
 
-<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="../../styles.css">
 </head>
 
 <body class="nav-fixed">
@@ -78,7 +112,7 @@ ul.task-list li input[type="checkbox"] {
     <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
       <div class="navbar-container container-fluid">
       <div class="navbar-brand-container mx-auto">
-    <a class="navbar-brand" href="./index.html">
+    <a class="navbar-brand" href="../../index.html">
     <span class="navbar-title">Deep Learning/NLP course</span>
     </a>
   </div>
@@ -89,19 +123,19 @@ ul.task-list li input[type="checkbox"] {
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav navbar-nav-scroll me-auto">
   <li class="nav-item">
-    <a class="nav-link" href="./index.html"> 
+    <a class="nav-link" href="../../index.html"> 
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./dl.html" aria-current="page"> 
+    <a class="nav-link" href="../../dl.html"> 
 <span class="menu-text">Deep Learning</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./nlp.html"> 
+    <a class="nav-link" href="../../nlp.html"> 
 <span class="menu-text">Natural Language Processing</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link" href="./about.html"> 
+    <a class="nav-link" href="../../about.html"> 
 <span class="menu-text">About</span></a>
   </li>  
 </ul>
@@ -115,103 +149,69 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#lectures" id="toc-lectures" class="nav-link active" data-scroll-target="#lectures">Lectures</a>
-  <ul class="collapse">
-  <li><a href="#lec-1" id="toc-lec-1" class="nav-link" data-scroll-target="#lec-1">Lec 1</a></li>
-  <li><a href="#lec-2" id="toc-lec-2" class="nav-link" data-scroll-target="#lec-2">Lec 2</a></li>
-  <li><a href="#lec-3" id="toc-lec-3" class="nav-link" data-scroll-target="#lec-3">Lec 3</a></li>
-  <li><a href="#lec-4" id="toc-lec-4" class="nav-link" data-scroll-target="#lec-4">Lec 4</a></li>
-  <li><a href="#lec-5" id="toc-lec-5" class="nav-link" data-scroll-target="#lec-5">Lec 5</a></li>
-  </ul></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
-  <li><a href="#python-venv-info" id="toc-python-venv-info" class="nav-link" data-scroll-target="#python-venv-info">Python venv info</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
-<main class="content" id="quarto-document-content">
+<main class="content" id="quarto-document-content"><header id="title-block-header" class="quarto-title-block"></header>
 
-<header id="title-block-header" class="quarto-title-block default">
-<div class="quarto-title">
-<h1 class="title">Deep Learning</h1>
+
+
+
+<div id="b7780884-3d2f-4744-8615-acdf112698af" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> praw</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="1dc5560b-ad7c-472b-9ec2-7a3716bd6014" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>reddit <span class="op">=</span> praw.Reddit(</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    client_id <span class="op">=</span> <span class="st">'vHoHFUfP-q6yQxxIxaCxWQ'</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    client_secret <span class="op">=</span> <span class="st">'IXyhkHbHX5YJO-Fx25L1cbHAqjmJYw'</span>,</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    user_agent <span class="op">=</span> <span class="st">'praw'</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="cfc3da73-8c67-4d12-ac6b-187ebd7dfa56" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> getComments(<span class="bu">id</span>):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    submission <span class="op">=</span> reddit.submission(<span class="bu">id</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    pandas_list <span class="op">=</span> []</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    commentsList <span class="op">=</span> submission.comments.<span class="bu">list</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 'limit' parameter can be increased </span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># in order to expand more comments</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    submission.comments.replace_more(limit<span class="op">=</span><span class="dv">64</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="bu">len</span>(commentsList))</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    i <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> c <span class="kw">in</span> commentsList:</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">isinstance</span>(c, praw.models.MoreComments):</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        commentText <span class="op">=</span> c.body</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        score <span class="op">=</span> c.score</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> commentText <span class="kw">in</span> {<span class="st">'[deleted]'</span>, <span class="st">'[removed]'</span>}:</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">continue</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        pandas_list.append([i, commentText, score])</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        i<span class="op">+=</span><span class="dv">1</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> pd.DataFrame(pandas_list)</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    df.columns <span class="op">=</span> [<span class="st">'id'</span>, <span class="st">'description'</span>, <span class="st">'score'</span>]</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d30674b5-23fb-4964-9e41-52b5c490b7ac" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> getComments(<span class="st">'1detli'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>902</code></pre>
+</div>
+</div>
+<div id="d301c29f-ce4a-43b5-825e-132a3b3c9a08" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df.size</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<pre><code>1359</code></pre>
+</div>
+</div>
+<div id="f201231e-78ae-4366-b170-31fcff3f19c9" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>df.loc[<span class="dv">3</span>][<span class="st">'description'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
+<pre><code>'Scariest moment of my life happened while my friend and I were camping in eastern Canada as teenagers. We decided to sleep in this abandoned camper we found deep in a large forest that was near our town. It had been there so long that small trees had grown around it. We\'d stumbled across it when we were exploring a few months back and thought it would be cool (and brave) to sleep there for a night. So one weekend we did it. \n\nWe arrived after dark because we had gotten lost trying to find the camper. We had a really low power flashlight, so it made it even more difficult. Once we finally found it we opened the rusty door and stepped in. The sounds inside the camper were shrill and echoey. There were typical camper things strewn about; cups, empty cans, swollen pulp fiction novels. \n\nAlready tired, we holed up in one end of the camper where the bed area had originally been before the cushions had rotted away to almost nothing. A long hallway stretched the length of the camper so we could basically see from end to end. \n\nIt was a miserable night. There were several rats living in there. I saw them staring at us from a chewed out part of the ceiling. When the wind blew outside the camper would shriek and groan. We even thought we heard a bear outside too, walking around. Still, we feigned bravery and acted like we were having a good time. But we were on edge.\n\nAt some point I woke up from an uncomfortable sleep. I sat up to adjust myself when I noticed some movement out of the corner of my eye. At the other end of the camper, there was a small window, and as I looked at it I saw a man\'s silouhette. He was clearly staring straight at me from outside. \n\nAt first I thought maybe it was a weird shape of a tree or something. But when I moved a bit to get a better look the person clearly reacted and then froze. My heart was pumping and I woke up my friend immediately, saying "someone is here" over and over and over in a whisper, not taking my eyes off his profile. He woke up immediately and I nodded towards the window. \n\nHe saw him too. We whispered frantically about who it could be and why was he staring at us. And for the next 10 minutes, no joke, we stared him down. The longer we stared at him the more frightened we got. Occasionally he would move, but always keeping his eyes locked on us. Eventually I shouted at him, "Hey!". No reaction. \n\nMy friend was braver than me and decided to shine the flashlight at him. As soon as he did we realized our horrible mistake. It wasn\'t a window at all on the other side of the camper. It was a mirror. We had been staring down ourselves from the very start. Completely idiotic. Still, it was the most fearful, relieving and funny moment of my life that I\'ll never forget it. Closest to paranormal I\'ve ever been. '</code></pre>
+</div>
 </div>
 
 
-
-<div class="quarto-title-meta">
-
-    
-  
-    
-  </div>
-  
-
-
-</header>
-
-
-<section id="lectures" class="level2">
-<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
-<section id="lec-1" class="level3">
-<h3 class="anchored" data-anchor-id="lec-1">Lec 1</h3>
-<p><a href="./dl_lec1.html">Slides</a></p>
-</section>
-<section id="lec-2" class="level3">
-<h3 class="anchored" data-anchor-id="lec-2">Lec 2</h3>
-<p><a href="./dl_lec2.html">Slides</a></p>
-</section>
-<section id="lec-3" class="level3">
-<h3 class="anchored" data-anchor-id="lec-3">Lec 3</h3>
-<p><a href="./dl_lec3.html">Slides</a></p>
-</section>
-<section id="lec-4" class="level3">
-<h3 class="anchored" data-anchor-id="lec-4">Lec 4</h3>
-<p><a href="./dl_lec4.html">Slides</a></p>
-</section>
-<section id="lec-5" class="level3">
-<h3 class="anchored" data-anchor-id="lec-5">Lec 5</h3>
-<p><a href="./dl_lec5.html">Slides</a></p>
-</section>
-</section>
-<section id="labs" class="level2">
-<h2 class="anchored" data-anchor-id="labs">Labs</h2>
-<p><a href="./dl_lab1.html">Lab 1</a></p>
-<p><a href="./dl_lab2.html">Lab 2</a></p>
-<p><a href="./dl_lab3.html">Lab 3</a></p>
-<p><a href="./dl_lab4.html">Lab 4</a></p>
-<p><a href="./dl_lab5.html">Lab 5</a></p>
-<p><a href="./dl_lab6.html">Lab 6</a></p>
-</section>
-<section id="python-venv-info" class="level2">
-<h2 class="anchored" data-anchor-id="python-venv-info">Python venv info</h2>
-<p>Instructions on how to create a virtual environment for DL course:</p>
-<ol type="1">
-<li>Launch Anaconda Prompt. In it execute:</li>
-</ol>
-<pre><code>python -m venv dl_venv</code></pre>
-<ol start="2" type="1">
-<li>Activate the environment:</li>
-</ol>
-<pre><code>dl_venv\Scripts\activate</code></pre>
-<ol start="3" type="1">
-<li>Install required packages:</li>
-</ol>
-<pre><code>pip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py</code></pre>
-<ol start="4" type="1">
-<li>Run Jupyter:</li>
-</ol>
-<pre><code>jupyter notebook</code></pre>
-<ol start="5" type="1">
-<li>Voila! (pardon my French)</li>
-</ol>
-
-
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
