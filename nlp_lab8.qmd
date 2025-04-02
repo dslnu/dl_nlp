@@ -1,0 +1,106 @@
+---
+title: "NLP: Lab 8 (Word2vec)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Gensim installation
+Install gensim:
+```python
+pip install gensim
+pip install pot
+```
+
+# Fetching word vectors
+
+## Train your own word2vec
+```{python}
+from gensim.test.utils import common_texts
+from gensim.models import Word2Vec
+```
+
+Check `common_texts`:
+```{python}
+common_texts
+```
+Train your model:
+```{python}
+model = Word2Vec(sentences=common_texts, vector_size=100, window=5, min_count=1, workers=4)
+```
+
+Now you have your vectors:
+```{python}
+model.wv
+```
+
+## Downloading pre-trained
+
+First, check what models are available:
+
+```{python}
+import gensim.downloader
+
+models = gensim.downloader.info()['models']
+```
+
+Download the light one:
+```{python}
+glove_vectors = gensim.downloader.load('glove-wiki-gigaword-50')
+```
+`glove_vectors` will also be a `KeyedVectors` object.
+
+# Working with vectors
+
+What can one do with these vectors?
+
+## Similarity
+```{python}
+model.wv.most_similar('trees', topn=10)
+```
+Between two words:
+```{python}
+model.wv.similarity('trees', 'graph')
+```
+
+Odd ones:
+```{python}
+model.wv.doesnt_match(['minors', 'human', 'interface'])
+```
+
+## Distance
+Between words:
+```{python}
+model.wv.distance('trees', 'graph')
+```
+Between documents:
+```{python}
+model.wv.wmdistance(['trees'], ['graph'])
+```
+
+# Exercises
+**Task 0**. Train your word2vec model on an multi-document (for example) NLTK corpus.
+
+  - don't forget to preprocess tokens first (lemmatization etc.)
+
+**Task 1**. Practice using similarity/distance.
+
+**Task 2**. Visualize document distances on a plot.
+
+# Recommended reading 
+
+- Gensim Word2vec documentation: https://radimrehurek.com/gensim/models/word2vec.html
+- KeyedVectors docs: https://radimrehurek.com/gensim/models/keyedvectors.html
