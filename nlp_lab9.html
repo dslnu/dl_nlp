@@ -1,0 +1,885 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.6.43">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>NLP: Lab 9 (doc2vec) – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body class="nav-fixed">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="./index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="./about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#doc2vec" id="toc-doc2vec" class="nav-link active" data-scroll-target="#doc2vec">doc2vec</a>
+  <ul class="collapse">
+  <li><a href="#distributed-memory" id="toc-distributed-memory" class="nav-link" data-scroll-target="#distributed-memory">Distributed Memory</a></li>
+  <li><a href="#distributed-bag-of-words" id="toc-distributed-bag-of-words" class="nav-link" data-scroll-target="#distributed-bag-of-words">Distributed Bag-of-Words</a></li>
+  <li><a href="#code-example" id="toc-code-example" class="nav-link" data-scroll-target="#code-example">Code example</a>
+  <ul class="collapse">
+  <li><a href="#open-traintest-files" id="toc-open-traintest-files" class="nav-link" data-scroll-target="#open-traintest-files">Open train/test files</a></li>
+  <li><a href="#preprocessing" id="toc-preprocessing" class="nav-link" data-scroll-target="#preprocessing">Preprocessing</a></li>
+  <li><a href="#create-a-model" id="toc-create-a-model" class="nav-link" data-scroll-target="#create-a-model">Create a model</a></li>
+  <li><a href="#build-a-vocabulary" id="toc-build-a-vocabulary" class="nav-link" data-scroll-target="#build-a-vocabulary">Build a vocabulary</a></li>
+  <li><a href="#train-a-model" id="toc-train-a-model" class="nav-link" data-scroll-target="#train-a-model">Train a model</a></li>
+  <li><a href="#use-a-model" id="toc-use-a-model" class="nav-link" data-scroll-target="#use-a-model">Use a model</a></li>
+  <li><a href="#test-the-model" id="toc-test-the-model" class="nav-link" data-scroll-target="#test-the-model">Test the model</a></li>
+  </ul></li>
+  </ul></li>
+  <li><a href="#exercises" id="toc-exercises" class="nav-link" data-scroll-target="#exercises">Exercises</a>
+  <ul class="collapse">
+  <li><a href="#using-parquet-files" id="toc-using-parquet-files" class="nav-link" data-scroll-target="#using-parquet-files">Using parquet files</a></li>
+  <li><a href="#dataset-examples" id="toc-dataset-examples" class="nav-link" data-scroll-target="#dataset-examples">Dataset examples</a></li>
+  </ul></li>
+  <li><a href="#recommended-reading" id="toc-recommended-reading" class="nav-link" data-scroll-target="#recommended-reading">Recommended reading</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">NLP: Lab 9 (doc2vec)</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="doc2vec" class="level1">
+<h1>doc2vec</h1>
+<p>What is it? An extension to word2vec for <strong>document embeddings</strong>.</p>
+<p>There are two variants: <strong>Distributed Memory</strong> and <strong>Distributed Bag-of-Words</strong>.</p>
+<section id="distributed-memory" class="level2">
+<h2 class="anchored" data-anchor-id="distributed-memory">Distributed Memory</h2>
+<p>Learns a fixed-length vector representation for each piece of text data (such as a sentence, paragraph, or document) by taking into account the context in which it appears.</p>
+<p>There are two types of <strong>inputs</strong>:</p>
+<ul>
+<li><strong>context words</strong>: used to predict a target word</li>
+<li><strong>unique document ID</strong>: used to capture the overall meaning of the document</li>
+</ul>
+<p>And two main <strong>components</strong>:</p>
+<ul>
+<li>the <strong>projection layer</strong>: creates the word vectors and document vectors</li>
+<li>the <strong>output layer</strong>: takes the distributed representation of the context and predicts the target word</li>
+</ul>
+</section>
+<section id="distributed-bag-of-words" class="level2">
+<h2 class="anchored" data-anchor-id="distributed-bag-of-words">Distributed Bag-of-Words</h2>
+<p>Focuses on understanding how words are distributed in a text, rather than their meaning.</p>
+<div class="callout callout-style-default callout-warning no-icon callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon no-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Differences to DM
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>no separate word vectors: the algorithm takes in a document and learns to predict the probability of each word in the document given only the document vector</li>
+<li>the model does not take into account the order of the words in the document, treating the document as a bag-of-words. This makes the DBOW architecture faster to train than DM, but potentially less powerful in capturing the meaning of the documents.</li>
+<li>useful for capturing distributional properties of words in a corpus</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="code-example" class="level2">
+<h2 class="anchored" data-anchor-id="code-example">Code example</h2>
+<p>Let’s use Gensim’s Lee corpus. First check if you have numerical libraries working:</p>
+<div id="682be8a3" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> gensim.models.doc2vec.FAST_VERSION <span class="op">&gt;</span> <span class="op">-</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="open-traintest-files" class="level3">
+<h3 class="anchored" data-anchor-id="open-traintest-files">Open train/test files</h3>
+<div id="37f731c1" class="cell" data-execution_count="3">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.test.utils</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Set file names for train and test data</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>lee_train_file <span class="op">=</span> gensim.test.utils.datapath(<span class="st">'lee_background.cor'</span>)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>lee_test_file <span class="op">=</span> gensim.test.utils.datapath(<span class="st">'lee.cor'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="preprocessing" class="level3">
+<h3 class="anchored" data-anchor-id="preprocessing">Preprocessing</h3>
+<div id="d3fecde2" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> smart_open</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_corpus(fname, tokens_only<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> smart_open.<span class="bu">open</span>(fname, encoding<span class="op">=</span><span class="st">"iso-8859-1"</span>) <span class="im">as</span> f:</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> i, line <span class="kw">in</span> <span class="bu">enumerate</span>(f):</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>            tokens <span class="op">=</span> gensim.utils.simple_preprocess(line)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> tokens_only:</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                <span class="cf">yield</span> tokens</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">else</span>:</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                <span class="co"># For training data, add tags</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                <span class="cf">yield</span> gensim.models.doc2vec.TaggedDocument(tokens, [i])</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>train_corpus <span class="op">=</span> <span class="bu">list</span>(read_corpus(lee_train_file))</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>test_corpus <span class="op">=</span> <span class="bu">list</span>(read_corpus(lee_test_file, tokens_only<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(train_corpus[<span class="dv">2</span>])</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(test_corpus[<span class="dv">2</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>TaggedDocument&lt;['the', 'national', 'road', 'toll', 'for', 'the', 'christmas', 'new', 'year', 'holiday', 'period', 'stands', 'at', 'eight', 'fewer', 'than', 'for', 'the', 'same', 'time', 'last', 'year', 'people', 'have', 'died', 'on', 'new', 'south', 'wales', 'roads', 'with', 'eight', 'fatalities', 'in', 'both', 'queensland', 'and', 'victoria', 'western', 'australia', 'the', 'northern', 'territory', 'and', 'south', 'australia', 'have', 'each', 'recorded', 'three', 'deaths', 'while', 'the', 'act', 'and', 'tasmania', 'remain', 'fatality', 'free'], [2]&gt;
+['the', 'united', 'states', 'government', 'has', 'said', 'it', 'wants', 'to', 'see', 'president', 'robert', 'mugabe', 'removed', 'from', 'power', 'and', 'that', 'it', 'is', 'working', 'with', 'the', 'zimbabwean', 'opposition', 'to', 'bring', 'about', 'change', 'of', 'administration', 'as', 'scores', 'of', 'white', 'farmers', 'went', 'into', 'hiding', 'to', 'escape', 'round', 'up', 'by', 'zimbabwean', 'police', 'senior', 'bush', 'administration', 'official', 'called', 'mr', 'mugabe', 'rule', 'illegitimate', 'and', 'irrational', 'and', 'said', 'that', 'his', 're', 'election', 'as', 'president', 'in', 'march', 'was', 'won', 'through', 'fraud', 'walter', 'kansteiner', 'the', 'assistant', 'secretary', 'of', 'state', 'for', 'african', 'affairs', 'went', 'on', 'to', 'blame', 'mr', 'mugabe', 'policies', 'for', 'contributing', 'to', 'the', 'threat', 'of', 'famine', 'in', 'zimbabwe']</code></pre>
+</div>
+</div>
+<p>So, train corpus contains <code>TaggedDocument</code>s which contain a list of words and a tag (we used just a simple integer).</p>
+<p>Test corpus contains lists of words only and no tags.</p>
+</section>
+<section id="create-a-model" class="level3">
+<h3 class="anchored" data-anchor-id="create-a-model">Create a model</h3>
+<div id="a689328b" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.models</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> gensim.models.doc2vec.Doc2Vec(vector_size<span class="op">=</span><span class="dv">50</span>, min_count<span class="op">=</span><span class="dv">2</span>, epochs<span class="op">=</span><span class="dv">40</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Here <code>min_count</code> stands for minimum number of occurrences for a word to be retained in the resulting embeddings set.</p>
+</section>
+<section id="build-a-vocabulary" class="level3">
+<h3 class="anchored" data-anchor-id="build-a-vocabulary">Build a vocabulary</h3>
+<div id="018c30f0" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.build_vocab(train_corpus)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Vocabulary is accessible via <code>model.wv</code>.</p>
+</section>
+<section id="train-a-model" class="level3">
+<h3 class="anchored" data-anchor-id="train-a-model">Train a model</h3>
+<div id="141bed41" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>model.train(train_corpus, total_examples<span class="op">=</span>model.corpus_count, epochs<span class="op">=</span>model.epochs)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Generated document vectors will be contained in <code>model.dv</code>.</p>
+<div id="5e40f6c6" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>model.dv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<pre><code>&lt;gensim.models.keyedvectors.KeyedVectors at 0x177efe960&gt;</code></pre>
+</div>
+</div>
+</section>
+<section id="use-a-model" class="level3">
+<h3 class="anchored" data-anchor-id="use-a-model">Use a model</h3>
+<p>Now, we can use the trained model to infer a vector for any piece of text by passing a list of words to the <code>model.infer_vector</code> function.</p>
+<p>This vector can then be compared with other vectors via cosine similarity.</p>
+<div id="a3592b8c" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>vector <span class="op">=</span> model.infer_vector([<span class="st">'only'</span>, <span class="st">'you'</span>, <span class="st">'can'</span>, <span class="st">'prevent'</span>, <span class="st">'forest'</span>, <span class="st">'fires'</span>])</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(vector)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[-0.11410969 -0.36130446 -0.10809141  0.18354002  0.02425136 -0.0160837
+  0.04798935 -0.0150411  -0.2253333  -0.15338649  0.16088457  0.01734591
+  0.11485602 -0.02333582 -0.08442167 -0.10905246  0.08623002  0.30984423
+  0.10422983 -0.14071268  0.01571192 -0.06974691  0.15832673  0.00897413
+ -0.01059318 -0.06641291 -0.2322331  -0.00829986 -0.21408382 -0.0575647
+  0.46765783  0.0352442   0.19045384  0.11350349  0.2553538   0.15355816
+ -0.13370405 -0.27000526 -0.04545086  0.01119181 -0.02395503  0.04603954
+ -0.06474479 -0.159902    0.14529307  0.07847077 -0.12114305 -0.19306047
+  0.14035448 -0.02129764]</code></pre>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>infer_vector()</code> does not take a string, but rather a list of string tokens, which should have already been tokenized the same way as the words property of original training document objects.</li>
+<li>as the underlying training/inference algorithms are an iterative approximation problem that makes use of internal randomization, repeated inferences of the same text will return <strong>slightly different vectors</strong>.</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="test-the-model" class="level3">
+<h3 class="anchored" data-anchor-id="test-the-model">Test the model</h3>
+<p>First we can try inferring vectors from the train dataset. Afterwards, we’ll find most similar vectors to the ones inferred before:</p>
+<div id="966d6fd4" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ranks <span class="op">=</span> []</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>second_ranks <span class="op">=</span> []</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> doc_id <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(train_corpus)):</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    inferred_vector <span class="op">=</span> model.infer_vector(train_corpus[doc_id].words)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    sims <span class="op">=</span> model.dv.most_similar([inferred_vector], topn<span class="op">=</span><span class="bu">len</span>(model.dv))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    rank <span class="op">=</span> [docid <span class="cf">for</span> docid, sim <span class="kw">in</span> sims].index(doc_id)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    ranks.append(rank)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    second_ranks.append(sims[<span class="dv">1</span>])</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> collections</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>counter <span class="op">=</span> collections.Counter(ranks)</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(counter)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Counter({0: 293, 1: 7})</code></pre>
+</div>
+</div>
+<p>Now we can pick some document from the test dataset and check the inference:</p>
+<div id="9b4ce59a" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Pick a random document from the test corpus and infer a vector from the model</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>doc_id <span class="op">=</span> random.randint(<span class="dv">0</span>, <span class="bu">len</span>(test_corpus) <span class="op">-</span> <span class="dv">1</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>inferred_vector <span class="op">=</span> model.infer_vector(test_corpus[doc_id])</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>sims <span class="op">=</span> model.dv.most_similar([inferred_vector], topn<span class="op">=</span><span class="bu">len</span>(model.dv))</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Compare and print the most/median/least similar documents from the train corpus</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">'Test Document (</span><span class="sc">{}</span><span class="st">): «</span><span class="sc">{}</span><span class="st">»</span><span class="ch">\n</span><span class="st">'</span>.<span class="bu">format</span>(doc_id, <span class="st">' '</span>.join(test_corpus[doc_id])))</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">u'SIMILAR/DISSIMILAR DOCS PER MODEL </span><span class="sc">%s</span><span class="st">:</span><span class="ch">\n</span><span class="st">'</span> <span class="op">%</span> model)</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> label, index <span class="kw">in</span> [(<span class="st">'MOST'</span>, <span class="dv">0</span>), (<span class="st">'MEDIAN'</span>, <span class="bu">len</span>(sims)<span class="op">//</span><span class="dv">2</span>), (<span class="st">'LEAST'</span>, <span class="bu">len</span>(sims) <span class="op">-</span> <span class="dv">1</span>)]:</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">u'</span><span class="sc">%s</span><span class="st"> </span><span class="sc">%s</span><span class="st">: «</span><span class="sc">%s</span><span class="st">»</span><span class="ch">\n</span><span class="st">'</span> <span class="op">%</span> (label, sims[index], <span class="st">' '</span>.join(train_corpus[sims[index][<span class="dv">0</span>]].words)))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Test Document (40): «researchers conducting the most elaborate wild goose chase in history are digesting the news that bird they have tracked for over miles is about to be cooked kerry an irish light bellied brent goose was one of six birds tagged in northern ireland in may by researchers monitoring the species remarkable migration last week however he was found dead in an inuit hunter freezer in canada still wearing his satelite tracking device kerry was discovered by researchers on the remote cornwallis island they picked up the signal and decided to try to find him»
+
+SIMILAR/DISSIMILAR DOCS PER MODEL Doc2Vec&lt;dm/m,d50,n5,w5,mc2,s0.001,t3&gt;:
+
+MOST (188, 0.7445157170295715): «one person has died after royal flying doctor service rfds aircraft crashed near the city of mt gambier in south australia south east last night the rfds says beech aircraft apparently came down just before midnight acdt in an area called dismal swamp about kilometres north of mt gambier the aircraft with two crew members on board had come from port augusta to mt gambier to fly six year old boy to sydney for medical treatment however spokesman for the rfds says no passenger was aboard the plane at the time one of the crew is believed to have died from injuries and the other is believed to be not as badly hurt no other details have been released and police have sealed off the crash site officers from the bureau of air safety investigation will head to the scene today to determine the cause of the crash»
+
+MEDIAN (160, 0.3469880223274231): «french moroccan man has been charged in the united states with conspiracy in the terrorist attacks of september it is the first indictment directly related to the suicide hijackings news of the charge came as president george bush delivered major foreign policy speech zaccarias moussaoui sought flying lessons month before the hijackings attorney general john ashcroft claims he was an active participant in the attacks moussaoui is charged with undergoing the same training receiving the same funding and pledging the same commitment to kill americans as the hijackers he said three months to the day since the attacks and president bush says missile defence is now more essential than ever before we must protect america and our friends against all forms of terror including the terror that could arrive on missile he said president bush says the united states now needs dramatically retooled military armed with hi tech weapons and real time intelligence»
+
+LEAST (151, -0.054664094001054764): «senior construction forestry mining and energy union cfmeu officials giving evidence at the royal commission into the building industry have been overwhelmed by support from union members about construction workers have walked off the job for the third day to demonstrate outside the commission venue mounted police escorted the protesters from melbourne city square to collins place morning traffic ground to halt at the intersection of russell and collins streets when the crowd stopped to chant union slogans cfmeu victorian secretary martin kingham says he has been astounded by the strong support shown by union members on each day of the hearings he maintains the union has been treated unfairly as it faces allegations of intimidation and using standover tactics on work sites mr kingham is currently giving evidence before the commission it is the last day of hearings before the christmas break the labor leader simon crean says senior labor figures bob hawke and neville wran will be used to help modernise the party labor national executive is meeting in canberra mr crean will put his views on the changes labor needs to make the executive is expected to ask mr hawke and mr wran to oversee the process mr crean says they know what needs to be done bob hawke and neville wran understood the importance of modernising the party and that why they were successful leaders of the country sure we don need to teach them to suck eggs what want them to do is to give us guidance as to how we can bring the new approach to labor in to enable us to properly present and gain the confidence of the majority of the australian people the opposition leader said»
+</code></pre>
+</div>
+</div>
+</section>
+</section>
+</section>
+<section id="exercises" class="level1">
+<h1>Exercises</h1>
+<p><strong>Task 0</strong>. Train your own doc2vec model on a test dataset. Most of the example files use Parquet file format. A short guide below.</p>
+<section id="using-parquet-files" class="level2">
+<h2 class="anchored" data-anchor-id="using-parquet-files">Using parquet files</h2>
+<p>First, install <code>fastparquet</code> library:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>pip install fastparquet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>Then read <code>file.parquet</code> into Pandas DataFrame via:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>pd.read_parquet(<span class="bu">file</span>.parquet)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</section>
+<section id="dataset-examples" class="level2">
+<h2 class="anchored" data-anchor-id="dataset-examples">Dataset examples</h2>
+<ul>
+<li><a href="https://huggingface.co/datasets/immortalizzy/reddit_dataset_197" class="uri">https://huggingface.co/datasets/immortalizzy/reddit_dataset_197</a> (Reddit posts)</li>
+<li><a href="https://huggingface.co/datasets/fancyzhx/ag_news" class="uri">https://huggingface.co/datasets/fancyzhx/ag_news</a> (News articles)</li>
+<li><a href="https://huggingface.co/datasets/arrmlet/x_dataset_218" class="uri">https://huggingface.co/datasets/arrmlet/x_dataset_218</a> (X posts)</li>
+<li><a href="https://huggingface.co/datasets/stanfordnlp/imdb" class="uri">https://huggingface.co/datasets/stanfordnlp/imdb</a> (IMDB reviews)</li>
+<li><a href="https://huggingface.co/datasets/wikimedia/wikipedia" class="uri">https://huggingface.co/datasets/wikimedia/wikipedia</a> (Wikipedia articles)</li>
+<li><a href="https://huggingface.co/datasets/CShorten/ML-ArXiv-Papers" class="uri">https://huggingface.co/datasets/CShorten/ML-ArXiv-Papers</a> (ArXiv papers)</li>
+<li><a href="https://huggingface.co/datasets/ccdv/arxiv-classification" class="uri">https://huggingface.co/datasets/ccdv/arxiv-classification</a> (ArXiv papers)</li>
+<li><a href="https://huggingface.co/datasets/gfissore/arxiv-abstracts-2021" class="uri">https://huggingface.co/datasets/gfissore/arxiv-abstracts-2021</a> (ArXiv papers)</li>
+</ul>
+<p><strong>Task 1.</strong> Practice finding similar documents/articles/posts. Assess validity of the model.</p>
+</section>
+</section>
+<section id="recommended-reading" class="level1">
+<h1>Recommended reading</h1>
+<ul>
+<li>Gensim doc2vec documentation: <a href="https://radimrehurek.com/gensim/models/doc2vec.html" class="uri">https://radimrehurek.com/gensim/models/doc2vec.html</a></li>
+<li>KeyedVectors docs: https://radimrehurek.com/gensim/models/keyedvectors.html</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const onCopySuccess = function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  }
+  const getTextToCopy = function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+    text: getTextToCopy
+  });
+  clipboard.on('success', onCopySuccess);
+  if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+    const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+      text: getTextToCopy,
+      container: window.document.getElementById('quarto-embedded-source-code-modal')
+    });
+    clipboardModal.on('success', onCopySuccess);
+  }
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.42">
+<meta name="generator" content="quarto-1.6.43">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-2f5df379a58b258e96c21c0638c20c03.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-6bd9cfa162949bde0a231f530c97869d.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -158,21 +158,127 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<div id="c933b24a-5d19-4320-9ea2-77935c53fc73" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nltk.corpus.genesis</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="3">
-<pre><code>&lt;PlaintextCorpusReader in '/Users/vitvly/nltk_data/corpora/genesis'&gt;</code></pre>
+<div id="af4747f3-4bbd-4ea5-9456-64cc1fed0803" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.test.utils</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="7febf5f4-e757-49c8-bba1-f562dcdf70c3" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>gensim.test.utils.datapath(<span class="st">'lee_background.cor'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="5">
+<pre><code>'/Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages/gensim/test/test_data/lee_background.cor'</code></pre>
 </div>
 </div>
-<div id="a701dec9-ff3d-45d0-823d-3e2df5d9baaf" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>l <span class="op">=</span> nltk.corpus.genesis.sents()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="1bb7e5c8-52a7-4d36-a9c3-a065f2e04782" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> scipy</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>scipy.show_config()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Build Dependencies:
+  blas:
+    detection method: pkgconfig
+    found: true
+    include directory: /opt/arm64-builds/include
+    lib directory: /opt/arm64-builds/lib
+    name: openblas
+    openblas configuration: USE_64BITINT=0 DYNAMIC_ARCH=1 DYNAMIC_OLDER= NO_CBLAS=
+      NO_LAPACK= NO_LAPACKE= NO_AFFINITY=1 USE_OPENMP= SANDYBRIDGE MAX_THREADS=64
+    pc file directory: /opt/arm64-builds/lib/pkgconfig
+    version: 0.3.27
+  lapack:
+    detection method: pkgconfig
+    found: true
+    include directory: /opt/arm64-builds/include
+    lib directory: /opt/arm64-builds/lib
+    name: openblas
+    openblas configuration: USE_64BITINT=0 DYNAMIC_ARCH=1 DYNAMIC_OLDER= NO_CBLAS=
+      NO_LAPACK= NO_LAPACKE= NO_AFFINITY=1 USE_OPENMP= SANDYBRIDGE MAX_THREADS=64
+    pc file directory: /opt/arm64-builds/lib/pkgconfig
+    version: 0.3.27
+  pybind11:
+    detection method: config-tool
+    include directory: unknown
+    name: pybind11
+    version: 2.12.0
+Compilers:
+  c:
+    commands: cc
+    linker: ld64
+    name: clang
+    version: 15.0.0
+  c++:
+    commands: c++
+    linker: ld64
+    name: clang
+    version: 15.0.0
+  cython:
+    commands: cython
+    linker: cython
+    name: cython
+    version: 3.0.10
+  fortran:
+    commands: gfortran
+    linker: ld64
+    name: gcc
+    version: 12.1.0
+  pythran:
+    include directory: ../../../../../../private/var/folders/2f/8t5k6yr535sdw0s4glnpxrzm0000gn/T/pip-build-env-f5fuy4wl/overlay/lib/python3.12/site-packages/pythran
+    version: 0.15.0
+Machine Information:
+  build:
+    cpu: aarch64
+    endian: little
+    family: aarch64
+    system: darwin
+  cross-compiled: false
+  host:
+    cpu: aarch64
+    endian: little
+    family: aarch64
+    system: darwin
+Python Information:
+  path: /private/var/folders/2f/8t5k6yr535sdw0s4glnpxrzm0000gn/T/cibw-run-zw3urd53/cp312-macosx_arm64/build/venv/bin/python
+  version: '3.12'
+</code></pre>
 </div>
-<div id="f7dd6de0-7592-4ce2-8155-a8d170362b0c" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="bu">len</span>(l)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="20">
-<pre><code>13640</code></pre>
+</div>
+<div id="696e8e81-036c-4d77-8536-a127994c83f1" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">assert</span> gensim.models.doc2vec.FAST_VERSION <span class="op">&gt;</span> <span class="op">-</span><span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="026020c5-227d-4bb1-838a-2b6d0ec78136" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>pip install fastparquet</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Collecting fastparquet
+  Downloading fastparquet-2024.11.0-cp312-cp312-macosx_11_0_arm64.whl.metadata (4.2 kB)
+Requirement already satisfied: pandas&gt;=1.5.0 in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from fastparquet) (2.2.3)
+Requirement already satisfied: numpy in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from fastparquet) (1.26.4)
+Collecting cramjam&gt;=2.3 (from fastparquet)
+  Downloading cramjam-2.9.1-cp312-cp312-macosx_11_0_arm64.whl.metadata (4.9 kB)
+Requirement already satisfied: fsspec in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from fastparquet) (2025.3.2)
+Requirement already satisfied: packaging in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from fastparquet) (24.2)
+Requirement already satisfied: python-dateutil&gt;=2.8.2 in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from pandas&gt;=1.5.0-&gt;fastparquet) (2.9.0.post0)
+Requirement already satisfied: pytz&gt;=2020.1 in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from pandas&gt;=1.5.0-&gt;fastparquet) (2025.1)
+Requirement already satisfied: tzdata&gt;=2022.7 in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from pandas&gt;=1.5.0-&gt;fastparquet) (2025.1)
+Requirement already satisfied: six&gt;=1.5 in /Users/vitvly/c/lnu/md/dl_nlp/venv/lib/python3.12/site-packages (from python-dateutil&gt;=2.8.2-&gt;pandas&gt;=1.5.0-&gt;fastparquet) (1.17.0)
+Downloading fastparquet-2024.11.0-cp312-cp312-macosx_11_0_arm64.whl (685 kB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 685.4/685.4 kB 5.3 MB/s eta 0:00:00
+Downloading cramjam-2.9.1-cp312-cp312-macosx_11_0_arm64.whl (1.9 MB)
+   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.9/1.9 MB 6.6 MB/s eta 0:00:00a 0:00:01
+Installing collected packages: cramjam, fastparquet
+Successfully installed cramjam-2.9.1 fastparquet-2024.11.0
+
+[notice] A new release of pip is available: 25.0 -&gt; 25.0.1
+[notice] To update, run: pip install --upgrade pip</code></pre>
+</div>
+</div>
+<div id="cef64715-0c94-4ccc-83f5-a85716b65435" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> pd.read_parquet(<span class="st">"../x_128.parquet"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="86ce48a9-d07f-4ab4-97b5-608b9467e60a" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> base64</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>base64.standard_b64decode(data.iloc[<span class="dv">0</span>].username_encoded)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="22">
+<pre><code>b'gAAAAABm8bIbGJOYWHzluGXFm_O1y3gPrmzM7EiP8oEOBAu_XesxdCSwcMBxFaFH5-fXmCNwI9PDuisiKFkRFrs1iL93L83me04B2Tyq8DWzxJTIYVpndQA='</code></pre>
 </div>
 </div>
 
