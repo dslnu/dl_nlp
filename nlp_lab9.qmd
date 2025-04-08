@@ -1,0 +1,205 @@
+---
+title: "NLP: Lab 9 (doc2vec)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+# doc2vec
+
+What is it? An extension to word2vec for **document embeddings**.
+
+There are two variants: **Distributed Memory** and **Distributed Bag-of-Words**.
+
+## Distributed Memory
+
+Learns a fixed-length vector representation for each piece of text data (such as a sentence, paragraph, or document) by taking into account the context in which it appears.
+
+There are two types of **inputs**:
+
+- **context words**: used to predict a target word
+- **unique document ID**: used to capture the overall meaning of the document
+
+And two main **components**:
+
+- the **projection layer**: creates the word vectors and document vectors
+- the **output layer**: takes the distributed representation of the context and predicts the target word
+
+## Distributed Bag-of-Words
+Focuses on understanding how words are distributed in a text, rather than their meaning.
+
+:::{.callout-warning icon=false}
+## Differences to DM
+
+- no separate word vectors:  the algorithm takes in a document and learns to predict the probability of each word in the document given only the document vector 
+- the model does not take into account the order of the words in the document, treating the document as a bag-of-words. This makes the DBOW architecture faster to train than DM, but potentially less powerful in capturing the meaning of the documents.
+- useful for capturing distributional properties of words in a corpus
+:::
+
+## Code example
+Let's use Gensim's Lee corpus. First check if you have numerical libraries working:
+```{python}
+import gensim
+
+assert gensim.models.doc2vec.FAST_VERSION > -1
+```
+
+### Open train/test files
+```{python}
+import gensim
+import gensim.test.utils
+
+# Set file names for train and test data
+lee_train_file = gensim.test.utils.datapath('lee_background.cor')
+lee_test_file = gensim.test.utils.datapath('lee.cor')
+```
+
+### Preprocessing
+```{python}
+import smart_open
+
+def read_corpus(fname, tokens_only=False):
+    with smart_open.open(fname, encoding="iso-8859-1") as f:
+        for i, line in enumerate(f):
+            tokens = gensim.utils.simple_preprocess(line)
+            if tokens_only:
+                yield tokens
+            else:
+                # For training data, add tags
+                yield gensim.models.doc2vec.TaggedDocument(tokens, [i])
+
+train_corpus = list(read_corpus(lee_train_file))
+test_corpus = list(read_corpus(lee_test_file, tokens_only=True))
+
+print(train_corpus[2])
+print(test_corpus[2])
+
+```
+So, train corpus contains `TaggedDocument`s which contain a list of words and a tag (we used just a simple integer). 
+
+Test corpus contains lists of words only and no tags.
+
+### Create a model
+
+```{python}
+import gensim.models
+
+model = gensim.models.doc2vec.Doc2Vec(vector_size=50, min_count=2, epochs=40)
+```
+Here `min_count` stands for minimum number of occurrences for a word to be retained in the resulting embeddings set.
+
+### Build a vocabulary
+```{python}
+model.build_vocab(train_corpus)
+```
+Vocabulary is accessible via `model.wv`.
+
+### Train a model
+
+```{python}
+model.train(train_corpus, total_examples=model.corpus_count, epochs=model.epochs)
+```
+Generated document vectors will be contained in `model.dv`.
+
+```{python}
+model.dv
+```
+### Use a model
+Now, we can use the trained model to infer a vector for any piece of text by passing a list of words to the `model.infer_vector` function.
+
+This vector can then be compared with other vectors via cosine similarity.
+
+```{python}
+vector = model.infer_vector(['only', 'you', 'can', 'prevent', 'forest', 'fires'])
+print(vector)
+```
+:::{.callout-note}
+
+- `infer_vector()` does not take a string, but rather a list of string tokens, which should have already been tokenized the same way as the words property of original training document objects.
+- as the underlying training/inference algorithms are an iterative approximation problem that makes use of internal randomization, repeated inferences of the same text will return **slightly different vectors**.
+:::
+
+### Test the model
+
+First we can try inferring vectors from the train dataset. Afterwards, we'll find most similar vectors to the ones inferred before:
+
+```{python}
+ranks = []
+second_ranks = []
+for doc_id in range(len(train_corpus)):
+    inferred_vector = model.infer_vector(train_corpus[doc_id].words)
+    sims = model.dv.most_similar([inferred_vector], topn=len(model.dv))
+    rank = [docid for docid, sim in sims].index(doc_id)
+    ranks.append(rank)
+
+    second_ranks.append(sims[1])
+
+import collections
+
+counter = collections.Counter(ranks)
+print(counter)
+```
+
+Now we can pick some document from the test dataset and check the inference:
+```{python}
+import random
+
+# Pick a random document from the test corpus and infer a vector from the model
+doc_id = random.randint(0, len(test_corpus) - 1)
+inferred_vector = model.infer_vector(test_corpus[doc_id])
+sims = model.dv.most_similar([inferred_vector], topn=len(model.dv))
+
+# Compare and print the most/median/least similar documents from the train corpus
+print('Test Document ({}): «{}»\n'.format(doc_id, ' '.join(test_corpus[doc_id])))
+print(u'SIMILAR/DISSIMILAR DOCS PER MODEL %s:\n' % model)
+for label, index in [('MOST', 0), ('MEDIAN', len(sims)//2), ('LEAST', len(sims) - 1)]:
+    print(u'%s %s: «%s»\n' % (label, sims[index], ' '.join(train_corpus[sims[index][0]].words)))
+
+```
+
+# Exercises
+
+**Task 0**. Train your own doc2vec model on a test dataset. Most of the example files use Parquet file format. A short guide below.
+
+## Using parquet files
+First, install `fastparquet` library:
+```python
+pip install fastparquet
+```
+
+Then read `file.parquet` into Pandas DataFrame via:
+
+```python
+import pandas as pd
+pd.read_parquet(file.parquet)
+```
+
+## Dataset examples
+
+- <https://huggingface.co/datasets/immortalizzy/reddit_dataset_197> (Reddit posts)
+- <https://huggingface.co/datasets/fancyzhx/ag_news> (News articles)
+- <https://huggingface.co/datasets/arrmlet/x_dataset_218> (X posts)
+- <https://huggingface.co/datasets/stanfordnlp/imdb> (IMDB reviews)
+- <https://huggingface.co/datasets/wikimedia/wikipedia> (Wikipedia articles)
+- <https://huggingface.co/datasets/CShorten/ML-ArXiv-Papers> (ArXiv papers)
+- <https://huggingface.co/datasets/ccdv/arxiv-classification> (ArXiv papers)
+- <https://huggingface.co/datasets/gfissore/arxiv-abstracts-2021> (ArXiv papers)
+
+**Task 1.** Practice finding similar documents/articles/posts. Assess validity of the model.
+
+# Recommended reading 
+
+- Gensim doc2vec documentation: <https://radimrehurek.com/gensim/models/doc2vec.html>
+- KeyedVectors docs: https://radimrehurek.com/gensim/models/keyedvectors.html

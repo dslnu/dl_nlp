@@ -40,9 +40,25 @@ format:
 ---
 
 ## Overview
-In this tutorial, we will review techniques for optimization and initialization of neural networks. When increasing the depth of neural networks, there are various challenges we face. Most importantly, we need to have a stable gradient flow through the network, as otherwise, we might encounter vanishing or exploding gradients. This is why we will take a closer look at the following concepts: initialization and optimization.
 
-In the first half of the notebook, we will review different initialization techniques, and go step by step from the simplest initialization to methods that are nowadays used in very deep networks. In the second half, we focus on optimization comparing the optimizers SGD, SGD with Momentum, and Adam.
+:::{.callout-important icon=false}
+## Challenges
+
+  - ensuring stable gradient flow
+  - avoiding exploding/vanishing gradients
+:::
+
+:::{.callout-tip icon=false}
+## Plan
+
+- **Initialization**: review different techniques, go from simple to complex ones
+  - constant/Gaussian
+  - Xavier/Kaiming
+- **Optimization**: 
+  - Stochastic Gradient Descent (SGD)
+  - SGD with Momentum
+  - Adam
+:::
 
 ## Imports
 
@@ -161,8 +177,11 @@ test_loader = data.DataLoader(test_set, batch_size=1024, shuffle=False, drop_las
 
 ## Transformation
 
-:::{.callout-tip icon=false}
-In comparison to the previous tutorial, we have changed the parameters of the normalization transformation `transforms.Normalize`. The normalization is now designed to give us an expected mean of 0 and a standard deviation of 1 across pixels. This will be particularly relevant for the discussion about initialization we will look at below, and hence we change it here. It should be noted that in most classification tasks, both normalization techniques (between -1 and 1 or mean 0 and stddev 1) have shown to work well.
+:::{.callout-note}
+We have changed the parameters of the normalization transformation `transforms.Normalize`:
+
+> the normalization is now designed to give us an expected mean of 0 and a standard deviation of 1 across pixels
+
 We can calculate the normalization parameters by determining the mean and standard deviation on the original images:
 
 
@@ -174,7 +193,7 @@ print("Std", (train_dataset.data.float() / 255.0).std().item())
 
 ## Transformation
 
-:::{.callout-note icon=false}
+:::{.callout-tip icon=false}
 ## Verification
 
 ```{python}
@@ -392,8 +411,12 @@ visualize_activations(model, print_variance=True)
 
 - only the first and the last layer have diverse gradient distributions
 - the other three layers have the same gradient for all weights (note that this value is unequal 0, but often very close to it).
+:::
+
+:::{.callout-important}
+
 - having the same gradient for parameters that have been initialized with the same values means that we will always have the same value for those parameters.
-- this would make our layer useless and reduce our effective number of parameters to 1.
+- this would make our layer useless and effectively reduce number of parameters to 1.
 :::
 
 ## Initialization {.scrollable}
@@ -410,7 +433,7 @@ visualize_activations(model, print_variance=True)
 ```
 :::
 ::: aside
-The variance of the activation becomes smaller and smaller across layers, and almost vanishes in the last layer.
+The variance of the activation becomes smaller and smaller across layers, and almost **vanishes** in the last layer.
 :::
 
 ## Initialization {.scrollable}
@@ -423,7 +446,7 @@ visualize_activations(model, print_variance=True)
 ```
 :::
 ::: aside
-With a higher standard deviation, the activations are likely to explode.
+With a higher standard deviation, the activations are likely to **explode.**
 :::
 
 ## Initialization
@@ -471,13 +494,14 @@ $$
 <!-- The needed variance of the weights, $\text{Var}(w_{ij})$, is calculated as follows: -->
 $$
 \begin{split}
-    y_i & = \sum_{j} w_{ij}x_{j}\hspace{10mm}\text{Calculation of a single output neuron without bias}\\
-    \text{Var}(y_i) = \sigma_x^{2} & = \text{Var}\left(\sum_{j} w_{ij}x_{j}\right)\\
+    &y_i  = \sum_{j} w_{ij}x_{j}\hspace{10mm}\text{Calculation of a single output neuron without bias}\\
+    &\text{Var}(y_i) = \sigma_x^{2}   \\
+    &= \text{Var}\left(\sum_{j} w_{ij}x_{j}\right)\\
     & = \sum_{j} \text{Var}(w_{ij}x_{j}) \hspace{10mm}\text{Inputs and weights are independent of each other}\\
     & = \sum_{j} \text{Var}(w_{ij})\cdot\text{Var}(x_{j}) \hspace{10mm}\text{Variance rule (see above) with expectations being zero}\\
     & = d_x \cdot \text{Var}(w_{ij})\cdot\text{Var}(x_{j}) \hspace{10mm}\text{Variance equal for all $d_x$ elements}\\
     & = \sigma_x^{2} \cdot d_x \cdot \text{Var}(w_{ij})\\
-    \Rightarrow \text{Var}(w_{ij}) = \sigma_{W}^2 & = \frac{1}{d_x}\\
+    &\Rightarrow \text{Var}(w_{ij}) = \sigma_{W}^2  = \frac{1}{d_x}
 \end{split}
 $$
 :::
@@ -499,12 +523,17 @@ visualize_activations(model, print_variance=True)
 
 ## Initialization {.scrollable}
 :::{.callout-note}
-Note that our initialization does not restrict us to a normal distribution, but allows any other distribution with a mean of 0 and variance of $1/d_x$. You often see that a uniform distribution is used for initialization. A small benefit of using a uniform instead of a normal distribution is that we can exclude the chance of initializing very large or small weights.
+Our initialization does not restrict us to a normal distribution, but allows any other distribution with:
+
+- a **mean** of 0 
+- and **variance** of $1/d_x$.
+
+You often see that a uniform distribution is used for initialization. A small benefit of using a uniform instead of a normal distribution is that we can exclude the chance of initializing very large or small weights.
 :::
 
 ## Initialization
 :::{.callout-tip icon=false}
-## Stabilization of gradient variance
+## Stabilization of gradient variance: Xavier initialization
 Ensures a stable optimization for deep networks. It turns out that we can do the same calculation as above starting from $\Delta x=W\Delta y$, and come to the conclusion that we should initialize our layers with $1/d_y$ where $d_y$ is the number of output neurons. As a compromise between both constraints, [Glorot and Bengio (2010)](http://proceedings.mlr.press/v9/glorot10a/glorot10a.pdf?hc_location=ufi) proposed to use the harmonic mean of both values. This leads us to the well-known Xavier initialization:
 
 $$W\sim \mathcal{N}\left(0,\frac{2}{d_x+d_y}\right)$$
@@ -542,7 +571,7 @@ visualize_activations(model, print_variance=True)
 :::{.callout-tip icon=false}
 ## Non-linearity
 
-In a tanh-based network, a common assumption is that for small values during the initial steps in training, the $\tanh$ works as a linear function such that we don't have to adjust our calculation. We can check if that is the case for us as well:
+In a $\tanh$-based network, a common assumption is that for small values during the initial steps in training, the $\tanh$ works as a linear function such that we don't have to adjust our calculation. We can check if that is the case for us as well:
 :::
 ```{python}
 model = BaseNetwork(act_fn=nn.Tanh()).to(device)
@@ -553,8 +582,11 @@ visualize_activations(model, print_variance=True)
 
 ## Initialization
 :::{.callout-tip icon=false}
-## Analysis
-Although the variance decreases over depth, it is apparent that the activation distribution becomes more focused on the low values. Therefore, our variance will stabilize around 0.25 if we would go even deeper. Hence, we can conclude that the Xavier initialization works well for Tanh networks. 
+## Analysis for tanh
+
+- Although the variance decreases over depth, it is apparent that the activation distribution becomes more focused on the low values.
+- Therefore, our variance will stabilize around 0.25 if we would go even deeper.
+- Hence, we can conclude that the Xavier initialization works well for Tanh networks. 
 :::
 
 
@@ -562,7 +594,9 @@ Although the variance decreases over depth, it is apparent that the activation d
 
 :::{.callout-tip icon=false}
 ## ReLU
-The ReLU activation function sets (in expectation) half of the inputs to 0 so that also the expectation of the input is not zero. However, as long as the expectation of $W$ is zero and $b=0$, the expectation of the output is zero. The part where the calculation of the ReLU initialization differs from the identity is when determining $\text{Var}(w_{ij}x_{j})$: 
+The ReLU activation function sets (in expectation) half of the inputs to 0 so that also the expectation of the input is not zero. However, as long as the expectation of $W$ is zero and $b=0$, the expectation of the output is zero.
+
+The part where the calculation of the ReLU initialization differs from the identity is when determining $\text{Var}(w_{ij}x_{j})$: 
 
 $$
 \text{Var}(w_{ij}x_{j})=\underbrace{\mathbb{E}[w_{ij}^2]}_{=\text{Var}(w_{ij})}\mathbb{E}[x_{j}^2]-\underbrace{\mathbb{E}[w_{ij}]^2}_{=0}\mathbb{E}[x_{j}]^2=\text{Var}(w_{ij})\mathbb{E}[x_{j}^2]
@@ -590,7 +624,7 @@ Thus, we see that we have an additional factor of 1/2 in the equation, so that o
 
 ## Initialization {.scrollable}
 :::{.callout-note}
-Note that the Kaiming initialization does not use the harmonic mean between input and output size. In their paper (Section 2.2, Backward Propagation, last paragraph), they argue that using $d_x$ or $d_y$ both lead to stable gradients throughout the network, and only depend on the overall input and output size of the network. Hence, we can use here only the input $d_x$:
+The Kaiming initialization does not use the harmonic mean between input and output size. In the original paper authors argue that using $d_x$ or $d_y$ both lead to stable gradients throughout the network, and only depend on the overall input and output size of the network. Hence, we can use here only the input $d_x$:
 :::
 ```{python}
 def kaiming_init(model):
@@ -619,7 +653,15 @@ visualize_activations(model, print_variance=True)
 - PyTorch provides a function to calculate this factor for many activation function, see `torch.nn.init.calculate_gain` ([link](https://pytorch.org/docs/stable/nn.init.html#torch.nn.init.calculate_gain)).
 :::
 
+## Initialization
+```{=html}
+<iframe width="1920" height="1080" src="https://www.deeplearning.ai/ai-notes/initialization/index.html" title="Initialization"></iframe>
+```
+
+
 ## Optimization
+:::{.callout-tip icon=false}
+## Preparation
 ```{python}
 def _get_config_file(model_path, model_name):
     return os.path.join(model_path, model_name + ".config")
@@ -758,6 +800,7 @@ def test_model(net, data_loader):
     test_acc = true_preds / count
     return test_acc
 ```
+:::
 
 ## Optimization
 
@@ -775,8 +818,8 @@ $$
 :::
 
 ## Optimization
-As most optimizers only differ in the implementation of $f$, we can define a template for an optimizer in PyTorch below.
-
+:::{.callout-tip icon=false}
+## Optimizer template
 ```{python}
 class OptimizerTemplate:
     
@@ -803,6 +846,7 @@ class OptimizerTemplate:
         # To be implemented in optimizer-specific classes
         raise NotImplementedError
 ```
+:::
 
 ## Optimization
 :::{.callout-tip icon=false}
@@ -830,7 +874,7 @@ class SGD(OptimizerTemplate):
 ## Optimization {.scrollable}
 :::{.callout-tip icon=false}
 ## Momentum
-In the lecture, we also have discussed the concept of momentum which replaces the gradient in the update by an exponential average of all past gradients including the current one:
+Momentum replaces the gradient in the update by an exponential average of all past gradients including the current one:
 
 $$
 \begin{split}
@@ -858,7 +902,7 @@ class SGDMomentum(OptimizerTemplate):
 ## Optimization {.scrollable}
 :::{.callout-tip icon=false}
 ## Adam
-Finally, we arrive at Adam. Adam combines the idea of momentum with an adaptive learning rate, which is based on an exponential average of the squared gradients, i.e. the gradients norm. Furthermore, we add a bias correction for the momentum and adaptive learning rate for the first iterations:
+Adam combines the idea of momentum with an adaptive learning rate, which is based on an exponential average of the squared gradients, i.e. the gradients norm. Furthermore, we add a bias correction for the momentum and adaptive learning rate for the first iterations:
 
 $$
 \begin{split}
@@ -869,7 +913,8 @@ $$
 \end{split}
 $$
 
-Epsilon is a small constant used to improve numerical stability for very small gradient norms. Remember that the adaptive learning rate does not replace the learning rate hyperparameter $\eta$, but rather acts as an extra factor and ensures that the gradients of various parameters have a similar norm.
+Epsilon is a small constant used to improve numerical stability for very small gradient norms.
+<!-- Remember that the adaptive learning rate does not replace the learning rate hyperparameter $\eta$, but rather acts as an extra factor and ensures that the gradients of various parameters have a similar norm. -->
 :::
 
 ## Optimization
@@ -1174,3 +1219,34 @@ plt.show()
 :::{.callout-tip icon=false}
 ## SGD vs Adam
 ![](img/flat_vs_sharp_minima.svg){height=400}
+:::
+
+## Optimization {.smaller}
+$$
+f(x,y) = x^2 + y^2 -ae^{-\frac{(x-1)^2+y^2}{c}} -be^{-\frac{(x+1)^2+y^2}{c}}
+$$
+```{=html}
+<iframe width="1920" height="1080" src="./resources/dl_optimization.html" title="Optimization"></iframe>
+```
+
+## Optimization {.smaller}
+
+:::{.callout-tip icon=false}
+## Rastrigin function
+$$
+f(x,y) = An + x^2- Acos(2\pi x) + y^2 - Acos(2\pi y), \, A=10, \; x,y \in [-5.12,5.12]
+$$
+:::
+```{=html}
+<iframe width="1920" height="1080" src="./resources/dl_rastrigin.html" title="Optimization"></iframe>
+```
+## Optimization {.smaller}
+:::{.callout-tip icon=false}
+## Rosenbrock function
+$$
+f(x,y) = (a-x)^2 + b(y-x^2)^2
+$$
+:::
+```{=html}
+<iframe width="1920" height="1080" src="./resources/dl_rosenbrock.html" title="Optimization"></iframe>
+```
