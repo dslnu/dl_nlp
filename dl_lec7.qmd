@@ -1,0 +1,621 @@
+---
+title: "Convolutional networks"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: true
+  echo: true
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usepackage{neuralnetwork}
+        \usepackage{mathtools}
+        \usepackage{amsmath}
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{shapes.misc}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    include-in-header: mathjax.html
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: '178c96dbeb73da2e865adb0113a6e663'
+      id: '06347abe4efa760e6afd7b47aca27942191e25a3998dfd45bc03d4e1f2d5e4df'
+---
+
+## Convolutional NNs
+:::{.callout-note icon=false}
+## Definition
+**Convolutional networks** (LeCun, 1989), also known as convolutional neural networks, or **CNNs**, are a specialized kind of neural network for processing data that has a known **grid-like topology**. 
+
+CNNs are a family of models that were originally inspired by how the visual cortex of the human brain works when recognizing objects. 
+:::
+
+## Convolutional NNs
+
+:::{.callout-tip icon=false}
+## What's in a name?
+Convolutional networks have been tremendously successful in practical applications. 
+The name “convolutional neural network” indicates that the network employs a mathematical operation called convolution. Convolution is a specialized kind of linear operation. 
+:::
+
+:::{.callout-tip icon=false}
+## Data Examples
+Examples include:
+
+- time-series data, which can be thought of as a 1-D grid taking samples at regular time intervals
+- image data, which can be thought of as a 2-D grid of pixels
+:::
+
+## Convolutional NNs
+:::{.callout-important icon=false}
+## Image processing challenges using feed-forward NNs
+
+- Images generally have a high dimensionality, with typical cameras capturing images comprising tens of megapixels. 
+- More significantly, such an approach fails to take account of the highly structured nature of image data, in which the relative positions of different pixels play a crucial role. 
+:::
+
+## Convolutional NNs
+
+:::{.callout-tip icon=false}
+## Uses
+
+- Classification of images. This is sometimes called ‘image recognition’.
+- Detection of objects in an image and determining their locations within the image.
+- Segmentation of images.
+- Caption generation.
+- Synthesis of new images. 
+:::
+
+## Convolutional NNs
+:::{.callout-tip icon=false}
+## Uses
+
+- Inpainting.
+- Style transfer.
+- Super-resolution.
+- Depth prediction.
+- Scene reconstruction.
+:::
+
+<!-- A guide to convolution arithmetic -->
+## Convolutional NNs
+:::{.callout-tip icon=false}
+## Data properties
+
+- stored as multi-dimensional arrays.
+- one or more axes for which ordering matters (e.g., width and height axes for an image, time axis for a sound clip).
+- one axis, called the channel axis, is used to access different views of the data (e.g., the red, green and blue channels of a color image, or the left and right channels of a stereo audio track).
+:::
+
+# History
+
+## History
+:::{.callout-tip icon=false}
+## Origins
+The development of CNNs goes back to the 1990s, when Yann LeCun and his colleagues proposed a novel NN architecture for classifying handwritten digits from images
+:::
+
+:::{.callout-note icon=false}
+## Turing award
+Several years later, in 2019, Yann LeCun received the Turing award (the most prestigious award in computer science) for his contributions to the field of artificial intelligence (AI), along with two other researchers, Yoshua Bengio and Geoffrey Hinton.
+:::
+
+::: aside
+Handwritten Digit Recognition with a Back-Propagation Network by Y. LeCun, and colleagues, 1989, published at the Neural Information Processing Systems (NeurIPS) conference). 
+:::
+
+## History
+:::{.callout-tip icon=false}
+## Cats
+The original discovery of how the visual cortex of our brain functions was made by David H. Hubel and Torsten Wiesel in 1959, when they inserted a microelectrode into the primary visual cortex of an anesthetized cat. 
+
+They measured the electrical responses of individual neurons in the visual cortex of cats while presenting visual stimuli to the cats’ eyes. 
+:::
+
+
+## Cat experiment
+![](img/cat_experiment.png)
+
+## Visual cortex
+![](img/feature_hierarchy.png)
+
+## Visual cortex
+:::{.callout-tip icon=false}
+## Gabor filters
+<!-- Bishop -->
+These model responses of simple cells.
+$$
+  \begin{align*}
+    &G(x,y) = A \exp \left(-\alpha \tilde{x}^2 - \beta \tilde{y}^2\right) \sin \left(\omega \tilde{x} + \psi\right), \; \text{where} \\
+    &\tilde{x} = (x-x_0)\cos \theta + (y-y_0) \sin \theta, \\
+    &\tilde{y} = -(x-x_0)\sin \theta + (y-y_0) \cos \theta.
+  \end{align*}
+$$
+:::
+
+## Gabor filters example
+<!-- Bishop -->
+![](img/gabor_filters.png)
+
+## Alexnet
+<!-- Bishop -->
+![](img/alexnet_filters.png)
+
+# Convolutional NNs
+
+## Convolutional NNs
+:::{.callout-tip icon=false}
+## Definition
+Convolutional networks are neural networks that use convolution in place of general matrix multiplication in at least one of their layers.
+:::
+
+:::: {.columns}
+
+::: {.column width="50%" background-color="lightgray"}
+:::{.callout-tip icon=false}
+## Feed-forward NN
+$$
+z = Wx + b
+$$
+:::
+:::
+
+::: {.column width="50%"}
+
+:::{.callout-note icon=false}
+## Convolutional NN
+$$
+\textbf{Z} = \textbf{W} \ast \textbf{X} + b
+$$
+:::
+:::
+::::
+
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Plan
+
+- what's a **convolution**? 
+- motivation for convolutions in NNs
+- **pooling**
+- variants of convolution functions
+- efficiency matters
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## General definition
+An operation on two functions of a real-valued argument. 
+:::
+
+:::{.callout-note icon=false}
+## Spaceship example
+
+- Suppose we are tracking the location of a spaceship with a laser sensor. Our laser sensor provides a single output $x(t)$, the position of the spaceship at time $t$. Both $x$ and $t$ are real valued.
+- Suppose that measurements are noisy. Do averaging to compensate with a weighting function $w(a)$, where $a$ is the age of the measurement. Give more weight to recent measurements.
+- Result: $s(t) = \int x(a)w(t-a)da$.
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Limitations
+
+- $w$ needs to be a valid probability density function, or the output will not be a weighted average. 
+- Also, $w$ needs to be $0$ for all negative arguments, or it will look into the future, which is presumably beyond our capabilities.
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Notation
+$$ 
+s(t) = (x \ast w)(t)
+$$
+:::
+
+:::{.callout-important icon=false}
+## Terminology
+
+- the first argument $x$ is the **input** or **signal**.
+- the second argument $w$ is the **filter** or**kernel**.
+- output is the **feature map**.
+:::
+
+## Convolutions
+:::{.callout-warning icon=false}
+
+## Discrete convolution
+Measurements cannot be continuous in practice, they will be discrete. Therefore:
+$$
+s(t) = (x \ast w)(t) = \sum\limits_{a=-\infty}^{+\infty} x(a)w(t-a). 
+$$
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## 2D
+Multiple axes: suppose we have a two-dimensional image $I$ and thus two-dimensional kernel $K$.
+$$
+S(i, j) = (I \ast K)(i,j) = \sum\limits_m \sum\limits_n I(m,n)K(i-m,j-n)
+$$
+By commutativity:
+$$
+S(i, j) = (K \ast I)(i,j) = \sum\limits_m \sum\limits_n I(i-m,j-n)K(m,n)
+$$
+:::
+
+## Cross-correlation
+:::{.callout-note}
+## Commutativity
+The commutative property of convolution arises because we have **flipped** the kernel relative to the input, in the sense that as m increases, the index into the input increases, but the index into the kernel decreases. The only reason to flip the kernel is to obtain the commutative property. 
+:::
+
+:::{.callout-tip icon=false}
+## Cross-correlation - Definition
+$$
+S(i, j) = (I \ast K)(i,j) = \sum\limits_m \sum\limits_n I(i+m,j+n)K(m,n)
+$$
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Properties
+
+- Discrete convolution **preserves ordering**!
+- **sparse** (only a few input units contribute to a given output unit) 
+- **reuses parameters** (the same weights are applied to multiple locations in the input).
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Analogies with weight/bias
+
+- **input** is a multidimensional array of data (a *tensor*)
+- **kernel** is a multidimensional array of parameters (also a *tensor*)
+- input/kernel are zero everywhere except for points where we have the data. Therefore, summation becomes **finite**.
+:::
+
+
+## Example
+![](img/2d_convolution.png)
+
+
+## Analogy
+:::{.callout-tip icon=false}
+## Algebraic analogy
+Discrete convolution can be viewed as a matrix multiplication, but *matrix has several entries constrained to be equal to other entries*. Also, matrices are very *sparse*, because kernel is usually much smaller than the input.
+
+In two dimensions, a **doubly block circulant** matrix corresponds to convolution. 
+:::
+
+## Toeplitz matrix {.smaller}
+For univariate discrete convolution, each row of the matrix is constrained to be equal to the row above shifted by one element. 
+
+$$
+\begin{pmatrix}
+2 & -1 & 0 & \cdots & \cdots & \cdots & \cdots & 0\\
+-1 & 2 & -1 & 0 & & & & \vdots\\
+0 & -1 & 2 & -1 & \ddots & & & \vdots\\
+\vdots & 0 & \ddots & \ddots & \ddots & \ddots & & \vdots\\
+\vdots & & \ddots & \ddots & \ddots & \ddots & 0 & \vdots\\
+\vdots & & & \ddots & -1 & 2 & -1 & 0\\
+\vdots & & & & 0 & -1 & 2 & -1\\
+0 & \cdots & \cdots  & \cdots & \cdots & 0 & -1 & 2\\
+\end{pmatrix}
+$$
+
+## Motivation
+:::{.callout-tip}
+## Ideas
+
+- **sparse interactions**
+- **parameter sharing**
+- **equivariant representations**
+- **variable-size inputs**
+:::
+
+## Sparseness
+
+:::{.callout-note}
+- in traditional NN, every output unit interacts with every input unit. 
+- in CNN, we have **sparse interactions** (also referred to as **sparse connectivity** or **sparse weights**). 
+- this is accomplished by making the kernel smaller than the input. 
+- results in efficiency improvements
+:::
+
+
+## Sparseness
+:::{.callout-tip icon=false}
+## Complexity notes
+For matrix multiplication, in case of $m$ inputs and $n$ otputs: $O(m \times n)$.
+
+Limit number of output connections to $k$, get $O(k \times n)$ complexity
+:::
+
+:::{.callout-important icon=false}
+## Improvement
+It's possible to obtain good performance while keeping $k \ll m$. 
+:::
+
+## Sparseness
+![Sparse connectivity, viewed from below.](img/sparse_conn_from_below.png)
+
+## Sparseness
+![Sparse connectivity, viewed from above.](img/sparse_conn_from_above.png)
+
+## Sparseness
+![Large receptive field.](img/receptive_field.png)
+
+
+## Parameter sharing
+:::{.callout-tip icon=false}
+## Definition
+**Parameter sharing** refers to using the same parameter for more than one function in a model. As a synonym for parameter sharing, one can say that a network has **tied weights**.
+:::
+  <!-- %In a convolutional neural net, each member of the kernel is used at every position of the input (except perhaps some of the boundary pixels, depending on the design decisions regarding the boundary). The parameter sharing used by the convolution operation means that rather than learning a separate set of parameters for every location, we learn only one set. This does not affect the runtime of forward propagation—it is still O(k × n)—but it does further reduce the storage requirements of the model to k parameters. Recall that k is usually several orders of magnitude smaller than m. Since m and n are usually roughly the same size, k is practically insignificant compared to m × n. Convolution is thus dramatically more efficient than dense matrix multiplication in terms of the memory requirements and statistical efficiency. For a graphical depiction of how parameter sharing works, see figure 9.5. -->
+
+![](img/parameter_sharing.png){height=400}
+<!-- %Parameter sharing. Black arrows indicate the connections that use a particular parameter in two different models. (Top)The black arrows indicate uses of the central element of a 3-element kernel in a convolutional model. Because of parameter sharing, this single parameter is used at all input locations. (Bottom)The single black arrow indicates the use of the central element of the weight matrix in a fully connected model. This model has no parameter sharing, so the parameter is used only once. -->
+
+## Parameter sharing {.smaller}
+
+![](img/edge_detection.png)
+
+Efficiency of edge detection.The image on the right was formed by taking each pixel in the original image and subtracting the value of its neighboring pixel on the left.
+
+<!-- %This shows the strength of all the vertically oriented edges in the input image, which can be a useful operation for object detection. Both images are 280 pixels tall. The input image is 320 pixels wide, while the output image is 319 pixels wide. This transformation can be described by a convolution kernel containing two elements, and requires 319 × 280 × 3 = 267, 960 floating-point operations (two multiplications and one addition per output pixel) to compute using convolution. To describe the same transformation with a matrix multiplication would take 320 × 280 × 319 × 280, or over eight billion, entries in the matrix, making convolution four billion times more efficient for representing this transformation. The straightforward matrix multiplication algorithm performs over sixteen billion floating point operations, making convolution roughly 60,000 times more efficient computationally. Of course, most of the entries of the matrix would be zero. If we stored only the nonzero entries of the matrix, then both matrix multiplication and convolution would require the same number of floating-point operations to compute. The matrix would still need to contain 2 × 319 × 280 = 178, 640 entries. Convolution is an extremely efficient way of describing transformations that apply the same linear transformation of a small local region across the entire input. Photo credit: Paula Goodfellow. -->
+
+## Equivariance
+:::{.callout-tip icon=false}
+## Definition
+To say a function is equivariant means that if the input changes, the output changes in the same way. 
+
+Specifically, a function f(x) is equivariant to a function g if $f(g(x)) = g(f(x))$.
+
+In the case of convolution, if we let g be any function that translates the input, that is, shifts it, then the convolution function is equivariant to g. 
+  <!-- % For example, let I be a function giving image brightness at integer coordinates. Let g be a function mapping one image function to another image function, such that I′ = g(I) is the image function with I′(x, y) = I(x − 1, y). This shifts every pixel of I one unit to the right. If we apply this transformation to I, then apply convolution, the result will be the same as if we applied convolution to I′, then applied the transformation g to the output. When processing time-series data, this means that convolution produces a sort of timeline that shows when different features appear in the input. -->
+:::
+
+<!-- %  If we move an event later in time in the input, the exact same representation of it will appear in the output, just later. Similarly with images, convolution creates a 2-D map of where certain features appear in the input. If we move the object in the input, its representation will move the same amount in the output. This is useful for when we know that some function of a small number of neighboring pixels is useful when applied to multiple input locations. For example, when processing images, it is useful to detect edges in the first layer of a convolutional network. The same edges appear more or less everywhere in the image, so it is practical to share parameters across the entire image. In some cases, we may not wish to share parameters across the entire image. For example, if we are processing images that are cropped to be centered on an individual’s face, we probably want to extract different features at different locations—the part of the network processing the top of the face needs to look for eyebrows, while the part of the network processing the bottom of the face needs to look for a chin. -->
+<!-- % Convolution is not naturally equivariant to some other transformations, such as changes in the scale or rotation of an image. -->
+
+## Convolutions
+![Kernel example.](img/cnn_kernel_example.png)
+
+## Convolutions
+![](img/convolution_computation1.png)
+
+## Convolutions
+![](img/convolution_computation2.png)
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Shape
+The collection of kernels defining a discrete convolution has a shape corresponding to some permutation of $(n, m, k_1, \dots, k_N)$, where
+
+- $n \equiv $ number of output feature maps
+- $m \equiv $ number of input feature maps
+- $k_j \equiv $ kernel size along axis $j$
+:::
+
+## Convolutions
+:::{.callout-tip icon=false}
+## Shape
+The following properties affect the output size $o_j$ of a convolutional layer along axis $j$:
+
+- $i_j$: input size along axis $j$,
+- $k_j$: kernel size along axis $j$,
+- $s_j$: stride (distance between two consecutive positions of the kernel) along axis $j$,
+- $p_j$: zero padding (number of zeros concatenated at the beginning and at the end of an axis) along axis $j$.
+:::
+
+## Convolutions: stride
+![Stride $s$=2.](img/convolution_steps.png)
+
+## Convolutions
+![For multiple feature maps, they are convolved with distinct kernels, and the results are summed up elementwise to produce the output feature map.](img/multiple_feature_maps.png)
+
+
+<!-- %ML with PyTorch -->
+<!-- % \begin{frame}{Feature extraction} -->
+<!-- %  it’s common to consider CNN layers as feature extractors: the early layers (those right after the input layer) extract low-level features from raw data, and the later layers (often fully connected layers, as in a multilayer perceptron (MLP)) use these features to predict a continuous target value or class label. -->
+<!-- % \end{frame} -->
+
+# Padding
+<!-- %Goodfellow book -->
+## Convolutions: padding
+:::{.callout-note}
+$$
+\begin{align*}
+  &y = x \ast w \\
+  &y[i] = \sum\limits_{k=-\infty}^{+\infty} x[i-k]w[k]
+\end{align*}
+$$
+:::
+
+![How to deal with infinity?](img/cnn_padding.png)
+
+## Padding
+:::{.callout-tip icon=false}
+## Padding modes
+ There are three modes of padding that are commonly used in practice: full, same, and valid.
+
+- In **full mode**, the padding parameter, p, is set to p = m – 1. Full padding increases the dimensions of the output; thus, it is rarely used in CNN architectures.
+- The **same padding** mode is usually used to ensure that the output vector has the same size as the input vector, x. In this case, the padding parameter, p, is computed according to the filter size, along with the requirement that the input size and output size are the same.
+- **valid mode** refers to the case where p = 0 (no padding). 
+:::
+
+## Padding
+![](img/cnn_padding_modes.png)
+
+## Padding
+
+:::{.callout-important icon=false}
+## Pros/cons
+- The most commonly used padding mode in CNNs is same padding. One of its advantages over the other padding modes is that same padding preserves the size of the vector
+- One big disadvantage of valid padding versus full and same padding is that the volume of the tensors will decrease substantially in NNs with many layers, which can be detrimental to the network’s performance.
+- As for full padding, its size results in an output larger than the input size. Full padding is usually used in signal processing applications where it is important to minimize boundary effects.
+:::
+<!-- %    In practice, you should preserve the spatial size using same padding for the convolutional layers and decrease the spatial size via pooling layers or convolutional layers with stride 2 instead, as described in Striving for Simplicity: The All Convolutional Net ICLR (workshop track), by Jost Tobias Springenberg, Alexey Dosovitskiy, and others, 2015 (https://arxiv.org/abs/1412.6806). -->
+<!-- %   However, in a deep learning context, boundary effects are usually not an issue, so we rarely see full padding being used in practice. -->
+
+## Padding
+:::{.callout-tip icon=false}
+## Example
+Padding with size $p$, input size $n$ and filter size $m$, $m \leq n$:
+$$
+\begin{gather}
+  y[i] = \sum\limits_{k=0}^{m-1} x^p [i+m-k]w[k]
+\end{gather}
+$$
+
+Output size of a convolution is determined by:
+$$
+\begin{align*}
+   &o = \lfloor \frac{n+2p-m}{s} + 1\rfloor 
+\end{align*}
+$$
+:::
+
+# Pooling
+
+## Pooling
+:::{.callout-tip icon=false}
+## Description
+Pooling works very much like a discrete convolution, but replaces the linear combination described by the kernel with some other function. 
+:::
+
+## Pooling
+![Average pooling.](img/cnn_average_pooling.png)
+
+## Pooling
+![Max pooling.](img/cnn_max_pooling.png)
+
+## Pooling
+![Max pooling.](img/max_pooling2.png)
+
+## Pooling
+![Max/mean pooling](img/max_mean_pooling.png)
+
+## Pooling
+![Pooling invariance example](img/pooling_invariance_example.png)
+
+
+## Pooling
+:::{.callout-tip icon=false}
+## Properties
+The following properties affect the output size $o_j$ of a pooling layer along axis $j$:
+
+- $i_j$: input size along axis $j$,
+- $k_j$: pooling window size along axis $j$,
+- $s_j$: stride (distance between two consecutive positions of the pooling window) along axis $j$.
+:::
+
+## Pooling
+
+:::{.callout-note icon=false}
+## Definition
+A pooling function replaces the output of the net at a certain location with a summary statistic of the nearby outputs.      
+:::
+
+:::{.callout-tip icon=false}
+## Examples
+
+- **max pooling** (Zhou and Chellappa, 1988) operation reports the maximum output within a rectangular neighborhood.
+- the average of a rectangular neighborhood
+- $L_2$ norm of a rectangular neighborhood
+- a weighted average based on the distance from the central pixel. 
+:::
+
+## Pooling
+:::{.callout-tip icon=false}
+## Why?
+In order to make the representation approximately **invariant** to small translations of the input.
+
+Invariance to translation means that if we translate the input by a small amount, the values of most of the pooled outputs do not change. 
+:::
+  
+:::{.callout-important icon=false}
+## When?
+- we can assume that the layer must be invariant to small translations.
+- we care about whether feature is present at all, not exactly where. For example, eyes on the face.
+:::
+
+## Pooling
+![Stride: 1 pixel, width: 3 pixels. Bottom row: shifted right.](img/max_pooling.png)
+
+## Pooling
+![If we pool over the outputs of separately parameterized convolutions, the features can learn which transformations to become invariant to.](img/learned_invariances.png)
+
+<!-- % \begin{frame}{Pooling} -->
+<!-- % Because pooling summarizes the responses over a whole neighborhood, it is possible to use fewer pooling units than detector units, by reporting summary statistics for pooling regions spaced k pixels apart rather than 1 pixel apart. This improves the computational efficiency of the network because the next layer has roughly k times fewer inputs to process. When the number of parameters in the next layer is a function of its input size (such as when the next layer is fully connected and based on matrix multiplication), this reduction in the input size can also result in improved statistical efficiency and reduced memory requirements for storing the parameters. -->
+<!-- % For many tasks, pooling is essential for handling inputs of varying size. --> 
+
+<!-- % \end{frame} -->
+
+## Pooling
+![Pooling with downsampling. Here we use max pooling with a pool width of three and a stride between pools of two. This reduces the representation size by a factor of two, which reduces the computational and statistical burden on the next layer. Note that the rightmost pooling region has a smaller size but must be included if we do not want to ignore some of the detector units.](img/pooling_with_downsampling.png)
+
+## Pooling
+:::{.callout-tip icon=false}
+## Advantages
+
+- introduces a local invariance. This means that small changes in a local neighborhood do not change the result of max-pooling. Therefore, it helps with generating features that are more robust to noise in the input data. 
+- pooling decreases the size of features, which results in higher computational efficiency. Furthermore, reducing the number of features may reduce the degree of overfitting as well. 
+:::
+
+## Architecture
+:::{.callout-tip icon=false}
+## Layer stages
+
+- perform several convolutions in parallel to produce a set of linear activations. 
+- each linear activation is run through a nonlinear activation function, such as the rectified linear activation function (aka the **detector stage**). 
+- use a **pooling function** to modify the output of the layer further.
+:::
+
+## Architecture {.smaller}
+
+![](img/cnn_layer_stages.png){height=500}
+
+The components of a typical convolutional neural network layer.
+
+<!-- There are two commonly used sets of terminology for describing these layers. (Left)In this terminology, the convolutional net is viewed as a small number of relatively complex layers, with each layer having many “stages.” In this terminology, there is a one-to-one mapping between kernel tensors and network layers. In this book we generally use this terminology. (Right)In this terminology, the convolutional net is viewed as a larger number of simple layers; every step of processing is regarded as a layer in its own right. This means that not every “layer” has parameters. -->
+
+## Architecture {.smaller}
+![Number of parameters for a CNN: $m_1 \times m_2 \times 3 \times 5 + 5$. Number of parameters for a fully-connected NN: $(n_1 \times n_2 \times 3) \times (n_1 \times n_2 \times 5)$.](img/implementing_a_cnn.png)
+
+## Deep CNN example
+![](img/deep_cnn.png)
+
+## Deep CNN example
+:::{.callout-tip icon=false}
+## Layer dimensions:
+
+- Input: $[batchsize \times 28 \times 28 \times 1]$
+- Conv\_1: $[batchsize \times 28 \times 28 \times 32]$
+- Pooling\_1: $[batchsize \times 14 \times 14 \times 32]$
+- Conv\_2: $[batchsize \times 14 \times 14 \times 64]$
+- Pooling\_2: $[batchsize \times 7 \times 7 \times 64]$
+- FC\_1: $[batchsize \times 1024]$
+- FC\_2 and softmax layer: $[batchsize \times 10]$
+:::
+
+## Example: VGG-16
+![](img/vgg16.png)
