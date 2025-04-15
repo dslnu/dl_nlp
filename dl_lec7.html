@@ -1,0 +1,1489 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.43">
+
+  <meta name="author" content="Vitaly Vlasov">
+  <title>Deep Learning/NLP course – Convolutional networks</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-2f366650f320edcfcf53d73c80250a32.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+  <script>
+    MathJax = {
+      tex: {
+        tags: 'ams'  // should be 'ams', 'none', or 'all'
+      }
+    };
+  </script>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Convolutional networks</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+Vitaly Vlasov 
+</div>
+        <p class="quarto-title-affiliation">
+            Lviv University
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="convolutional-nns" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Convolutional networks</strong> (LeCun, 1989), also known as convolutional neural networks, or <strong>CNNs</strong>, are a specialized kind of neural network for processing data that has a known <strong>grid-like topology</strong>.</p>
+<p>CNNs are a family of models that were originally inspired by how the visual cortex of the human brain works when recognizing objects.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutional-nns-1" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>What’s in a name?</strong></p>
+</div>
+<div class="callout-content">
+<p>Convolutional networks have been tremendously successful in practical applications. The name “convolutional neural network” indicates that the network employs a mathematical operation called convolution. Convolution is a specialized kind of linear operation.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Data Examples</strong></p>
+</div>
+<div class="callout-content">
+<p>Examples include:</p>
+<ul>
+<li>time-series data, which can be thought of as a 1-D grid taking samples at regular time intervals</li>
+<li>image data, which can be thought of as a 2-D grid of pixels</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutional-nns-2" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Image processing challenges using feed-forward NNs</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Images generally have a high dimensionality, with typical cameras capturing images comprising tens of megapixels.</li>
+<li>More significantly, such an approach fails to take account of the highly structured nature of image data, in which the relative positions of different pixels play a crucial role.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutional-nns-3" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Uses</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Classification of images. This is sometimes called ‘image recognition’.</li>
+<li>Detection of objects in an image and determining their locations within the image.</li>
+<li>Segmentation of images.</li>
+<li>Caption generation.</li>
+<li>Synthesis of new images.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutional-nns-4" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Uses</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Inpainting.</li>
+<li>Style transfer.</li>
+<li>Super-resolution.</li>
+<li>Depth prediction.</li>
+<li>Scene reconstruction.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- A guide to convolution arithmetic -->
+</section>
+<section id="convolutional-nns-5" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Data properties</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>stored as multi-dimensional arrays.</li>
+<li>one or more axes for which ordering matters (e.g., width and height axes for an image, time axis for a sound clip).</li>
+<li>one axis, called the channel axis, is used to access different views of the data (e.g., the red, green and blue channels of a color image, or the left and right channels of a stereo audio track).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section>
+<section id="history" class="title-slide slide level1 center">
+<h1>History</h1>
+
+</section>
+<section id="history-1" class="slide level2">
+<h2>History</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Origins</strong></p>
+</div>
+<div class="callout-content">
+<p>The development of CNNs goes back to the 1990s, when Yann LeCun and his colleagues proposed a novel NN architecture for classifying handwritten digits from images</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Turing award</strong></p>
+</div>
+<div class="callout-content">
+<p>Several years later, in 2019, Yann LeCun received the Turing award (the most prestigious award in computer science) for his contributions to the field of artificial intelligence (AI), along with two other researchers, Yoshua Bengio and Geoffrey Hinton.</p>
+</div>
+</div>
+</div>
+
+<aside><div>
+<p>Handwritten Digit Recognition with a Back-Propagation Network by Y. LeCun, and colleagues, 1989, published at the Neural Information Processing Systems (NeurIPS) conference).</p>
+</div></aside></section>
+<section id="history-2" class="slide level2">
+<h2>History</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Cats</strong></p>
+</div>
+<div class="callout-content">
+<p>The original discovery of how the visual cortex of our brain functions was made by David H. Hubel and Torsten Wiesel in 1959, when they inserted a microelectrode into the primary visual cortex of an anesthetized cat.</p>
+<p>They measured the electrical responses of individual neurons in the visual cortex of cats while presenting visual stimuli to the cats’ eyes.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="cat-experiment" class="slide level2">
+<h2>Cat experiment</h2>
+
+<img data-src="img/cat_experiment.png" class="r-stretch"></section>
+<section id="visual-cortex" class="slide level2">
+<h2>Visual cortex</h2>
+
+<img data-src="img/feature_hierarchy.png" class="r-stretch"></section>
+<section id="visual-cortex-1" class="slide level2">
+<h2>Visual cortex</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Gabor filters</strong></p>
+</div>
+<div class="callout-content">
+<!-- Bishop -->
+<p>These model responses of simple cells. <span class="math display">\[
+  \begin{align*}
+    &amp;G(x,y) = A \exp \left(-\alpha \tilde{x}^2 - \beta \tilde{y}^2\right) \sin \left(\omega \tilde{x} + \psi\right), \; \text{where} \\
+    &amp;\tilde{x} = (x-x_0)\cos \theta + (y-y_0) \sin \theta, \\
+    &amp;\tilde{y} = -(x-x_0)\sin \theta + (y-y_0) \cos \theta.
+  \end{align*}
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="gabor-filters-example" class="slide level2">
+<h2>Gabor filters example</h2>
+<!-- Bishop -->
+
+<img data-src="img/gabor_filters.png" class="r-stretch"></section>
+<section id="alexnet" class="slide level2">
+<h2>Alexnet</h2>
+<!-- Bishop -->
+
+<img data-src="img/alexnet_filters.png" class="r-stretch"></section></section>
+<section>
+<section id="convolutional-nns-6" class="title-slide slide level1 center">
+<h1>Convolutional NNs</h1>
+
+</section>
+<section id="convolutional-nns-7" class="slide level2">
+<h2>Convolutional NNs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>Convolutional networks are neural networks that use convolution in place of general matrix multiplication in at least one of their layers.</p>
+</div>
+</div>
+</div>
+<div class="columns">
+<div class="column" data-background-color="lightgray" style="width:50%;">
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Feed-forward NN</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+z = Wx + b
+\]</span></p>
+</div>
+</div>
+</div>
+</div><div class="column" style="width:50%;">
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Convolutional NN</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+\textbf{Z} = \textbf{W} \ast \textbf{X} + b
+\]</span></p>
+</div>
+</div>
+</div>
+</div></div>
+</section>
+<section id="convolutions" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Plan</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>what’s a <strong>convolution</strong>?</li>
+<li>motivation for convolutions in NNs</li>
+<li><strong>pooling</strong></li>
+<li>variants of convolution functions</li>
+<li>efficiency matters</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-1" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>General definition</strong></p>
+</div>
+<div class="callout-content">
+<p>An operation on two functions of a real-valued argument.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Spaceship example</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Suppose we are tracking the location of a spaceship with a laser sensor. Our laser sensor provides a single output <span class="math inline">\(x(t)\)</span>, the position of the spaceship at time <span class="math inline">\(t\)</span>. Both <span class="math inline">\(x\)</span> and <span class="math inline">\(t\)</span> are real valued.</li>
+<li>Suppose that measurements are noisy. Do averaging to compensate with a weighting function <span class="math inline">\(w(a)\)</span>, where <span class="math inline">\(a\)</span> is the age of the measurement. Give more weight to recent measurements.</li>
+<li>Result: <span class="math inline">\(s(t) = \int x(a)w(t-a)da\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-2" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Limitations</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><span class="math inline">\(w\)</span> needs to be a valid probability density function, or the output will not be a weighted average.</li>
+<li>Also, <span class="math inline">\(w\)</span> needs to be <span class="math inline">\(0\)</span> for all negative arguments, or it will look into the future, which is presumably beyond our capabilities.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-3" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Notation</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+s(t) = (x \ast w)(t)
+\]</span></p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Terminology</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>the first argument <span class="math inline">\(x\)</span> is the <strong>input</strong> or <strong>signal</strong>.</li>
+<li>the second argument <span class="math inline">\(w\)</span> is the <strong>filter</strong> or<strong>kernel</strong>.</li>
+<li>output is the <strong>feature map</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-4" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-warning no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Discrete convolution</strong></p>
+</div>
+<div class="callout-content">
+<p>Measurements cannot be continuous in practice, they will be discrete. Therefore: <span class="math display">\[
+s(t) = (x \ast w)(t) = \sum\limits_{a=-\infty}^{+\infty} x(a)w(t-a).
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-5" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>2D</strong></p>
+</div>
+<div class="callout-content">
+<p>Multiple axes: suppose we have a two-dimensional image <span class="math inline">\(I\)</span> and thus two-dimensional kernel <span class="math inline">\(K\)</span>. <span class="math display">\[
+S(i, j) = (I \ast K)(i,j) = \sum\limits_m \sum\limits_n I(m,n)K(i-m,j-n)
+\]</span> By commutativity: <span class="math display">\[
+S(i, j) = (K \ast I)(i,j) = \sum\limits_m \sum\limits_n I(i-m,j-n)K(m,n)
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="cross-correlation" class="slide level2">
+<h2>Cross-correlation</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Commutativity</strong></p>
+</div>
+<div class="callout-content">
+<p>The commutative property of convolution arises because we have <strong>flipped</strong> the kernel relative to the input, in the sense that as m increases, the index into the input increases, but the index into the kernel decreases. The only reason to flip the kernel is to obtain the commutative property.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Cross-correlation - Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+S(i, j) = (I \ast K)(i,j) = \sum\limits_m \sum\limits_n I(i+m,j+n)K(m,n)
+\]</span></p>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-6" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Properties</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Discrete convolution <strong>preserves ordering</strong>!</li>
+<li><strong>sparse</strong> (only a few input units contribute to a given output unit)</li>
+<li><strong>reuses parameters</strong> (the same weights are applied to multiple locations in the input).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-7" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Analogies with weight/bias</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>input</strong> is a multidimensional array of data (a <em>tensor</em>)</li>
+<li><strong>kernel</strong> is a multidimensional array of parameters (also a <em>tensor</em>)</li>
+<li>input/kernel are zero everywhere except for points where we have the data. Therefore, summation becomes <strong>finite</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="example" class="slide level2">
+<h2>Example</h2>
+
+<img data-src="img/2d_convolution.png" class="r-stretch"></section>
+<section id="analogy" class="slide level2">
+<h2>Analogy</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Algebraic analogy</strong></p>
+</div>
+<div class="callout-content">
+<p>Discrete convolution can be viewed as a matrix multiplication, but <em>matrix has several entries constrained to be equal to other entries</em>. Also, matrices are very <em>sparse</em>, because kernel is usually much smaller than the input.</p>
+<p>In two dimensions, a <strong>doubly block circulant</strong> matrix corresponds to convolution.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="toeplitz-matrix" class="slide level2 smaller">
+<h2>Toeplitz matrix</h2>
+<p>For univariate discrete convolution, each row of the matrix is constrained to be equal to the row above shifted by one element.</p>
+<p><span class="math display">\[
+\begin{pmatrix}
+2 &amp; -1 &amp; 0 &amp; \cdots &amp; \cdots &amp; \cdots &amp; \cdots &amp; 0\\
+-1 &amp; 2 &amp; -1 &amp; 0 &amp; &amp; &amp; &amp; \vdots\\
+0 &amp; -1 &amp; 2 &amp; -1 &amp; \ddots &amp; &amp; &amp; \vdots\\
+\vdots &amp; 0 &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; &amp; \vdots\\
+\vdots &amp; &amp; \ddots &amp; \ddots &amp; \ddots &amp; \ddots &amp; 0 &amp; \vdots\\
+\vdots &amp; &amp; &amp; \ddots &amp; -1 &amp; 2 &amp; -1 &amp; 0\\
+\vdots &amp; &amp; &amp; &amp; 0 &amp; -1 &amp; 2 &amp; -1\\
+0 &amp; \cdots &amp; \cdots  &amp; \cdots &amp; \cdots &amp; 0 &amp; -1 &amp; 2\\
+\end{pmatrix}
+\]</span></p>
+</section>
+<section id="motivation" class="slide level2">
+<h2>Motivation</h2>
+<div class="callout callout-tip callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Ideas</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>sparse interactions</strong></li>
+<li><strong>parameter sharing</strong></li>
+<li><strong>equivariant representations</strong></li>
+<li><strong>variable-size inputs</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="sparseness" class="slide level2">
+<h2>Sparseness</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>in traditional NN, every output unit interacts with every input unit.</li>
+<li>in CNN, we have <strong>sparse interactions</strong> (also referred to as <strong>sparse connectivity</strong> or <strong>sparse weights</strong>).</li>
+<li>this is accomplished by making the kernel smaller than the input.</li>
+<li>results in efficiency improvements</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="sparseness-1" class="slide level2">
+<h2>Sparseness</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Complexity notes</strong></p>
+</div>
+<div class="callout-content">
+<p>For matrix multiplication, in case of <span class="math inline">\(m\)</span> inputs and <span class="math inline">\(n\)</span> otputs: <span class="math inline">\(O(m \times n)\)</span>.</p>
+<p>Limit number of output connections to <span class="math inline">\(k\)</span>, get <span class="math inline">\(O(k \times n)\)</span> complexity</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Improvement</strong></p>
+</div>
+<div class="callout-content">
+<p>It’s possible to obtain good performance while keeping <span class="math inline">\(k \ll m\)</span>.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="sparseness-2" class="slide level2">
+<h2>Sparseness</h2>
+
+<img data-src="img/sparse_conn_from_below.png" class="r-stretch quarto-figure-center"><p class="caption">Sparse connectivity, viewed from below.</p></section>
+<section id="sparseness-3" class="slide level2">
+<h2>Sparseness</h2>
+
+<img data-src="img/sparse_conn_from_above.png" class="r-stretch quarto-figure-center"><p class="caption">Sparse connectivity, viewed from above.</p></section>
+<section id="sparseness-4" class="slide level2">
+<h2>Sparseness</h2>
+
+<img data-src="img/receptive_field.png" class="r-stretch quarto-figure-center"><p class="caption">Large receptive field.</p></section>
+<section id="parameter-sharing" class="slide level2">
+<h2>Parameter sharing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><strong>Parameter sharing</strong> refers to using the same parameter for more than one function in a model. As a synonym for parameter sharing, one can say that a network has <strong>tied weights</strong>.</p>
+</div>
+</div>
+</div>
+<p><!-- %In a convolutional neural net, each member of the kernel is used at every position of the input (except perhaps some of the boundary pixels, depending on the design decisions regarding the boundary). The parameter sharing used by the convolution operation means that rather than learning a separate set of parameters for every location, we learn only one set. This does not affect the runtime of forward propagation—it is still O(k × n)—but it does further reduce the storage requirements of the model to k parameters. Recall that k is usually several orders of magnitude smaller than m. Since m and n are usually roughly the same size, k is practically insignificant compared to m × n. Convolution is thus dramatically more efficient than dense matrix multiplication in terms of the memory requirements and statistical efficiency. For a graphical depiction of how parameter sharing works, see figure 9.5. --></p>
+<p><img data-src="img/parameter_sharing.png" height="400"> <!-- %Parameter sharing. Black arrows indicate the connections that use a particular parameter in two different models. (Top)The black arrows indicate uses of the central element of a 3-element kernel in a convolutional model. Because of parameter sharing, this single parameter is used at all input locations. (Bottom)The single black arrow indicates the use of the central element of the weight matrix in a fully connected model. This model has no parameter sharing, so the parameter is used only once. --></p>
+</section>
+<section id="parameter-sharing-1" class="slide level2 smaller">
+<h2>Parameter sharing</h2>
+
+<img data-src="img/edge_detection.png" class="r-stretch"><p>Efficiency of edge detection.The image on the right was formed by taking each pixel in the original image and subtracting the value of its neighboring pixel on the left.</p>
+<!-- %This shows the strength of all the vertically oriented edges in the input image, which can be a useful operation for object detection. Both images are 280 pixels tall. The input image is 320 pixels wide, while the output image is 319 pixels wide. This transformation can be described by a convolution kernel containing two elements, and requires 319 × 280 × 3 = 267, 960 floating-point operations (two multiplications and one addition per output pixel) to compute using convolution. To describe the same transformation with a matrix multiplication would take 320 × 280 × 319 × 280, or over eight billion, entries in the matrix, making convolution four billion times more efficient for representing this transformation. The straightforward matrix multiplication algorithm performs over sixteen billion floating point operations, making convolution roughly 60,000 times more efficient computationally. Of course, most of the entries of the matrix would be zero. If we stored only the nonzero entries of the matrix, then both matrix multiplication and convolution would require the same number of floating-point operations to compute. The matrix would still need to contain 2 × 319 × 280 = 178, 640 entries. Convolution is an extremely efficient way of describing transformations that apply the same linear transformation of a small local region across the entire input. Photo credit: Paula Goodfellow. -->
+</section>
+<section id="equivariance" class="slide level2">
+<h2>Equivariance</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>To say a function is equivariant means that if the input changes, the output changes in the same way.</p>
+<p>Specifically, a function f(x) is equivariant to a function g if <span class="math inline">\(f(g(x)) = g(f(x))\)</span>.</p>
+<p>In the case of convolution, if we let g be any function that translates the input, that is, shifts it, then the convolution function is equivariant to g. <!-- % For example, let I be a function giving image brightness at integer coordinates. Let g be a function mapping one image function to another image function, such that I′ = g(I) is the image function with I′(x, y) = I(x − 1, y). This shifts every pixel of I one unit to the right. If we apply this transformation to I, then apply convolution, the result will be the same as if we applied convolution to I′, then applied the transformation g to the output. When processing time-series data, this means that convolution produces a sort of timeline that shows when different features appear in the input. --></p>
+</div>
+</div>
+</div>
+<!-- %  If we move an event later in time in the input, the exact same representation of it will appear in the output, just later. Similarly with images, convolution creates a 2-D map of where certain features appear in the input. If we move the object in the input, its representation will move the same amount in the output. This is useful for when we know that some function of a small number of neighboring pixels is useful when applied to multiple input locations. For example, when processing images, it is useful to detect edges in the first layer of a convolutional network. The same edges appear more or less everywhere in the image, so it is practical to share parameters across the entire image. In some cases, we may not wish to share parameters across the entire image. For example, if we are processing images that are cropped to be centered on an individual’s face, we probably want to extract different features at different locations—the part of the network processing the top of the face needs to look for eyebrows, while the part of the network processing the bottom of the face needs to look for a chin. -->
+<!-- % Convolution is not naturally equivariant to some other transformations, such as changes in the scale or rotation of an image. -->
+</section>
+<section id="convolutions-8" class="slide level2">
+<h2>Convolutions</h2>
+
+<img data-src="img/cnn_kernel_example.png" class="r-stretch quarto-figure-center"><p class="caption">Kernel example.</p></section>
+<section id="convolutions-9" class="slide level2">
+<h2>Convolutions</h2>
+
+<img data-src="img/convolution_computation1.png" class="r-stretch"></section>
+<section id="convolutions-10" class="slide level2">
+<h2>Convolutions</h2>
+
+<img data-src="img/convolution_computation2.png" class="r-stretch"></section>
+<section id="convolutions-11" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Shape</strong></p>
+</div>
+<div class="callout-content">
+<p>The collection of kernels defining a discrete convolution has a shape corresponding to some permutation of <span class="math inline">\((n, m, k_1, \dots, k_N)\)</span>, where</p>
+<ul>
+<li>$n $ number of output feature maps</li>
+<li>$m $ number of input feature maps</li>
+<li>$k_j $ kernel size along axis <span class="math inline">\(j\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-12" class="slide level2">
+<h2>Convolutions</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Shape</strong></p>
+</div>
+<div class="callout-content">
+<p>The following properties affect the output size <span class="math inline">\(o_j\)</span> of a convolutional layer along axis <span class="math inline">\(j\)</span>:</p>
+<ul>
+<li><span class="math inline">\(i_j\)</span>: input size along axis <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(k_j\)</span>: kernel size along axis <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(s_j\)</span>: stride (distance between two consecutive positions of the kernel) along axis <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(p_j\)</span>: zero padding (number of zeros concatenated at the beginning and at the end of an axis) along axis <span class="math inline">\(j\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="convolutions-stride" class="slide level2">
+<h2>Convolutions: stride</h2>
+
+<img data-src="img/convolution_steps.png" class="r-stretch quarto-figure-center"><p class="caption">Stride <span class="math inline">\(s\)</span>=2.</p></section>
+<section id="convolutions-13" class="slide level2">
+<h2>Convolutions</h2>
+
+<!-- %ML with PyTorch -->
+<!-- % \begin{frame}{Feature extraction} -->
+<!-- %  it’s common to consider CNN layers as feature extractors: the early layers (those right after the input layer) extract low-level features from raw data, and the later layers (often fully connected layers, as in a multilayer perceptron (MLP)) use these features to predict a continuous target value or class label. -->
+<!-- % \end{frame} -->
+<img data-src="img/multiple_feature_maps.png" class="r-stretch quarto-figure-center"><p class="caption">For multiple feature maps, they are convolved with distinct kernels, and the results are summed up elementwise to produce the output feature map.</p></section></section>
+<section>
+<section id="padding" class="title-slide slide level1 center">
+<h1>Padding</h1>
+<!-- %Goodfellow book -->
+</section>
+<section id="convolutions-padding" class="slide level2">
+<h2>Convolutions: padding</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p><span class="math display">\[
+\begin{align*}
+  &amp;y = x \ast w \\
+  &amp;y[i] = \sum\limits_{k=-\infty}^{+\infty} x[i-k]w[k]
+\end{align*}
+\]</span></p>
+</div>
+</div>
+</div>
+
+<img data-src="img/cnn_padding.png" class="r-stretch quarto-figure-center"><p class="caption">How to deal with infinity?</p></section>
+<section id="padding-1" class="slide level2">
+<h2>Padding</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Padding modes</strong></p>
+</div>
+<div class="callout-content">
+<p>There are three modes of padding that are commonly used in practice: full, same, and valid.</p>
+<ul>
+<li>In <strong>full mode</strong>, the padding parameter, p, is set to p = m – 1. Full padding increases the dimensions of the output; thus, it is rarely used in CNN architectures.</li>
+<li>The <strong>same padding</strong> mode is usually used to ensure that the output vector has the same size as the input vector, x. In this case, the padding parameter, p, is computed according to the filter size, along with the requirement that the input size and output size are the same.</li>
+<li><strong>valid mode</strong> refers to the case where p = 0 (no padding).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="padding-2" class="slide level2">
+<h2>Padding</h2>
+
+<img data-src="img/cnn_padding_modes.png" class="r-stretch"></section>
+<section id="padding-3" class="slide level2">
+<h2>Padding</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Pros/cons</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>The most commonly used padding mode in CNNs is same padding. One of its advantages over the other padding modes is that same padding preserves the size of the vector</li>
+<li>One big disadvantage of valid padding versus full and same padding is that the volume of the tensors will decrease substantially in NNs with many layers, which can be detrimental to the network’s performance.</li>
+<li>As for full padding, its size results in an output larger than the input size. Full padding is usually used in signal processing applications where it is important to minimize boundary effects.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- %    In practice, you should preserve the spatial size using same padding for the convolutional layers and decrease the spatial size via pooling layers or convolutional layers with stride 2 instead, as described in Striving for Simplicity: The All Convolutional Net ICLR (workshop track), by Jost Tobias Springenberg, Alexey Dosovitskiy, and others, 2015 (https://arxiv.org/abs/1412.6806). -->
+<!-- %   However, in a deep learning context, boundary effects are usually not an issue, so we rarely see full padding being used in practice. -->
+</section>
+<section id="padding-4" class="slide level2">
+<h2>Padding</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Example</strong></p>
+</div>
+<div class="callout-content">
+<p>Padding with size <span class="math inline">\(p\)</span>, input size <span class="math inline">\(n\)</span> and filter size <span class="math inline">\(m\)</span>, <span class="math inline">\(m \leq n\)</span>: <span class="math display">\[
+\begin{gather}
+  y[i] = \sum\limits_{k=0}^{m-1} x^p [i+m-k]w[k]
+\end{gather}
+\]</span></p>
+<p>Output size of a convolution is determined by: <span class="math display">\[
+\begin{align*}
+   &amp;o = \lfloor \frac{n+2p-m}{s} + 1\rfloor
+\end{align*}
+\]</span></p>
+</div>
+</div>
+</div>
+</section></section>
+<section>
+<section id="pooling" class="title-slide slide level1 center">
+<h1>Pooling</h1>
+
+</section>
+<section id="pooling-1" class="slide level2">
+<h2>Pooling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Description</strong></p>
+</div>
+<div class="callout-content">
+<p>Pooling works very much like a discrete convolution, but replaces the linear combination described by the kernel with some other function.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="pooling-2" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/cnn_average_pooling.png" class="r-stretch quarto-figure-center"><p class="caption">Average pooling.</p></section>
+<section id="pooling-3" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/cnn_max_pooling.png" class="r-stretch quarto-figure-center"><p class="caption">Max pooling.</p></section>
+<section id="pooling-4" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/max_pooling2.png" class="r-stretch quarto-figure-center"><p class="caption">Max pooling.</p></section>
+<section id="pooling-5" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/max_mean_pooling.png" class="r-stretch quarto-figure-center"><p class="caption">Max/mean pooling</p></section>
+<section id="pooling-6" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/pooling_invariance_example.png" class="r-stretch quarto-figure-center"><p class="caption">Pooling invariance example</p></section>
+<section id="pooling-7" class="slide level2">
+<h2>Pooling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Properties</strong></p>
+</div>
+<div class="callout-content">
+<p>The following properties affect the output size <span class="math inline">\(o_j\)</span> of a pooling layer along axis <span class="math inline">\(j\)</span>:</p>
+<ul>
+<li><span class="math inline">\(i_j\)</span>: input size along axis <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(k_j\)</span>: pooling window size along axis <span class="math inline">\(j\)</span>,</li>
+<li><span class="math inline">\(s_j\)</span>: stride (distance between two consecutive positions of the pooling window) along axis <span class="math inline">\(j\)</span>.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="pooling-8" class="slide level2">
+<h2>Pooling</h2>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p>A pooling function replaces the output of the net at a certain location with a summary statistic of the nearby outputs.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Examples</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>max pooling</strong> (Zhou and Chellappa, 1988) operation reports the maximum output within a rectangular neighborhood.</li>
+<li>the average of a rectangular neighborhood</li>
+<li><span class="math inline">\(L_2\)</span> norm of a rectangular neighborhood</li>
+<li>a weighted average based on the distance from the central pixel.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="pooling-9" class="slide level2">
+<h2>Pooling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Why?</strong></p>
+</div>
+<div class="callout-content">
+<p>In order to make the representation approximately <strong>invariant</strong> to small translations of the input.</p>
+<p>Invariance to translation means that if we translate the input by a small amount, the values of most of the pooled outputs do not change.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>When?</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>we can assume that the layer must be invariant to small translations.</li>
+<li>we care about whether feature is present at all, not exactly where. For example, eyes on the face.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="pooling-10" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/max_pooling.png" class="r-stretch quarto-figure-center"><p class="caption">Stride: 1 pixel, width: 3 pixels. Bottom row: shifted right.</p></section>
+<section id="pooling-11" class="slide level2">
+<h2>Pooling</h2>
+
+<!-- % \begin{frame}{Pooling} -->
+<!-- % Because pooling summarizes the responses over a whole neighborhood, it is possible to use fewer pooling units than detector units, by reporting summary statistics for pooling regions spaced k pixels apart rather than 1 pixel apart. This improves the computational efficiency of the network because the next layer has roughly k times fewer inputs to process. When the number of parameters in the next layer is a function of its input size (such as when the next layer is fully connected and based on matrix multiplication), this reduction in the input size can also result in improved statistical efficiency and reduced memory requirements for storing the parameters. -->
+<!-- % For many tasks, pooling is essential for handling inputs of varying size. -->
+<!-- % \end{frame} -->
+<img data-src="img/learned_invariances.png" class="r-stretch quarto-figure-center"><p class="caption">If we pool over the outputs of separately parameterized convolutions, the features can learn which transformations to become invariant to.</p></section>
+<section id="pooling-12" class="slide level2">
+<h2>Pooling</h2>
+
+<img data-src="img/pooling_with_downsampling.png" class="r-stretch quarto-figure-center"><p class="caption">Pooling with downsampling. Here we use max pooling with a pool width of three and a stride between pools of two. This reduces the representation size by a factor of two, which reduces the computational and statistical burden on the next layer. Note that the rightmost pooling region has a smaller size but must be included if we do not want to ignore some of the detector units.</p></section>
+<section id="pooling-13" class="slide level2">
+<h2>Pooling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Advantages</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>introduces a local invariance. This means that small changes in a local neighborhood do not change the result of max-pooling. Therefore, it helps with generating features that are more robust to noise in the input data.</li>
+<li>pooling decreases the size of features, which results in higher computational efficiency. Furthermore, reducing the number of features may reduce the degree of overfitting as well.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="architecture" class="slide level2">
+<h2>Architecture</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Layer stages</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>perform several convolutions in parallel to produce a set of linear activations.</li>
+<li>each linear activation is run through a nonlinear activation function, such as the rectified linear activation function (aka the <strong>detector stage</strong>).</li>
+<li>use a <strong>pooling function</strong> to modify the output of the layer further.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="architecture-1" class="slide level2 smaller">
+<h2>Architecture</h2>
+<p><img data-src="img/cnn_layer_stages.png" height="500"></p>
+<p>The components of a typical convolutional neural network layer.</p>
+<!-- There are two commonly used sets of terminology for describing these layers. (Left)In this terminology, the convolutional net is viewed as a small number of relatively complex layers, with each layer having many “stages.” In this terminology, there is a one-to-one mapping between kernel tensors and network layers. In this book we generally use this terminology. (Right)In this terminology, the convolutional net is viewed as a larger number of simple layers; every step of processing is regarded as a layer in its own right. This means that not every “layer” has parameters. -->
+</section>
+<section id="architecture-2" class="slide level2 smaller">
+<h2>Architecture</h2>
+
+<img data-src="img/implementing_a_cnn.png" class="r-stretch quarto-figure-center"><p class="caption">Number of parameters for a CNN: <span class="math inline">\(m_1 \times m_2 \times 3 \times 5 + 5\)</span>. Number of parameters for a fully-connected NN: <span class="math inline">\((n_1 \times n_2 \times 3) \times (n_1 \times n_2 \times 5)\)</span>.</p></section>
+<section id="deep-cnn-example" class="slide level2">
+<h2>Deep CNN example</h2>
+
+<img data-src="img/deep_cnn.png" class="r-stretch"></section>
+<section id="deep-cnn-example-1" class="slide level2">
+<h2>Deep CNN example</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Layer dimensions:</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Input: <span class="math inline">\([batchsize \times 28 \times 28 \times 1]\)</span></li>
+<li>Conv_1: <span class="math inline">\([batchsize \times 28 \times 28 \times 32]\)</span></li>
+<li>Pooling_1: <span class="math inline">\([batchsize \times 14 \times 14 \times 32]\)</span></li>
+<li>Conv_2: <span class="math inline">\([batchsize \times 14 \times 14 \times 64]\)</span></li>
+<li>Pooling_2: <span class="math inline">\([batchsize \times 7 \times 7 \times 64]\)</span></li>
+<li>FC_1: <span class="math inline">\([batchsize \times 1024]\)</span></li>
+<li>FC_2 and softmax layer: <span class="math inline">\([batchsize \times 10]\)</span></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="example-vgg-16" class="slide level2">
+<h2>Example: VGG-16</h2>
+
+<img data-src="img/vgg16.png" class="r-stretch"></section>
+<section id="explainer" class="slide level2">
+<h2>Explainer</h2>
+<p><a href="https://poloclub.github.io/cnn-explainer/" class="uri">https://poloclub.github.io/cnn-explainer/</a></p>
+
+
+</section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/socket.io.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/multiplex.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'multiplex': {"url":"https://mplex.vitv.ly","secret":null,"id":"06347abe4efa760e6afd7b47aca27942191e25a3998dfd45bc03d4e1f2d5e4df"},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
+
+          RevealMath,
+          
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
