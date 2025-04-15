@@ -1,0 +1,30 @@
+---
+title: "DL: Lab 7"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Image classification using Food-101 dataset
+
+## Task description
+
+0. Review the Jupyter notebook [here](https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html)
+1. Grab the dataset from <https://huggingface.co/datasets/food101>
+2. Implement a convolutional neural network for multiclass image classification.
+
+## Recommended reading
+1. <https://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html>

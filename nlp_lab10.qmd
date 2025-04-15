@@ -1,0 +1,277 @@
+---
+title: "NLP: Lab 10 (PCA)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Overview
+In this lab we will fetch documents from Reddit manually. After preprocessing we will use PCA for topic modeling.
+
+## Libraries
+
+We will use a Reddit Python library:
+```python
+pip install praw
+```
+
+Wordcloud:
+```python
+!pip install wordcloud
+```
+Library docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html
+
+## Data loading
+Now we need to setup Reddit data fetching. For this we need to have a Reddit account.
+
+We'll use posts from https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration.
+
+Now, create `client_id` and `client_secret`.
+
+How?
+
+  - Create a Reddit account if you don't have one yet
+  - Go to <https://www.reddit.com/prefs/apps> and click `create an app`
+  - Pick `script` app type. Name and description can be anything, but make sure to specify `http://localhost:8080` as `redirect uri`
+  - Press `create app`. Your `client_id` is the string under **personal use script** and `client_secret` is the string next to **secret**
+
+Below is the function for comment fetching:
+```python
+import praw
+import pandas as pd
+
+#reddit = praw.Reddit(
+ #   client_id = '???',
+  #  client_secret = '???',
+   # user_agent = 'praw'
+
+# This function returns a Pandas dataframe
+# containing reddit post comments, given its id
+def getComments(id):
+    submission = reddit.submission(id)
+    pandas_list = []
+    commentsList = submission.comments.list()
+    # 'limit' parameter can be increased 
+    # in order to expand more comments
+    submission.comments.replace_more(limit=64)
+    print(len(commentsList))
+    i = 0
+    for c in commentsList:
+        if isinstance(c, praw.models.MoreComments):
+            continue
+        commentText = c.body
+        if commentText in {'[deleted]', '[removed]'}:
+            continue
+        pandas_list.append([i, commentText])
+        i+=1
+    df = pd.DataFrame(pandas_list)
+    df.columns = ['id', 'description']
+    return df
+```
+
+Read reddit comments and put it in a DataFrame named `corpus`.
+```python
+corpus = getComments('1detli')
+
+print(corpus.shape)
+corpus.head()
+```
+
+```python
+print('First spooky story : ',corpus.loc[0,'description'])
+```
+
+## Preprocessing
+Use `str` methods to clean the texts. Save cleaned-up text into a column named `clean_description`.
+```python
+# Remove HTML elements
+
+# CODE_START
+# corpus['clean_description'] = ...
+# CODE_END
+
+# Remove special characters and numbers
+
+# CODE_START
+#corpus['clean_description'] = ...
+# CODE_END
+print('Description cleaned of the first product : ',corpus.loc[0,'clean_description'])
+
+```
+Transform characters to lowercase:
+```python
+# Lowercase
+# CODE_START
+#corpus['clean_description'] = ...
+# CODE_END
+print('First story lower-cased : ',corpus.loc[0,'clean_description'])
+```
+
+Use NLTK to tokenize the documents and put the result in a new column named `clean_tokens`.
+```python
+## Tokenize the cleaned description
+# CODE_START
+#corpus['clean_tokens'] = ...
+# CODE_END
+corpus.head()
+```
+Remove the stop words and lemmatize clean_tokens. We'll use the code we had in lab3.
+
+```python
+# Remove stop words
+from nltk.stem import WordNetLemmatizer
+from nltk.corpus import stopwords
+from nltk.tag import pos_tag
+stop_words = set(stopwords.words('english'))
+
+
+ 
+lemmatizer = WordNetLemmatizer()
+def lemmatize(tokens):
+# CODE_START
+#...
+# CODE_END
+    
+# Lemmatize
+# CODE_START
+#corpus['clean_tokens'] = ...
+# CODE_END
+corpus.head()
+
+```
+Write all the cleaned tokens into one single string and put it in a new column named `clean_document`.
+```python
+# Put back tokens into one single string
+# CODE_START
+#corpus["clean_document"] = ...
+# CODE_END
+corpus.head()
+```
+
+## TF-IDF
+We can use `clean_document` to compute TF-IDF matrices:
+```python
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+# TF-IDF vector
+vectorizer = TfidfVectorizer(stop_words='english')
+X = vectorizer.fit_transform(corpus["clean_document"])
+
+# X is a generator. We can transform that as an array
+X = X.toarray()
+print(X.shape)
+```
+
+- Each line of X correspond to a story.
+- Each column of X correspond to a word in the vocabulary.
+- So each cell of X correspond to the score TF-IDF for a word in a particular story.
+
+## LSA
+Scikit-learn library has a `TruncatedSVD` class:
+```python
+from sklearn.decomposition import TruncatedSVD
+# Train SVD model
+svd_model = TruncatedSVD(n_components=12) # We test on 12 topics
+lsa = svd_model.fit_transform(X)
+topic_encoded_df = pd.DataFrame(lsa, columns = ["topic_" + str(i) for i in range(lsa.shape[1])])
+topic_encoded_df["documents"] = corpus['clean_description']
+topic_encoded_df.head()
+```
+
+Create a new column named `main_topic` in `topic_encoded_df` where we store the main topics related to each document:
+```python
+import numpy as np
+
+def extract_main_topics(x):
+    """
+    Return the main topic for each document. The main topic is the one that has the maximum value for each line
+    """
+
+    # CODE_START
+    #...
+    # CODE_END
+    return main_topic
+
+# Initialize column main_topics with 0
+topic_encoded_df.loc[:, 'main_topic'] = 0
+
+for i, row in topic_encoded_df.iloc[:,:-2].iterrows():
+    topic_encoded_df.loc[i, 'main_topic'] = extract_main_topics(row)
+
+topic_encoded_df.head()
+```
+Count each main topic in the corpus:
+```python
+topic_encoded_df['main_topic'].value_counts()
+```
+Use the attribute `components_` of the SVD model to print the 5 most important words in each topic.
+```python
+# Create DataFrame containing the description of each topic in terms of the words in the vocabulary
+topics_description = pd.DataFrame(svd_model.components_, columns = vectorizer.get_feature_names_out(), 
+                                  index = ['topic_' + str(i) for i in range(svd_model.components_.shape[0])])
+
+# Compute absolute values of coefficients
+topics_description = topics_description.apply(np.abs, axis = 1)
+
+# Each word is map with a score of relevance for each topic
+topics_description.head()
+```
+
+```python
+# Loop over each topic and print the 5 most important words
+
+# CODE_START
+#for i,row in ...
+
+# CODE_END
+```
+
+Create a wordcloud:
+
+```python
+import wordcloud
+import matplotlib.pyplot as plt
+
+# Loop over each topic and create wordcloud from documents that are related to this main topic
+wd = wordcloud.WordCloud()
+
+cols = [c for c in topic_encoded_df.columns if 'topic_' in c]
+
+for t in cols:
+    print('-------------------------')
+    print()
+    print('TOPIC ', t)
+    
+    # Handle topics that are not main topics for any document in the corpus
+    if (topic_encoded_df['main_topic']==t).any() == False :
+        print('cannot create wordcloud for this topic')
+        continue
+    
+    texts = " ".join(topic_encoded_df.loc[topic_encoded_df['main_topic']==t,'documents'])
+    cloud = wd.generate(texts)
+    plt.imshow(cloud)
+    plt.show()
+    
+    print()
+```
+# Exercises
+
+**Task 0**. Complete missing code.
+
+**Task 1**. Use doc2vec instead of TF-IDF.
+
+**Task 2**. Add SNE visualization (use [Scikit-learn's TSNE](https://scikit-learn.org/stable/modules/generated/sklearn.manifold.TSNE.html))
+
