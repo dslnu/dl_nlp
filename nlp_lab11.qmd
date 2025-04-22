@@ -204,9 +204,9 @@ def data_loader(train_inputs, val_inputs, train_labels, val_labels,
     """
 
     # Convert data type to torch.Tensor
-    # START
+    # CODE_START
     # train_inputs, val_inputs, train_labels, val_labels = tuple(...)
-    # END
+    # CODE_END
 
     # Create DataLoader for training data
     train_data = TensorDataset(train_inputs, train_labels)
@@ -214,11 +214,11 @@ def data_loader(train_inputs, val_inputs, train_labels, val_labels,
     train_dataloader = DataLoader(train_data, sampler=train_sampler, batch_size=batch_size)
 
     # Create DataLoader for validation data
-    # START
+    # CODE_START
     # val_data = ...
     # val_sampler = SequentialSampler(...)
     # val_dataloader = ...
-    # END
+    # CODE_END
 
     return train_dataloader, val_dataloader
 ```
@@ -228,15 +228,15 @@ Use `train_test_split` function from scikit-learn library:
 from sklearn.model_selection import train_test_split
 
 # Train Test Split with test set size = 5%
-# START
+# CODE_START
 # train_inputs, val_inputs, train_labels, val_labels = train_test_split(...)
-# END
+# CODE_END
 
 # Load data to PyTorch DataLoader
 # Use batch_size = 50
-# START
+# CODE_START
 # train_dataloader, val_dataloader = ...
-# END
+# CODE_END
 ```
 
 ## CNN Model
@@ -324,21 +324,21 @@ class CNN_NLP(nn.Module):
                                           max_norm=5.0)
         # Conv Network
         # Build a convolutional (nn.Conv1d) layer here, containing len(filter_sizes) filters
-        # START
+        # CODE_START
         # self.conv1d_list = nn.ModuleList([
              # ...
         #])
-        # END
+        # CODE_END
         
         # Fully-connected layer and Dropout
-        # START
+        # CODE_START
         # self.fc = nn.Linear(...)
-        # END
+        # CODE_END
 
         # Dropout 
-        # START
+        # CODE_START
         # self.dropout = ...
-        # END 
+        # CODE_END 
 
     def forward(self, input_ids):
         """Perform a forward pass through the network.
@@ -360,9 +360,9 @@ class CNN_NLP(nn.Module):
         x_reshaped = x_embed.permute(0, 2, 1)
 
         # Apply CNN and ReLU. Output shape: (b, num_filters[i], L_out)
-        # START
+        # CODE_START
         # x_conv_list = [... for conv1d in self.conv1d_list]
-        # END
+        # CODE_END
 
         # Max pooling. Output shape: (b, num_filters[i], 1)
         x_pool_list = [F.max_pool1d(x_conv, kernel_size=x_conv.shape[2])
@@ -420,9 +420,9 @@ def initialize_model(pretrained_embedding=None,
     cnn_model.to(device)
 
     # Instantiate RMSprop optimizer
-    # START
+    # CODE_START
     # optimizer = ...
-    # END
+    # CODE_END
 
     return cnn_model, optimizer
 ```
@@ -475,30 +475,30 @@ def train(model, optimizer, train_dataloader, val_dataloader=None, epochs=10):
             b_input_ids, b_labels = tuple(t.to(device) for t in batch)
 
             # Zero out any previously calculated gradients
-            # START
+            # CODE_START
             # ...
-            # END
+            # CODE_END
 
             # Perform a forward pass. This will return logits.
-            # START
+            # CODE_START
             # logits = ...
-            # END
+            # CODE_END
 
             # Compute loss and accumulate the loss values
-            # START
+            # CODE_START
             # loss = ...
             # total_loss += loss.item()
-            # END 
+            # CODE_END 
 
             # Perform a backward pass to calculate gradients and update parameters
-            # START
+            # CODE_START
             # ...
-            # END
+            # CODE_END
 
         # Calculate the average loss over the entire training data
-        # START
+        # CODE_START
         # avg_train_loss = ...
-        # END
+        # CODE_END
 
         # =======================================
         #               Evaluation
