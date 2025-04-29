@@ -88,7 +88,8 @@ If training vanilla neural nets is optimization over **functions**, training rec
 
 - standard connections:  applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step
 - recurrent connections: dynamic, passing information across adjacent time steps
-While Feedforward Networks pass information through the network without cycles, the This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs $\bb{X}_{0:t-1}$ and not only the current input $\bb{X}_t$. 
+
+While Feedforward Networks pass information through the network without cycles, recurrent networks have cycles. This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs $\bb{X}_{0:t-1}$ and not only the current input $\bb{X}_t$. 
 :::
 
 
@@ -114,7 +115,7 @@ While Feedforward Networks pass information through the network without cycles, 
 :::
 
 ## Recurrent neural networks
-![Note, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block $\bb(H}$. This block can obviously be extended to multiple hidden layers.]{img/ff_vs_rn.png)
+![Note, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block $\bb{H}$. This block can obviously be extended to multiple hidden layers.](img/ff_vs_rn.png)
 
 ## Recurrent neural networks
 :::{.callout-tip icon=false}
@@ -171,7 +172,9 @@ At any time step $t$:
 ## Recurrent neural networks
 :::{.callout-tip icon=false}
 ## Language modeling
-We aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels). Bengio et al. (2003) first proposed to use a neural network for language modeling.
+We aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels).
+
+**Bengio** et al. (2003) first proposed to use a neural network for language modeling.
 :::
 
 <!-- Let the minibatch size be one, and the sequence of the text be “machine”. To simplify training in subsequent sections, we tokenize text into characters rather than words and consider a character-level language model. The next figure demonstrates how to predict the next character based on the current and previous characters via an RNN for character-level language modeling. -->
@@ -186,7 +189,10 @@ During the training process, we run a softmax operation on the output from the o
 
 Because of the recurrent computation of the hidden state in the hidden layer, the output $\bb{O}_3$ of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.
 
-In practice, each token is represented by a $d$-dimensional vector, and we use a batch size . Therefore, the input $\bb{X}_t$ at time step $t$ will be an $n \times d$ matrix.
+:::
+
+:::{.callout-note}
+In practice, each token is represented by a $d$-dimensional vector, and we use a batch size $n$. Therefore, the input $\bb{X}_t$ at time step $t$ will be an $n \times d$ matrix.
 
 :::
 # Backpropagation in RNNs
@@ -570,7 +576,7 @@ Weight matrices $\bb{W}_{ho} \in \mathbb{R}^{2h\times o}$, bias parameters $\bb{
 
 # Encoder-Decoder Architecture
 
-## Encoder-Decoder Architecture} 
+## Encoder-Decoder Architecture
 :::{.callout-tip icon=false}
 ## Description
 
