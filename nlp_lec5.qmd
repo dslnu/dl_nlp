@@ -29,8 +29,8 @@ format:
     theme: default
     multiplex:
       url: 'https://mplex.vitv.ly'
-      secret: '19f286c43d34d478f6aaac04c3d1de92'
-      id: '2e8cbc3acc2ca7d0b4a4e016fa8804a63f3512b3e00e7872956831f754b3cab5'
+      secret: 'a78db14ce5001defd147f3501079b058'
+      id: 'b3f677cc187e7a9f7b1b7ce69a39ffc660d840fdd8b81ea67eb8ca2869a93514'
 ---
 
 ## ANN
@@ -127,7 +127,7 @@ Pairwise comparison - at best log-linear $O(n \log n)$.
 ## Basic outline
 
 - segment and hash same sample several times
-- when we find that a pair of vectors has been hashed to the same value at least once, we tag them as \textit{candidate pairs} — that is, potential matches.
+- when we find that a pair of vectors has been hashed to the same value at least once, we tag them as *candidate pairs* — that is, potential matches.
 :::
       
 :::{.callout-tip icon=false}
@@ -234,7 +234,7 @@ Minhashing is the next step in our process, allowing us to convert our *sparse v
 - MinHash functions are a randomized order of numbers — and we count from 1 to the final number (which is `len(vocab)`)
 :::
 
-## Minhashing
+## Minhashing {.smaller}
 Our signature values are created by first taking a randomly permuted count vector (from 1 to `len(vocab)+1`) and finding the minimum number that aligns with a 1 in our sparse vector.
 
 ::: {layout-ncol=2}
@@ -458,7 +458,7 @@ We want signatures that share even some similarity to be hashed into the same bu
 :::{.callout-tip icon=false}
 ## How it Works
 
-- The banding method solves this problem by splitting our vectors into sub-parts called \textit{bands} $b$ 
+- The banding method solves this problem by splitting our vectors into sub-parts called *bands* $b$ 
 - rather than processing the full vector through our hash function, we pass each band of our vector through a hash function
 
 Imagine we split a 100-dimensionality vector into 20 bands. That gives us 20 opportunities to identify matching sub-vectors between our vectors.

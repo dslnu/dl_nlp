@@ -1,0 +1,633 @@
+---
+title: "Recurrent neural networks"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: true
+  echo: true
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usepackage{neuralnetwork}
+        \usepackage{mathtools}
+        \usepackage{amsmath}
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{shapes.misc}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    include-in-header: mathjax.html
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: 'd1bd5b366670324829aaa528aa92edc1'
+      id: '422433a0ba05fc61fae86fba5472bf329e67b28592de698028ca670214f8a8b2'
+---
+
+
+## Recurrent neural networks
+::: {.hidden}
+\newcommand{\bb}[1]{\boldsymbol{#1}}
+\newcommand{\bi}[1]{\textbf{\textit{{#1}}}}
+:::
+:::{.callout-tip icon=false}
+## Uses
+
+- Language Modelling and Generating Text
+- Speech Recognition
+- Generating Image Descriptions 
+- Video Tagging
+:::
+
+## Recurrent neural networks
+![Recurrent networks operate on sequences of vectors](img/rnn_sequences.jpeg)
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Interpretation
+      
+- RNNs combine the input vector with their state vector with a fixed (but learned) function to produce a new state vector. 
+
+- This can in programming terms be interpreted as running a fixed program with certain inputs and some internal variables. 
+
+- Viewed this way, RNNs essentially describe programs and are Turing-complete. 
+:::
+
+:::{.callout-note icon=false}
+## RNNs as programs
+If training vanilla neural nets is optimization over **functions**, training recurrent nets is optimization over **programs**.
+:::
+
+
+## Recurrent neural networks
+:::{.callout-important}
+## Cycles
+
+- feedforward networks -- no cycles 
+- RNN has cycles and transmits information back into itself. 
+- cycles are **recurrent connections**
+:::
+
+:::{.callout-tip icon=false}
+## Connection types
+
+- standard connections:  applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step
+- recurrent connections: dynamic, passing information across adjacent time steps
+While Feedforward Networks pass information through the network without cycles, the This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs $\bb{X}_{0:t-1}$ and not only the current input $\bb{X}_t$. 
+:::
+
+
+## Recurrent neural networks
+![](img/rnn_simple.png)
+
+## Recurrent neural networks
+![](img/rnn_simple2.png)
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Notation
+
+- $n$ -- number of samples
+- $d$ -- number of inputs
+- $h$ -- number of hidden units
+- $\bb{H}_t \in \mathbb{R}^{n \times h}$ -- hidden state at time $t$
+- $\bb{X}_t \in \mathbb{R}^{n \times d}$ -- input at time $t$
+- $\bb{W}_{xh} \in \mathbb{R}^{d \times h}$ -- weight matrix
+- $\bb{W}_{hh} \in \mathbb{R}^{h \times h}$ -- hidden-state-to-hidden-state matrix
+- $\bb{b}_h \in \mathbb{R}^{1 \times h}$ -- bias parameter
+- $\phi$ -- activation function (usually sigmoid or tanh)
+:::
+
+## Recurrent neural networks
+![Note, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block $\bb(H}$. This block can obviously be extended to multiple hidden layers.]{img/ff_vs_rn.png)
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Equation for hidden variable
+$$
+\label{hidden_var}
+\bb{H}_t = \phi_h \left(\bb{X}_t \bb{W}_{xh} + \bb{H}_{t-1} \bb{W}_{hh} + \bb{b}_h\right) 
+$$
+:::
+
+:::{.callout-note icon=false}
+## Equation for output variable
+$$
+\label{output_var}
+\bb{O}_t = \phi_o \left(\bb{H}_t \bb{W}_{ho} + \bb{b}_o\right) 
+$$
+Since $\bb{H}_t$ recursively includes $\bb{H}_{t-1}$ and this process occurs for every time step the RNN includes traces of all hidden states that preceded $\bb{H}_{t-1}$ as well as $\bb{H}_{t-1}$ itself.
+:::
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Computation for hidden variable
+$$
+\label{hidden_var_computation}
+\bb{H} = \phi_h \left(\bb{X} \bb{W}_{xh} + \bb{b}_h\right) 
+$$
+:::
+
+:::{.callout-note icon=false}
+## Computation for output variable
+$$
+\label{output_var_computation}
+\bb{O} = \phi_o \left(\bb{H} \bb{W}_{ho} + \bb{b}_o\right) 
+$$
+:::
+
+## Recurrent neural networks
+
+:::{.callout-tip icon=false}
+## Hidden state computation
+At any time step $t$:
+
+- concatenate the input $\bb{X}_t$ at the current time step $t$ and the hidden state $\bb{H}_{t-1}$  at the previous time step $t$
+- feed the concatenation result into a fully connected layer with the activation function $\phi$
+- The output of such a fully connected layer is the hidden state $\bb{H}_t$ of the current time step $t$
+- the model parameters are the concatenation of $\bb{W}_{xh}$ and $\bb{W}_{hh}$ and a bias $\bb{b}_h$
+- $\bb{H}_t$ will participate in computing the hidden state $\bb{H}_{t+1}$ of the next time step $t+1$
+- $\bb{H}_t$ will also be fed into the fully connected output layer to compute the output $\bb{O}_t$ of the current time step $t$ 
+:::
+
+## Recurrent neural networks
+![](img/rnn_hidden_state.png)
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Language modeling
+We aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels). Bengio et al. (2003) first proposed to use a neural network for language modeling.
+:::
+
+<!-- Let the minibatch size be one, and the sequence of the text be “machine”. To simplify training in subsequent sections, we tokenize text into characters rather than words and consider a character-level language model. The next figure demonstrates how to predict the next character based on the current and previous characters via an RNN for character-level language modeling. -->
+
+## Recurrent neural networks
+![A character-level language model based on the RNN. The input and target sequences are “machin” and “achine”, respectively.](img/rnn_char_based_lang_model.png)
+
+## Recurrent neural networks
+:::{.callout-tip icon=false}
+## Process
+During the training process, we run a softmax operation on the output from the output layer for each time step, and then use the cross-entropy loss to compute the error between the model output and the target. 
+
+Because of the recurrent computation of the hidden state in the hidden layer, the output $\bb{O}_3$ of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.
+
+In practice, each token is represented by a $d$-dimensional vector, and we use a batch size . Therefore, the input $\bb{X}_t$ at time step $t$ will be an $n \times d$ matrix.
+
+:::
+# Backpropagation in RNNs
+
+
+## Backpropagation in RNNs
+:::{.callout-tip icon=false}
+## Backpropagation Through Time (BPTT)
+
+- BPTT expands (or unrolls) the computational graph of an RNN one time step at a time. 
+- unrolled RNN is a FF neural network with same parameters appearing at each time step
+- The gradient with respect to each parameter must be summed across all places that the parameter occurs in the unrolled net. 
+:::
+
+## Backpropagation in RNNs
+
+:::{.callout-tip icon=false}
+## Backpropagation Through Time (BPTT)
+When we forward pass our input $\bb{X}_t$ through the network, we compute the hidden state $\bb{H}_t$ and the output state $\bb{O}_t$ one step at at time. 
+
+We can then define a loss function $L(\bb{O}, \bb{Y})$ to describe the difference between all outputs $\bb{O}_t$ and target values $\bb{Y}_t$, summing up loss terms $l_t$.
+
+$$
+\label{loss_function}
+L(\bb{O}, \bb{Y}) = \sum\limits_{t=1}^T l_t (\bb{O}_t, \bb{Y}_t)
+$$
+:::
+
+## Backpropagation in RNNs
+![Boxes represent variables (not shaded) or parameters (shaded) and circles represent operators.](img/bptt_graph.png)
+
+## Backpropagation in RNNs
+$$
+\notag
+\frac{\partial L}{\partial \bb{W}_{ho}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\partial \bb{W}_{ho}} = \\
+\label{loss_function_derivative1}
+= \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{H}_t.
+$$
+
+## Backpropagation in RNNs
+$$
+\label{loss_function_derivative2}
+\frac{\partial L}{\partial \bb{W}_{hh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\bb{H}_t} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_{hh}}= \\
+= \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{W}_{ho} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_hh}.
+$$
+
+## Backpropagation in RNNs
+$$
+\label{loss_function_derivative3}
+\frac{\partial L}{\partial \bb{W}_{xh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\bb{H}_t} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_{xh}}= \\
+= \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{W}_{ho} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_xh}.
+$$
+
+## Backpropagation in RNNs
+Since each $\bb{H}_t$ depends on the previous time step, we can substitute the last part from above equations to obtain
+$$
+\label{loss_function_derivative4}
+\frac{\partial L}{\partial \bb{W}_{hh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \bb{W}_{ho} \sum\limits_{k=1}^t \frac{\partial \bb{H}_t}{\partial \bb{H}_k}\frac{\partial \bb{H}_t}{\partial \bb{W}_{hh}}.
+$$
+
+$$
+\label{loss_function_derivative5}
+\frac{\partial L}{\partial \bb{W}_{xh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \bb{W}_{ho} \sum\limits_{k=1}^t \frac{\partial \bb{H}_t}{\partial \bb{H}_k}\frac{\partial \bb{H}_t}{\partial \bb{W}_{xh}}.
+$$
+
+## Backpropagation in RNNs
+:::{.callout-tip icon=false}
+## OR:
+$$
+\label{loss_function_derivative6}
+\frac{\partial L}{\partial \bb{W}_{hh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \bb{W}_{ho} \sum\limits_{k=1}^t \left(\bb{W}^T_{hh}\right)^{t-k} \cdot \bb{H}_k.
+$$
+
+$$
+\label{loss_function_derivative7}
+\frac{\partial L}{\partial \bb{W}_{xh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \bb{W}_{ho} \sum\limits_{k=1}^t \left(\bb{W}^T_{hh}\right)^{t-k} \cdot \bb{X}_k.
+$$
+:::
+
+
+## Backpropagation in RNNs
+:::{.callout-important icon=false}
+## A problem
+We can see that we need to store powers of $\bb{W}_{hh}^k$ as we proceed through each loss term $l_t$ of the overall loss function $L$ that can become very large.
+
+For these large values this method becomes numerically unstable since eigenvalues smaller than 1 vanish and eigenvalues larger than 1 diverge. 
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Truncate a sum at computationally convenient size - **Truncated BPTT**.
+:::
+
+## Backpropagation in RNNs
+:::{.callout-tip icon=false}
+## Truncated BPTT
+This establishes an upper bound for the number of time steps the gradient can flow back to.
+
+**Interpretation:** a moving window of past time steps which the RNN considers.  Anything before the cut-off time step doesn’t get taken into account. Since BPTT basically unfolds the RNN to create a new layer for each time step we can also think of this procedure as limiting the number of hidden layers.
+
+**Result:** model focuses primarily on short-term influence rather than long-term consequences.
+:::
+
+# LSTMs
+
+## LSTMs
+:::{.callout-important icon=false}
+## Problem
+In \eqref{loss_function_derivative4} and \eqref{loss_function_derivative5} we see $\frac{\partial \bb{H}_t}{\partial \bb{H}_k}$ that introduces a matrix multiplication over a potentially very long sequence.
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+LSTMs were designed to handle a vanishing gradient problem.
+
+Since they use a more constant error, they allow RNNs to learn over a lot more time steps (way over 1000).
+:::
+
+## LSTMs
+:::{.callout-tip icon=false}
+## Gates
+To achieve that, LSTMs store more information outside of the traditional neural network flow in structures called **gated cells**. 
+
+### Gate types
+
+- **output gate** $\bb{O}_t$ -- reads entries of the cell
+- **input gate** $\bb{I}_t$ -- reads data into the cell 
+- **forget gate** $\bb{F}_t$ -- resets the content of the cell.
+
+:::
+
+## LSTMs
+:::{.callout-tip icon=false}
+## Computations
+$$
+\label{lstm_computations}
+\bb{O}_t = \sigma\left(\bb{X}_t \bb{W}_{xo} + \bb{H}_{t-1} \bb{W}_{ho} + \bb{b}_o\right), \\
+\bb{I}_t = \sigma\left(\bb{X}_t \bb{W}_{xi} + \bb{H}_{t-1} \bb{W}_{hi} + \bb{b}_i\right), \\
+\bb{F}_t = \sigma\left(\bb{X}_t \bb{W}_{xf} + \bb{H}_{t-1} \bb{W}_{hf} + \bb{b}_f\right).
+$$
+
+Here $\bb{W}_{xo}, \bb{W}_{xi}\bb{W}_{xf} \in \mathbb{R}^{d \times h}$, and $\bb{W}_{ho}, \bb{W}_{hi}\bb{W}_{hf} \in \mathbb{R}^{h \times h}$ are weight matrices and $\bb{b}_o, \bb{b}_i, \bb{b}_f \in \mathbb{R}^{1 \times h}$ are their respective biases.
+
+Further, they use the sigmoid activation function $\sigma$ to transform the output $\in (0, 1)$ which each results in a vector with entries $\in (0, 1)$.
+:::
+
+## LSTMs
+![Calculation of input, forget, and output gates in an LSTM](img/lec12_lstm1.png)
+
+## LSTMs
+:::{.callout-tip icon=false}
+## Candidate memory cell
+$\tilde{\bb{C}}_t \in \mathbb{R}^{n \times h}$ -- similar computation as previously mentioned gates but uses tanh to have output $\in (-1, 1)$.
+
+Has its own weights $\bb{W}_{xc} \in \mathbb{R}^{d \times h},\bb{W}_{hc} \in \mathbb{R}^{h \times h}$ and biases $\bb{b}_c \in \mathbb{R}^{1 \times h}$.
+:::
+
+:::{.callout-note icon=false}
+## Computation
+$$
+\label{candidate_memory_cell_computation}
+\tilde{\bb{C}}_t = tanh \left(\bb{X}_t \bb{W}_{xc} + \bb{H}_{t-1} \bb{W}_{hc} + \bb{b}_c\right)
+$$
+:::
+
+## LSTMs
+![Computation of candidate memory cells in LSTM.](img/lec12_lstm2.png)
+
+## LSTMs
+:::{.callout-tip icon=false}
+## Old memory content
+To put things together we introduce old memory content $\bb{C}_{t−1} \in \mathbb{R}^{n \times h}$ which together with the introduced gates controls how much of the old memory content we want to preserve to get to the new memory content $\bb{C}_t$. 
+:::
+
+:::{.callout-note icon=false}
+## Computation
+$$
+\label{candidate_memory_cell_computation2}
+\bb{C}_t = \bb{F}_t \odot \bb{C}_{t-1} + \bb{I}_t \odot \tilde{\bb{C}}_t. 
+$$
+:::
+
+## LSTMs
+![Computation of memory cells in an LSTM.](img/lec12_lstm3.png)
+
+## LSTMs
+:::{.callout-tip icon=false}
+## Hidden states computation
+$$
+\label{hidden_states_computation}
+\bb{H}_t = \bb{O}_t \odot tanh\left(\bb{C}_t\right), \; \bb{H}_t \in \mathbb{R}^{n \times h}.
+$$
+
+- the output gate is close to 1 -- we allow the memory cell internal state to impact the subsequent layers uninhibited,
+- the output gate is close to -- we prevent the current memory from impacting other layers of the network at the current time step. 
+:::
+
+:::{.callout-note}
+A memory cell can accrue information across many time steps without impacting the rest of the network (as long as the output gate takes values close to 0), and then suddenly impact the network at a subsequent time step as soon as the output gate flips from values close to 0 to values close to 1.
+:::
+
+
+## LSTMs
+![Computation of the hidden state in an LSTM.](img/lec12_lstm4.png)
+
+# Gated Recurrent Units
+
+## Gated Recurrent Units
+:::{.callout-tip icon=false}
+## Rationale
+
+- simpler architecture
+- retain internal state and gating mechanisms
+- but speed up computation
+:::
+
+:::{.callout-note icon=false}
+## Outline
+
+- instead of LSTM's 3 gates, use 2: **reset gate** and **update gate**
+- reset gate controls how much of the previous state we want to remember
+- update gate controls how much of the new state is just a copy of the old one
+:::
+
+## Gated Recurrent Units
+![Computing the reset gate and the update gate in a GRU model.](img/gru_gate_computation.png)
+
+## Gated Recurrent Units
+
+:::{.callout-tip icon=false}
+## Gate computation
+Suppose that for a given time step $t$ we have:
+
+- a minibatch $\bb{X}_t \in \mathbb{R}^{n \times d}$ 
+- hidden state of the previous time step $\bb{H}_{t-1} \in \mathbb{R}^{n \times h}$
+- $\bb{W}_{xr}, \bb{W}_{xz} \in \mathbb{R}^{d \times h}, \; \bb{W}_{hr}, \bb{W}_{hz} \in \mathbb{R}^{h \times h}$ are weights
+- $\bb{b}_r, \bb{b}_z \in \mathbb{R}^{1 \times h}$ are bias parameters
+
+We compute:
+$$
+\bb{R}_t = \sigma\left(\bb{X}_t \bb{W}_{xr} + \bb{H}_{t-1}\bb{W}_{hr} + \bb{b}_r\right),\\
+\bb{Z}_t = \sigma\left(\bb{X}_t \bb{W}_{xz} + \bb{H}_{t-1}\bb{W}_{hz} + \bb{b}_z\right).
+$$
+:::
+
+## Gated Recurrent Units
+:::{.callout-tip icon=false}
+## Candidate hidden state at time step $t$
+Next, we integrate reset gate $\bb{R}_t$ with the regular updating mechanism and obtain:
+$$
+\tilde{\bb{H}}_t = tanh\left(\bb{X}_t \bb{W}_{xh} + (\bb{R}_t \odot \bb{H}_{t-1}) \bb{W}_{hh} + \bb{b}_h\right), \; \tilde{\bb{H}}_t \in \mathbb{R}^{n\times h}
+$$
+
+- influence of previous states is reduced with the Hadamard product of $\bb{R}_t$ and $\bb{H}_{t-1}$
+- entries in $\bb{R}_t$ close to 1 -- vanilla RNN
+- entries in $\bb{R}_t$ close to 0 -- candidate hidden state is the result of MLP with $\bb{X}_t$ as an input
+- any pre-existing hidden state is thus reset to defaults.
+:::
+
+## Gated Recurrent Units
+![Computing the candidate hidden state in a GRU model.](img/gru_candidate_hidden_state_computation.png)
+
+## Gated Recurrent Units
+:::{.callout-tip icon=false}
+## Update gate
+Finally, we need to incorporate the effect of the update gate $\bb{Z}_t$. 
+
+This determines the extent to which the new hidden state $\bb{H}_t \in \mathbb{R}^{n \times h}$ matches the old state $\bb{H}_{t-1}$ compared with how much it resembles the new candidate state $\tilde{\bb{H}}_t$. 
+
+The update gate $\bb{Z}_t$ can be used for this purpose, simply by taking elementwise convex combinations of $\bb{H}_{t-1}$ and $\tilde{\bb{H}}_t$.
+
+$$
+\bb{H}_t = \bb{Z}_t \odot \bb{H}_{t-1} + (1-\bb{Z}_t) \odot \tilde{\bb{H}}_t.
+$$
+
+- $\bb{Z}_t$ close to 1 -- retain the old state. In this case the information from $\bb{X}_t$ is ignored%, effectively skipping time step $t$ in the dependency chain. 
+- $\bb{Z}_t$ is close to 0 -- the new latent state $\bb{H}_t$ approaches the candidate latent state $\tilde{\bb{H}}_t$.
+
+:::
+
+## Gated Recurrent Units
+
+![Computing the hidden state in a GRU model.](img/gru_hidden_state_computation.png)
+
+## Gated Recurrent Units
+:::{.callout-tip icon=false}
+## Summary
+
+- Reset gates help capture **short-term** dependencies in sequences.
+- Update gates help capture **long-term** dependencies in sequences. 
+:::
+
+# Deep Recurrent Neural Networks
+
+## Deep Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## Stacking
+To construct a deep RNN with $L$ hidden layers we simply stack ordinary RNNs of any type on top of each other. 
+
+Each hidden state $\bb{H}^{(l)}_t \in \mathbb{R}^{n\times h}$ is passed to the next time step of the current layer $\bb{H}^{(l)}_{t+1}$ as well as the current time step of the next layer $\bb{H}^{(l+1)}_t$. 
+
+:::
+
+:::{.callout-tip icon=false}
+## State computation
+$$
+\label{drnn_subsequent_state}
+\bb{H}^{(l)}_t = \phi_l \left(\bb{H}^{(l-1)}_t \bb{W}_{xh}^{(l)} + \bb{H}_{t-1}^{(l)} \bb{W}_{hh}^{(l)} + \bb{b}_h^{(l)}\right),
+$$
+where $\bb{H}_t^{(0)} = \bb{X}_t$.
+:::
+
+## Deep Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## Output computation
+$$
+\label{drnn_output_computation}
+\bb{O}_t = \phi_o \left(\bb{H}_t^{(L)} \bb{W}_{ho} + \bb{b}_o\right), \; \bb{O}_t \in \mathbb{R}^{n \times o}.
+$$
+
+Note that we only use the hidden state of layer $L$.
+:::
+
+## Deep Recurrent Neural Networks
+![Architecture of a deep recurrent neural network.](img/deep_rnn_arch.png)
+
+# Bidirectional Recurrent Neural Networks
+
+## Bidirectional Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## Language modeling example
+Based on our current models we are able to reliably predict the next sequence element (i.e. the next word) based on what we have seen so far. However, there scenarios where we might want to fill in a gap in a sentence and the part of the sentence after the gap conveys significant information. This information is necessary to take into account to perform well on this kind of task. On a more generalised level we want to incorporate a **look-ahead property** for sequences.
+
+1. I am `___`.
+2. I am `___` hungry.
+3. I am `___` hungry, and I can eat half a pig. 
+:::
+
+## Bidirectional Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## Description
+To achieve this look-ahead property Bidirectional Recurrent Neural Networks (BRNNs) got introduced which basically add another hidden layer which run the sequence backwards starting from the last element.
+
+We simply implement two unidirectional RNN layers chained together in opposite directions and acting on the same input. For the first RNN layer, the first input is $\bb{X}_1$ and the last input is $\bb{X}_T$, but for the second RNN layer, the first input is $\bb{X}_T$ and the last input is $\bb{X}_1$.
+:::
+
+## Bidirectional Recurrent Neural Networks
+![Architecture of a bidirectional recurrent neural network.](img/brnn_architecture.png)
+
+## Bidirectional Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## Forward/Backward Hidden States
+
+$$
+\label{brnn_forward} 
+\overrightarrow{\bb{H}}_t = \phi\left(\bb{X}_t \bb{W}_{xh}^{(f)} + \overrightarrow{\bb{H}}_{t-1}\bb{W}_{hh}^{(f)} + \bb{b}_h^{(f)}\right),\; \overrightarrow{\bb{H}}_t \in \mathbb{R}^{n \times h},
+$$
+$$
+\label{brnn_backward} 
+\overleftarrow{\bb{H}}_t = \phi\left(\bb{X}_t \bb{W}_{xh}^{(b)} + \overleftarrow{\bb{H}}_{t+1}\bb{W}_{hh}^{(b)} + \bb{b}_h^{(b)}\right), \; \overleftarrow{\bb{H}}_t \in \mathbb{R}^{n \times h}.
+$$
+
+Note two sets of hidden matrices and biases:
+$$
+\bb{W}_{xh}^{(f)},\bb{W}_{xh}^{(b)} \in \mathbb{R}^{d \times h}, \; \bb{W}_{hh}^{(f)},\bb{W}_{hh}^{(b)} \in \mathbb{R}^{h \times h},\\
+\bb{b}_h^{(f)}, \bb{b}_h^{(b)} \in \mathbb{R}^{1 \times h}.
+$$
+:::
+
+## Bidirectional Recurrent Neural Networks
+:::{.callout-tip icon=false}
+## BRNN output
+$$
+\bb{O}_t = \phi\left(\left[\overrightarrow{\bb{H}}_t \frown \overleftarrow{\bb{H}}_t\right]\bb{W}_{ho} + \bb{b}_o\right),
+$$
+where $\frown$ denotes matrix concatenation (stacking them on top of each other).
+
+Weight matrices $\bb{W}_{ho} \in \mathbb{R}^{2h\times o}$, bias parameters $\bb{b}_o \in \mathbb{R}^{1 \times o}$.
+:::
+
+
+# Encoder-Decoder Architecture
+
+## Encoder-Decoder Architecture} 
+:::{.callout-tip icon=false}
+## Description
+
+- network is twofold 
+- **encoder network** -- encode the (variable-length) input into a state
+- **decoder network** -- decode the state into an output
+:::
+![](img/enc_dec_arch.png)
+
+## Encoder-Decoder Architecture} 
+:::{.callout-tip icon=false}
+## seq2seq
+Based on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq)  got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder. 
+
+It mainly focuses on mapping a fixed length input sequence
+of size $n$ to an fixed length output sequence of size $m$ where $n \neq m$ can be true but isn’t a necessity.
+:::
+
+## Encoder-Decoder Architecture
+![Seq2seq model](img/seq2seq.png)
+
+## Encoder-Decoder Architecture} 
+:::{.callout-tip icon=false}
+## Encoder
+
+- RNN accepts a single element of the sequence $\bb{X}_t$, $t$ being order of the sequence element
+- these RNNs can be LSTMs or GRUs for performance
+- hidden states $\bb{H}_t$ are computed according to the definition of hidden states in the used RNN type (LSTM or GRU)
+- The Encoder Vector (context) is a representation of the last hidden state of the encoder network which aims to aggregate all information from all previous input elements. 
+- This functions as initial hidden state of the decoder network of the model and enables the decoder to make accurate predictions. 
+:::
+
+
+## Encoder-Decoder Architecture} 
+:::{.callout-tip icon=false}
+## Decoder
+
+- RNN which predicts an output $\bb{Y}_t$ at a time step $t$
+- The produced output is again a sequence where each $\bb{Y}_t$ is a sequence element with order $t$
+- At each time step the RNN accepts a hidden state from the previous unit and itself produces an output as well as a new hidden state.
+:::
+
+
+## Encoder-Decoder Architecture} 
+:::{.callout-tip icon=false}
+## Encoder computation
+Encoder transforms the hidden states at all time steps into a context variable $\bb{C}$ through a customized function $q$:
+$$
+\bb{C} = q\left(\bb{H}_1, \dots, \bb{H}_T\right)
+$$
+:::
+
+:::{.callout-tip icon=false}
+## Decoder computation
+Decoder assigns a predicted probability to each possible token occurring at step $t'+1$ conditioned upon the previous tokens in the target $y_1, \dots, y_{t'}$ and the context variable $\bb{C}$, i.e. $P(y_{t'+1} | y_1, \dots, y_{t'}, \bb{C})$.
+
+$$
+\bb{S}_{t'} = g\left(y_{t'-1}, \bb{C}, \bb{S}_{t'-1}\right)
+$$
+:::
