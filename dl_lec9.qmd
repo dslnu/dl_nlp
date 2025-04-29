@@ -586,7 +586,7 @@ Weight matrices $\bb{W}_{ho} \in \mathbb{R}^{2h\times o}$, bias parameters $\bb{
 :::
 ![](img/enc_dec_arch.png)
 
-## Encoder-Decoder Architecture} 
+## Encoder-Decoder Architecture
 :::{.callout-tip icon=false}
 ## seq2seq
 Based on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq)  got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder. 
@@ -598,7 +598,7 @@ of size $n$ to an fixed length output sequence of size $m$ where $n \neq m$ can 
 ## Encoder-Decoder Architecture
 ![Seq2seq model](img/seq2seq.png)
 
-## Encoder-Decoder Architecture} 
+## Encoder-Decoder Architecture
 :::{.callout-tip icon=false}
 ## Encoder
 
@@ -610,7 +610,7 @@ of size $n$ to an fixed length output sequence of size $m$ where $n \neq m$ can 
 :::
 
 
-## Encoder-Decoder Architecture} 
+## Encoder-Decoder Architecture
 :::{.callout-tip icon=false}
 ## Decoder
 
@@ -620,7 +620,7 @@ of size $n$ to an fixed length output sequence of size $m$ where $n \neq m$ can 
 :::
 
 
-## Encoder-Decoder Architecture} 
+## Encoder-Decoder Architecture
 :::{.callout-tip icon=false}
 ## Encoder computation
 Encoder transforms the hidden states at all time steps into a context variable $\bb{C}$ through a customized function $q$:
