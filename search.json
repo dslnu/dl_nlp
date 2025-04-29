@@ -3070,7 +3070,7 @@
     "href": "dl_lec9.html#recurrent-neural-networks-3",
     "title": "Recurrent neural networks",
     "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\n\n\n\nCycles\n\n\n\nfeedforward networks – no cycles\nRNN has cycles and transmits information back into itself.\ncycles are recurrent connections\n\n\n\n\n\n\n\nConnection types\n\n\n\nstandard connections: applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step\nrecurrent connections: dynamic, passing information across adjacent time steps While Feedforward Networks pass information through the network without cycles, the This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs \\(\\boldsymbol{X}_{0:t-1}\\) and not only the current input \\(\\boldsymbol{X}_t\\)."
+    "text": "Recurrent neural networks\n\n\n\n\n\n\nCycles\n\n\n\nfeedforward networks – no cycles\nRNN has cycles and transmits information back into itself.\ncycles are recurrent connections\n\n\n\n\n\n\n\nConnection types\n\n\n\nstandard connections: applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step\nrecurrent connections: dynamic, passing information across adjacent time steps\n\nWhile Feedforward Networks pass information through the network without cycles, recurrent networks have cycles. This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs \\(\\boldsymbol{X}_{0:t-1}\\) and not only the current input \\(\\boldsymbol{X}_t\\)."
   },
   {
     "objectID": "dl_lec9.html#recurrent-neural-networks-4",
@@ -3098,7 +3098,7 @@
     "href": "dl_lec9.html#recurrent-neural-networks-7",
     "title": "Recurrent neural networks",
     "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n![Note, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block \\(\\boldsymbol{(}H}\\). This block can obviously be extended to multiple hidden layers.]{img/ff_vs_rn.png)"
+    "text": "Recurrent neural networks\n\nNote, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block \\(\\boldsymbol{H}\\). This block can obviously be extended to multiple hidden layers."
   },
   {
     "objectID": "dl_lec9.html#recurrent-neural-networks-8",
@@ -3133,7 +3133,7 @@
     "href": "dl_lec9.html#recurrent-neural-networks-12",
     "title": "Recurrent neural networks",
     "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nLanguage modeling\n\n\nWe aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels). Bengio et al. (2003) first proposed to use a neural network for language modeling."
+    "text": "Recurrent neural networks\n\n\n\nLanguage modeling\n\n\nWe aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels).\nBengio et al. (2003) first proposed to use a neural network for language modeling."
   },
   {
     "objectID": "dl_lec9.html#recurrent-neural-networks-13",
@@ -3147,7 +3147,7 @@
     "href": "dl_lec9.html#recurrent-neural-networks-14",
     "title": "Recurrent neural networks",
     "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nProcess\n\n\nDuring the training process, we run a softmax operation on the output from the output layer for each time step, and then use the cross-entropy loss to compute the error between the model output and the target.\nBecause of the recurrent computation of the hidden state in the hidden layer, the output \\(\\boldsymbol{O}_3\\) of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.\nIn practice, each token is represented by a \\(d\\)-dimensional vector, and we use a batch size . Therefore, the input \\(\\boldsymbol{X}_t\\) at time step \\(t\\) will be an \\(n \\times d\\) matrix."
+    "text": "Recurrent neural networks\n\n\n\nProcess\n\n\nDuring the training process, we run a softmax operation on the output from the output layer for each time step, and then use the cross-entropy loss to compute the error between the model output and the target.\nBecause of the recurrent computation of the hidden state in the hidden layer, the output \\(\\boldsymbol{O}_3\\) of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.\n\n\n\n\n\n\n\n\n\nNote\n\n\nIn practice, each token is represented by a \\(d\\)-dimensional vector, and we use a batch size \\(n\\). Therefore, the input \\(\\boldsymbol{X}_t\\) at time step \\(t\\) will be an \\(n \\times d\\) matrix."
   },
   {
     "objectID": "dl_lec9.html#backpropagation-in-rnns-1",
@@ -3405,8 +3405,8 @@
     "objectID": "dl_lec9.html#encoder-decoder-architecture-1",
     "href": "dl_lec9.html#encoder-decoder-architecture-1",
     "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture}",
-    "text": "Encoder-Decoder Architecture}\n\n\n\nDescription\n\n\n\nnetwork is twofold\nencoder network – encode the (variable-length) input into a state\ndecoder network – decode the state into an output"
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nDescription\n\n\n\nnetwork is twofold\nencoder network – encode the (variable-length) input into a state\ndecoder network – decode the state into an output"
   },
   {
     "objectID": "dl_lec9.html#encoder-decoder-architecture-2",
