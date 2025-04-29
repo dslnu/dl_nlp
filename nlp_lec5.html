@@ -1,0 +1,1540 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-html/tabby.min.js"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-d4d76bf8491c20bad77d141916dc28e1.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.6.43">
+
+  <meta name="author" content="MSDE">
+  <title>Deep Learning/NLP course – Nearest-neighbor search</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    ul.task-list{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+      vertical-align: middle;
+    }
+    /* CSS for syntax highlighting */
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      { color: #003b4f; background-color: #f1f3f5; }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span { color: #003b4f; } /* Normal */
+    code span.al { color: #ad0000; } /* Alert */
+    code span.an { color: #5e5e5e; } /* Annotation */
+    code span.at { color: #657422; } /* Attribute */
+    code span.bn { color: #ad0000; } /* BaseN */
+    code span.bu { } /* BuiltIn */
+    code span.cf { color: #003b4f; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #20794d; } /* Char */
+    code span.cn { color: #8f5902; } /* Constant */
+    code span.co { color: #5e5e5e; } /* Comment */
+    code span.cv { color: #5e5e5e; font-style: italic; } /* CommentVar */
+    code span.do { color: #5e5e5e; font-style: italic; } /* Documentation */
+    code span.dt { color: #ad0000; } /* DataType */
+    code span.dv { color: #ad0000; } /* DecVal */
+    code span.er { color: #ad0000; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #ad0000; } /* Float */
+    code span.fu { color: #4758ab; } /* Function */
+    code span.im { color: #00769e; } /* Import */
+    code span.in { color: #5e5e5e; } /* Information */
+    code span.kw { color: #003b4f; font-weight: bold; } /* Keyword */
+    code span.op { color: #5e5e5e; } /* Operator */
+    code span.ot { color: #003b4f; } /* Other */
+    code span.pp { color: #ad0000; } /* Preprocessor */
+    code span.sc { color: #5e5e5e; } /* SpecialChar */
+    code span.ss { color: #20794d; } /* SpecialString */
+    code span.st { color: #20794d; } /* String */
+    code span.va { color: #111111; } /* Variable */
+    code span.vs { color: #20794d; } /* VerbatimString */
+    code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-2f366650f320edcfcf53d73c80250a32.css">
+  <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/font-awesome/css/all.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/reveal-chalkboard/style.css" rel="stylesheet">
+  <link href="site_libs/revealjs/plugin/quarto-support/footer.css" rel="stylesheet">
+  <style type="text/css">
+    .reveal div.sourceCode {
+      margin: 0;
+      overflow: auto;
+    }
+    .reveal div.hanging-indent {
+      margin-left: 1em;
+      text-indent: -1em;
+    }
+    .reveal .slide:not(.center) {
+      height: 100%;
+    }
+    .reveal .slide.scrollable {
+      overflow-y: auto;
+    }
+    .reveal .footnotes {
+      height: 100%;
+      overflow-y: auto;
+    }
+    .reveal .slide .absolute {
+      position: absolute;
+      display: block;
+    }
+    .reveal .footnotes ol {
+      counter-reset: ol;
+      list-style-type: none; 
+      margin-left: 0;
+    }
+    .reveal .footnotes ol li:before {
+      counter-increment: ol;
+      content: counter(ol) ". "; 
+    }
+    .reveal .footnotes ol li > p:first-child {
+      display: inline-block;
+    }
+    .reveal .slide ul,
+    .reveal .slide ol {
+      margin-bottom: 0.5em;
+    }
+    .reveal .slide ul li,
+    .reveal .slide ol li {
+      margin-top: 0.4em;
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide ul[role="tablist"] li {
+      margin-bottom: 0;
+    }
+    .reveal .slide ul li > *:first-child,
+    .reveal .slide ol li > *:first-child {
+      margin-block-start: 0;
+    }
+    .reveal .slide ul li > *:last-child,
+    .reveal .slide ol li > *:last-child {
+      margin-block-end: 0;
+    }
+    .reveal .slide .columns:nth-child(3) {
+      margin-block-start: 0.8em;
+    }
+    .reveal blockquote {
+      box-shadow: none;
+    }
+    .reveal .tippy-content>* {
+      margin-top: 0.2em;
+      margin-bottom: 0.7em;
+    }
+    .reveal .tippy-content>*:last-child {
+      margin-bottom: 0.2em;
+    }
+    .reveal .slide > img.stretch.quarto-figure-center,
+    .reveal .slide > img.r-stretch.quarto-figure-center {
+      display: block;
+      margin-left: auto;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-left,
+    .reveal .slide > img.r-stretch.quarto-figure-left  {
+      display: block;
+      margin-left: 0;
+      margin-right: auto; 
+    }
+    .reveal .slide > img.stretch.quarto-figure-right,
+    .reveal .slide > img.r-stretch.quarto-figure-right  {
+      display: block;
+      margin-left: auto;
+      margin-right: 0; 
+    }
+  </style>
+</head>
+<body class="quarto-light">
+  <div class="reveal">
+    <div class="slides">
+
+<section id="title-slide" class="quarto-title-block center">
+  <h1 class="title">Nearest-neighbor search</h1>
+
+<div class="quarto-title-authors">
+<div class="quarto-title-author">
+<div class="quarto-title-author-name">
+MSDE 
+</div>
+        <p class="quarto-title-affiliation">
+            Lviv University
+          </p>
+    </div>
+</div>
+
+</section>
+<section id="ann" class="slide level2">
+<h2>ANN</h2>
+<div class="hidden">
+
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>LSH</strong></p>
+</div>
+<div class="callout-content">
+<p>Locality sensitive hashing (LSH) is a widely popular technique used in approximate nearest neighbor (<strong>ANN</strong>) search.</p>
+<p><strong>LSH</strong> is one of the original techniques for producing high quality search, while maintaining lightning fast search speeds.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>ANN Users</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Google (query-vs-index)</li>
+<li>Amazon (product recommendations)</li>
+<li>Spotify (music recommendations)</li>
+<li>Netflix (movie recommendations)</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="spotify-example" class="slide level2">
+<h2>Spotify example</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Tip</strong></p>
+</div>
+<div class="callout-content">
+<p>Spotify uses <strong>Voyager</strong>.</p>
+<ul>
+<li>modified version of open-source hnswlib</li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/spotify_voyager.png" class="r-stretch"></section>
+<section id="guide-to-electronic-music" class="slide level2">
+<h2>Guide to electronic music</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/music_guide.png"></p>
+<figcaption>https://music.ishkur.com</figcaption>
+</figure>
+</div>
+
+<aside><div>
+
+</div></aside></section>
+<section id="guide-to-electronic-music-1" class="slide level2">
+<h2>Guide to electronic music</h2>
+<iframe width="1920" height="1080" src="https://music.ishkur.com" title="Guide">
+</iframe>
+</section>
+<section id="search-complexity" class="slide level2">
+<h2>Search complexity</h2>
+<div class="callout callout-warning no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Pairwise comparison</strong></p>
+</div>
+<div class="callout-content">
+<p>Complexity is <span class="math inline">\(O(n^2)\)</span>. If a single query against all samples - <span class="math inline">\(O(n)\)</span>.</p>
+<p>Plus, we compare vectors - sometimes <strong>highly-dimensional</strong> ones.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="approximate-search" class="slide level2">
+<h2>Approximate search</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem</strong></p>
+</div>
+<div class="callout-content">
+<p>Is it even possible to perform a search with sub-linear complexity?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Solution</strong></p>
+</div>
+<div class="callout-content">
+<p>The solution is <strong>approximate search</strong>.</p>
+<p>Rather than comparing every vector (<strong>exhaustive search</strong>) — we can approximate and limit our search scope to only the most relevant vectors.</p>
+</div>
+</div>
+</div>
+<!--LSH is one algorithm that provides us with those sub-linear search times.-->
+</section>
+<section id="locality-sensitive-hashing" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Vector comparison complexity</strong></p>
+</div>
+<div class="callout-content">
+<p>Attempting to find a closest match is linear <span class="math inline">\(O(n)\)</span>.</p>
+<p>Pairwise comparison - at best log-linear <span class="math inline">\(O(n \log n)\)</span>.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Considerations</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>we need to reduce the number of comparisons</li>
+<li>we want only to compare vectors that we believe to be potential matches — or candidate pairs</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="locality-sensitive-hashing-1" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>LSH</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>several approaches</li>
+<li>we’ll consider traditional one first: shingling + MinHashing + banded function</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="locality-sensitive-hashing-2" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Basic outline</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>segment and hash same sample several times</li>
+<li>when we find that a pair of vectors has been hashed to the same value at least once, we tag them as <em>candidate pairs</em> — that is, potential matches.</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Python dictionaries</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>We have a key-value pair which we feed into the dictionary.<br>
+</li>
+<li>The key is processed through the dictionary hash function and mapped to a specific bucket.</li>
+<li>We then connect the respective value to this bucket.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="locality-sensitive-hashing-3" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+
+<img data-src="img/hash.png" class="r-stretch quarto-figure-center"><p class="caption">A typical hash function aims to place different values (no matter how similar) into separate buckets.</p></section>
+<section id="locality-sensitive-hashing-4" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Hash properties</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong>determinism</strong></li>
+<li><strong>uniformity</strong></li>
+<li><strong>non-reversibility</strong></li>
+<li><strong>fixed-size output</strong></li>
+<li><strong>sensitivity to input changes</strong></li>
+<li><strong>collision resistance</strong></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="locality-sensitive-hashing-5" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Difference in goals</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Dictionaries: <strong>minimize</strong> collisions.</li>
+<li>LSH: <strong>maximize</strong> collisions (ideally only for similar inputs)</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="locality-sensitive-hashing-6" class="slide level2">
+<h2>Locality Sensitive Hashing</h2>
+<div class="quarto-figure quarto-figure-center">
+<figure>
+<p><img data-src="img/lsh_hash.png"></p>
+<figcaption>An LSH function aims to place similar values into the same buckets.</figcaption>
+</figure>
+</div>
+
+<!--The method we have briefly described and will be covering throughout the remainder of this article could be described as the traditional approach, using shingling, MinHashing, and banding.-->
+<aside><div>
+<p>There is no single approach to hashing in LSH. Indeed, they all share the same ‘bucket similar samples through a hash function’ logic , but they can vary a lot beyond this.</p>
+</div></aside></section>
+<section id="shingling-minhashing-and-lsh" class="slide level2">
+<h2>Shingling, MinHashing, and LSH</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>LSH Steps</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>convert text to sparse vectors using <em>k-shingling</em> (and <em>one-hot encoding</em>)</li>
+<li>use <em>minhashing</em> to create <code>signatures</code></li>
+<li>pass signatures onto LSH process to weed out <em>candidate pairs</em></li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="shingling-minhashing-and-lsh-1" class="slide level2">
+<h2>Shingling, MinHashing, and LSH</h2>
+
+<img data-src="img/lsh_process.png" class="r-stretch"></section>
+<section id="k-shingling" class="slide level2">
+<h2>k-Shingling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Definition</strong></p>
+</div>
+<div class="callout-content">
+<p><em>k-Shingling</em>, or simply <em>shingling</em>, is the process of converting a string of text into a set of <code>shingles</code>. The process is similar to moving a window of length <span class="math inline">\(k\)</span> down our string of text and taking a picture at each step. We collate all of those pictures to create our <strong>set of shingles</strong>.</p>
+</div>
+</div>
+</div>
+
+<img data-src="img/shingling.png" class="r-stretch"></section>
+<section id="k-shingling-1" class="slide level2">
+<h2>k-Shingling</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Note</strong></p>
+</div>
+<div class="callout-content">
+<p>Shingling removes duplicate items!</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Python example</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="kw">def</span> shingle(text: <span class="bu">str</span>, k: <span class="bu">int</span>):</span>
+<span id="cb1-2"><a></a>  shingle_set <span class="op">=</span> []</span>
+<span id="cb1-3"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(text) <span class="op">-</span> k<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb1-4"><a></a>    shingle_set.append(text[i:i<span class="op">+</span>k])</span>
+<span id="cb1-5"><a></a>  <span class="cf">return</span> <span class="bu">set</span>(shingle_set)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="k-shingling-2" class="slide level2">
+<h2>k-Shingling</h2>
+<div class="callout callout-note callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Sparse vectors</strong></p>
+</div>
+<div class="callout-content">
+<p>Next, create <strong>sparse vectors</strong>. To do this, we first need to union all of our sets to create one big set containing all of the shingles across all of our sets — we call this the <strong>vocabulary</strong> (or <strong>vocab</strong>).</p>
+</div>
+</div>
+</div>
+
+<img data-src="img/lsh_vocab.png" class="r-stretch"></section>
+<section id="k-shingling-3" class="slide level2">
+<h2>k-Shingling</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Sparse vectors</strong></p>
+</div>
+<div class="callout-content">
+<p>We use this vocab to create our sparse vector representations of each set - a <strong>one-hot encoding</strong>.</p>
+<p>All we do is create an empty vector full of zeros and the same length as our vocab — then, we look at which shingles appear in our set.</p>
+</div>
+</div>
+</div>
+
+<!-- For every shingle that appears, we identify the position of that shingle in our vocab and set the respective position in our new zero-vector to 1. Some of you may recognize this as one-hot encoding. -->
+<img data-src="img/lsh_sparse_vector.png" class="r-stretch"></section>
+<section id="minhashing" class="slide level2">
+<h2>Minhashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Minhashing</strong></p>
+</div>
+<div class="callout-content">
+<p>Minhashing is the next step in our process, allowing us to convert our <em>sparse vectors</em> into <em>dense vectors</em>.</p>
+<p><strong>Minhash functions:</strong></p>
+<ul>
+<li>randomly generate for every position in the signature (e.g.&nbsp;the dense vector)</li>
+<li>for a dense vector/signature of 20 numbers — we would use 20 minhash functions.</li>
+<li>MinHash functions are a randomized order of numbers — and we count from 1 to the final number (which is <code>len(vocab)</code>)</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-2" class="slide level2 smaller">
+<h2>Minhashing</h2>
+<p>Our signature values are created by first taking a randomly permuted count vector (from 1 to <code>len(vocab)+1</code>) and finding the minimum number that aligns with a 1 in our sparse vector.</p>
+<div>
+
+</div>
+<div class="quarto-layout-panel" data-layout-ncol="2">
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/minhash1.png"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/minhash3.png"></p>
+</div>
+</div>
+<div class="quarto-layout-row">
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/minhash2.png"></p>
+</div>
+<div class="quarto-layout-cell" style="flex-basis: 50.0%;justify-content: center;">
+<p><img data-src="img/minhash4.png"></p>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-3" class="slide level2">
+<h2>Minhashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Process</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Above, we’re using a smaller vocab containing six values so we can easily visualize the process.</li>
+<li>We look at our sparse vector and say, “did this shingle at vocab[1] exist in our set?”. If it did — the sparse vector value will be 1 — in this case, it did not exist (hence the 0 value). So, we move to number 2, identify its position (0) and ask the same question. This time, the answer is yes, and so our minhash output is 2.</li>
+<li>That’s how we produce one value in our minhash signature. But we need to produce 20 (or more) of these values. So, we assign a different minhash function to each signature position — and repeat the process.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-4" class="slide level2">
+<h2>Minhashing</h2>
+
+<img data-src="img/minhash_signature.png" class="r-stretch quarto-figure-center"><p class="caption">Here we use four minhash functions/vectors to create a four-digit signature vector. If you count (from one) in each minhash function, and identify the first value that aligns with a one in the sparse vector — you will get 2412.</p></section>
+<section id="minhashing-in-python" class="slide level2">
+<h2>Minhashing in Python</h2>
+<p>We have three steps:</p>
+<h3 id="generate-a-randomized-minhash-vector.">1. Generate a randomized MinHash vector.</h3>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Unshuffled</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>  hash_ex <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb2-2"><a></a>  <span class="bu">print</span>(hash_ex)  <span class="co"># we haven't shuffled yet</span></span>
+<span id="cb2-3"><a></a></span>
+<span id="cb2-4"><a></a>  Out: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, ..., <span class="dv">101</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Shuffled</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>  <span class="im">from</span> random <span class="im">import</span> shuffle</span>
+<span id="cb3-2"><a></a></span>
+<span id="cb3-3"><a></a>  shuffle(hash_ex)</span>
+<span id="cb3-4"><a></a>  <span class="bu">print</span>(hash_ex)</span>
+<span id="cb3-5"><a></a></span>
+<span id="cb3-6"><a></a>  Out: [<span class="dv">63</span>, <span class="dv">7</span>, <span class="dv">94</span>, ..., <span class="dv">56</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-in-python-1" class="slide level2">
+<h2>Minhashing in Python</h2>
+<h3 id="loop-through-this-randomized-minhash-vector-starting-at-1.">2. Loop through this randomized MinHash vector (starting at 1).</h3>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Matching</strong></p>
+</div>
+<div class="callout-content">
+<p>Match the index of each value to the equivalent values in the sparse vector <code>a_1hot</code>.</p>
+<p>If we find a 1 — that index is our signature value.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="bu">print</span>(<span class="ss">f"7 -&gt; </span><span class="sc">{</span>hash_ex<span class="sc">.</span>index(<span class="dv">7</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb4-2"><a></a></span>
+<span id="cb4-3"><a></a>  Out: <span class="dv">7</span> <span class="op">-&gt;</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We now have a randomized list of integers which we can use in creating our <strong>hashed</strong> signatures.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-in-python-2" class="slide level2">
+<h2>Minhashing in Python</h2>
+<h3 id="loop-through-this-randomized-minhash-vector-starting-at-1.-1">2. Loop through this randomized MinHash vector (starting at 1).</h3>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Count</strong></p>
+</div>
+<div class="callout-content">
+<p>Count up from 1 to len(vocab) + 1 and find if <code>hash_ex.index(i)</code> position in our one-hot encoded vectors contains 1 in that position:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb5-2"><a></a>  idx <span class="op">=</span> hash_ex.index(i)</span>
+<span id="cb5-3"><a></a>  signature_val <span class="op">=</span> a_1hot[idx]</span>
+<span id="cb5-4"><a></a>  <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>signature_val<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-5"><a></a>  <span class="cf">if</span> signature_val <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb5-6"><a></a>      <span class="bu">print</span>(<span class="st">'match!'</span>)</span>
+<span id="cb5-7"><a></a>      <span class="cf">break</span></span>
+<span id="cb5-8"><a></a></span>
+<span id="cb5-9"><a></a>Out:  <span class="dv">1</span> <span class="op">-&gt;</span> <span class="dv">58</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-10"><a></a>      <span class="dv">2</span> <span class="op">-&gt;</span> <span class="dv">19</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-11"><a></a>      <span class="dv">3</span> <span class="op">-&gt;</span> <span class="dv">96</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-12"><a></a>      <span class="dv">4</span> <span class="op">-&gt;</span> <span class="dv">92</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-13"><a></a>      <span class="dv">5</span> <span class="op">-&gt;</span> <span class="dv">83</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
+<span id="cb5-14"><a></a>      <span class="dv">6</span> <span class="op">-&gt;</span> <span class="dv">98</span> <span class="op">-&gt;</span> <span class="dv">1</span></span>
+<span id="cb5-15"><a></a>      match<span class="op">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-in-python-3" class="slide level2">
+<h2>Minhashing in Python</h2>
+<h3 id="build-a-signature-from-multiple-iterations-of-1-and-2.">3. Build a signature from multiple iterations of 1 and 2.</h3>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Minhash vectors</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> create_hash_func(size: <span class="bu">int</span>):</span>
+<span id="cb6-2"><a></a>  <span class="co"># function for creating the hash vector/function</span></span>
+<span id="cb6-3"><a></a>  hash_ex <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>))</span>
+<span id="cb6-4"><a></a>  shuffle(hash_ex)</span>
+<span id="cb6-5"><a></a>  <span class="cf">return</span> hash_ex</span>
+<span id="cb6-6"><a></a></span>
+<span id="cb6-7"><a></a><span class="kw">def</span> build_minhash_func(vocab_size: <span class="bu">int</span>, nbits: <span class="bu">int</span>):</span>
+<span id="cb6-8"><a></a>  <span class="co"># function for building multiple minhash vectors</span></span>
+<span id="cb6-9"><a></a>  hashes <span class="op">=</span> []</span>
+<span id="cb6-10"><a></a>  <span class="cf">for</span> _ <span class="kw">in</span> <span class="bu">range</span>(nbits):</span>
+<span id="cb6-11"><a></a>      hashes.append(create_hash_func(vocab_size))</span>
+<span id="cb6-12"><a></a>  <span class="cf">return</span> hashes</span>
+<span id="cb6-13"><a></a></span>
+<span id="cb6-14"><a></a><span class="co"># we create 20 minhash vectors</span></span>
+<span id="cb6-15"><a></a>minhash_func <span class="op">=</span> build_minhash_func(<span class="bu">len</span>(vocab), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-in-python-4" class="slide level2">
+<h2>Minhashing in Python</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Create hash</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> create_hash(vector: <span class="bu">list</span>):</span>
+<span id="cb7-2"><a></a>  <span class="co"># use this function for creating our signatures (eg the matching)</span></span>
+<span id="cb7-3"><a></a>  signature <span class="op">=</span> []</span>
+<span id="cb7-4"><a></a>  <span class="cf">for</span> func <span class="kw">in</span> minhash_func:</span>
+<span id="cb7-5"><a></a>      <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>):</span>
+<span id="cb7-6"><a></a>          idx <span class="op">=</span> func.index(i)</span>
+<span id="cb7-7"><a></a>          signature_val <span class="op">=</span> vector[idx]</span>
+<span id="cb7-8"><a></a>          <span class="cf">if</span> signature_val <span class="op">==</span> <span class="dv">1</span>:</span>
+<span id="cb7-9"><a></a>              signature.append(idx)</span>
+<span id="cb7-10"><a></a>              <span class="cf">break</span></span>
+<span id="cb7-11"><a></a>  <span class="cf">return</span> signature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-in-python-5" class="slide level2">
+<h2>Minhashing in Python</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Signatures creation</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="co"># now create signatures</span></span>
+<span id="cb8-2"><a></a>a_sig <span class="op">=</span> create_hash(a_1hot)</span>
+<span id="cb8-3"><a></a>b_sig <span class="op">=</span> create_hash(b_1hot)</span>
+<span id="cb8-4"><a></a>c_sig <span class="op">=</span> create_hash(c_1hot)</span>
+<span id="cb8-5"><a></a></span>
+<span id="cb8-6"><a></a><span class="bu">print</span>(a_sig)</span>
+<span id="cb8-7"><a></a><span class="bu">print</span>(b_sig)</span>
+<span id="cb8-8"><a></a>  </span>
+<span id="cb8-9"><a></a>Out: </span>
+<span id="cb8-10"><a></a>[<span class="dv">44</span>, <span class="dv">21</span>, <span class="dv">73</span>, <span class="dv">14</span>, <span class="dv">2</span>, <span class="dv">13</span>, <span class="dv">62</span>, <span class="dv">70</span>, <span class="dv">17</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">86</span>, <span class="dv">21</span>, <span class="dv">18</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">86</span>, <span class="dv">47</span>, <span class="dv">17</span>, <span class="dv">78</span>]</span>
+<span id="cb8-11"><a></a>[<span class="dv">97</span>, <span class="dv">96</span>, <span class="dv">57</span>, <span class="dv">82</span>, <span class="dv">43</span>, <span class="dv">67</span>, <span class="dv">75</span>, <span class="dv">24</span>, <span class="dv">49</span>, <span class="dv">28</span>, <span class="dv">67</span>, <span class="dv">56</span>, <span class="dv">96</span>, <span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">85</span>, <span class="dv">86</span>, <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">75</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="minhashing-5" class="slide level2">
+<h2>Minhashing</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Outcome</strong></p>
+</div>
+<div class="callout-content">
+<p>We’ve taken a sparse vector and compressed it into a more densely packed, 20-number signature.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="information-transfer-from-sparse-to-signature" class="slide level2">
+<h2>Information Transfer from Sparse to Signature</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Question</strong></p>
+</div>
+<div class="callout-content">
+<p>Is the information truly maintained between our much larger sparse vector and much smaller dense vector?</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Answer</strong></p>
+</div>
+<div class="callout-content">
+<p>We use <strong>Jaccard similarity</strong> to calculate the similarity between our sentences in shingle format — then repeat for the same vectors in signature format.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="information-transfer-from-sparse-to-signature-1" class="slide level2">
+<h2>Information Transfer from Sparse to Signature</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Jaccard fn</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="kw">def</span> jaccard(a: <span class="bu">set</span>, b: <span class="bu">set</span>):</span>
+<span id="cb9-2"><a></a>  <span class="cf">return</span> <span class="bu">len</span>(a.intersection(b)) <span class="op">/</span> <span class="bu">len</span>(a.union(b))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Jaccard a and b</span></span>
+<span id="cb10-2"><a></a>jaccard(a, b), jaccard(<span class="bu">set</span>(a_sig), <span class="bu">set</span>(b_sig))</span>
+<span id="cb10-3"><a></a></span>
+<span id="cb10-4"><a></a>(<span class="fl">0.14814814814814814</span>, <span class="fl">0.10344827586206896</span>)</span>
+<span id="cb10-5"><a></a></span>
+<span id="cb10-6"><a></a><span class="co"># Jaccard b and c</span></span>
+<span id="cb10-7"><a></a>jaccard(b, c), jaccard(<span class="bu">set</span>(b_sig), <span class="bu">set</span>(c_sig))</span>
+<span id="cb10-8"><a></a></span>
+<span id="cb10-9"><a></a>(<span class="fl">0.45652173913043476</span>, <span class="fl">0.34615384615384615</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash" class="slide level2">
+<h2>Band and Hash</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Banding approach to LSH</strong></p>
+</div>
+<div class="callout-content">
+<p>The final step in identifying similar sentences is the LSH function itself.</p>
+<ul>
+<li>signatures</li>
+<li>hashing segments of each signature</li>
+<li>looking for hash collisions</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-1" class="slide level2">
+<h2>Band and Hash</h2>
+
+<img data-src="img/band_and_hash.png" class="r-stretch quarto-figure-center"><p class="caption">A high-level view of the signature-building process. We take our text, build a shingle set, one-hot encode it using our vocab, and process it through our minhashing process.</p></section>
+<section id="band-and-hash-2" class="slide level2">
+<h2>Band and Hash</h2>
+<div class="callout callout-important no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Problem</strong></p>
+</div>
+<div class="callout-content">
+<p>Now, if we were to hash each of these vectors as a whole, we may struggle to build a hashing function that accurately identifies similarity between them — we don’t require that the full vector is equal, only that parts of it are similar.</p>
+<p>In most cases, even though parts of two vectors may match perfectly — if the remainder of the vectors are not equal, the hashing function will likely put them into separate buckets.</p>
+</div>
+</div>
+</div>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Solution</strong></p>
+</div>
+<div class="callout-content">
+<p>We want signatures that share even some similarity to be hashed into the same bucket, thus being identified as candidate pairs.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-3" class="slide level2">
+<h2>Band and Hash</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>How it Works</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>The banding method solves this problem by splitting our vectors into sub-parts called <em>bands</em> <span class="math inline">\(b\)</span></li>
+<li>rather than processing the full vector through our hash function, we pass each band of our vector through a hash function</li>
+</ul>
+<p>Imagine we split a 100-dimensionality vector into 20 bands. That gives us 20 opportunities to identify matching sub-vectors between our vectors.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-4" class="slide level2">
+<h2>Band and Hash</h2>
+
+<img data-src="img/banding_how.png" class="r-stretch quarto-figure-center"><p class="caption">We split our signature into b sub-vectors, each is processed through a hash function (we can use a single hash function, or b hash functions) and mapped to a hash bucket.</p></section>
+<section id="band-and-hash-5" class="slide level2">
+<h2>Band and Hash</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Banding</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>If there is a collision between any two sub-vectors, we consider the respective full vectors as candidate pairs.</li>
+<li>We split the signatures into subvectors. Each equivalent subvector across all signatures must be processed through the same hash function. However, it is not necessary to use different hash functions for each subvector (we can use just one hash function for them all).</li>
+</ul>
+</div>
+</div>
+</div>
+
+<img data-src="img/banding_how2.png" class="r-stretch"></section>
+<section id="band-and-hash-6" class="slide level2">
+<h2>Band and Hash</h2>
+<div class="callout callout-important callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<p><strong>Problem</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Only part of the two vectors must match for us to consider them.</li>
+<li>This increases the number of false positives (samples that we mark as candidate matches where they are not similar).</li>
+<li>However, we try to minimize these as far as possible.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-in-python" class="slide level2">
+<h2>Band and Hash in Python</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Split fn</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> split_vector(signature, b):</span>
+<span id="cb11-2"><a></a>  <span class="cf">assert</span> <span class="bu">len</span>(signature) <span class="op">%</span> b <span class="op">==</span> <span class="dv">0</span></span>
+<span id="cb11-3"><a></a>  r <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(signature) <span class="op">/</span> b)</span>
+<span id="cb11-4"><a></a>  <span class="co"># code splitting signature in b parts</span></span>
+<span id="cb11-5"><a></a>  subvecs <span class="op">=</span> []</span>
+<span id="cb11-6"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(signature), r):</span>
+<span id="cb11-7"><a></a>      subvecs.append(signature[i : i<span class="op">+</span>r])</span>
+<span id="cb11-8"><a></a>  <span class="cf">return</span> subvecs </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-in-python-1" class="slide level2">
+<h2>Band and Hash in Python</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Output</strong></p>
+</div>
+<div class="callout-content">
+<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>band_a <span class="op">=</span> split_vector(a_sig, <span class="dv">10</span>)</span>
+<span id="cb12-2"><a></a>band_b <span class="op">=</span> split_vector(b_sig, <span class="dv">10</span>)</span>
+<span id="cb12-3"><a></a>band_c <span class="op">=</span> split_vector(c_sig, <span class="dv">10</span>)</span>
+<span id="cb12-4"><a></a></span>
+<span id="cb12-5"><a></a>Out: [[<span class="dv">42</span>, <span class="dv">43</span>],</span>
+<span id="cb12-6"><a></a>     [<span class="dv">69</span>, <span class="dv">55</span>],</span>
+<span id="cb12-7"><a></a>     [<span class="dv">29</span>, <span class="dv">96</span>],</span>
+<span id="cb12-8"><a></a>     [<span class="dv">86</span>, <span class="dv">46</span>],</span>
+<span id="cb12-9"><a></a>     [<span class="dv">92</span>, <span class="dv">5</span>],</span>
+<span id="cb12-10"><a></a>     [<span class="dv">72</span>, <span class="dv">65</span>],</span>
+<span id="cb12-11"><a></a>     [<span class="dv">29</span>, <span class="dv">5</span>],</span>
+<span id="cb12-12"><a></a>     [<span class="dv">53</span>, <span class="dv">33</span>],</span>
+<span id="cb12-13"><a></a>     [<span class="dv">40</span>, <span class="dv">94</span>],</span>
+<span id="cb12-14"><a></a>     [<span class="dv">96</span>, <span class="dv">70</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="band-and-hash-in-python-2" class="slide level2">
+<h2>Band and Hash in Python</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Looping</strong></p>
+</div>
+<div class="callout-content">
+<p>Then we loop through the lists to identify any matches between sub-vectors. If we find any matches — we take those vectors as candidate pairs.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="cf">for</span> b_rows, c_rows <span class="kw">in</span> <span class="bu">zip</span>(band_b, band_c):</span>
+<span id="cb13-2"><a></a>  <span class="cf">if</span> b_rows <span class="op">==</span> c_rows:</span>
+<span id="cb13-3"><a></a>      <span class="bu">print</span>(<span class="ss">f"Candidate pair: </span><span class="sc">{</span>b_rows<span class="sc">}</span><span class="ss"> == </span><span class="sc">{</span>c_rows<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb13-4"><a></a>      <span class="co"># we only need one band to match</span></span>
+<span id="cb13-5"><a></a>      <span class="cf">break</span></span>
+<span id="cb13-6"><a></a></span>
+<span id="cb13-7"><a></a>Out: Candidate pair: [<span class="dv">69</span>, <span class="dv">55</span>] <span class="op">==</span> [<span class="dv">69</span>, <span class="dv">55</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>We find that our two more similar sentences, <strong>b</strong>, and <strong>c</strong> are identified as candidate pairs.</p>
+<p>The less similar of the trio, a — is not identified as a candidate. This is a good result, but if we want to really test LSH, we will need to work with more data.</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<section id="other-kinds-of-ann" class="title-slide slide level1 center">
+<h1>Other kinds of ANN</h1>
+
+</section>
+<section id="tradeoffs" class="slide level2">
+<h2>Tradeoffs</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Tradeoffs</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>speed</li>
+<li>memory</li>
+<li>quality</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="flat-search" class="slide level2">
+<h2>Flat search</h2>
+
+<img data-src="img/ann_flat_index.png" class="r-stretch quarto-figure-center"><p class="caption">With flat indexes, we compare our search query <span class="math inline">\(\boldsymbol{xq}\)</span> to every other vector in the index.</p></section>
+<section id="flat-search-1" class="slide level2">
+<h2>Flat search</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>When?</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>Search quality is a very high priority.</li>
+<li>Search time does not matter OR when using a small index (&lt;10K).</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="flat-search-2" class="slide level2">
+<h2>Flat search</h2>
+
+<img data-src="img/ann_flat_search_time.png" class="r-stretch quarto-figure-center"><p class="caption">Euclidean (L2) and Inner Product (IP) flat index search times using faiss-cpu on an M1 chip. Both using vector dimensionality of 100.</p></section>
+<section id="flat-search-3" class="slide level2">
+<h2>Flat search</h2>
+
+<img data-src="img/ann_flat_index_balance.png" class="r-stretch"></section>
+<section id="speed-improvements" class="slide level2">
+<h2>Speed improvements</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>How can we search faster?</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li><strong><em>Reduce vector size</em></strong> - through dimensionality reduction or reducing the number of bits representing our vectors values.</li>
+<li><strong><em>Reduce search scope</em></strong> - we can do this by clustering or organizing vectors into tree structures based on certain attributes, similarity, or distance - and restricting our search to closest clusters or filter through most similar branches.</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="speed-improvements-1" class="slide level2">
+<h2>Speed improvements</h2>
+
+<img data-src="img/ann_balance.png.png" class="r-stretch quarto-figure-center"><p class="caption">Using either of these approaches means that we are no longer performing an exhaustive nearest-neighbors search but an approximate nearest-neighbors (ANN) search — as we no longer search the entire, full-resolution dataset.</p></section>
+<section id="lsh-speed" class="slide level2">
+<h2>LSH speed</h2>
+
+<img data-src="img/lsh_nbits.png" class="r-stretch quarto-figure-center"><p class="caption">$nbits $ <code>resolution</code> of the hashed vectors. A higher value means greater accuracy at the cost of more memory and slower search speeds.</p></section>
+<section id="lsh-speed-1" class="slide level2">
+<h2>LSH speed</h2>
+
+<img data-src="img/lsh_search_time.png" class="r-stretch quarto-figure-center"><p class="caption">So our stored vectors become increasingly larger as our original vector dimensionality d increases. This quickly leads to excessive search times.</p></section>
+<section id="lsh-speed-2" class="slide level2">
+<h2>LSH speed</h2>
+
+<img data-src="img/lsh_mem_size.png" class="r-stretch quarto-figure-center"><p class="caption">Which is mirrored by our index memory size:</p></section>
+<section id="lsh-speed-3" class="slide level2">
+<h2>LSH speed</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>When?</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>low-dimensionality vectors (128 is already a bit too large)</li>
+<li>small indexes</li>
+</ul>
+</div>
+</div>
+</div>
+</section>
+<section id="hnsw" class="slide level2">
+<h2>HNSW</h2>
+<div class="callout callout-tip no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Hierarchical Navigable Small World Graphs</strong></p>
+</div>
+<div class="callout-content">
+<ul>
+<li>great search quality</li>
+<li>good search speed</li>
+<li>big index sizes</li>
+</ul>
+</div>
+</div>
+</div>
+<div class="callout callout-note no-icon callout-titled callout-style-default">
+<div class="callout-body">
+<div class="callout-title">
+<p><strong>Facebook example</strong></p>
+</div>
+<div class="callout-content">
+<p>With 1.59B active users, the average number of steps (or hops) needed to traverse the graph from one user to another was just 3.57.</p>
+</div>
+</div>
+</div>
+</section>
+<section id="hnsw-1" class="slide level2">
+<h2>HNSW</h2>
+
+<img data-src="img/nsw_graph.png" class="r-stretch quarto-figure-center"><p class="caption">Visualization of an NSW graph. Notice that each point is no more than four hops away from another.</p></section>
+<section id="hnsw-2" class="slide level2">
+<h2>HNSW</h2>
+
+
+
+<img data-src="img/nsw_levels.png" class="r-stretch quarto-figure-center"><p class="caption">HNSW graphs are built by taking NSW graphs and breaking them apart into multiple layers. With each incremental layer eliminating intermediate connections between vertices. With HNSW, we break networks into several layers, which are traversed during the search.</p></section></section>
+    </div>
+  <div class="quarto-auto-generated-content" style="display: none;">
+<div class="footer footer-default">
+
+</div>
+</div></div>
+
+  <script>window.backupDefine = window.define; window.define = undefined;</script>
+  <script src="site_libs/revealjs/dist/reveal.js"></script>
+  <!-- reveal.js plugins -->
+  <script src="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.js"></script>
+  <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/reveal-chalkboard/plugin.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/socket.io.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/multiplex.js"></script>
+  <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
+  
+
+  <script src="site_libs/revealjs/plugin/notes/notes.js"></script>
+  <script src="site_libs/revealjs/plugin/search/search.js"></script>
+  <script src="site_libs/revealjs/plugin/zoom/zoom.js"></script>
+  <script src="site_libs/revealjs/plugin/math/math.js"></script>
+  <script>window.define = window.backupDefine; window.backupDefine = undefined;</script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://revealjs.com/config/
+      Reveal.initialize({
+'controlsAuto': true,
+'previewLinksAuto': true,
+'pdfSeparateFragments': false,
+'autoAnimateEasing': "ease",
+'autoAnimateDuration': 1,
+'autoAnimateUnmatched': true,
+'jumpToSlide': true,
+'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleChalkboard(event)\"><kbd>b</kbd> Toggle Chalkboard</a></li>\n<li class=\"slide-tool-item\" data-item=\"6\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleNotesCanvas(event)\"><kbd>c</kbd> Toggle Notes Canvas</a></li>\n<li class=\"slide-tool-item\" data-item=\"7\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.downloadDrawings(event)\"><kbd>d</kbd> Download Drawings</a></li>\n<li class=\"slide-tool-item\" data-item=\"8\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'chalkboard': {"buttons":true},
+'multiplex': {"url":"https://mplex.vitv.ly","secret":null,"id":"b3f677cc187e7a9f7b1b7ce69a39ffc660d840fdd8b81ea67eb8ca2869a93514"},
+'smaller': false,
+ 
+        // Display controls in the bottom right corner
+        controls: false,
+
+        // Help the user learn the controls by providing hints, for example by
+        // bouncing the down arrow when they first encounter a vertical slide
+        controlsTutorial: false,
+
+        // Determines where controls appear, "edges" or "bottom-right"
+        controlsLayout: 'edges',
+
+        // Visibility rule for backwards navigation arrows; "faded", "hidden"
+        // or "visible"
+        controlsBackArrows: 'faded',
+
+        // Display a presentation progress bar
+        progress: true,
+
+        // Display the page number of the current slide
+        slideNumber: 'c/t',
+
+        // 'all', 'print', or 'speaker'
+        showSlideNumber: 'all',
+
+        // Add the current slide number to the URL hash so that reloading the
+        // page/copying the URL will return you to the same slide
+        hash: true,
+
+        // Start with 1 for the hash rather than 0
+        hashOneBasedIndex: false,
+
+        // Flags if we should monitor the hash and change slides accordingly
+        respondToHashChanges: true,
+
+        // Push each slide change to the browser history
+        history: true,
+
+        // Enable keyboard shortcuts for navigation
+        keyboard: true,
+
+        // Enable the slide overview mode
+        overview: true,
+
+        // Disables the default reveal.js slide layout (scaling and centering)
+        // so that you can use custom CSS layout
+        disableLayout: false,
+
+        // Vertical centering of slides
+        center: false,
+
+        // Enables touch navigation on devices with touch input
+        touch: true,
+
+        // Loop the presentation
+        loop: false,
+
+        // Change the presentation direction to be RTL
+        rtl: false,
+
+        // see https://revealjs.com/vertical-slides/#navigation-mode
+        navigationMode: 'linear',
+
+        // Randomizes the order of slides each time the presentation loads
+        shuffle: false,
+
+        // Turns fragments on and off globally
+        fragments: true,
+
+        // Flags whether to include the current fragment in the URL,
+        // so that reloading brings you to the same fragment position
+        fragmentInURL: false,
+
+        // Flags if the presentation is running in an embedded mode,
+        // i.e. contained within a limited portion of the screen
+        embedded: false,
+
+        // Flags if we should show a help overlay when the questionmark
+        // key is pressed
+        help: true,
+
+        // Flags if it should be possible to pause the presentation (blackout)
+        pause: true,
+
+        // Flags if speaker notes should be visible to all viewers
+        showNotes: false,
+
+        // Global override for autoplaying embedded media (null/true/false)
+        autoPlayMedia: null,
+
+        // Global override for preloading lazy-loaded iframes (null/true/false)
+        preloadIframes: null,
+
+        // Number of milliseconds between automatically proceeding to the
+        // next slide, disabled when set to 0, this value can be overwritten
+        // by using a data-autoslide attribute on your slides
+        autoSlide: 0,
+
+        // Stop auto-sliding after user input
+        autoSlideStoppable: true,
+
+        // Use this method for navigation when auto-sliding
+        autoSlideMethod: null,
+
+        // Specify the average time in seconds that you think you will spend
+        // presenting each slide. This is used to show a pacing timer in the
+        // speaker view
+        defaultTiming: null,
+
+        // Enable slide navigation via mouse wheel
+        mouseWheel: false,
+
+        // The display mode that will be used to show slides
+        display: 'block',
+
+        // Hide cursor if inactive
+        hideInactiveCursor: true,
+
+        // Time before the cursor is hidden (in ms)
+        hideCursorTime: 5000,
+
+        // Opens links in an iframe preview overlay
+        previewLinks: false,
+
+        // Transition style (none/fade/slide/convex/concave/zoom)
+        transition: 'none',
+
+        // Transition speed (default/fast/slow)
+        transitionSpeed: 'default',
+
+        // Transition style for full page slide backgrounds
+        // (none/fade/slide/convex/concave/zoom)
+        backgroundTransition: 'none',
+
+        // Number of slides away from the current that are visible
+        viewDistance: 3,
+
+        // Number of slides away from the current that are visible on mobile
+        // devices. It is advisable to set this to a lower number than
+        // viewDistance in order to save resources.
+        mobileViewDistance: 2,
+
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1050,
+
+        height: 700,
+
+        // Factor of the display size that should remain empty around the content
+        margin: 0.1,
+
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+          tex2jax: {
+            inlineMath: [['\\(','\\)']],
+            displayMath: [['\\[','\\]']],
+            balanceBraces: true,
+            processEscapes: false,
+            processRefs: true,
+            processEnvironments: true,
+            preview: 'TeX',
+            skipTags: ['script','noscript','style','textarea','pre','code'],
+            ignoreClass: 'tex2jax_ignore',
+            processClass: 'tex2jax_process'
+          },
+        },
+
+        // reveal.js plugins
+        plugins: [QuartoLineHighlight, PdfExport, RevealMenu, RevealChalkboard, QuartoSupport,
+
+          RevealMath,
+          
+          RevealSearch,
+          RevealZoom
+        ]
+      });
+    </script>
+    <script id="quarto-html-after-body" type="application/javascript">
+    window.document.addEventListener("DOMContentLoaded", function (event) {
+      const toggleBodyColorMode = (bsSheetEl) => {
+        const mode = bsSheetEl.getAttribute("data-mode");
+        const bodyEl = window.document.querySelector("body");
+        if (mode === "dark") {
+          bodyEl.classList.add("quarto-dark");
+          bodyEl.classList.remove("quarto-light");
+        } else {
+          bodyEl.classList.add("quarto-light");
+          bodyEl.classList.remove("quarto-dark");
+        }
+      }
+      const toggleBodyColorPrimary = () => {
+        const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+        if (bsSheetEl) {
+          toggleBodyColorMode(bsSheetEl);
+        }
+      }
+      toggleBodyColorPrimary();  
+      const tabsets =  window.document.querySelectorAll(".panel-tabset-tabby")
+      tabsets.forEach(function(tabset) {
+        const tabby = new Tabby('#' + tabset.id);
+      });
+      const isCodeAnnotation = (el) => {
+        for (const clz of el.classList) {
+          if (clz.startsWith('code-annotation-')) {                     
+            return true;
+          }
+        }
+        return false;
+      }
+      const onCopySuccess = function(e) {
+        // button target
+        const button = e.trigger;
+        // don't keep focus
+        button.blur();
+        // flash "checked"
+        button.classList.add('code-copy-button-checked');
+        var currentTitle = button.getAttribute("title");
+        button.setAttribute("title", "Copied!");
+        let tooltip;
+        if (window.bootstrap) {
+          button.setAttribute("data-bs-toggle", "tooltip");
+          button.setAttribute("data-bs-placement", "left");
+          button.setAttribute("data-bs-title", "Copied!");
+          tooltip = new bootstrap.Tooltip(button, 
+            { trigger: "manual", 
+              customClass: "code-copy-button-tooltip",
+              offset: [0, -8]});
+          tooltip.show();    
+        }
+        setTimeout(function() {
+          if (tooltip) {
+            tooltip.hide();
+            button.removeAttribute("data-bs-title");
+            button.removeAttribute("data-bs-toggle");
+            button.removeAttribute("data-bs-placement");
+          }
+          button.setAttribute("title", currentTitle);
+          button.classList.remove('code-copy-button-checked');
+        }, 1000);
+        // clear code selection
+        e.clearSelection();
+      }
+      const getTextToCopy = function(trigger) {
+          const codeEl = trigger.previousElementSibling.cloneNode(true);
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
+            }
+          }
+          return codeEl.innerText;
+      }
+      const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+        text: getTextToCopy
+      });
+      clipboard.on('success', onCopySuccess);
+      if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+        const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+          text: getTextToCopy,
+          container: window.document.getElementById('quarto-embedded-source-code-modal')
+        });
+        clipboardModal.on('success', onCopySuccess);
+      }
+        var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+        var mailtoRegex = new RegExp(/^mailto:/);
+          var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+        var isInternal = (href) => {
+            return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+        }
+        // Inspect non-navigation links and adorn them if external
+     	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+        for (var i=0; i<links.length; i++) {
+          const link = links[i];
+          if (!isInternal(link.href)) {
+            // undo the damage that might have been done by quarto-nav.js in the case of
+            // links that we want to consider external
+            if (link.dataset.originalHref !== undefined) {
+              link.href = link.dataset.originalHref;
+            }
+          }
+        }
+      function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+        const config = {
+          allowHTML: true,
+          maxWidth: 500,
+          delay: 100,
+          arrow: false,
+          appendTo: function(el) {
+              return el.closest('section.slide') || el.parentElement;
+          },
+          interactive: true,
+          interactiveBorder: 10,
+          theme: 'light-border',
+          placement: 'bottom-start',
+        };
+        if (contentFn) {
+          config.content = contentFn;
+        }
+        if (onTriggerFn) {
+          config.onTrigger = onTriggerFn;
+        }
+        if (onUntriggerFn) {
+          config.onUntrigger = onUntriggerFn;
+        }
+          config['offset'] = [0,0];
+          config['maxWidth'] = 700;
+        window.tippy(el, config); 
+      }
+      const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+      for (var i=0; i<noterefs.length; i++) {
+        const ref = noterefs[i];
+        tippyHover(ref, function() {
+          // use id or data attribute instead here
+          let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+          try { href = new URL(href).hash; } catch {}
+          const id = href.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note) {
+            return note.innerHTML;
+          } else {
+            return "";
+          }
+        });
+      }
+      const findCites = (el) => {
+        const parentEl = el.parentElement;
+        if (parentEl) {
+          const cites = parentEl.dataset.cites;
+          if (cites) {
+            return {
+              el,
+              cites: cites.split(' ')
+            };
+          } else {
+            return findCites(el.parentElement)
+          }
+        } else {
+          return undefined;
+        }
+      };
+      var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+      for (var i=0; i<bibliorefs.length; i++) {
+        const ref = bibliorefs[i];
+        const citeInfo = findCites(ref);
+        if (citeInfo) {
+          tippyHover(citeInfo.el, function() {
+            var popup = window.document.createElement('div');
+            citeInfo.cites.forEach(function(cite) {
+              var citeDiv = window.document.createElement('div');
+              citeDiv.classList.add('hanging-indent');
+              citeDiv.classList.add('csl-entry');
+              var biblioDiv = window.document.getElementById('ref-' + cite);
+              if (biblioDiv) {
+                citeDiv.innerHTML = biblioDiv.innerHTML;
+              }
+              popup.appendChild(citeDiv);
+            });
+            return popup.innerHTML;
+          });
+        }
+      }
+    });
+    </script>
+    
+
+</body></html>
