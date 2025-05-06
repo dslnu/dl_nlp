@@ -1,0 +1,529 @@
+---
+title: "Transformers 1"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: true
+  echo: true
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usepackage{neuralnetwork}
+        \usepackage{mathtools}
+        \usepackage{amsmath}
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{shapes.misc}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    include-in-header: mathjax.html
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: 'd1bd5b366670324829aaa528aa92edc1'
+      id: '422433a0ba05fc61fae86fba5472bf329e67b28592de698028ca670214f8a8b2'
+---
+
+## Attention
+::: {.hidden}
+\newcommand{\bb}[1]{\boldsymbol{#1}}
+\newcommand{\bi}[1]{\textbf{\textit{{#1}}}}
+:::
+
+:::{.callout-tip icon=false}
+## Early methods
+
+- MLP
+- Convolutions
+- Recurrent NNs
+:::
+
+:::{.callout-note}
+
+- convolutions dominating **image processing**
+- LSTM RNNs dominating **NLP**
+:::
+
+## Applications
+:::{.callout-tip icon=false}
+## Applications of transformers
+
+- NLP
+- image recognition
+- speech recognition
+- reinforcement learning
+:::
+
+## Attention
+:::{.callout-tip icon=false}
+## History
+  Attention - originally proposed for encoded-decoder architectures.
+
+  Vaswani paper - "Attention is all you need"
+
+  Large-scale pretrained models, now sometimes called **foundation models**.
+:::
+![](img/attention_is_all_you_need.png)
+
+# seq2seq models
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Definition
+A sequence-to-sequence model is a model that takes a sequence of items (words, letters, features of an images…etc) and outputs another sequence of items.
+:::
+![](img/seq2seq_1.png)
+![](img/seq2seq_2.png)
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Encoder/Decoder
+Under the hood, the model is composed of an encoder and a decoder.
+
+The encoder processes each item in the input sequence, it compiles the information it captures into a vector (called the \textbf{context}). After processing the entire input sequence, the encoder sends the context over to the decoder, which begins producing the output sequence item by item.
+
+The context is a vector (an array of numbers, basically) in the case of machine translation. The encoder and decoder tend to both be recurrent neural networks
+
+:::
+![](img/seq2seq_context.png)
+
+## seq2seq
+RNN takes two inputs: an input (one word from the input sentence) and a hidden state.
+
+Context: You can set the size of the context vector when you set up your model. It is basically the number of hidden units in the encoder RNN. These visualizations show a vector of size 4, but in real world applications the context vector would be of a size like 256, 512, or 1024.
+
+![](img/seq2seq_embedding.png)
+
+## seq2seq
+![](img/seq2seq_dec1.png){height=150}
+![](img/seq2seq_dec2.png){height=150}
+![](img/seq2seq_dec3.png){height=150}
+
+## seq2seq
+![](img/seq2seq_rnn.png)
+
+## seq2seq
+In the following visualization, each pulse for the encoder or decoder is that RNN processing its inputs and generating an output for that time step. Since the encoder and decoder are both RNNs, each time step one of the RNNs does some processing, it updates its hidden state based on its inputs and previous inputs it has seen.
+
+Let’s look at the hidden states for the encoder. Notice how the last hidden state is actually the context we pass along to the decoder.
+
+## seq2seq
+![](img/seq2seq_ts1.png){height=150}
+![](img/seq2seq_ts3.png){height=150}
+![](img/seq2seq_ts7.png){height=150}
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Unrolled view
+
+![](img/seq2seq_unrolled1.png){height=250}
+![](img/seq2seq_unrolled2.png){height=250}
+:::
+
+
+## seq2seq
+:::{.callout-important icon=false}
+## Problem
+The context vector turned out to be a bottleneck for these types of models: it was challenging for the models to deal with long sentences. 
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+A solution was proposed in Bahdanau et al., 2014 and Luong et al., 2015.
+
+- These papers introduced and refined a technique called **attention**, which highly improved the quality of machine translation systems.
+- Attention allows the model to focus on the relevant parts of the input sequence as needed.
+:::
+
+## seq2seq
+![At time step 7, the attention mechanism enables the decoder to focus on the word "étudiant" ("student" in french) before it generates the English translation.](img/seq2seq_att1.png)
+
+<!-- This ability to amplify the signal from the relevant part of the input sequence makes attention models produce better results than models without attention. -->
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Attention model differences
+**Encoder** passes all hidden states to the decoder, not just the last state.
+
+**Decoder** does some extra step before producing its output:
+
+- Look at the set of encoder hidden states it received – each encoder hidden state is most associated with a certain word in the input sentence
+- Give each hidden state a score
+- Multiply each hidden state by its softmaxed score, thus amplifying hidden states with high scores, and drowning out hidden states with low scores
+- The scoring is done at each time step.
+:::
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Illustrated
+![](img/seq2seq_att2.png)
+:::
+
+## seq2seq
+![](img/seq2seq_att3.png)
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Process
+
+- The attention decoder RNN takes in the embedding of the <END> token, and an initial decoder hidden state.
+- The RNN processes its inputs, producing an output and a new hidden state vector $h_4$. The output is discarded.
+- Attention Step: We use the encoder hidden states and the $h_4$ vector to calculate a context vector $c_4$ for this time step.
+- We concatenate $h_4$ and $c_4$ into one vector.
+- We pass this vector through a feedforward neural network (one trained jointly with the model).
+- The output of the feedforward neural networks indicates the output word of this time step.
+- Repeat for the next time steps
+:::
+
+## seq2seq
+![](img/seq2seq_att4.png)
+
+## seq2seq
+:::{.callout-tip icon=false}
+## Another way
+![](img/seq2seq_att5.png)
+:::
+
+## seq2seq
+![Model learns how to align words (example from paper).](img/seq2seq_att6.png)
+
+# Transformers
+
+## Transformers
+![Attention is all you need (2017)](img/tfs_arch_orig.png)
+
+## Transformers
+![Compared to seq2seq, performance is improved!](img/tfs_arch1.png)
+
+## Transformers
+![Encoder and decoder structure.](img/tfs_arch2.png)
+
+## Transformers
+![A key property of the Transformer: the word in each position flows through its own path in the encoder. There are dependencies between these paths in the self-attention layer. The feed-forward layer does not have those dependencies, however, and thus the various paths can be executed in parallel while flowing through the feed-forward layer.](img/tfs_enc_dec_flow.png)
+
+## Transformers
+![The word at each position passes through a **self-attention process**. Then, they each pass through a FFNN.](img/tfs_enc_dec_flow2.png)
+
+## Transformers
+
+:::{.callout-important icon=false}
+## High-level view
+What does the word "it" refer to?
+
+> The animal didn't cross the street because it was too tired
+
+:::
+![](img/tfs_self_attention.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## High-level flow
+
+- when the model is processing the word “it”, self-attention allows it to associate “it” with “animal”.
+
+- as the model processes each word (each position in the input sequence), self attention allows it to look at other positions in the input sequence for clues that can help lead to a better encoding for this word.
+
+- for RNNs, maintaining a hidden state allows them to incorporate its representation of previous words/vectors it has processed with the current one it’s processing.
+
+- Self-attention is the method the Transformer uses to bake the “understanding” of other relevant words into the one we’re currently processing.
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## How is self-attention calculated?
+
+1. Create 3 vectors (Query, Key, Value) from each input embedding.
+
+![](img/tfs_self_attention2.png){height=450}
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## How is self-attention calculated?
+
+2. Calculate **score**. The score is calculated by taking the dot product of the query vector with the key vector of the respective word we’re scoring.
+
+![](img/tfs_self_attention3.png){height=450}
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## How is self-attention calculated?
+
+3. Divide by $\sqrt{d_k}$. 
+
+4. Normalize via softmax.
+
+![width=9cm](img/tfs_self_attention4.png){height=400}
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## How is self-attention calculated?
+5. Multiply each value vector by softmax score.
+
+   **Intuition**: keep intact the values of the word(s) we want to focus on, and drown-out irrelevant words (by multiplying them by tiny numbers like 0.001, for example).
+
+6. Sum up weighted value vectors. This produces the output of the self-attention layer at this position (for the first word).
+:::
+
+## Transformers
+![](img/tfs_self_attention5.png)
+
+
+## Transformers
+:::{.callout-tip icon=false}
+## Matrix calculation
+![](img/tfs_self_attention6.png){height=450}
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## Matrix calculation
+![](img/tfs_self_attention7.png){height=450}
+:::
+
+## Transformers
+:::{.callout-important}
+## Multiheaded attention
+Introduced in the original paper.
+
+This improves the performance of the attention layer in two ways:
+
+- It expands the model’s ability to focus on different positions. 
+- It gives the attention layer multiple "representation subspaces". 
+:::
+
+## Transformers
+![](img/tfs_multiheaded_attention.png)
+
+## Transformers
+Calculating e.g. 8 times:
+![](img/tfs_multiheaded_attention2.png)
+
+## Transformers
+:::{.callout-important icon=false}
+## Problem
+Feed-forward layer is not expecting 8 matrices, but 1. 
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Concat the matrices then multiply them by an additional weights matrix $W_O$.
+:::
+
+## Transformers
+![](img/tfs_multiheaded_attention3.png)
+
+## Transformers
+![Everything together.](img/tfs_multiheaded_attention4.png)
+
+## Transformers
+![The model's representation of the word "it" bakes in some of the representation of both "animal" and "tired".](img/tfs_multiheaded_attention5.png)
+
+## Transformers
+![With all attention heads.](img/tfs_multiheaded_attention6.png)
+
+## Transformers
+
+:::{.callout-important icon=false}
+## Problem
+How do we account for the order of the words in the input sequence?
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+The transformer adds a vector to each input embedding. 
+
+These vectors follow a specific pattern that the model learns, which helps it determine the position of each word, or the distance between different words in the sequence. 
+
+The intuition here is that adding these values to the embeddings provides meaningful distances between the embedding vectors once they’re projected into Q/K/V vectors and during dot-product attention.
+:::
+
+## Transformers
+![Values of positional encoding vectors follow a specific pattern.](img/tfs_pe.png)
+
+## Transformers
+![A real example of positional encoding with a toy embedding size of 4.](img/tfs_pe2.png)
+
+## Transformers
+   
+  <!-- %You can see that it appears split in half down the center. That's because the values of the left half are generated by one function (which uses sine), and the right half is generated by another function (which uses cosine). They're then concatenated to form each of the positional encoding vectors. -->
+![PE for 20 words (rows) with an embedding size of 512 (columns).](img/tfs_pe3.png){height=600}
+
+## Transformers
+:::{.callout-tip icon=false}
+## A formule for PE from the paper
+    
+$$
+  PE_{(pos,2i)} =sin(pos/10000^{2i/d_{model}}),\\
+  PE_{(pos,2i+1)} =cos(pos/10000^{2i/d_{model}})
+$$
+where $pos$ is the position and $i$ is the dimension. 
+
+That is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from $2\pi$ to $10000 \cdot 2\pi$. We chose this function because we hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset $k$, $PE_{pos+k}$ can be represented as a linear function of $PE_{pos}$.
+
+:::
+
+## Transformers
+![Each sub-layer (self-attention, ffnn) in each encoder has a residual connection around it, and is followed by a layer-normalization step.](img/tfs_layer_norm.png)
+
+## Transformers
+![With vectors and operations visualized.](img/tfs_layer_norm2.png)
+
+## Transformers
+![Transformer of 2 stacked encoders and decoders](img/tfs_layer_norm3.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## Decoder
+
+- The encoders start by processing the input sequence
+- The output of the top encoder is then transformed into a set of attention vectors $\bb{K}$ and $\bb{V}$
+- These are to be used by each decoder in its “encoder-decoder attention” layer which helps the decoder focus on appropriate places in the input sequence.
+- Each step in the decoding phase outputs an element from the output sequence (the English translation sentence in this case).
+:::
+
+## Transformers
+![](img/tfs_decoder.png)
+
+## Transformers
+<!-- The following steps repeat the process until a special symbol is reached indicating the transformer decoder has completed its output. The output of each step is fed to the bottom decoder in the next time step, and the decoders bubble up their decoding results just like the encoders did. And just like we did with the encoder inputs, we embed and add positional encoding to those decoder inputs to indicate the position of each word. -->
+![](img/tfs_decoder2.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## Decoder
+The self attention layers in the decoder operate in a slightly different way than the one in the encoder:
+
+In the decoder, the self-attention layer is only allowed to attend to earlier positions in the output sequence. This is done by masking future positions (setting them to -inf) before the softmax step in the self-attention calculation.
+:::
+
+:::{.callout-note}
+The “Encoder-Decoder Attention” layer works just like multiheaded self-attention, except it creates its Queries matrix from the layer below it, and takes the Keys and Values matrix from the output of the encoder stack.
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## Decoder
+The decoder stack outputs a vector of floats. How do we turn that into a word? That’s the job of the final Linear layer which is followed by a Softmax Layer.
+
+The Linear layer is a simple fully connected neural network that projects the vector produced by the stack of decoders, into a much, much larger vector called a logits vector.
+
+Let’s assume that our model knows 10,000 unique English words (our model’s “output vocabulary”) that it’s learned from its training dataset. This would make the logits vector 10,000 cells wide – each cell corresponding to the score of a unique word. That is how we interpret the output of the model followed by the Linear layer.
+
+The softmax layer then turns those scores into probabilities (all positive, all add up to 1.0). The cell with the highest probability is chosen, and the word associated with it is produced as the output for this time step.
+:::
+
+## Transformers
+![This figure starts from the bottom with the vector produced as the output of the decoder stack. It is then turned into an output word.](img/tfs_decoder_output.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## Training a model
+
+During training, an untrained model would go through the exact same forward pass. But since we are training it on a labeled training dataset, we can compare its output with the actual correct output.
+
+<!-- To visualize this, let’s assume our output vocabulary only contains six words(“a”, “am”, “i”, “thanks”, “student”, and “<eos>” (short for ‘end of sentence’)). -->
+
+![](img/tfs_training.png)
+:::
+
+## Transformers
+![Once we define our output vocabulary, we can use a vector of the same width to indicate each word in our vocabulary. This also known as one-hot encoding. So for example, we can indicate the word “am” using the following vector.](img/tfs_training2.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## The loss function
+We want the output to be a probability distribution indicating the word "thanks".
+
+![The (untrained) model produces a probability distribution with arbitrary values for each cell/word. We can compare it with the actual output, then tweak all the model's weights.](img/tfs_training3.png){height=400}
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## Comparison
+How do you compare two probability distributions? **Kullback–Leibler divergence**.
+
+We want our model to successively output probability distributions where:
+
+- Each probability distribution is represented by a vector of width vocab_size (6 in our toy example, but more realistically a number like 30,000 or 50,000)
+- The first probability distribution has the highest probability at the cell associated with the word “i”
+- The second probability distribution has the highest probability at the cell associated with the word “am”
+- And so on, until the fifth output distribution indicates <end_of_sentence symbol>, which also has a cell associated with it from the 10,000 element vocabulary.
+:::
+
+## Transformers
+![The targeted probability distributions.](img/tfs_training4.png)
+  
+## Transformers
+![Produced probability distributions.](img/tfs_training5.png)
+
+
+## Attention
+:::{.callout-tip icon=false}
+## Database analogy
+Denote by
+$$
+D \equiv \left\{(k_1, v_1, \dots, (k_m, v_m)\right\} 
+$$
+a database of $m$ tuples of keys and values. Denote by $\bb{q}$ a query.
+:::
+
+:::{.callout-note icon=false}
+## Attention definition
+$$
+Attention(\bb{q}, D) \equiv \sum\limits_{i=1}^m \alpha(\bb{q}, k_i)v_i,
+$$
+where $\alpha(\bb{q},k_i) \in \mathbb{R}$ are scalar attention weights.
+
+The operation itself is typically referred to as attention pooling. The name attention derives from the fact that the operation pays particular attention to the terms for which the weight $\alpha$ is significant (i.e., large).
+
+<!-- As such, the attention over generates a linear combination of values contained in the database. In fact, this contains the above example as a special case where all but one weight is zero. -->  
+:::
+
+## Attention
+:::{.callout-warning icon=false}
+## Special cases
+
+- $\alpha(\bb{q}, k_i) \geq 0$ -- output of the attention mechanism is contained in the convex cone spanned by the values $\bb{v}_i$
+- $\sum_i \alpha(\bb{q}, k_i) = 1, \alpha(q,k_i) \geq 0 \; \forall i$ -- most common
+- $\exists j: \alpha(\bb{q}, k_j) = 1, \; \alpha(\bb{q}, k_i) = 0, i \neq j$ -- traditional database query
+- $\alpha(\bb{q}, k_i) = \frac{1}{m} \; \forall i$ -- **average pooling**
+:::
+
+## Attention
+
+Strategies:
+
+:::{.callout-tip icon=false}
+## Normalization
+$$
+       \alpha(\bb{q}, k_i) = \frac{\alpha(\bb{q}, k_i)}{\sum_j \alpha(\bb{q}, k_j)}. 
+$$
+:::
+
+:::{.callout-note icon=false}
+## Exponentiation
+$$
+\alpha(\bb{q}, k_i) = \frac{exp\left(\alpha(\bb{q}, k_i)\right)}{\sum_j exp\left(\alpha(\bb{q}, k_j)\right)}. 
+$$
+:::
+
+## Attention
+![](img/attention_mechanism.png)

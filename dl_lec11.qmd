@@ -1,0 +1,325 @@
+---
+title: "Transformers 1"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: true
+  echo: true
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usepackage{neuralnetwork}
+        \usepackage{mathtools}
+        \usepackage{amsmath}
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \newcommand\mybox[2][]{\tikz[overlay]\node[fill=blue!20,inner sep=2pt, anchor=text, rectangle, rounded corners=1mm,#1] {#2};\phantom{#2}}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{shapes.misc}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    include-in-header: mathjax.html
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: 'd1bd5b366670324829aaa528aa92edc1'
+      id: '422433a0ba05fc61fae86fba5472bf329e67b28592de698028ca670214f8a8b2'
+---
+
+## Attention
+:::{.callout-tip icon=false}
+## Visualization
+```python
+def show_heatmaps(matrices, xlabel, ylabel, titles=None, figsize=(2.5, 2.5),
+                cmap='Reds'):
+  """Show heatmaps of matrices."""
+  d2l.use_svg_display()
+  num_rows, num_cols, _, _ = matrices.shape
+  fig, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize,
+                               sharex=True, sharey=True, squeeze=False)
+  for i, (row_axes, row_matrices) in enumerate(zip(axes, matrices)):
+      for j, (ax, matrix) in enumerate(zip(row_axes, row_matrices)):
+          pcm = ax.imshow(matrix.detach().numpy(), cmap=cmap)
+          if i == num_rows - 1:
+              ax.set_xlabel(xlabel)
+          if j == 0:
+              ax.set_ylabel(ylabel)
+          if titles:
+              ax.set_title(titles[j])
+  fig.colorbar(pcm, ax=axes, shrink=0.6); 
+
+attention_weights = torch.eye(10).reshape((1, 1, 10, 10))
+show_heatmaps(attention_weights, xlabel='Keys', ylabel='Queries') 
+```
+:::
+
+## Attention
+![](img/attention_identity_vis.png)
+
+
+## Attention
+:::{.callout-tip icon=false}
+## Example
+Regression and classification via kernel density estimation.
+:::
+
+:::{.callout-note icon=false}
+## Nadaraya-Watson estimators
+
+Rely on a similarity kernel $\alpha(q,k)$ relating queries $q$ to keys $k$.
+
+-  $\alpha(\bb{q}, k) = \exp\left(-\frac{1}{2} \|q-k\|^2\right)$ -- Gaussian
+-  $\alpha(\bb{q}, k) = 1 \text{ if } \|q-k\| \leq 1$ -- Boxcar
+-  $\alpha(\bb{q}, k) = \max\left(0, 1-\|q-k\|\right)$ -- Epanechikov
+:::
+
+## Attention
+:::{.callout-tip icon=false}
+## An equation for regression and classification
+$$
+f(\bb{q}) = \sum_i v_i \frac{\alpha(\bb{q}, k_i)}{\sum_j \alpha(\bb{q}, k_j)} 
+$$
+:::
+
+## Attention
+![](img/kernel_vis.png)
+
+## Attention
+![](img/kernel_estimates.png)
+
+:::{.callout-note}
+  These estimators demonstrate the limits of hand-crafted attention mechanisms.
+:::
+
+# Attention scoring functions
+
+## Attention scoring functions
+  
+![Computing the output of attention pooling as a weighted average of values, where weights are computed with the attention scoring function  and the softmax operation.](img/attention_scoring_function.png)
+
+# Historical perspective
+<!-- From "Machine learning with PyTorch and Scikit-Learn" book -->
+
+## History
+![RNN model for seq2seq. Parses entire input sequence.](img/enc_dec_traditional.png)
+
+## History
+![Why parse the whole sentence? Translating a sentence word by word can lead to grammatical errors.](img/att_word_by_word.png)
+  
+## History
+:::{.callout-important icon=false}
+## Problems
+
+- RNN is trying to remember the entire input before translation
+- compression (encoding) might cause loss of information
+:::
+
+:::{.callout-tip icon=false}
+## Solution
+Use attention mechanism to assign different attention weights to each input element.
+:::
+
+# Bahdanau, Cho, Bengio paper
+
+## Bahdanau
+![RNN with attention mechanism.](img/rnn_bahdanau.png)
+
+::: aside
+Title: "Neural Machine Translation by Jointly Learning to Align and Translate", 2014.
+::: 
+
+## Bahdanau
+:::{.callout-tip icon=false}
+## RNN #1
+
+- generate hidden states from forward ($h_F^{(i)}$) and backward ($h_B^{(i)}$) passes
+- concatenate the above into $h^{(i)}$.
+- generate context vectors $c_i$ from $h^{(i)}$ via attention mechanism
+
+$$
+c_i = \sum\limits_{j=1}^T a_{ij}h^{(j)}.
+$$
+:::
+
+\begin{frame}{Bahdanau}
+:::{.callout-tip icon=false}
+## RNN #2
+
+Hidden states $s^{(i)}$ depend on:
+
+- previous hidden state $s^{(i-1)}$
+- previous target word  $y^{(i-1)}$
+- context vector $c^{(i)}$.
+:::
+
+:::{.callout-note icon=false}
+## Attention weights computation
+$$
+\alpha_{ij} = \frac{\exp (e_{ij})}{\sum\limits_{k=1}^T \exp (e_{ik})},
+$$
+where $e_{ij}$ is an alignment score evaluating how well the input around position $j$ matches the output around position $i$. 
+:::
+
+# Self-attention
+
+:::{.callout-tip icon=false}
+## Self-attention
+Transformer can be thought of as a NN architecture entirely based on attention, without the RNN parts.
+
+This is also called **self-attention**.
+:::
+
+## Self-attention
+Suppose we have an input sequence $x^{(1)},\dots,x^{(T)}$, and output sequence $z^{(1)},\dots,z^{(T)}$. Here $x^{(i)}, z^{(i)} \in \mathbb{R}^d$.
+
+For a seq2seq task, the goal of self-attention is to model the dependencies of the current input element to all other input elements.
+
+:::{.callout-tip icon=false}
+## Self-attention stages
+
+- derive importance weights based on the similarity between the current element and all other elements in the sequence
+- normalize the weights, which usually involves softmax 
+- use these weights in combination with the corresponding sequence elements to compute attention value
+:::
+
+## Self-attention
+$$
+z^{(i)} = \sum\limits_{j=1}^T \alpha_{ij} x^{(j)},\\
+\omega_{ij} = x^{(i)T}x^{(j)},\\
+\alpha_{ij} = \frac{\exp \omega_{ij}}{\sum\limits_{j=1}^T \exp \omega_{ij}} = softmax \left([w_{ij}]_{j=1\dots T}\right), \\
+\sum\limits_{j=1}^T \alpha_{ij} = 1.
+$$
+
+
+## Self-attention
+![](img/basic_self_attention.png)
+
+## Self-attention
+Scaled dot-product attention: introduce learnable parameters.
+
+Introduce three weight matrices: $U_q, U_k, U_v$:
+$$
+q^{(i)} = U_q x^{(i)},\\ 
+k^{(i)} = U_k x^{(i)},\\ 
+v^{(i)} = U_v x^{(i)},\\ 
+$$
+
+## Self-attention
+![](img/att_scaled_self_attention.png)
+
+## Self-attention
+$$
+\omega_{ij} = q^{(i)T} k^{(j)},\\
+\alpha_{ij} = softmax \left(\frac{\omega_{ij}}{\sqrt{m}}\right),\\
+z^{(i)} = \sum\limits_{j=1}^T \alpha_{ij} v^{(j)}.
+$$
+
+## Self-attention
+![How is $\bb{q}k$ evaluated.](img/qk_matrix_eval.png)
+
+## Self-attention
+![Information flow in a scaled dot-product self-attention layer. How is $\bb{q}k$ evaluated.](img/att_information_flow.png)
+
+# Transformers
+![Original transformer architecture.](img/transformers.png)
+
+## Transformers
+**Multi-head self attention:** a modification of scaled dot-product attention.
+
+Multiple heads (sets of query, key, value matrices), similar to multiple kernels in CNNs.
+
+Read sequential input $\bb{X} = \left(x^{(1)},\dots,x^{(T)}\right)$. 
+Suppose each element is embedded by a vector of length $d$.
+Therefore, input can be embedded into a $T\times d$ matrix.
+Then, create $h$ sets of query, key, value matrices:
+
+$$
+U_{q_1},  U_{k_1}, U_{v_1},\\
+ \cdots \\
+U_{q_h},  U_{k_h}, U_{v_h}.
+$$
+
+$U_{q_j},U_{k_j}$ have shape $d_k \times d$. 
+
+$U_{v_j}$ has shape $d_v \times d$. 
+
+Resulting value sequence has length $d_v$.
+
+## Transformers
+:::{.callout-tip icon=false}
+## Practical considerations
+
+- In practice, $d_k = d_v = m$ is often chosen for simplicity.
+- In practice, rather than having a separate matrix for each attention head, transformer implementations use a single matrix for all attention heads. The attention heads are then organized into logically separate regions in this matrix, which can be accessed via Boolean masks. This makes it possible to implement multi-head attention more efficiently because multiple matrix multiplications can be implemented as a single matrix multiplication instead. However, for simplicity, we are omitting this implementation detail in this section.
+- computation can all be done in parallel because there are no dependencies between the multiple heads.
+:::
+
+## Transformers
+:::{.callout-tip icon=false}
+## Vectorized computations
+$$
+q_j^{(i)} = U_{q_j}x^{(i)}. 
+$$
+Then we concatenate vectors.
+:::
+
+## Transformers
+![Concatenating the scaled dot-product attention vectors into one vector and passing it through a linear projection.](img/transformers_concat.png)
+
+## Transformers
+:::{.callout-tip icon=false}
+## Decoder layer
+
+Similar to the encoder, the decoder also contains several repeated layers. Besides the two sublayers that we have already introduced in the previous encoder section (the multi-head self-attention layer and fully connected layer), each repeated layer also contains a masked multi-head attention sublayer.
+
+Masked attention is a variation of the original attention mechanism, where masked attention only passes a limited input sequence into the model by “masking” out a certain number of words. For example, if we are building a language translation model with a labeled dataset, at sequence position $i$ during the training procedure, we only feed in the correct output words from positions $1,\dots,i-1$. All other words (for instance, those that come after the current position) are hidden from the model to prevent the model from “cheating.” This is also consistent with the nature of text generation: although the true translated words are known during training, we know nothing about the ground truth in practice. Thus, we can only feed the model the solutions to what it has already generated, at position $i$.
+:::
+
+## Transformers
+![Concatenating the scaled dot-product attention vectors into one vector and passing it through a linear projection.](img/transformers_decoder.png)
+
+## Transformers
+
+- the previous output words (output embeddings) are passed into the masked multi-head attention layer. 
+- the second layer receives both the encoded inputs from the encoder block and the output of the masked multi-head attention layer into a multi-head attention layer. 
+- Finally, we pass the multi-head attention outputs into a fully connected layer that generates the overall model output: a probability vector corresponding to the output words.
+
+
+## Transformers
+![Layer normalization mechanism, which was first introduced by J. Ba, J.R. Kiros, and G.E. Hinton in 2016 in the same-named paper Layer Normalization (URL: https://arxiv.org/ abs/1607.06450). ](img/transformers_layer_normalization.png)
+
+## Transformers
+:::{.callout-important icon=false}
+## Recursion vs recurrence
+RNNs are **recurrent**.
+
+Transformers are **recursive** -- therefore no need to unroll.
+
+:::
+
+:::{.callout-warning icon=false}
+## Attention benefits
+
+- Much simpler than CNNs or RNNs.
+- No vanishing/exploding gradients problems.
+- Attention can be thought of as a single convolution kernel spanning the whole sequence of tokens.
+:::
+
+## Transformers
+![](img/transformers_recursion.png)
+
+## Transformers
+![Example of learned attention weights (Vaswani 2017 paper)](img/att_learned_weights.png)
