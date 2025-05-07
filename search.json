@@ -3003,6 +3003,468 @@
     "text": "Labs\nLab 1: NLTK basics\nLab 2: Stemming/String distance\nLab 3: Lemmatization/WordNet\nLab 4: Naive Bayes classifier\nLab 5: N-grams\nLab 6: Bag-of-words/PPMI\nLab 7: TF-IDF\nLab 8: word2vec\nLab 9: doc2vec\nLab 10: PCA\nLab 11: CNNs for NLP"
   },
   {
+    "objectID": "dl_lec10.html#attention",
+    "href": "dl_lec10.html#attention",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\n\n\n\nEarly methods\n\n\n\nMLP\nConvolutions\nRecurrent NNs\n\n\n\n\n\n\n\n\n\n\nNote\n\n\n\nconvolutions dominating image processing\nLSTM RNNs dominating NLP"
+  },
+  {
+    "objectID": "dl_lec10.html#applications",
+    "href": "dl_lec10.html#applications",
+    "title": "Transformers 1",
+    "section": "Applications",
+    "text": "Applications\n\n\n\nApplications of transformers\n\n\n\nNLP\nimage recognition\nspeech recognition\nreinforcement learning"
+  },
+  {
+    "objectID": "dl_lec10.html#attention-1",
+    "href": "dl_lec10.html#attention-1",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nHistory\n\n\nAttention - originally proposed for encoded-decoder architectures.\nVaswani paper - “Attention is all you need”\nLarge-scale pretrained models, now sometimes called foundation models."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq",
+    "href": "dl_lec10.html#seq2seq",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nDefinition\n\n\nA sequence-to-sequence model is a model that takes a sequence of items (words, letters, features of an images…etc) and outputs another sequence of items."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-1",
+    "href": "dl_lec10.html#seq2seq-1",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nEncoder/Decoder\n\n\nUnder the hood, the model is composed of an encoder and a decoder.\nThe encoder processes each item in the input sequence, it compiles the information it captures into a vector (called the ). After processing the entire input sequence, the encoder sends the context over to the decoder, which begins producing the output sequence item by item.\nThe context is a vector (an array of numbers, basically) in the case of machine translation. The encoder and decoder tend to both be recurrent neural networks"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-2",
+    "href": "dl_lec10.html#seq2seq-2",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\nRNN takes two inputs: an input (one word from the input sentence) and a hidden state.\nContext: You can set the size of the context vector when you set up your model. It is basically the number of hidden units in the encoder RNN. These visualizations show a vector of size 4, but in real world applications the context vector would be of a size like 256, 512, or 1024."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-3",
+    "href": "dl_lec10.html#seq2seq-3",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-4",
+    "href": "dl_lec10.html#seq2seq-4",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-5",
+    "href": "dl_lec10.html#seq2seq-5",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\nIn the following visualization, each pulse for the encoder or decoder is that RNN processing its inputs and generating an output for that time step. Since the encoder and decoder are both RNNs, each time step one of the RNNs does some processing, it updates its hidden state based on its inputs and previous inputs it has seen.\nLet’s look at the hidden states for the encoder. Notice how the last hidden state is actually the context we pass along to the decoder."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-6",
+    "href": "dl_lec10.html#seq2seq-6",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-7",
+    "href": "dl_lec10.html#seq2seq-7",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nUnrolled view"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-8",
+    "href": "dl_lec10.html#seq2seq-8",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nProblem\n\n\nThe context vector turned out to be a bottleneck for these types of models: it was challenging for the models to deal with long sentences.\n\n\n\n\n\n\nSolution\n\n\nA solution was proposed in Bahdanau et al., 2014 and Luong et al., 2015.\n\nThese papers introduced and refined a technique called attention, which highly improved the quality of machine translation systems.\nAttention allows the model to focus on the relevant parts of the input sequence as needed."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-9",
+    "href": "dl_lec10.html#seq2seq-9",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\nAt time step 7, the attention mechanism enables the decoder to focus on the word “étudiant” (“student” in french) before it generates the English translation."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-10",
+    "href": "dl_lec10.html#seq2seq-10",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nAttention model differences\n\n\nEncoder passes all hidden states to the decoder, not just the last state.\nDecoder does some extra step before producing its output:\n\nLook at the set of encoder hidden states it received – each encoder hidden state is most associated with a certain word in the input sentence\nGive each hidden state a score\nMultiply each hidden state by its softmaxed score, thus amplifying hidden states with high scores, and drowning out hidden states with low scores\nThe scoring is done at each time step."
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-11",
+    "href": "dl_lec10.html#seq2seq-11",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nIllustrated"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-12",
+    "href": "dl_lec10.html#seq2seq-12",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-13",
+    "href": "dl_lec10.html#seq2seq-13",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nProcess\n\n\n\nThe attention decoder RNN takes in the embedding of the  token, and an initial decoder hidden state.\nThe RNN processes its inputs, producing an output and a new hidden state vector \\(h_4\\). The output is discarded.\nAttention Step: We use the encoder hidden states and the \\(h_4\\) vector to calculate a context vector \\(c_4\\) for this time step.\nWe concatenate \\(h_4\\) and \\(c_4\\) into one vector.\nWe pass this vector through a feedforward neural network (one trained jointly with the model).\nThe output of the feedforward neural networks indicates the output word of this time step.\nRepeat for the next time steps"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-14",
+    "href": "dl_lec10.html#seq2seq-14",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-15",
+    "href": "dl_lec10.html#seq2seq-15",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\n\n\nAnother way"
+  },
+  {
+    "objectID": "dl_lec10.html#seq2seq-16",
+    "href": "dl_lec10.html#seq2seq-16",
+    "title": "Transformers 1",
+    "section": "seq2seq",
+    "text": "seq2seq\n\nModel learns how to align words (example from paper)."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-1",
+    "href": "dl_lec10.html#transformers-1",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nAttention is all you need (2017)"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-2",
+    "href": "dl_lec10.html#transformers-2",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nCompared to seq2seq, performance is improved!"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-3",
+    "href": "dl_lec10.html#transformers-3",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nEncoder and decoder structure."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-4",
+    "href": "dl_lec10.html#transformers-4",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nA key property of the Transformer: the word in each position flows through its own path in the encoder. There are dependencies between these paths in the self-attention layer. The feed-forward layer does not have those dependencies, however, and thus the various paths can be executed in parallel while flowing through the feed-forward layer."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-5",
+    "href": "dl_lec10.html#transformers-5",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nThe word at each position passes through a self-attention process. Then, they each pass through a FFNN."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-6",
+    "href": "dl_lec10.html#transformers-6",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHigh-level view\n\n\nWhat does the word “it” refer to?\n\nThe animal didn’t cross the street because it was too tired"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-7",
+    "href": "dl_lec10.html#transformers-7",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHigh-level flow\n\n\n\nwhen the model is processing the word “it”, self-attention allows it to associate “it” with “animal”.\nas the model processes each word (each position in the input sequence), self attention allows it to look at other positions in the input sequence for clues that can help lead to a better encoding for this word.\nfor RNNs, maintaining a hidden state allows them to incorporate its representation of previous words/vectors it has processed with the current one it’s processing.\nSelf-attention is the method the Transformer uses to bake the “understanding” of other relevant words into the one we’re currently processing."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-8",
+    "href": "dl_lec10.html#transformers-8",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHow is self-attention calculated?\n\n\n\nCreate 3 vectors (Query, Key, Value) from each input embedding."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-9",
+    "href": "dl_lec10.html#transformers-9",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHow is self-attention calculated?\n\n\n\nCalculate score. The score is calculated by taking the dot product of the query vector with the key vector of the respective word we’re scoring."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-10",
+    "href": "dl_lec10.html#transformers-10",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHow is self-attention calculated?\n\n\n\nDivide by \\(\\sqrt{d_k}\\).\nNormalize via softmax.\n\n\n\n\nwidth=9cm"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-11",
+    "href": "dl_lec10.html#transformers-11",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nHow is self-attention calculated?\n\n\n\nMultiply each value vector by softmax score.\nIntuition: keep intact the values of the word(s) we want to focus on, and drown-out irrelevant words (by multiplying them by tiny numbers like 0.001, for example).\nSum up weighted value vectors. This produces the output of the self-attention layer at this position (for the first word)."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-12",
+    "href": "dl_lec10.html#transformers-12",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-13",
+    "href": "dl_lec10.html#transformers-13",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nMatrix calculation"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-14",
+    "href": "dl_lec10.html#transformers-14",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nMatrix calculation"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-15",
+    "href": "dl_lec10.html#transformers-15",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\n\n\n\nMultiheaded attention\n\n\nIntroduced in the original paper.\nThis improves the performance of the attention layer in two ways:\n\nIt expands the model’s ability to focus on different positions.\nIt gives the attention layer multiple “representation subspaces”."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-16",
+    "href": "dl_lec10.html#transformers-16",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-17",
+    "href": "dl_lec10.html#transformers-17",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\nCalculating e.g. 8 times:"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-18",
+    "href": "dl_lec10.html#transformers-18",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nProblem\n\n\nFeed-forward layer is not expecting 8 matrices, but 1.\n\n\n\n\n\n\nSolution\n\n\nConcat the matrices then multiply them by an additional weights matrix \\(W_O\\)."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-19",
+    "href": "dl_lec10.html#transformers-19",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-20",
+    "href": "dl_lec10.html#transformers-20",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nEverything together."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-21",
+    "href": "dl_lec10.html#transformers-21",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nThe model’s representation of the word “it” bakes in some of the representation of both “animal” and “tired”."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-22",
+    "href": "dl_lec10.html#transformers-22",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nWith all attention heads."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-23",
+    "href": "dl_lec10.html#transformers-23",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nProblem\n\n\nHow do we account for the order of the words in the input sequence?\n\n\n\n\n\n\nSolution\n\n\nThe transformer adds a vector to each input embedding.\nThese vectors follow a specific pattern that the model learns, which helps it determine the position of each word, or the distance between different words in the sequence.\nThe intuition here is that adding these values to the embeddings provides meaningful distances between the embedding vectors once they’re projected into Q/K/V vectors and during dot-product attention."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-24",
+    "href": "dl_lec10.html#transformers-24",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nValues of positional encoding vectors follow a specific pattern."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-25",
+    "href": "dl_lec10.html#transformers-25",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nA real example of positional encoding with a toy embedding size of 4."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-26",
+    "href": "dl_lec10.html#transformers-26",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-27",
+    "href": "dl_lec10.html#transformers-27",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nA formule for PE from the paper\n\n\n\\[\n  PE_{(pos,2i)} =sin(pos/10000^{2i/d_{model}}),\\\\\n  PE_{(pos,2i+1)} =cos(pos/10000^{2i/d_{model}})\n\\] where \\(pos\\) is the position and \\(i\\) is the dimension.\nThat is, each dimension of the positional encoding corresponds to a sinusoid. The wavelengths form a geometric progression from \\(2\\pi\\) to \\(10000 \\cdot 2\\pi\\). We chose this function because we hypothesized it would allow the model to easily learn to attend by relative positions, since for any fixed offset \\(k\\), \\(PE_{pos+k}\\) can be represented as a linear function of \\(PE_{pos}\\)."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-28",
+    "href": "dl_lec10.html#transformers-28",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nEach sub-layer (self-attention, ffnn) in each encoder has a residual connection around it, and is followed by a layer-normalization step."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-29",
+    "href": "dl_lec10.html#transformers-29",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nWith vectors and operations visualized."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-30",
+    "href": "dl_lec10.html#transformers-30",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nTransformer of 2 stacked encoders and decoders"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-31",
+    "href": "dl_lec10.html#transformers-31",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nDecoder\n\n\n\nThe encoders start by processing the input sequence\nThe output of the top encoder is then transformed into a set of attention vectors \\(\\boldsymbol{K}\\) and \\(\\boldsymbol{V}\\)\nThese are to be used by each decoder in its “encoder-decoder attention” layer which helps the decoder focus on appropriate places in the input sequence.\nEach step in the decoding phase outputs an element from the output sequence (the English translation sentence in this case)."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-32",
+    "href": "dl_lec10.html#transformers-32",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-33",
+    "href": "dl_lec10.html#transformers-33",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-34",
+    "href": "dl_lec10.html#transformers-34",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nDecoder\n\n\nThe self attention layers in the decoder operate in a slightly different way than the one in the encoder:\nIn the decoder, the self-attention layer is only allowed to attend to earlier positions in the output sequence. This is done by masking future positions (setting them to -inf) before the softmax step in the self-attention calculation.\n\n\n\n\n\n\n\n\n\nNote\n\n\nThe “Encoder-Decoder Attention” layer works just like multiheaded self-attention, except it creates its Queries matrix from the layer below it, and takes the Keys and Values matrix from the output of the encoder stack."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-35",
+    "href": "dl_lec10.html#transformers-35",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nDecoder\n\n\nThe decoder stack outputs a vector of floats. How do we turn that into a word? That’s the job of the final Linear layer which is followed by a Softmax Layer.\nThe Linear layer is a simple fully connected neural network that projects the vector produced by the stack of decoders, into a much, much larger vector called a logits vector.\nLet’s assume that our model knows 10,000 unique English words (our model’s “output vocabulary”) that it’s learned from its training dataset. This would make the logits vector 10,000 cells wide – each cell corresponding to the score of a unique word. That is how we interpret the output of the model followed by the Linear layer.\nThe softmax layer then turns those scores into probabilities (all positive, all add up to 1.0). The cell with the highest probability is chosen, and the word associated with it is produced as the output for this time step."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-36",
+    "href": "dl_lec10.html#transformers-36",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nThis figure starts from the bottom with the vector produced as the output of the decoder stack. It is then turned into an output word."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-37",
+    "href": "dl_lec10.html#transformers-37",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nTraining a model\n\n\nDuring training, an untrained model would go through the exact same forward pass. But since we are training it on a labeled training dataset, we can compare its output with the actual correct output."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-38",
+    "href": "dl_lec10.html#transformers-38",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nOnce we define our output vocabulary, we can use a vector of the same width to indicate each word in our vocabulary. This also known as one-hot encoding. So for example, we can indicate the word “am” using the following vector."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-39",
+    "href": "dl_lec10.html#transformers-39",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nThe loss function\n\n\nWe want the output to be a probability distribution indicating the word “thanks”.\n\n\n\nThe (untrained) model produces a probability distribution with arbitrary values for each cell/word. We can compare it with the actual output, then tweak all the model’s weights."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-40",
+    "href": "dl_lec10.html#transformers-40",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nComparison\n\n\nHow do you compare two probability distributions? Kullback–Leibler divergence.\nWe want our model to successively output probability distributions where:\n\nEach probability distribution is represented by a vector of width vocab_size (6 in our toy example, but more realistically a number like 30,000 or 50,000)\nThe first probability distribution has the highest probability at the cell associated with the word “i”\nThe second probability distribution has the highest probability at the cell associated with the word “am”\nAnd so on, until the fifth output distribution indicates , which also has a cell associated with it from the 10,000 element vocabulary."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-41",
+    "href": "dl_lec10.html#transformers-41",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nThe targeted probability distributions."
+  },
+  {
+    "objectID": "dl_lec10.html#transformers-42",
+    "href": "dl_lec10.html#transformers-42",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nProduced probability distributions."
+  },
+  {
+    "objectID": "dl_lec10.html#attention-2",
+    "href": "dl_lec10.html#attention-2",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nDatabase analogy\n\n\nDenote by \\[\nD \\equiv \\left\\{(k_1, v_1, \\dots, (k_m, v_m)\\right\\}\n\\] a database of \\(m\\) tuples of keys and values. Denote by \\(\\boldsymbol{q}\\) a query.\n\n\n\n\n\n\nAttention definition\n\n\n\\[\nAttention(\\boldsymbol{q}, D) \\equiv \\sum\\limits_{i=1}^m \\alpha(\\boldsymbol{q}, k_i)v_i,\n\\] where \\(\\alpha(\\boldsymbol{q},k_i) \\in \\mathbb{R}\\) are scalar attention weights.\nThe operation itself is typically referred to as attention pooling. The name attention derives from the fact that the operation pays particular attention to the terms for which the weight \\(\\alpha\\) is significant (i.e., large)."
+  },
+  {
+    "objectID": "dl_lec10.html#attention-3",
+    "href": "dl_lec10.html#attention-3",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nSpecial cases\n\n\n\n\\(\\alpha(\\boldsymbol{q}, k_i) \\geq 0\\) – output of the attention mechanism is contained in the convex cone spanned by the values \\(\\boldsymbol{v}_i\\)\n\\(\\sum_i \\alpha(\\boldsymbol{q}, k_i) = 1, \\alpha(q,k_i) \\geq 0 \\; \\forall i\\) – most common\n\\(\\exists j: \\alpha(\\boldsymbol{q}, k_j) = 1, \\; \\alpha(\\boldsymbol{q}, k_i) = 0, i \\neq j\\) – traditional database query\n\\(\\alpha(\\boldsymbol{q}, k_i) = \\frac{1}{m} \\; \\forall i\\) – average pooling"
+  },
+  {
+    "objectID": "dl_lec10.html#attention-4",
+    "href": "dl_lec10.html#attention-4",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\nStrategies:\n\n\n\nNormalization\n\n\n\\[\n       \\alpha(\\boldsymbol{q}, k_i) = \\frac{\\alpha(\\boldsymbol{q}, k_i)}{\\sum_j \\alpha(\\boldsymbol{q}, k_j)}.\n\\]\n\n\n\n\n\n\nExponentiation\n\n\n\\[\n\\alpha(\\boldsymbol{q}, k_i) = \\frac{exp\\left(\\alpha(\\boldsymbol{q}, k_i)\\right)}{\\sum_j exp\\left(\\alpha(\\boldsymbol{q}, k_j)\\right)}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec10.html#attention-5",
+    "href": "dl_lec10.html#attention-5",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention"
+  },
+  {
     "objectID": "nlp_lab9.html",
     "href": "nlp_lab9.html",
     "title": "NLP: Lab 9 (doc2vec)",
@@ -3412,8 +3874,8 @@
     "objectID": "dl_lec9.html#encoder-decoder-architecture-2",
     "href": "dl_lec9.html#encoder-decoder-architecture-2",
     "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture}",
-    "text": "Encoder-Decoder Architecture}\n\n\n\nseq2seq\n\n\nBased on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq) got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder.\nIt mainly focuses on mapping a fixed length input sequence of size \\(n\\) to an fixed length output sequence of size \\(m\\) where \\(n \\neq m\\) can be true but isn’t a necessity."
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nseq2seq\n\n\nBased on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq) got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder.\nIt mainly focuses on mapping a fixed length input sequence of size \\(n\\) to an fixed length output sequence of size \\(m\\) where \\(n \\neq m\\) can be true but isn’t a necessity."
   },
   {
     "objectID": "dl_lec9.html#encoder-decoder-architecture-3",
@@ -3426,22 +3888,22 @@
     "objectID": "dl_lec9.html#encoder-decoder-architecture-4",
     "href": "dl_lec9.html#encoder-decoder-architecture-4",
     "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture}",
-    "text": "Encoder-Decoder Architecture}\n\n\n\nEncoder\n\n\n\nRNN accepts a single element of the sequence \\(\\boldsymbol{X}_t\\), \\(t\\) being order of the sequence element\nthese RNNs can be LSTMs or GRUs for performance\nhidden states \\(\\boldsymbol{H}_t\\) are computed according to the definition of hidden states in the used RNN type (LSTM or GRU)\nThe Encoder Vector (context) is a representation of the last hidden state of the encoder network which aims to aggregate all information from all previous input elements.\nThis functions as initial hidden state of the decoder network of the model and enables the decoder to make accurate predictions."
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder\n\n\n\nRNN accepts a single element of the sequence \\(\\boldsymbol{X}_t\\), \\(t\\) being order of the sequence element\nthese RNNs can be LSTMs or GRUs for performance\nhidden states \\(\\boldsymbol{H}_t\\) are computed according to the definition of hidden states in the used RNN type (LSTM or GRU)\nThe Encoder Vector (context) is a representation of the last hidden state of the encoder network which aims to aggregate all information from all previous input elements.\nThis functions as initial hidden state of the decoder network of the model and enables the decoder to make accurate predictions."
   },
   {
     "objectID": "dl_lec9.html#encoder-decoder-architecture-5",
     "href": "dl_lec9.html#encoder-decoder-architecture-5",
     "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture}",
-    "text": "Encoder-Decoder Architecture}\n\n\n\nDecoder\n\n\n\nRNN which predicts an output \\(\\boldsymbol{Y}_t\\) at a time step \\(t\\)\nThe produced output is again a sequence where each \\(\\boldsymbol{Y}_t\\) is a sequence element with order \\(t\\)\nAt each time step the RNN accepts a hidden state from the previous unit and itself produces an output as well as a new hidden state."
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nDecoder\n\n\n\nRNN which predicts an output \\(\\boldsymbol{Y}_t\\) at a time step \\(t\\)\nThe produced output is again a sequence where each \\(\\boldsymbol{Y}_t\\) is a sequence element with order \\(t\\)\nAt each time step the RNN accepts a hidden state from the previous unit and itself produces an output as well as a new hidden state."
   },
   {
     "objectID": "dl_lec9.html#encoder-decoder-architecture-6",
     "href": "dl_lec9.html#encoder-decoder-architecture-6",
     "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture}",
-    "text": "Encoder-Decoder Architecture}\n\n\n\nEncoder computation\n\n\nEncoder transforms the hidden states at all time steps into a context variable \\(\\boldsymbol{C}\\) through a customized function \\(q\\): \\[\n\\boldsymbol{C} = q\\left(\\boldsymbol{H}_1, \\dots, \\boldsymbol{H}_T\\right)\n\\]\n\n\n\n\n\n\nDecoder computation\n\n\nDecoder assigns a predicted probability to each possible token occurring at step \\(t'+1\\) conditioned upon the previous tokens in the target \\(y_1, \\dots, y_{t'}\\) and the context variable \\(\\boldsymbol{C}\\), i.e. \\(P(y_{t'+1} | y_1, \\dots, y_{t'}, \\boldsymbol{C})\\).\n\\[\n\\boldsymbol{S}_{t'} = g\\left(y_{t'-1}, \\boldsymbol{C}, \\boldsymbol{S}_{t'-1}\\right)\n\\]"
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder computation\n\n\nEncoder transforms the hidden states at all time steps into a context variable \\(\\boldsymbol{C}\\) through a customized function \\(q\\): \\[\n\\boldsymbol{C} = q\\left(\\boldsymbol{H}_1, \\dots, \\boldsymbol{H}_T\\right)\n\\]\n\n\n\n\n\n\nDecoder computation\n\n\nDecoder assigns a predicted probability to each possible token occurring at step \\(t'+1\\) conditioned upon the previous tokens in the target \\(y_1, \\dots, y_{t'}\\) and the context variable \\(\\boldsymbol{C}\\), i.e. \\(P(y_{t'+1} | y_1, \\dots, y_{t'}, \\boldsymbol{C})\\).\n\\[\n\\boldsymbol{S}_{t'} = g\\left(y_{t'-1}, \\boldsymbol{C}, \\boldsymbol{S}_{t'-1}\\right)\n\\]"
   },
   {
     "objectID": "dl_lec8.html#modern-cnn-variants",
@@ -3819,14 +4281,14 @@
     "href": "dl.html",
     "title": "Deep Learning",
     "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
   },
   {
     "objectID": "dl.html#lectures",
     "href": "dl.html#lectures",
     "title": "Deep Learning",
     "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
   },
   {
     "objectID": "dl.html#labs",
@@ -3876,6 +4338,223 @@
     "title": "NLP: Lab 8 (Word2vec)",
     "section": "Distance",
     "text": "Distance\nBetween words:\n\nmodel.wv.distance('trees', 'graph')\n\n1.0236716531217098\n\n\nBetween documents:\n\nmodel.wv.wmdistance(['trees'], ['graph'])\n\n1.4308540422347924"
+  },
+  {
+    "objectID": "dl_lec11.html#attention",
+    "href": "dl_lec11.html#attention",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nVisualization\n\n\ndef show_heatmaps(matrices, xlabel, ylabel, titles=None, figsize=(2.5, 2.5),\n                cmap='Reds'):\n  \"\"\"Show heatmaps of matrices.\"\"\"\n  d2l.use_svg_display()\n  num_rows, num_cols, _, _ = matrices.shape\n  fig, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize,\n                               sharex=True, sharey=True, squeeze=False)\n  for i, (row_axes, row_matrices) in enumerate(zip(axes, matrices)):\n      for j, (ax, matrix) in enumerate(zip(row_axes, row_matrices)):\n          pcm = ax.imshow(matrix.detach().numpy(), cmap=cmap)\n          if i == num_rows - 1:\n              ax.set_xlabel(xlabel)\n          if j == 0:\n              ax.set_ylabel(ylabel)\n          if titles:\n              ax.set_title(titles[j])\n  fig.colorbar(pcm, ax=axes, shrink=0.6); \n\nattention_weights = torch.eye(10).reshape((1, 1, 10, 10))\nshow_heatmaps(attention_weights, xlabel='Keys', ylabel='Queries')"
+  },
+  {
+    "objectID": "dl_lec11.html#attention-1",
+    "href": "dl_lec11.html#attention-1",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention"
+  },
+  {
+    "objectID": "dl_lec11.html#attention-2",
+    "href": "dl_lec11.html#attention-2",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nExample\n\n\nRegression and classification via kernel density estimation.\n\n\n\n\n\n\nNadaraya-Watson estimators\n\n\nRely on a similarity kernel \\(\\alpha(q,k)\\) relating queries \\(q\\) to keys \\(k\\).\n\n\\(\\alpha(\\bb{q}, k) = \\exp\\left(-\\frac{1}{2} \\|q-k\\|^2\\right)\\) – Gaussian\n\\(\\alpha(\\bb{q}, k) = 1 \\text{ if } \\|q-k\\| \\leq 1\\) – Boxcar\n\\(\\alpha(\\bb{q}, k) = \\max\\left(0, 1-\\|q-k\\|\\right)\\) – Epanechikov"
+  },
+  {
+    "objectID": "dl_lec11.html#attention-3",
+    "href": "dl_lec11.html#attention-3",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\nAn equation for regression and classification\n\n\n\\[\nf(\\bb{q}) = \\sum_i v_i \\frac{\\alpha(\\bb{q}, k_i)}{\\sum_j \\alpha(\\bb{q}, k_j)}\n\\]"
+  },
+  {
+    "objectID": "dl_lec11.html#attention-4",
+    "href": "dl_lec11.html#attention-4",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention"
+  },
+  {
+    "objectID": "dl_lec11.html#attention-5",
+    "href": "dl_lec11.html#attention-5",
+    "title": "Transformers 1",
+    "section": "Attention",
+    "text": "Attention\n\n\n\n\n\n\n\nNote\n\n\nThese estimators demonstrate the limits of hand-crafted attention mechanisms."
+  },
+  {
+    "objectID": "dl_lec11.html#attention-scoring-functions-1",
+    "href": "dl_lec11.html#attention-scoring-functions-1",
+    "title": "Transformers 1",
+    "section": "Attention scoring functions",
+    "text": "Attention scoring functions\n\nComputing the output of attention pooling as a weighted average of values, where weights are computed with the attention scoring function and the softmax operation."
+  },
+  {
+    "objectID": "dl_lec11.html#history",
+    "href": "dl_lec11.html#history",
+    "title": "Transformers 1",
+    "section": "History",
+    "text": "History\n\nRNN model for seq2seq. Parses entire input sequence."
+  },
+  {
+    "objectID": "dl_lec11.html#history-1",
+    "href": "dl_lec11.html#history-1",
+    "title": "Transformers 1",
+    "section": "History",
+    "text": "History\n\nWhy parse the whole sentence? Translating a sentence word by word can lead to grammatical errors."
+  },
+  {
+    "objectID": "dl_lec11.html#history-2",
+    "href": "dl_lec11.html#history-2",
+    "title": "Transformers 1",
+    "section": "History",
+    "text": "History\n\n\n\nProblems\n\n\n\nRNN is trying to remember the entire input before translation\ncompression (encoding) might cause loss of information\n\n\n\n\n\n\n\nSolution\n\n\nUse attention mechanism to assign different attention weights to each input element."
+  },
+  {
+    "objectID": "dl_lec11.html#bahdanau",
+    "href": "dl_lec11.html#bahdanau",
+    "title": "Transformers 1",
+    "section": "Bahdanau",
+    "text": "Bahdanau\n\n\n\nRNN with attention mechanism.\n\n\n\n\nTitle: “Neural Machine Translation by Jointly Learning to Align and Translate”, 2014."
+  },
+  {
+    "objectID": "dl_lec11.html#bahdanau-1",
+    "href": "dl_lec11.html#bahdanau-1",
+    "title": "Transformers 1",
+    "section": "Bahdanau",
+    "text": "Bahdanau\n\n\n\nRNN #1\n\n\n\ngenerate hidden states from forward (\\(h_F^{(i)}\\)) and backward (\\(h_B^{(i)}\\)) passes\nconcatenate the above into \\(h^{(i)}\\).\ngenerate context vectors \\(c_i\\) from \\(h^{(i)}\\) via attention mechanism\n\n\\[\nc_i = \\sum\\limits_{j=1}^T a_{ij}h^{(j)}.\n\\]\n\n\n\n\\begin{frame}{Bahdanau} :::{.callout-tip icon=false} ## RNN #2\nHidden states \\(s^{(i)}\\) depend on:\n\nprevious hidden state \\(s^{(i-1)}\\)\nprevious target word \\(y^{(i-1)}\\)\ncontext vector \\(c^{(i)}\\). :::\n\n\n\n\nAttention weights computation\n\n\n\\[\n\\alpha_{ij} = \\frac{\\exp (e_{ij})}{\\sum\\limits_{k=1}^T \\exp (e_{ik})},\n\\] where \\(e_{ij}\\) is an alignment score evaluating how well the input around position \\(j\\) matches the output around position \\(i\\)."
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-2",
+    "href": "dl_lec11.html#self-attention-2",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\nSuppose we have an input sequence \\(x^{(1)},\\dots,x^{(T)}\\), and output sequence \\(z^{(1)},\\dots,z^{(T)}\\). Here \\(x^{(i)}, z^{(i)} \\in \\mathbb{R}^d\\).\nFor a seq2seq task, the goal of self-attention is to model the dependencies of the current input element to all other input elements.\n\n\n\nSelf-attention stages\n\n\n\nderive importance weights based on the similarity between the current element and all other elements in the sequence\nnormalize the weights, which usually involves softmax\nuse these weights in combination with the corresponding sequence elements to compute attention value"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-3",
+    "href": "dl_lec11.html#self-attention-3",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\n\\[\nz^{(i)} = \\sum\\limits_{j=1}^T \\alpha_{ij} x^{(j)},\\\\\n\\omega_{ij} = x^{(i)T}x^{(j)},\\\\\n\\alpha_{ij} = \\frac{\\exp \\omega_{ij}}{\\sum\\limits_{j=1}^T \\exp \\omega_{ij}} = softmax \\left([w_{ij}]_{j=1\\dots T}\\right), \\\\\n\\sum\\limits_{j=1}^T \\alpha_{ij} = 1.\n\\]"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-4",
+    "href": "dl_lec11.html#self-attention-4",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-5",
+    "href": "dl_lec11.html#self-attention-5",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\nScaled dot-product attention: introduce learnable parameters.\nIntroduce three weight matrices: \\(U_q, U_k, U_v\\): \\[\nq^{(i)} = U_q x^{(i)},\\\\\nk^{(i)} = U_k x^{(i)},\\\\\nv^{(i)} = U_v x^{(i)},\\\\\n\\]"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-6",
+    "href": "dl_lec11.html#self-attention-6",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-7",
+    "href": "dl_lec11.html#self-attention-7",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\n\\[\n\\omega_{ij} = q^{(i)T} k^{(j)},\\\\\n\\alpha_{ij} = softmax \\left(\\frac{\\omega_{ij}}{\\sqrt{m}}\\right),\\\\\nz^{(i)} = \\sum\\limits_{j=1}^T \\alpha_{ij} v^{(j)}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-8",
+    "href": "dl_lec11.html#self-attention-8",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\n\nHow is \\(\\bb{q}k\\) evaluated."
+  },
+  {
+    "objectID": "dl_lec11.html#self-attention-9",
+    "href": "dl_lec11.html#self-attention-9",
+    "title": "Transformers 1",
+    "section": "Self-attention",
+    "text": "Self-attention\n\nInformation flow in a scaled dot-product self-attention layer. How is \\(\\bb{q}k\\) evaluated."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-1",
+    "href": "dl_lec11.html#transformers-1",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\nMulti-head self attention: a modification of scaled dot-product attention.\nMultiple heads (sets of query, key, value matrices), similar to multiple kernels in CNNs.\nRead sequential input \\(\\bb{X} = \\left(x^{(1)},\\dots,x^{(T)}\\right)\\). Suppose each element is embedded by a vector of length \\(d\\). Therefore, input can be embedded into a \\(T\\times d\\) matrix. Then, create \\(h\\) sets of query, key, value matrices:\n\\[\nU_{q_1},  U_{k_1}, U_{v_1},\\\\\n\\cdots \\\\\nU_{q_h},  U_{k_h}, U_{v_h}.\n\\]\n\\(U_{q_j},U_{k_j}\\) have shape \\(d_k \\times d\\).\n\\(U_{v_j}\\) has shape \\(d_v \\times d\\).\nResulting value sequence has length \\(d_v\\)."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-2",
+    "href": "dl_lec11.html#transformers-2",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nPractical considerations\n\n\n\nIn practice, \\(d_k = d_v = m\\) is often chosen for simplicity.\nIn practice, rather than having a separate matrix for each attention head, transformer implementations use a single matrix for all attention heads. The attention heads are then organized into logically separate regions in this matrix, which can be accessed via Boolean masks. This makes it possible to implement multi-head attention more efficiently because multiple matrix multiplications can be implemented as a single matrix multiplication instead. However, for simplicity, we are omitting this implementation detail in this section.\ncomputation can all be done in parallel because there are no dependencies between the multiple heads."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-3",
+    "href": "dl_lec11.html#transformers-3",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nVectorized computations\n\n\n\\[\nq_j^{(i)} = U_{q_j}x^{(i)}.\n\\] Then we concatenate vectors."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-4",
+    "href": "dl_lec11.html#transformers-4",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nConcatenating the scaled dot-product attention vectors into one vector and passing it through a linear projection."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-5",
+    "href": "dl_lec11.html#transformers-5",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nDecoder layer\n\n\nSimilar to the encoder, the decoder also contains several repeated layers. Besides the two sublayers that we have already introduced in the previous encoder section (the multi-head self-attention layer and fully connected layer), each repeated layer also contains a masked multi-head attention sublayer.\nMasked attention is a variation of the original attention mechanism, where masked attention only passes a limited input sequence into the model by “masking” out a certain number of words. For example, if we are building a language translation model with a labeled dataset, at sequence position \\(i\\) during the training procedure, we only feed in the correct output words from positions \\(1,\\dots,i-1\\). All other words (for instance, those that come after the current position) are hidden from the model to prevent the model from “cheating.” This is also consistent with the nature of text generation: although the true translated words are known during training, we know nothing about the ground truth in practice. Thus, we can only feed the model the solutions to what it has already generated, at position \\(i\\)."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-6",
+    "href": "dl_lec11.html#transformers-6",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nConcatenating the scaled dot-product attention vectors into one vector and passing it through a linear projection."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-7",
+    "href": "dl_lec11.html#transformers-7",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nthe previous output words (output embeddings) are passed into the masked multi-head attention layer.\nthe second layer receives both the encoded inputs from the encoder block and the output of the masked multi-head attention layer into a multi-head attention layer.\nFinally, we pass the multi-head attention outputs into a fully connected layer that generates the overall model output: a probability vector corresponding to the output words."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-8",
+    "href": "dl_lec11.html#transformers-8",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\nLayer normalization mechanism, which was first introduced by J. Ba, J.R. Kiros, and G.E. Hinton in 2016 in the same-named paper Layer Normalization (URL: https://arxiv.org/ abs/1607.06450)."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-9",
+    "href": "dl_lec11.html#transformers-9",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nRecursion vs recurrence\n\n\nRNNs are recurrent.\nTransformers are recursive – therefore no need to unroll.\n\n\n\n\n\n\nAttention benefits\n\n\n\nMuch simpler than CNNs or RNNs.\nNo vanishing/exploding gradients problems.\nAttention can be thought of as a single convolution kernel spanning the whole sequence of tokens."
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-10",
+    "href": "dl_lec11.html#transformers-10",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers"
+  },
+  {
+    "objectID": "dl_lec11.html#transformers-11",
+    "href": "dl_lec11.html#transformers-11",
+    "title": "Transformers 1",
+    "section": "Transformers",
+    "text": "Transformers\n\n\n\nExample of learned attention weights (Vaswani 2017 paper)"
   },
   {
     "objectID": "index.html",
