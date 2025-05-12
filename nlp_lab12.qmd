@@ -1,0 +1,23 @@
+---
+title: "NLP: Lab 12 (LSH)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# Locality-sensitive hashing
+
+Use attached notebook (lsh.ipynb).
