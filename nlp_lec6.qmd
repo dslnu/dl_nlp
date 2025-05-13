@@ -1,0 +1,670 @@
+---
+title: "CNNs for NLP"
+author: 
+  - name: MSDE
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \pgfplotsset{compat=1.16}
+        \usepackage{pgfplots}
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    chalkboard: true
+    preview-links: auto
+    slide-number: true
+    theme: default
+    multiplex:
+      url: 'https://mplex.vitv.ly'
+      secret: 'a78db14ce5001defd147f3501079b058'
+      id: 'b3f677cc187e7a9f7b1b7ce69a39ffc660d840fdd8b81ea67eb8ca2869a93514'
+---
+
+## CNNs for NLP
+
+::: {.hidden}
+\newcommand{\bb}[1]{\boldsymbol{#1}}
+\newcommand{\bi}[1]{\textbf{\textit{{#1}}}}
+:::
+
+:::{.callout-tip icon=false}
+## Comparison to image processing
+
+- instead of image pixels - sentences or documents represented as a matrix 
+- these vectors can either be word embeddings like word2vec or GloVe
+- or one-hot vectors
+
+For a 10 word sentence using a 100-dimensional embedding we would have a 10×100 matrix as our input - this would be the "image". 
+:::
+
+## Comparison to image processing
+:::{.callout-tip icon=false}
+## Filters
+
+- In vision, our filters slide over local patches of an image, but in NLP we typically use filters that slide over full rows of the matrix (words).      
+- Thus, the “width” of our filters is usually the same as the width of the input matrix. 
+- The height, or region size, may vary, but sliding windows over 2-5 words at a time is typical. 
+:::
+
+## Diagram
+![](img/cnn_nlp_diagram.png)
+
+## Diagram
+:::{.callout-tip icon=false}
+## Description
+
+-  three filter region sizes: 2, 3 and 4, each of which has 2 filters. 
+- each filter generates variable-length feature maps
+- Then 1-max pooling is performed over each map, i.e., the largest number from each feature map is recorded. 
+-  Thus a univariate feature vector is generated from all six maps, and these 6 features are concatenated to form a feature vector for the penultimate layer. 
+- The final softmax layer then receives this feature vector as input and uses it to classify the sentence; here we assume binary classification and hence depict two possible output states. 
+:::
+
+## Comparison to image processing
+:::{.callout-important icon=false}
+## Intuitions broken ?
+
+- Location invariance 
+- Compositionality
+
+:::
+
+:::{.callout-tip icon=false}
+## Benefits
+A big argument for CNNs is that they are fast. **Very fast**. 
+:::
+
+## Applications
+:::{.callout-tip icon=false}
+## Classification tasks
+***Good idea:***
+
+- Sentiment Analysis
+- Spam Detection 
+- Topic Categorization
+:::
+
+## Applications
+:::{.callout-important icon=false}
+## Order of words lost
+
+***Bad idea (unless you do it right):***
+
+- Sequence Tagging
+- PoS Tagging
+- Entity Extraction (with a caveat)
+:::
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## Comparison with transformers
+
+- **PaLM**: 540B parameters
+- **GPT-3**: 175B parameters
+- **T5-11B**: 11B parameters (FOSS, outperforms GPT-3) 
+- **GPT-J**: 6B parameters (FOSS, outperforms GPT-3) 
+- **CNNs**: less than 200k parameters 
+:::
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## CNN benefits
+The main advantage of CNNs over previous NLP algorithms is that 
+
+- they can recognize patterns in text no matter where those patterns occur in the text (**translation invariance**) 
+- and how spread out they are (**scale invariance**).  
+:::
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## Comparison to other NLP methods
+
+- TF-IDF: don't recognize and generalize from text patterns
+- fully-connected NNs: over-generalize from particular patterns at particular locations
+- RNNs: 
+  - Cognitively plausible
+  - not best for classification (if just use last state),
+  - much slower than CNNs
+  - good for sequence tagging and classification
+  - great for language models
+  - can be amazing with attention mechanisms
+:::
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## Stencil example
+![](img/stencil_example.png){height=500}
+:::
+
+## CNNs in NLP
+:::{.callout-note icon=false}
+## Considerations
+
+- We don't need to program the kernels - just decide their width.
+- CNN optimizer will calculate weights within the kernel
+- by matching the patterns that are most predictive of the target variable.
+:::
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## What does CNN do with a kernel?
+
+1. Measure similarity between kernel and text (**dot product**)
+2. Find the max value of kernel match by **sliding** through textl
+3. Convert max value to a probability using activation function (**max pooling**)
+
+Convolution is steps 1 and 2.
+:::
+
+## CNNs in NLP
+:::{.callout-note icon=false}
+## convolve() in Python
+```python
+def convolve(inpt, kernel):
+  output = []
+  for i in range(len(inpt) - len(kernel) + 1):  # #1
+      output.append(
+          sum(
+              [
+                  inpt[i + k] * kernel[k]
+                  for k in range(len(kernel))  # #2
+              ]))
+  return output
+```
+:::
+
+## CNNs in NLP
+  <!-- %d2l.ai -->
+![](img/cnn_1dim_cross_correlation.png)
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![](img/1d_conv_for_text.png){height=600}
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![With padding](img/1d_conv_for_text_with_padding.png){height=600}
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![3 channels](img/3chan_conv_for_text.png)
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![Max pooling](img/1d_conv_for_text_max_pooling.png)
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## PyTorch example
+```python
+batch_size = 16
+word_embed_size = 4
+seq_len = 7
+input = torch.randn(batch_size, word_embed_size, seq_len)
+conv1 = Conv1d(in_channels=word_embed_size, out_channels=3, kernel_size=3) # can add: padding=1
+hidden1 = conv1(input)
+hidden2 = torch.max(hidden1, dim=2) # max pool
+```
+:::
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![Stride](img/1d_conv_stride.png)
+
+## CNNs in NLP
+  <!-- %Stanford lecture -->
+![Dilation = 2](img/1d_conv_dilation.png)
+
+# PyTorch 1-D CNN on 4-D embedding vectors
+
+## CNNs in NLP
+:::{.callout-note icon=false}
+## Manual kernel
+Let's start with a manual kernel first.
+```python
+from nltk.tokenize import word_tokenize
+from nltk.tag import pos_tag
+import pandas as pd
+
+tags = 'ADV ADJ VERB NOUN'.split()
+quote = 'The right word may be effective, but no word was ever as effective as a rightly timed pause.'
+tokens = pos_tag(word_tokenize(quote), tagset='universal')
+tagged_words = [[word] + [int(tag == t) for t in tags] for word, tag in tokens]
+
+df = pd.DataFrame(tagged_words, columns=['token'] + tags).T
+print(df)
+```
+:::
+
+## CNNs in NLP {.smaller}
+```
+            0      1     2    3   4          5  6    7   8     9    10    11  12  \
+    token  The  right  word  may  be  effective  ,  but  no  word  was  ever  as   
+    ADV      0      0     0    0   0          0  0    0   0     0    0     1   1   
+    ADJ      0      1     0    0   0          1  0    0   0     0    0     0   0   
+    VERB     0      0     0    1   1          0  0    0   0     0    1     0   0   
+    NOUN     0      0     1    0   0          0  0    0   0     1    0     0   0   
+
+                  13  14 15       16     17     18 19  
+    token  effective  as  a  rightly  timed  pause  .  
+    ADV            0   0  0        1      0      0  0  
+    ADJ            1   0  0        0      0      0  0  
+    VERB           0   0  0        0      1      0  0  
+    NOUN           0   0  0        0      0      1  0  
+```
+
+## CNNs in NLP
+:::{.callout-tip icon=false}
+## Tensor
+```python
+import torch
+x = torch.tensor(
+      df.iloc[1:].astype(float).values,
+      dtype=torch.float32)  # #1
+x = x.unsqueeze(0) # #2
+```
+:::
+
+:::{.callout-note icon=false}
+## Pattern
+Now you construct that pattern that we want to search for in the text: adverb, verb, then noun.
+```python
+kernel = pd.DataFrame(
+[[1, 0, 0.],
+ [0, 0, 0.],
+ [0, 1, 0.],
+ [0, 0, 1.]], index=tags)
+print(kernel)
+```
+:::
+
+## CNNs in NLP
+![](img/1d_cnn_example.png)
+
+## CNNs in NLP
+```python
+kernel = torch.tensor(kernel.values, dtype=torch.float32)
+kernel = kernel.unsqueeze(0)  # #1
+conv = torch.nn.Conv1d(in_channels=4,
+                     out_channels=1,
+                     kernel_size=3,
+                     bias=False)
+conv.load_state_dict({'weight': kernel})
+print(conv.weight)
+```
+
+## CNNs in NLP
+```python
+import numpy as np
+
+y = np.array(conv.forward(x).detach()).squeeze()
+df.loc['y'] = pd.Series(y)
+df
+```
+
+## CNNs in NLP
+![The y value reaches a maximum value of 3 where all 3 values of 1 in the kernel line up perfectly with the three 1’s forming the same pattern within the part-of-speech tags for the sentence.](img/1d_cnn_example_output.png)
+
+
+# Embeddings: a recap
+
+## Embeddings in PyTorch
+:::{.callout-tip icon=false}
+## nn.Embedding
+The nn.Embedding layer is a simple lookup table that maps an index value to a weight matrix of a certain dimension.     
+:::
+
+:::{.callout-important icon=false}
+## Training
+
+- During the training the parameters of the nn.Embedding layer in a neural network are adjusted in order to optimize the performance of the model.
+- Vectors are optimised to represent the meaning or context of the input tokens in relation to the task the model is trained for (e.g. text generation, language translation).
+:::
+
+## Embeddings
+:::{.callout-tip icon=false}
+## Parameters
+The nn.Embedding layer takes in two arguments:
+
+- vocabulary size
+- size of encoded representation
+
+```python
+import torch
+import torch.nn as nn
+
+# Define the embedding layer with 10 vocab size and 50 vector embeddings.
+embedding = nn.Embedding(10, 50)
+```
+:::
+
+:::{.callout-note icon=false}
+## Description
+
+- embedding lookup table shape is $(10,50)$.
+- each row is initialized with `torch.nn.init.uniform_()`
+- weights are initialized with random values between -1 and 1.
+:::
+
+## Embeddings
+:::{.callout-tip icon=false}
+## How to check a particular embedding
+To examine the embeddings for a given word (eg. first word in the table), run:
+```python
+embedding(torch.LongTensor([0]))
+```
+Output is a vector of size 50:
+![](img/embedding_sample.png)
+:::
+
+
+## Embeddings
+![](img/cnn_embedding_dims.png)
+
+
+## Embeddings
+:::{.callout-tip icon=false}
+## Initialization
+
+- **Normal**: initializes the weights with random values drawn from a normal distribution with a mean of 0 and a standard deviation of 1. It is also known as Gaussian initialization.
+```python
+nn.init.normal_(embedding.weight)
+```
+- **Constant**: initializes the weights with a specific constant value.
+```python
+nn.init.constant_(embedding.weight, 0)
+```
+:::
+
+## Embeddings
+:::{.callout-tip icon=false}
+## Initialization
+
+- **Xavier**: based on the work of Xavier Glorot and Yoshua Bengio, and they are designed to work well with sigmoid and tanh activation functions. They initialize the weights to values that are close to zero, but not too small.
+```python
+nn.init.xavier_uniform_(embedding.weight)
+```
+- **Kaiming**: based on the work of He et al., and they are designed to work well with ReLU and its variants (LeakyReLU, PReLU, RReLU, etc.). They also initialize the weights to values that are close to zero, but not too small.
+```python
+nn.init.kaiming_normal_(embedding.weight, nonlinearity='leaky_relu')
+```
+
+- **Pre-trained**: pre-trained word vectors such as GloVe or word2vec, which have been trained on large corpora and have been shown to be useful for many natural language processing tasks. The process of using a pre-trained word vectors is called  **fine-tuning**.
+:::
+
+## Embeddings
+
+:::{.callout-tip icon=false}
+## Pre-trained embeddings: advantages
+
+- **Improve model performance**: provide the model with a good set of initial weights that capture the meaning of words.
+- **Save computation time and resources**: embeddings have already been learned on a large corpus.
+- **Transfer learning**: pre-trained word embeddings can be used for transfer learning, which means that you can use the embeddings learned on one task as a starting point for a different but related task.
+:::
+
+
+## Embeddings
+:::{.callout-tip icon=false}
+## Pre-trained embeddings example
+```python
+import torch
+import torch.nn as nn
+
+# Load a pre-trained embedding model
+pretrained_embeddings = torch.randn(10, 50) # Example only, not actual pre-trained embeddings
+
+# Initialize the embedding layer with the pre-trained embeddings
+embedding.weight.data.copy_(pretrained_embeddings)
+```
+**OR:**
+```python
+embedding_layer = nn.Embedding.from_pretrained(pretrained_embeddings)
+```
+:::
+
+## Embeddings
+:::{.callout-tip icon=false}
+## Use pre-trained embeddings from popular libraries like GloVe or fastText:
+```python
+import torchtext
+
+# Load pre-trained GloVe embeddings
+glove = torchtext.vocab.GloVe(name='6B', dim=300)
+embedding_layer = nn.Embedding.from_pretrained(glove.vectors)   
+```
+:::
+
+## Embeddings
+
+![](img/pytorch_pretrained.png)
+
+## Embeddings
+:::{.callout-important icon=false}
+## Freezing
+In some cases when performing transfer learning, you may need to freeze the pre-trained embeddings during training process, so that they are not updated during the backpropagation step and only the last dense layer is updated. To do this:
+```python
+embedding_layer.weight.requiresGrad = False
+```
+:::
+
+## CNNs in NLP
+![torcn.nn.Embedding example](img/cnn_word_embeddings.png){height=550}
+
+# Kim paper
+
+## Kim paper
+:::{.callout-note icon=false}
+## Abstract
+We report on a series of experiments with convolutional neural networks (CNN) trained on top of pre-trained word vectors for sentence-level classification tasks. We show that a simple CNN with little hyperparameter tuning and static vectors achieves excellent results on multiple benchmarks. Learning task-specific vectors through fine-tuning offers further gains in performance. We additionally propose a simple modification to the architecture to allow for the use of both task-specific and static vectors. The CNN models discussed herein improve upon the state of the art on 4 out of 7 tasks, which include sentiment analysis and question classification.
+:::
+
+<!--
+% \begin{frame}{Kim paper}
+%   Within natural language process- ing, much of the work with deep learning meth- ods has involved learning word vector representa- tions through neural language models (Bengio et al., 2003; Yih et al., 2011; Mikolov et al., 2013) and performing composition over the learned word vectors for classification (Collobert et al., 2011). Word vectors, wherein words are projected from a sparse, 1-of-V encoding (here V is the vocabulary size) onto a lower dimensional vector space via a hidden layer, are essentially feature extractors that encode semantic features of words in their dimen- sions. In such dense representations, semantically close words are likewise close—in euclidean or cosine distance—in the lower dimensional vector space.
+% \end{frame}
+
+% \begin{frame}{Kim paper}
+%   In the present work, we train a simple CNN with one layer of convolution on top of word vectors obtained from an unsupervised neural language model. These vectors were trained by Mikolov et al. (2013) on 100 billion words of Google News, and are publicly available.1 We initially keep the word vectors static and learn only the other param- eters of the model. Despite little tuning of hyper- parameters, this simple model achieves excellent results on multiple benchmarks, suggesting that the pre-trained vectors are ‘universal’ feature ex- tractors that can be utilized for various classifica- tion tasks. Learning task-specific vectors through fine-tuning results in further improvements. We finally describe a simple modification to the archi- tecture to allow for the use of both pre-trained and task-specific vectors by having multiple channels.
+% \end{frame}
+
+-->
+
+## Kim paper
+<!-- %Evaluates a CNN architecture on various classification datasets, mostly comprised of Sentiment Analysis and Topic Categorization tasks. --> 
+
+![The input layer is a sentence comprised of concatenated word2vec word embeddings. That’s followed by a convolutional layer with multiple filters, then a max-pooling layer, and finally a softmax classifier. ](img/kim_paper_diagram.png)
+
+## Kim paper
+
+Let $\bb{x}_i \in \textrm{R}^k$ be the $k$-dimensional word vector corresponding to the $i$-th word in a sentence.
+
+A sentence of length $n$ (padded when necessary) is represented as
+$$
+\bb{x}_{1:n} = \bb{x}_1 \oplus \bb{x}_2 \oplus \dots \bb{x}_n,
+$$
+where $\oplus$ is the concatenation operator.
+
+In general, $\bb{x}_{i:i+j}$ will refer to the concatenation of words $\bb{x}_i, \bb{x}_{i+1}, \dots, \bb{x}_{i+j}$.
+
+## Kim paper
+A **convolution** operation involves a **filter** $\bb{w} \in \textrm{R}^{hk}$, which is applied to a window of $h$ words to produce a **feature**.
+
+![](img/cnn_kim_conv1.png)
+
+## Kim paper
+For example, a feature $c_i$ is generated from a window of words $\bb{x}_{i:i+h-1}$ by 
+$$
+c_i = f(\bb{w} \cdot \bb{x}_{i:i+h-1} + b),
+$$
+where $b \in \textrm{R}$ is a bias term and $f$ is an activation function.
+
+## Kim paper
+This filter is applied to each possible window of words in the sentence
+$$
+\left\{\bb{x}_{1:h}, \bb{x}_{2:h+1}, \dots, \bb{x}_{n-h+1:n}\right\}
+$$
+to produce a **feature map**:
+$$
+\bb{c} = \left[c_1,c_2,\dots,c_{n-h+1}\right], \; c \in \textrm{R}^{n-h+1}. 
+$$
+![](img/cnn_kim_conv2.png){height=200}
+
+## Kim paper
+:::{.callout-tip icon=false}
+## Pooling
+Apply a max-overtime pooling operation (Collobert et al., 2011) over the feature map and take the maximum value 
+$$
+\hat{\bb{c}} = \max{\bb{c}}
+$$
+as the feature corresponding to this particular filter.    
+
+- multiple filters 
+- softmax layer whose output is the probability distribution over labels.
+- multiple channels: one is kept static, another is fine-tuned via backprop.
+:::
+
+## Kim paper
+:::{.callout-note icon=false}
+## Hyperparameters
+
+- Nonlinearity: ReLU
+- Window filter sizes h = 3, 4, 5
+- Each filter size has 100 feature maps
+- Dropout p = 0.5 (2-4\% accuracy improvement)
+- $L_2$ constraint $s=3$ for rows of softmax
+- Mini batch size for SGD training: 50
+- Word vectors: pre-trained with word2vec, k = 30
+:::
+
+## Kim paper
+![](img/kim_paper_dataset_stats.png)
+
+## Kim paper
+:::{.callout-tip icon=false}
+## Dataset descriptions
+
+- **MR**: Movie reviews with one sentence per review. Classification involves detecting positive/negative reviews (Pang and Lee, 2005).
+- **SST-1**: Stanford Sentiment Treebank - an extension of MR but with train/dev/test splits provided and fine-grained labels (very positive, positive, neutral, negative, very negative), re-labeled by Socher et al. (2013).
+- **SST-2**: Same as SST-1 but with neutral reviews removed and binary labels.
+:::
+
+## Kim paper
+:::{.callout-tip icon=false}
+## Dataset descriptions
+
+- **Subj**: Subjectivity dataset where the task is to classify a sentence as being subjective or objective (Pang and Lee, 2004).
+- **TREC**: TREC question dataset - task involves classifying a question into 6 question types (whether the question is about person, location, numeric information, etc.) (Li and Roth, 2002).
+- **CR**: Customer reviews of various products (cameras, MP3s etc.). Task is to predict positive/negative reviews (Hu and Liu, 2004).
+:::
+
+## Kim paper
+:::{.callout-note icon=false}
+## Variants
+
+- **CNN-rand**: Our baseline model where all words are randomly initialized and then mod- ified during training.
+- **CNN-static**: A model with pre-trained vectors from word2vec. All words— including the unknown ones that are ran- domly initialized—are kept static and only the other parameters of the model are learned.
+- **CNN-non-static**: Same as above but the pre- trained vectors are fine-tuned for each task.
+- **CNN-multichannel**: A model with two sets of word vectors. Each set of vectors is treated as a ‘channel’ and each filter is applied to both channels, but gradients are back-propagated only through one of the channels. Both channels are initialized with word2vec.
+:::
+
+## Kim paper
+![](img/kim_paper_results.png)
+
+# Character-level networks
+
+## Character-level networks
+:::{.callout-tip icon=false}
+## Zhang, Zhao, Lecun (2015)
+
+- explore text as a kind of raw signal at character level
+- no knowledge about semantics/syntax required
+- no knowledge of words required
+- can work for different languages
+- misspellings or emoticons may be naturally learnt
+:::
+
+## Character-level networks
+:::{.callout-warning icon=false}
+## Design
+Main component is the temporal convolutional module. Suppose we have a discrete input function 
+$$
+g(x) \in [1,l]\rightarrow \mathrm{R},
+$$
+and a discrete kernel function
+$$
+f(x) \in [1,k]\rightarrow \textrm{R}.
+$$
+
+The convolution $h(y) \in [1, \lfloor(l-k+1)/d\rfloor] \rightarrow \mathrm{R}$ between $f(x)$ and $g(x)$ with stride $d$ is defined as
+$$
+h(y) = \sum\limits_{x=1}^k f(x) \cdot g(y\cdot d - x + c),
+$$
+where $c=k-d+1$ is a offset constant.
+::: 
+
+## Character-level networks
+:::{.callout-note icon=false}
+## Parametrization
+
+- Module is parameterized by a set of such kernel functions $f_{ij}(x)$, where $i=1,2,\dots,m$, and $j=1,2,\dots,n$ which we call weights, on a set of inputs $g_i(x)$ and outputs $h_j(y)$.
+
+- We call each $g_i$ (or $h_j$) input (or output) features, and $m$ (or $n$) input (or output) feature size.
+
+- Output $h_j(y)$ is obtained by a sum of the convolutions between $g_i(x)$ and $f_{ij}(x)$.
+:::
+
+## Character-level networks
+:::{.callout-note icon=false}
+## Temporal max-pooling
+A 1-D version of max-pooling used in computer vision.
+
+Given a discrete input function $g(x) \in [1,l]\rightarrow \mathrm{R}$, the max-pooling function
+$h(y) \in [1, \lfloor(l-k+1)/d\rfloor] \rightarrow \mathrm{R}$ of $g(x)$ is defined as
+$$
+h(y) = \max\limits_{x=1}^k g(y\cdot d - x + c). 
+$$
+:::
+
+## Character-level networks
+:::{.callout-tip icon=false}
+## Parameters
+
+- Activation fn: $h(x) = \max\left\{0,x\right\}$ 
+- SGD with minibatch size=128
+- Momentum=0.9
+:::
+
+## Character-level networks
+:::{.callout-tip icon=false}
+## Quantization
+
+- use alphabet of size $m$
+- quantize each character using 1-of-m (or one-hot) encoding
+- then the sequence of characters is transformed to a sequence of $m$-sized vectors with fixed length $l_0$
+:::
+
+## Character-level networks
+![Alphabet size: 70](img/char_level_cnn_alphabet.png)
+
+## Character-level networks
+![Model design. Number of features: 70. Input feature length: 1014.](img/char_level_cnn_diagram.png)
+
+## Character-level networks
+![Number of features: 70. Input feature length: 1014.](img/char_level_cnn_relative_errors.png)
+  
+
+## Character-level networks
+![Character-aware neural language models (2015)](img/cnn_character_aware_nlms.png)
