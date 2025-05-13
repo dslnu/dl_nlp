@@ -1,5 +1,5 @@
 ---
-title: "NLP: Lab 13 (Generating Names with a Character-Level RNN)"
+title: "NLP: Lab 14 (Translation with Seq2seq and Attention)"
 execute:
   enabled: true
   echo: true
@@ -19,4 +19,8 @@ filters:
 ---
 
 # Description
-Please complete notebook and exercises from <https://docs.pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html>
+Please complete notebook and exercises from <https://docs.pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html>
+
+## Dataset examples
+
+1. <https://huggingface.co/datasets/toughdata/quora-question-answer-dataset> (`Question → Answer`)
