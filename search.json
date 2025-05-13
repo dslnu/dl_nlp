@@ -4813,7 +4813,7 @@
     "href": "dl.html#labs",
     "title": "Deep Learning",
     "section": "Labs",
-    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch"
+    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch\nLab 9: Annotated Encoder-Decoder with Attention"
   },
   {
     "objectID": "dl.html#python-venv-info",
@@ -4823,11 +4823,11 @@
     "text": "Python venv info\nInstructions on how to create a virtual environment for DL course:\n\nLaunch Anaconda Prompt. In it execute:\n\npython -m venv dl_venv\n\nActivate the environment:\n\ndl_venv\\Scripts\\activate\n\nInstall required packages:\n\npip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py\n\nRun Jupyter:\n\njupyter notebook\n\nVoila! (pardon my French)"
   },
   {
-    "objectID": "dl_lab8.html",
-    "href": "dl_lab8.html",
-    "title": "DL: Lab 7",
+    "objectID": "dl_lab9.html",
+    "href": "dl_lab9.html",
+    "title": "DL: Lab 9 (Annotated Encoder-Decoder with Attention)",
     "section": "",
-    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
+    "text": "Annotated Encoder-Decoder with Attention\nJupyter notebook attached (dl_lab9.zip)"
   },
   {
     "objectID": "dl_lec8.html#modern-cnn-variants",
@@ -5199,6 +5199,13 @@
     "title": "Convolutional networks: examples",
     "section": "Comparison",
     "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))\n\n\n\n\nModel\nVal Accuracy\nTest Accuracy\nNum Parameters\n\n\n\n\nGoogleNet\n90.40%\n89.70%\n260,650\n\n\nResNet\n91.84%\n91.06%\n272,378\n\n\nResNetPreAct\n91.80%\n91.07%\n272,250\n\n\nDenseNet\n90.72%\n90.23%\n239,146"
+  },
+  {
+    "objectID": "dl_lab8.html",
+    "href": "dl_lab8.html",
+    "title": "DL: Lab 8",
+    "section": "",
+    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
   },
   {
     "objectID": "dl_lec9.html#recurrent-neural-networks",
@@ -6122,7 +6129,7 @@
     "href": "nlp.html#labs",
     "title": "Natural Language Processing",
     "section": "Labs",
-    "text": "Labs\nLab 1: NLTK basics\nLab 2: Stemming/String distance\nLab 3: Lemmatization/WordNet\nLab 4: Naive Bayes classifier\nLab 5: N-grams\nLab 6: Bag-of-words/PPMI\nLab 7: TF-IDF\nLab 8: word2vec\nLab 9: doc2vec\nLab 10: PCA\nLab 11: CNNs for NLP\nLab 12: LSH\nLab 13: Generating Names with a Character-Level RNN\nLab 14:"
+    "text": "Labs\nLab 1: NLTK basics\nLab 2: Stemming/String distance\nLab 3: Lemmatization/WordNet\nLab 4: Naive Bayes classifier\nLab 5: N-grams\nLab 6: Bag-of-words/PPMI\nLab 7: TF-IDF\nLab 8: word2vec\nLab 9: doc2vec\nLab 10: PCA\nLab 11: CNNs for NLP\nLab 12: LSH\nLab 13: Generating Names with a Character-Level RNN\nLab 14: Translation with Seq2seq and Attention"
   },
   {
     "objectID": "about.html",
@@ -7618,9 +7625,16 @@
   {
     "objectID": "nlp_lab14.html",
     "href": "nlp_lab14.html",
-    "title": "NLP: Lab 13 (Generating Names with a Character-Level RNN)",
+    "title": "NLP: Lab 14 (Translation with Seq2seq and Attention)",
     "section": "",
-    "text": "Description\nPlease complete notebook and exercises from https://docs.pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html"
+    "text": "Please complete notebook and exercises from https://docs.pytorch.org/tutorials/intermediate/seq2seq_translation_tutorial.html\n\n\n\nhttps://huggingface.co/datasets/toughdata/quora-question-answer-dataset (Question → Answer)"
+  },
+  {
+    "objectID": "nlp_lab14.html#dataset-examples",
+    "href": "nlp_lab14.html#dataset-examples",
+    "title": "NLP: Lab 14 (Translation with Seq2seq and Attention)",
+    "section": "",
+    "text": "https://huggingface.co/datasets/toughdata/quora-question-answer-dataset (Question → Answer)"
   },
   {
     "objectID": "dl_lab3.html",
@@ -8698,6 +8712,13 @@
     "href": "nlp_lab13.html",
     "title": "NLP: Lab 13 (Generating Names with a Character-Level RNN)",
     "section": "",
-    "text": "Description\nPlease complete notebook and exercises from https://docs.pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html"
+    "text": "Please complete notebook and exercises from https://docs.pytorch.org/tutorials/intermediate/char_rnn_generation_tutorial.html\n\n\n\nhttps://huggingface.co/datasets/NousResearch/CharacterCodex (Fictional series -&gt; Character name)\nhttps://huggingface.co/datasets/jamescalam/world-cities-geo (Country -&gt; City)"
+  },
+  {
+    "objectID": "nlp_lab13.html#dataset-examples",
+    "href": "nlp_lab13.html#dataset-examples",
+    "title": "NLP: Lab 13 (Generating Names with a Character-Level RNN)",
+    "section": "",
+    "text": "https://huggingface.co/datasets/NousResearch/CharacterCodex (Fictional series -&gt; Character name)\nhttps://huggingface.co/datasets/jamescalam/world-cities-geo (Country -&gt; City)"
   }
 ]
