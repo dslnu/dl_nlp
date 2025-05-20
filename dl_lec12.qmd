@@ -39,9 +39,11 @@ format:
       id: '5ab825911099445d8fd201a3fc394cf428a7d217aa2ec5d05192de6aafe32206'
 ---
 
-<!-- % note: https://arxiv.org/pdf/2310.03003 -->
+
 ## LLM tree
 ![](img/llm_dev_paths.png)
+
+  <!-- % note: https://arxiv.org/pdf/2310.03003 -->
   <!-- % Transformer-based: non-grey -->
   <!-- % Encoder-only: pink -->
   <!-- % Decoder-only: blue -->
@@ -93,10 +95,7 @@ $$
 ![](img/quantization2.png)
 
 ## 1-bit LLMs
-:::{.callout-tip icon=false}
-## Another solution: Hardware accelerators
-![](img/hw_accelerators.png)
-:::
+![Another solution: Hardware accelerators](img/hw_accelerators.png){height=550}
 
 ## 1-bit LLMs
 :::{.callout-tip icon=false}
@@ -520,8 +519,8 @@ $h_i^0$ can be defined arbitrarily on initialisation.
 ![2D Convolution vs. Graph Convolution.](img/2d_conv_vs_graph_conv.png)
 
 ## Convolutional Graph Neural Networks
-![](img/cgnn_cnn.png)
-![](img/cgnn_convolution.png)
+![](img/cgnn_cnn.png){height=300}
+![](img/cgnn_convolution.png){height=300}
 
 ## Convolutional Graph Neural Networks
 :::{.callout-tip icon=false}
