@@ -1,0 +1,4285 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Task 0. – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../../">
+<script src="../../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task1" id="toc-task1" class="nav-link active" data-scroll-target="#task1">Task1</a></li>
+  <li><a href="#task2" id="toc-task2" class="nav-link" data-scroll-target="#task2">Task2</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Task 0.</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Install required dependencies</p>
+<div id="aea94a37" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install nltk</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Requirement already satisfied: nltk in c:\users\asus\anaconda3\lib\site-packages (3.7)
+Requirement already satisfied: tqdm in c:\users\asus\anaconda3\lib\site-packages (from nltk) (4.64.1)
+Requirement already satisfied: regex&gt;=2021.8.3 in c:\users\asus\anaconda3\lib\site-packages (from nltk) (2022.7.9)
+Requirement already satisfied: click in c:\users\asus\anaconda3\lib\site-packages (from nltk) (8.0.4)
+Requirement already satisfied: joblib in c:\users\asus\anaconda3\lib\site-packages (from nltk) (1.1.1)
+Requirement already satisfied: colorama in c:\users\asus\anaconda3\lib\site-packages (from click-&gt;nltk) (0.4.6)
+Note: you may need to restart the kernel to use updated packages.</code></pre>
+</div>
+</div>
+<div id="9e6a3f58" class="cell" data-scrolled="true" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk<span class="op">;</span> </span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'popular'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Downloading collection 'popular'
+[nltk_data]    | 
+[nltk_data]    | Downloading package cmudict to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\cmudict.zip.
+[nltk_data]    | Downloading package gazetteers to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\gazetteers.zip.
+[nltk_data]    | Downloading package genesis to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\genesis.zip.
+[nltk_data]    | Downloading package gutenberg to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\gutenberg.zip.
+[nltk_data]    | Downloading package inaugural to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\inaugural.zip.
+[nltk_data]    | Downloading package movie_reviews to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\movie_reviews.zip.
+[nltk_data]    | Downloading package names to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\names.zip.
+[nltk_data]    | Downloading package shakespeare to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\shakespeare.zip.
+[nltk_data]    | Downloading package stopwords to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\stopwords.zip.
+[nltk_data]    | Downloading package treebank to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\treebank.zip.
+[nltk_data]    | Downloading package twitter_samples to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\twitter_samples.zip.
+[nltk_data]    | Downloading package omw to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package omw-1.4 to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package wordnet to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package wordnet2021 to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package wordnet31 to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package wordnet_ic to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\wordnet_ic.zip.
+[nltk_data]    | Downloading package words to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping corpora\words.zip.
+[nltk_data]    | Downloading package maxent_ne_chunker to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping chunkers\maxent_ne_chunker.zip.
+[nltk_data]    | Downloading package punkt to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping tokenizers\punkt.zip.
+[nltk_data]    | Downloading package snowball_data to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    | Downloading package averaged_perceptron_tagger to
+[nltk_data]    |     C:\Users\Asus\AppData\Roaming\nltk_data...
+[nltk_data]    |   Unzipping taggers\averaged_perceptron_tagger.zip.
+[nltk_data]    | 
+[nltk_data]  Done downloading collection popular</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="1">
+<pre><code>True</code></pre>
+</div>
+</div>
+<div id="730a2989" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'nps_chat'</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'webtext'</span>)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.book <span class="im">import</span> <span class="op">*</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>[nltk_data] Error loading nps_chat: &lt;urlopen error [Errno 11001]
+[nltk_data]     getaddrinfo failed&gt;
+[nltk_data] Error loading webtext: &lt;urlopen error [Errno 11001]
+[nltk_data]     getaddrinfo failed&gt;</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>*** Introductory Examples for the NLTK Book ***
+Loading text1, ..., text9 and sent1, ..., sent9
+Type the name of the text or sentence to view it.
+Type: 'texts()' or 'sents()' to list the materials.
+text1: Moby Dick by Herman Melville 1851
+text2: Sense and Sensibility by Jane Austen 1811
+text3: The Book of Genesis
+text4: Inaugural Address Corpus
+text5: Chat Corpus
+text6: Monty Python and the Holy Grail
+text7: Wall Street Journal
+text8: Personals Corpus
+text9: The Man Who Was Thursday by G . K . Chesterton 1908</code></pre>
+</div>
+</div>
+<div id="c582eec3" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>pip install spacy scattertext</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Collecting spacy
+  Downloading spacy-3.8.4-cp310-cp310-win_amd64.whl (12.2 MB)
+     ---------------------------------------- 12.2/12.2 MB 4.0 MB/s eta 0:00:00
+Collecting scattertext
+  Downloading scattertext-0.1.19-py3-none-any.whl (8.2 MB)
+     ---------------------------------------- 8.2/8.2 MB 3.6 MB/s eta 0:00:00
+Collecting spacy-loggers&lt;2.0.0,&gt;=1.0.0
+  Downloading spacy_loggers-1.0.5-py3-none-any.whl (22 kB)
+Requirement already satisfied: numpy&gt;=1.19.0 in c:\users\asus\anaconda3\lib\site-packages (from spacy) (1.24.0)
+Collecting langcodes&lt;4.0.0,&gt;=3.2.0
+  Downloading langcodes-3.5.0-py3-none-any.whl (182 kB)
+     -------------------------------------- 183.0/183.0 kB 2.7 MB/s eta 0:00:00
+Collecting thinc&lt;8.4.0,&gt;=8.3.4
+  Downloading thinc-8.3.4-cp310-cp310-win_amd64.whl (1.5 MB)
+     ---------------------------------------- 1.5/1.5 MB 4.0 MB/s eta 0:00:00
+Collecting murmurhash&lt;1.1.0,&gt;=0.28.0
+  Downloading murmurhash-1.0.12-cp310-cp310-win_amd64.whl (25 kB)
+Requirement already satisfied: jinja2 in c:\users\asus\anaconda3\lib\site-packages (from spacy) (3.1.2)
+Collecting preshed&lt;3.1.0,&gt;=3.0.2
+  Downloading preshed-3.0.9-cp310-cp310-win_amd64.whl (122 kB)
+     -------------------------------------- 122.2/122.2 kB 3.5 MB/s eta 0:00:00
+Collecting spacy-legacy&lt;3.1.0,&gt;=3.0.11
+  Downloading spacy_legacy-3.0.12-py2.py3-none-any.whl (29 kB)
+Collecting wasabi&lt;1.2.0,&gt;=0.9.1
+  Downloading wasabi-1.1.3-py3-none-any.whl (27 kB)
+Requirement already satisfied: tqdm&lt;5.0.0,&gt;=4.38.0 in c:\users\asus\anaconda3\lib\site-packages (from spacy) (4.64.1)
+Collecting typer&lt;1.0.0,&gt;=0.3.0
+  Downloading typer-0.15.1-py3-none-any.whl (44 kB)
+     ---------------------------------------- 44.9/44.9 kB 2.3 MB/s eta 0:00:00
+Collecting pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4
+  Downloading pydantic-2.10.6-py3-none-any.whl (431 kB)
+     -------------------------------------- 431.7/431.7 kB 2.7 MB/s eta 0:00:00
+Collecting srsly&lt;3.0.0,&gt;=2.4.3
+  Downloading srsly-2.5.1-cp310-cp310-win_amd64.whl (632 kB)
+     -------------------------------------- 632.3/632.3 kB 3.1 MB/s eta 0:00:00
+Requirement already satisfied: setuptools in c:\users\asus\anaconda3\lib\site-packages (from spacy) (65.6.3)
+Collecting cymem&lt;2.1.0,&gt;=2.0.2
+  Downloading cymem-2.0.11-cp310-cp310-win_amd64.whl (39 kB)
+Collecting weasel&lt;0.5.0,&gt;=0.1.0
+  Downloading weasel-0.4.1-py3-none-any.whl (50 kB)
+     ---------------------------------------- 50.3/50.3 kB 1.3 MB/s eta 0:00:00
+Requirement already satisfied: requests&lt;3.0.0,&gt;=2.13.0 in c:\users\asus\anaconda3\lib\site-packages (from spacy) (2.28.1)
+Collecting catalogue&lt;2.1.0,&gt;=2.0.6
+  Downloading catalogue-2.0.10-py3-none-any.whl (17 kB)
+Requirement already satisfied: packaging&gt;=20.0 in c:\users\asus\anaconda3\lib\site-packages (from spacy) (22.0)
+Requirement already satisfied: scikit-learn in c:\users\asus\anaconda3\lib\site-packages (from scattertext) (1.2.1)
+Requirement already satisfied: gensim&gt;=4.0.0 in c:\users\asus\anaconda3\lib\site-packages (from scattertext) (4.3.0)
+Collecting flashtext
+  Downloading flashtext-2.7.tar.gz (14 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Requirement already satisfied: scipy in c:\users\asus\anaconda3\lib\site-packages (from scattertext) (1.10.0)
+Requirement already satisfied: pandas in c:\users\asus\anaconda3\lib\site-packages (from scattertext) (1.5.3)
+Requirement already satisfied: statsmodels in c:\users\asus\anaconda3\lib\site-packages (from scattertext) (0.13.5)
+Requirement already satisfied: smart-open&gt;=1.8.1 in c:\users\asus\anaconda3\lib\site-packages (from gensim&gt;=4.0.0-&gt;scattertext) (5.2.1)
+Collecting FuzzyTM&gt;=0.4.0
+  Downloading FuzzyTM-2.0.9-py3-none-any.whl (31 kB)
+Collecting language-data&gt;=1.2
+  Downloading language_data-1.3.0-py3-none-any.whl (5.4 MB)
+     ---------------------------------------- 5.4/5.4 MB 2.9 MB/s eta 0:00:00
+Requirement already satisfied: typing-extensions&gt;=4.12.2 in c:\users\asus\appdata\roaming\python\python310\site-packages (from pydantic!=1.8,!=1.8.1,&lt;3.0.0,&gt;=1.7.4-&gt;spacy) (4.12.2)
+Collecting annotated-types&gt;=0.6.0
+  Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+Collecting pydantic-core==2.27.2
+  Downloading pydantic_core-2.27.2-cp310-cp310-win_amd64.whl (2.0 MB)
+     ---------------------------------------- 2.0/2.0 MB 2.2 MB/s eta 0:00:00
+Requirement already satisfied: charset-normalizer&lt;3,&gt;=2 in c:\users\asus\anaconda3\lib\site-packages (from requests&lt;3.0.0,&gt;=2.13.0-&gt;spacy) (2.0.4)
+Requirement already satisfied: idna&lt;4,&gt;=2.5 in c:\users\asus\anaconda3\lib\site-packages (from requests&lt;3.0.0,&gt;=2.13.0-&gt;spacy) (3.4)
+Requirement already satisfied: urllib3&lt;1.27,&gt;=1.21.1 in c:\users\asus\anaconda3\lib\site-packages (from requests&lt;3.0.0,&gt;=2.13.0-&gt;spacy) (1.26.14)
+Requirement already satisfied: certifi&gt;=2017.4.17 in c:\users\asus\anaconda3\lib\site-packages (from requests&lt;3.0.0,&gt;=2.13.0-&gt;spacy) (2022.12.7)
+Collecting confection&lt;1.0.0,&gt;=0.0.1
+  Downloading confection-0.1.5-py3-none-any.whl (35 kB)
+Collecting blis&lt;1.3.0,&gt;=1.2.0
+  Downloading blis-1.2.0-cp310-cp310-win_amd64.whl (6.2 MB)
+     ---------------------------------------- 6.2/6.2 MB 3.5 MB/s eta 0:00:00
+Requirement already satisfied: colorama in c:\users\asus\anaconda3\lib\site-packages (from tqdm&lt;5.0.0,&gt;=4.38.0-&gt;spacy) (0.4.6)
+Collecting shellingham&gt;=1.3.0
+  Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+Requirement already satisfied: click&gt;=8.0.0 in c:\users\asus\anaconda3\lib\site-packages (from typer&lt;1.0.0,&gt;=0.3.0-&gt;spacy) (8.0.4)
+Requirement already satisfied: rich&gt;=10.11.0 in c:\users\asus\appdata\roaming\python\python310\site-packages (from typer&lt;1.0.0,&gt;=0.3.0-&gt;spacy) (13.9.4)
+Collecting cloudpathlib&lt;1.0.0,&gt;=0.7.0
+  Downloading cloudpathlib-0.20.0-py3-none-any.whl (52 kB)
+     ---------------------------------------- 52.5/52.5 kB 2.6 MB/s eta 0:00:00
+Requirement already satisfied: MarkupSafe&gt;=2.0 in c:\users\asus\anaconda3\lib\site-packages (from jinja2-&gt;spacy) (2.1.1)
+Requirement already satisfied: pytz&gt;=2020.1 in c:\users\asus\anaconda3\lib\site-packages (from pandas-&gt;scattertext) (2022.7)
+Requirement already satisfied: python-dateutil&gt;=2.8.1 in c:\users\asus\anaconda3\lib\site-packages (from pandas-&gt;scattertext) (2.8.2)
+Requirement already satisfied: joblib&gt;=1.1.1 in c:\users\asus\anaconda3\lib\site-packages (from scikit-learn-&gt;scattertext) (1.1.1)
+Requirement already satisfied: threadpoolctl&gt;=2.0.0 in c:\users\asus\anaconda3\lib\site-packages (from scikit-learn-&gt;scattertext) (2.2.0)
+Requirement already satisfied: patsy&gt;=0.5.2 in c:\users\asus\anaconda3\lib\site-packages (from statsmodels-&gt;scattertext) (0.5.3)
+Collecting pyfume
+  Downloading pyFUME-0.3.4-py3-none-any.whl (60 kB)
+     ---------------------------------------- 60.3/60.3 kB 1.6 MB/s eta 0:00:00
+Collecting marisa-trie&gt;=1.1.0
+  Downloading marisa_trie-1.2.1-cp310-cp310-win_amd64.whl (151 kB)
+     -------------------------------------- 151.9/151.9 kB 4.6 MB/s eta 0:00:00
+Requirement already satisfied: six in c:\users\asus\anaconda3\lib\site-packages (from patsy&gt;=0.5.2-&gt;statsmodels-&gt;scattertext) (1.16.0)
+Requirement already satisfied: pygments&lt;3.0.0,&gt;=2.13.0 in c:\users\asus\appdata\roaming\python\python310\site-packages (from rich&gt;=10.11.0-&gt;typer&lt;1.0.0,&gt;=0.3.0-&gt;spacy) (2.18.0)
+Requirement already satisfied: markdown-it-py&gt;=2.2.0 in c:\users\asus\appdata\roaming\python\python310\site-packages (from rich&gt;=10.11.0-&gt;typer&lt;1.0.0,&gt;=0.3.0-&gt;spacy) (3.0.0)
+Requirement already satisfied: mdurl~=0.1 in c:\users\asus\appdata\roaming\python\python310\site-packages (from markdown-it-py&gt;=2.2.0-&gt;rich&gt;=10.11.0-&gt;typer&lt;1.0.0,&gt;=0.3.0-&gt;spacy) (0.1.2)
+Collecting fst-pso==1.8.1
+  Downloading fst-pso-1.8.1.tar.gz (18 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Collecting scipy
+  Downloading scipy-1.10.1-cp310-cp310-win_amd64.whl (42.5 MB)
+     ---------------------------------------- 42.5/42.5 MB 3.8 MB/s eta 0:00:00
+Collecting numpy&gt;=1.19.0
+  Downloading numpy-1.24.4-cp310-cp310-win_amd64.whl (14.8 MB)
+     ---------------------------------------- 14.8/14.8 MB 6.7 MB/s eta 0:00:00
+Collecting simpful==2.12.0
+  Downloading simpful-2.12.0-py3-none-any.whl (24 kB)
+Collecting miniful
+  Downloading miniful-0.0.6.tar.gz (2.8 kB)
+  Preparing metadata (setup.py): started
+  Preparing metadata (setup.py): finished with status 'done'
+Building wheels for collected packages: flashtext, fst-pso, miniful
+  Building wheel for flashtext (setup.py): started
+  Building wheel for flashtext (setup.py): finished with status 'done'
+  Created wheel for flashtext: filename=flashtext-2.7-py2.py3-none-any.whl size=9323 sha256=c89d4f718f0f9c02579a4f75e04ba7278ca6e46aa952f632f786e5b6b933ae10
+  Stored in directory: c:\users\asus\appdata\local\pip\cache\wheels\30\31\d7\4151687c4ab1948641fe115a3cdee286d03ad89a5f52cbd8b5
+  Building wheel for fst-pso (setup.py): started
+  Building wheel for fst-pso (setup.py): finished with status 'done'
+  Created wheel for fst-pso: filename=fst_pso-1.8.1-py3-none-any.whl size=20448 sha256=1f31d9227e900b3b57dcc805f4ffb53d5f319f69ccf90b1260699d568b732fff
+  Stored in directory: c:\users\asus\appdata\local\pip\cache\wheels\01\02\ee\df0699282986903a384b69aab4413af9efd26b3612b5dccc9e
+  Building wheel for miniful (setup.py): started
+  Building wheel for miniful (setup.py): finished with status 'done'
+  Created wheel for miniful: filename=miniful-0.0.6-py3-none-any.whl size=3522 sha256=69d7cf007c3cca76390bf59c328184b64a6f2ef773d4bf3c7a193e73cd43b8e1
+  Stored in directory: c:\users\asus\appdata\local\pip\cache\wheels\43\aa\48\5c66b931ff013ad19774081aa19656637af5c0cc33b5494b30
+Successfully built flashtext fst-pso miniful
+Installing collected packages: flashtext, cymem, wasabi, spacy-loggers, spacy-legacy, shellingham, pydantic-core, numpy, murmurhash, marisa-trie, cloudpathlib, catalogue, annotated-types, srsly, scipy, pydantic, preshed, language-data, blis, typer, simpful, miniful, langcodes, confection, weasel, thinc, fst-pso, spacy, pyfume, FuzzyTM, scattertext
+  Attempting uninstall: numpy
+    Found existing installation: numpy 1.24.0
+    Uninstalling numpy-1.24.0:
+      Successfully uninstalled numpy-1.24.0
+Note: you may need to restart the kernel to use updated packages.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>ERROR: Could not install packages due to an OSError: [WinError 5] Access is denied: 'C:\\Users\\Asus\\anaconda3\\Lib\\site-packages\\numpy\\~libs\\libopenblas64__v0.3.21-gcc_10_3_0.dll'
+Consider using the `--user` option or check the permissions.
+</code></pre>
+</div>
+</div>
+<div id="47c84ad0" class="cell" data-execution_count="2">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>python <span class="op">-</span>m spacy download en_core_web_sm</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\Asus\anaconda3\python.exe: No module named spacy</code></pre>
+</div>
+</div>
+<section id="task1" class="level3">
+<h3 class="anchored" data-anchor-id="task1">Task1</h3>
+<p>Using <code>FreqDist</code>, find the following from text5: * words that are hapaxes (unique) and those that occur less than 5 times * draw a plot showing mapping from word length to word frequency * find 10 most frequent words occurring at the end of the sentence</p>
+<div id="372d944e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.probability <span class="im">import</span> FreqDist</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.book <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>*** Introductory Examples for the NLTK Book ***
+Loading text1, ..., text9 and sent1, ..., sent9
+Type the name of the text or sentence to view it.
+Type: 'texts()' or 'sents()' to list the materials.
+text1: Moby Dick by Herman Melville 1851
+text2: Sense and Sensibility by Jane Austen 1811
+text3: The Book of Genesis
+text4: Inaugural Address Corpus
+text5: Chat Corpus
+text6: Monty Python and the Holy Grail
+text7: Wall Street Journal
+text8: Personals Corpus
+text9: The Man Who Was Thursday by G . K . Chesterton 1908</code></pre>
+</div>
+</div>
+<div id="bc028758" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>fdist <span class="op">=</span> FreqDist(text3)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fdist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FreqDist with 2789 samples and 44764 outcomes&gt;</code></pre>
+</div>
+</div>
+<div id="cb6d7021" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sorted_dict <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">sorted</span>(fdist.items(), key<span class="op">=</span><span class="kw">lambda</span> item: item[<span class="dv">1</span>], reverse<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"-"</span><span class="op">*</span><span class="dv">10</span> <span class="op">+</span> <span class="st">"Words that occur less than 5 times"</span> <span class="op">+</span> <span class="st">"-"</span><span class="op">*</span><span class="dv">10</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, value <span class="kw">in</span> sorted_dict.items():</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value <span class="op">&lt;</span> <span class="dv">5</span> <span class="kw">and</span> <span class="bu">bool</span>(re.match(<span class="st">'^[a-zA-Z]+$'</span>, key)):</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss"> times"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>----------Words that occur less than 5 times----------
+darkness: 4 times
+dry: 4 times
+Se: 4 times
+abundantly: 4 times
+dominion: 4 times
+bearing: 4 times
+host: 4 times
+seventh: 4 times
+work: 4 times
+caused: 4 times
+rain: 4 times
+breath: 4 times
+Havilah: 4 times
+goeth: 4 times
+fall: 4 times
+naked: 4 times
+wise: 4 times
+hid: 4 times
+wast: 4 times
+Hast: 4 times
+shouldest: 4 times
+ev: 4 times
+whence: 4 times
+countenance: 4 times
+n: 4 times
+hurt: 4 times
+truly: 4 times
+appointed: 4 times
+comfort: 4 times
+grieved: 4 times
+cubits: 4 times
+increased: 4 times
+mountains: 4 times
+remembered: 4 times
+wind: 4 times
+rest: 4 times
+offered: 4 times
+curse: 4 times
+token: 4 times
+remember: 4 times
+drank: 4 times
+faces: 4 times
+awoke: 4 times
+By: 4 times
+Shinar: 4 times
+afterward: 4 times
+spread: 4 times
+countries: 4 times
+elder: 4 times
+language: 4 times
+nothing: 4 times
+Reu: 4 times
+Serug: 4 times
+save: 4 times
+Phara: 4 times
+dwelled: 4 times
+thyself: 4 times
+wicked: 4 times
+number: 4 times
+walk: 4 times
+built: 4 times
+Bela: 4 times
+vale: 4 times
+With: 4 times
+Hebrew: 4 times
+pursued: 4 times
+priest: 4 times
+most: 4 times
+steward: 4 times
+heir: 4 times
+hither: 4 times
+flee: 4 times
+affliction: 4 times
+needs: 4 times
+yourselves: 4 times
+ready: 4 times
+herself: 4 times
+laugh: 4 times
+cry: 4 times
+LO: 4 times
+angels: 4 times
+turn: 4 times
+abide: 4 times
+mercy: 4 times
+preserve: 4 times
+withheld: 4 times
+restore: 4 times
+ought: 4 times
+thought: 4 times
+restored: 4 times
+bondwoman: 4 times
+lambs: 4 times
+eldest: 4 times
+follow: 4 times
+clear: 4 times
+room: 4 times
+provender: 4 times
+prosper: 4 times
+hou: 4 times
+kindly: 4 times
+Send: 4 times
+comforted: 4 times
+ghost: 4 times
+kept: 4 times
+charged: 4 times
+love: 4 times
+How: 4 times
+plenty: 4 times
+pleased: 4 times
+certain: 4 times
+Naphtali: 4 times
+Gad: 4 times
+Asher: 4 times
+hire: 4 times
+Issachar: 4 times
+brown: 4 times
+times: 4 times
+rams: 4 times
+carried: 4 times
+Gilead: 4 times
+searched: 4 times
+On: 4 times
+hollow: 4 times
+defiled: 4 times
+trade: 4 times
+Lotan: 4 times
+Dishon: 4 times
+dreams: 4 times
+deliver: 4 times
+Ishmeelites: 4 times
+rent: 4 times
+clothes: 4 times
+kid: 4 times
+Shelah: 4 times
+vine: 4 times
+interpret: 4 times
+befall: 4 times
+wagons: 4 times
+bed: 4 times
+lights: 3 times
+fourth: 3 times
+moveth: 3 times
+Be: 3 times
+green: 3 times
+heavens: 3 times
+ended: 3 times
+rested: 3 times
+formed: 3 times
+planted: 3 times
+eastward: 3 times
+pleasant: 3 times
+alone: 3 times
+help: 3 times
+instead: 3 times
+trees: 3 times
+doth: 3 times
+Why: 3 times
+receive: 3 times
+strength: 3 times
+sevenfold: 3 times
+Zillah: 3 times
+Hear: 3 times
+walked: 3 times
+eighty: 3 times
+spirit: 3 times
+continually: 3 times
+window: 3 times
+sort: 3 times
+gather: 3 times
+generation: 3 times
+broken: 3 times
+selfsame: 3 times
+shut: 3 times
+stopped: 3 times
+restrained: 3 times
+abated: 3 times
+tenth: 3 times
+dried: 3 times
+stayed: 3 times
+Every: 3 times
+smite: 3 times
+harvest: 3 times
+lives: 3 times
+cloud: 3 times
+backward: 3 times
+Blessed: 3 times
+Cush: 3 times
+Sheba: 3 times
+Dedan: 3 times
+hunter: 3 times
+Rehoboth: 3 times
+Amorite: 3 times
+Hivite: 3 times
+comest: 3 times
+Admah: 3 times
+Elam: 3 times
+Aram: 3 times
+Joktan: 3 times
+Jobab: 3 times
+dwelling: 3 times
+tower: 3 times
+top: 3 times
+Ur: 3 times
+Chaldees: 3 times
+Canaanite: 3 times
+la: 3 times
+ea: 3 times
+going: 3 times
+sojourn: 3 times
+princes: 3 times
+able: 3 times
+catt: 3 times
+separate: 3 times
+separated: 3 times
+seest: 3 times
+numbered: 3 times
+joined: 3 times
+Siddim: 3 times
+Horites: 3 times
+Kadesh: 3 times
+Amorites: 3 times
+valley: 3 times
+enemies: 3 times
+thread: 3 times
+After: 3 times
+Fear: 3 times
+exceeding: 3 times
+bowels: 3 times
+counted: 3 times
+inherit: 3 times
+ram: 3 times
+birds: 3 times
+iniquity: 3 times
+mistress: 3 times
+despised: 3 times
+dealt: 3 times
+Shur: 3 times
+camest: 3 times
+Return: 3 times
+As: 3 times
+laughed: 3 times
+Isa: 3 times
+favour: 3 times
+wash: 3 times
+tender: 3 times
+hasted: 3 times
+waxed: 3 times
+hard: 3 times
+command: 3 times
+Wilt: 3 times
+far: 3 times
+angry: 3 times
+soon: 3 times
+tarry: 3 times
+pressed: 3 times
+gre: 3 times
+consumed: 3 times
+hold: 3 times
+fire: 3 times
+inhabitants: 3 times
+yesternight: 3 times
+fath: 3 times
+suffered: 3 times
+bottle: 3 times
+Phichol: 3 times
+ewe: 3 times
+sand: 3 times
+obeyed: 3 times
+Cana: 3 times
+prince: 3 times
+Zohar: 3 times
+audience: 3 times
+shekels: 3 times
+named: 3 times
+thi: 3 times
+dwe: 3 times
+Drink: 3 times
+al: 3 times
+held: 3 times
+earring: 3 times
+Whose: 3 times
+worshipped: 3 times
+haste: 3 times
+bad: 3 times
+tarried: 3 times
+hate: 3 times
+vail: 3 times
+Midian: 3 times
+Shuah: 3 times
+Nebajoth: 3 times
+stronger: 3 times
+red: 3 times
+hairy: 3 times
+pottage: 3 times
+sist: 3 times
+Lest: 3 times
+servan: 3 times
+envied: 3 times
+strove: 3 times
+touched: 3 times
+Elon: 3 times
+obey: 3 times
+goodly: 3 times
+smell: 3 times
+stones: 3 times
+poured: 3 times
+Luz: 3 times
+embraced: 3 times
+knees: 3 times
+wrestled: 3 times
+wouldest: 3 times
+Zebulun: 3 times
+knowest: 3 times
+answer: 3 times
+conceive: 3 times
+power: 3 times
+changed: 3 times
+images: 3 times
+overtook: 3 times
+though: 3 times
+trespass: 3 times
+stuff: 3 times
+empty: 3 times
+labour: 3 times
+Gather: 3 times
+bre: 3 times
+staff: 3 times
+daught: 3 times
+consent: 3 times
+troubled: 3 times
+strange: 3 times
+loins: 3 times
+beyond: 3 times
+Jeush: 3 times
+Jaalam: 3 times
+Korah: 3 times
+got: 3 times
+Teman: 3 times
+Kenaz: 3 times
+Zerah: 3 times
+Shobal: 3 times
+Ezer: 3 times
+Dishan: 3 times
+colours: 3 times
+obeisance: 3 times
+Do: 3 times
+hence: 3 times
+mourned: 3 times
+refused: 3 times
+Adullamite: 3 times
+Timnath: 3 times
+garments: 3 times
+pledge: 3 times
+Pharez: 3 times
+home: 3 times
+officers: 3 times
+branches: 3 times
+Yet: 3 times
+interpreted: 3 times
+leanfleshed: 3 times
+blasted: 3 times
+throughout: 3 times
+Egy: 3 times
+part: 3 times
+ruler: 3 times
+Asenath: 3 times
+Potipherah: 3 times
+sa: 3 times
+mischief: 3 times
+households: 3 times
+bereaved: 3 times
+gray: 3 times
+hairs: 3 times
+best: 3 times
+washed: 3 times
+priests: 3 times
+lion: 3 times
+Spirit: 2 times
+moved: 2 times
+gathering: 2 times
+grass: 2 times
+itself: 2 times
+moving: 2 times
+open: 2 times
+fill: 2 times
+fish: 2 times
+replenish: 2 times
+sixth: 2 times
+nostrils: 2 times
+grow: 2 times
+knowledge: 2 times
+heads: 2 times
+compasseth: 2 times
+dress: 2 times
+e: 2 times
+closed: 2 times
+bone: 2 times
+bones: 2 times
+fle: 2 times
+Yea: 2 times
+touch: 2 times
+amongst: 2 times
+myself: 2 times
+beguiled: 2 times
+li: 2 times
+bruise: 2 times
+heel: 2 times
+desire: 2 times
+Eve: 2 times
+skins: 2 times
+placed: 2 times
+process: 2 times
+respect: 2 times
+offeri: 2 times
+doest: 2 times
+accepted: 2 times
+lieth: 2 times
+Am: 2 times
+yield: 2 times
+fugitive: 2 times
+vagabond: 2 times
+Irad: 2 times
+Mehujael: 2 times
+harp: 2 times
+Tubalcain: 2 times
+slain: 2 times
+likeness: 2 times
+fifteen: 2 times
+toil: 2 times
+chose: 2 times
+strive: 2 times
+wickedness: 2 times
+imagination: 2 times
+perfect: 2 times
+corrupt: 2 times
+violence: 2 times
+Make: 2 times
+pitch: 2 times
+length: 2 times
+breadth: 2 times
+A: 2 times
+side: 2 times
+sevens: 2 times
+nights: 2 times
+hundredth: 2 times
+seventeenth: 2 times
+fountains: 2 times
+windows: 2 times
+prevail: 2 times
+remained: 2 times
+Also: 2 times
+foot: 2 times
+pulled: 2 times
+covering: 2 times
+smelled: 2 times
+youth: 2 times
+heat: 2 times
+cut: 2 times
+generatio: 2 times
+established: 2 times
+Japhe: 2 times
+Cursed: 2 times
+Gomer: 2 times
+Javan: 2 times
+Mizraim: 2 times
+Raamah: 2 times
+Nimrod: 2 times
+Even: 2 times
+kingdom: 2 times
+Babel: 2 times
+Out: 2 times
+Asshur: 2 times
+Nineveh: 2 times
+Calah: 2 times
+Sidon: 2 times
+border: 2 times
+tongues: 2 times
+Uz: 2 times
+speech: 2 times
+brick: 2 times
+burn: 2 times
+build: 2 times
+scattered: 2 times
+confound: 2 times
+understand: 2 times
+scatter: 2 times
+barren: 2 times
+Get: 2 times
+curseth: 2 times
+west: 2 times
+Hai: 2 times
+still: 2 times
+Say: 2 times
+togeth: 2 times
+strife: 2 times
+depart: 2 times
+like: 2 times
+Lift: 2 times
+ever: 2 times
+Amraphel: 2 times
+Arioch: 2 times
+Ellasar: 2 times
+Tidal: 2 times
+Zeboiim: 2 times
+salt: 2 times
+Rephaims: 2 times
+Shaveh: 2 times
+Eshcol: 2 times
+captive: 2 times
+Damascus: 2 times
+possessor: 2 times
+persons: 2 times
+believed: 2 times
+righteousness: 2 times
+whereby: 2 times
+anoth: 2 times
+Know: 2 times
+afflict: 2 times
+furnace: 2 times
+ey: 2 times
+pleaseth: 2 times
+fountain: 2 times
+Have: 2 times
+seeth: 2 times
+fourscore: 2 times
+uncircumcised: 2 times
+serva: 2 times
+fetched: 2 times
+hastened: 2 times
+quickly: 2 times
+fine: 2 times
+calf: 2 times
+milk: 2 times
+stricken: 2 times
+hide: 2 times
+Sod: 2 times
+spare: 2 times
+lack: 2 times
+rise: 2 times
+break: 2 times
+small: 2 times
+besides: 2 times
+pla: 2 times
+Up: 2 times
+seemed: 2 times
+lingered: 2 times
+overthrow: 2 times
+Haste: 2 times
+overthrew: 2 times
+smoke: 2 times
+feared: 2 times
+perceived: 2 times
+Moab: 2 times
+broth: 2 times
+integrity: 2 times
+offended: 2 times
+womenservants: 2 times
+silv: 2 times
+reproved: 2 times
+weaned: 2 times
+aw: 2 times
+spent: 2 times
+wot: 2 times
+clave: 2 times
+afar: 2 times
+knife: 2 times
+wo: 2 times
+lamb: 2 times
+provide: 2 times
+stretched: 2 times
+caught: 2 times
+possess: 2 times
+concubine: 2 times
+weep: 2 times
+choice: 2 times
+mind: 2 times
+worth: 2 times
+borders: 2 times
+sure: 2 times
+Put: 2 times
+willing: 2 times
+matter: 2 times
+stand: 2 times
+wat: 2 times
+speaking: 2 times
+virgin: 2 times
+drinking: 2 times
+emptied: 2 times
+prosperous: 2 times
+weight: 2 times
+lodge: 2 times
+moreover: 2 times
+straw: 2 times
+led: 2 times
+prepared: 2 times
+jewels: 2 times
+least: 2 times
+enquire: 2 times
+nurse: 2 times
+followed: 2 times
+Lahairoi: 2 times
+lighted: 2 times
+camel: 2 times
+Keturah: 2 times
+Jokshan: 2 times
+Hanoch: 2 times
+Hadar: 2 times
+intreated: 2 times
+Two: 2 times
+twins: 2 times
+Jac: 2 times
+fai: 2 times
+profit: 2 times
+Swear: 2 times
+w: 2 times
+beside: 2 times
+charge: 2 times
+long: 2 times
+store: 2 times
+wells: 2 times
+dim: 2 times
+kids: 2 times
+smooth: 2 times
+feel: 2 times
+kiss: 2 times
+dew: 2 times
+fatness: 2 times
+forget: 2 times
+daughers: 2 times
+pillows: 2 times
+sou: 2 times
+places: 2 times
+oil: 2 times
+vow: 2 times
+G: 2 times
+lying: 2 times
+rolled: 2 times
+Lo: 2 times
+abode: 2 times
+space: 2 times
+week: 2 times
+service: 2 times
+praise: 2 times
+else: 2 times
+kindled: 2 times
+troop: 2 times
+dowry: 2 times
+hadst: 2 times
+since: 2 times
+fa: 2 times
+pilled: 2 times
+gutters: 2 times
+glory: 2 times
+inheritance: 2 times
+strangers: 2 times
+riches: 2 times
+shear: 2 times
+unawares: 2 times
+heed: 2 times
+either: 2 times
+steal: 2 times
+doing: 2 times
+whomsoever: 2 times
+ewes: 2 times
+torn: 2 times
+fourteen: 2 times
+Except: 2 times
+rebuked: 2 times
+Galeed: 2 times
+met: 2 times
+messengers: 2 times
+bands: 2 times
+truth: 2 times
+Es: 2 times
+lodged: 2 times
+foremost: 2 times
+eleven: 2 times
+Isra: 2 times
+dost: 2 times
+sinew: 2 times
+shrank: 2 times
+handmaids: 2 times
+graciously: 2 times
+themselv: 2 times
+Succoth: 2 times
+fie: 2 times
+possessions: 2 times
+never: 2 times
+Only: 2 times
+spoiled: 2 times
+distress: 2 times
+thereon: 2 times
+Ephra: 2 times
+travailed: 2 times
+midwife: 2 times
+Ephrath: 2 times
+Bethlehem: 2 times
+da: 2 times
+Edomites: 2 times
+Omar: 2 times
+Zepho: 2 times
+Gatam: 2 times
+Timna: 2 times
+Nahath: 2 times
+Shammah: 2 times
+Mizz: 2 times
+Hori: 2 times
+Husham: 2 times
+Hadad: 2 times
+ste: 2 times
+Samlah: 2 times
+Saul: 2 times
+Baalhanan: 2 times
+Achbor: 2 times
+habitations: 2 times
+seventeen: 2 times
+sheaves: 2 times
+sheaf: 2 times
+ourselves: 2 times
+seek: 2 times
+Dothan: 2 times
+balm: 2 times
+myrrh: 2 times
+Midianites: 2 times
+Potiphar: 2 times
+officer: 2 times
+Hirah: 2 times
+displeased: 2 times
+widow: 2 times
+friend: 2 times
+signet: 2 times
+scarlet: 2 times
+overseer: 2 times
+Lie: 2 times
+committed: 2 times
+mock: 2 times
+wrath: 2 times
+prisoners: 2 times
+interpreter: 2 times
+shot: 2 times
+grap: 2 times
+Hebrews: 2 times
+baskets: 2 times
+basket: 2 times
+hanged: 2 times
+fatfleshed: 2 times
+stalk: 2 times
+rank: 2 times
+sprung: 2 times
+magicians: 2 times
+reason: 2 times
+discreet: 2 times
+plenteous: 2 times
+chariot: 2 times
+dearth: 2 times
+governor: 2 times
+roughly: 2 times
+Hereby: 2 times
+proved: 2 times
+provision: 2 times
+laded: 2 times
+inn: 2 times
+failed: 2 times
+fo: 2 times
+blame: 2 times
+double: 2 times
+noon: 2 times
+bondmen: 2 times
+abomination: 2 times
+forbid: 2 times
+nourish: 2 times
+Moreover: 2 times
+changes: 2 times
+laden: 2 times
+fainted: 2 times
+His: 2 times
+Hezron: 2 times
+Beriah: 2 times
+presented: 2 times
+shepherds: 2 times
+occupation: 2 times
+shepherd: 2 times
+pilgrimage: 2 times
+last: 2 times
+excellency: 2 times
+prey: 2 times
+haven: 2 times
+strong: 2 times
+tribes: 2 times
+overcome: 2 times
+bough: 2 times
+physicians: 2 times
+embalm: 2 times
+embalmed: 2 times
+elders: 2 times
+Atad: 2 times
+visit: 2 times
+form: 1 times
+void: 1 times
+Day: 1 times
+Night: 1 times
+firmame: 1 times
+Heaven: 1 times
+appe: 1 times
+Earth: 1 times
+signs: 1 times
+seasons: 1 times
+lesser: 1 times
+nig: 1 times
+darkne: 1 times
+fly: 1 times
+whales: 1 times
+winged: 1 times
+seas: 1 times
+likene: 1 times
+subdue: 1 times
+finished: 1 times
+sanctified: 1 times
+plant: 1 times
+gr: 1 times
+mist: 1 times
+breathed: 1 times
+parted: 1 times
+Pison: 1 times
+bdellium: 1 times
+onyx: 1 times
+Gihon: 1 times
+Ethiopia: 1 times
+Hiddekel: 1 times
+Assyria: 1 times
+Euphrates: 1 times
+freely: 1 times
+eatest: 1 times
+sle: 1 times
+ribs: 1 times
+rib: 1 times
+Woman: 1 times
+Man: 1 times
+cleave: 1 times
+ashamed: 1 times
+subtil: 1 times
+gard: 1 times
+knowing: 1 times
+desired: 1 times
+sewed: 1 times
+fig: 1 times
+leaves: 1 times
+aprons: 1 times
+walking: 1 times
+cool: 1 times
+whereof: 1 times
+gavest: 1 times
+belly: 1 times
+enmity: 1 times
+conception: 1 times
+Thorns: 1 times
+thistles: 1 times
+sweat: 1 times
+tak: 1 times
+coats: 1 times
+clothed: 1 times
+Cherubims: 1 times
+flaming: 1 times
+tiller: 1 times
+firstlings: 1 times
+fallen: 1 times
+crieth: 1 times
+tillest: 1 times
+henceforth: 1 times
+punishment: 1 times
+driven: 1 times
+findeth: 1 times
+whosoever: 1 times
+slayeth: 1 times
+vengeance: 1 times
+mark: 1 times
+finding: 1 times
+Nod: 1 times
+Methusa: 1 times
+Methusael: 1 times
+Jabal: 1 times
+Jubal: 1 times
+handle: 1 times
+organ: 1 times
+instructor: 1 times
+artificer: 1 times
+brass: 1 times
+ir: 1 times
+Naamah: 1 times
+spee: 1 times
+wounding: 1 times
+avenged: 1 times
+En: 1 times
+book: 1 times
+Male: 1 times
+begotten: 1 times
+Eno: 1 times
+always: 1 times
+giants: 1 times
+renown: 1 times
+thoughts: 1 times
+repented: 1 times
+repenteth: 1 times
+just: 1 times
+corrupted: 1 times
+gopher: 1 times
+rooms: 1 times
+fashion: 1 times
+height: 1 times
+cubit: 1 times
+finish: 1 times
+lower: 1 times
+stories: 1 times
+fema: 1 times
+cause: 1 times
+bird: 1 times
+hills: 1 times
+Fifteen: 1 times
+upward: 1 times
+asswaged: 1 times
+Ararat: 1 times
+decreased: 1 times
+tops: 1 times
+ma: 1 times
+raven: 1 times
+fro: 1 times
+sole: 1 times
+olive: 1 times
+leaf: 1 times
+pluckt: 1 times
+twentieth: 1 times
+breed: 1 times
+kinds: 1 times
+offerings: 1 times
+sweet: 1 times
+savour: 1 times
+While: 1 times
+remaineth: 1 times
+seedtime: 1 times
+cold: 1 times
+summer: 1 times
+winter: 1 times
+cease: 1 times
+dread: 1 times
+fishes: 1 times
+liveth: 1 times
+Whoso: 1 times
+sheddeth: 1 times
+shed: 1 times
+perpetual: 1 times
+clo: 1 times
+overspread: 1 times
+husbandman: 1 times
+vineyard: 1 times
+drunken: 1 times
+uncovered: 1 times
+shoulders: 1 times
+enlarge: 1 times
+Magog: 1 times
+Madai: 1 times
+Tubal: 1 times
+Meshech: 1 times
+Tiras: 1 times
+Ashkenaz: 1 times
+Riphath: 1 times
+Togarmah: 1 times
+Elishah: 1 times
+Tarshish: 1 times
+Kittim: 1 times
+Dodanim: 1 times
+isles: 1 times
+Gentiles: 1 times
+tongue: 1 times
+Phut: 1 times
+Seba: 1 times
+Sabtah: 1 times
+Sabtech: 1 times
+Erech: 1 times
+Accad: 1 times
+Calneh: 1 times
+Resen: 1 times
+Ludim: 1 times
+Anamim: 1 times
+Lehabim: 1 times
+Naphtuhim: 1 times
+Pathrusim: 1 times
+Casluhim: 1 times
+Philistim: 1 times
+Caphtorim: 1 times
+Jebusite: 1 times
+Girgasite: 1 times
+Arkite: 1 times
+Sinite: 1 times
+Arvadite: 1 times
+Zemarite: 1 times
+Hamathite: 1 times
+Gaza: 1 times
+Zeboim: 1 times
+Lasha: 1 times
+Lud: 1 times
+Hul: 1 times
+Gether: 1 times
+Mash: 1 times
+Almodad: 1 times
+Sheleph: 1 times
+Hazarmaveth: 1 times
+Jerah: 1 times
+Hadoram: 1 times
+Uzal: 1 times
+Diklah: 1 times
+Obal: 1 times
+Abimael: 1 times
+Ophir: 1 times
+Mesha: 1 times
+Sephar: 1 times
+natio: 1 times
+thoroughly: 1 times
+slime: 1 times
+morter: 1 times
+reach: 1 times
+begin: 1 times
+imagined: 1 times
+flo: 1 times
+nineteen: 1 times
+nativity: 1 times
+Iscah: 1 times
+blessi: 1 times
+Sichem: 1 times
+Moreh: 1 times
+having: 1 times
+enter: 1 times
+commended: 1 times
+entreated: 1 times
+plagued: 1 times
+plagues: 1 times
+rich: 1 times
+journeys: 1 times
+fir: 1 times
+Perizzite: 1 times
+sinners: 1 times
+northward: 1 times
+southward: 1 times
+westwa: 1 times
+war: 1 times
+Bera: 1 times
+Birsha: 1 times
+Shinab: 1 times
+Shemeber: 1 times
+Twelve: 1 times
+thirteenth: 1 times
+rebelled: 1 times
+fourteenth: 1 times
+Ashteroth: 1 times
+Karnaim: 1 times
+Zuzims: 1 times
+Emins: 1 times
+Kiriathaim: 1 times
+Elparan: 1 times
+Enmishpat: 1 times
+Amalekites: 1 times
+Hazezontamar: 1 times
+battle: 1 times
+slimepits: 1 times
+victuals: 1 times
+escaped: 1 times
+An: 1 times
+confederate: 1 times
+armed: 1 times
+trained: 1 times
+eighteen: 1 times
+Hobah: 1 times
+slaughter: 1 times
+dale: 1 times
+Melchizedek: 1 times
+Salem: 1 times
+tithes: 1 times
+shoelatchet: 1 times
+ri: 1 times
+Save: 1 times
+Aner: 1 times
+vision: 1 times
+Abr: 1 times
+shield: 1 times
+reward: 1 times
+childless: 1 times
+Eliezer: 1 times
+Look: 1 times
+heifer: 1 times
+goat: 1 times
+turtledove: 1 times
+pigeon: 1 times
+piece: 1 times
+carcases: 1 times
+horror: 1 times
+dark: 1 times
+smoking: 1 times
+burning: 1 times
+lamp: 1 times
+Euphrat: 1 times
+Kenites: 1 times
+Kenizzites: 1 times
+Kadmonites: 1 times
+Hittites: 1 times
+Perizzites: 1 times
+Girgashites: 1 times
+Jebusites: 1 times
+beari: 1 times
+obtain: 1 times
+wrong: 1 times
+bosom: 1 times
+hardly: 1 times
+submit: 1 times
+wild: 1 times
+Beerlahairoi: 1 times
+Bered: 1 times
+Neither: 1 times
+circumcise: 1 times
+circumcis: 1 times
+beget: 1 times
+next: 1 times
+talking: 1 times
+thirteen: 1 times
+plains: 1 times
+tr: 1 times
+morsel: 1 times
+hearts: 1 times
+measures: 1 times
+meal: 1 times
+knead: 1 times
+cakes: 1 times
+hearth: 1 times
+herd: 1 times
+fetcht: 1 times
+butter: 1 times
+dressed: 1 times
+ceased: 1 times
+pleasure: 1 times
+too: 1 times
+At: 1 times
+denied: 1 times
+Seeing: 1 times
+justice: 1 times
+judgment: 1 times
+altogether: 1 times
+wick: 1 times
+Judge: 1 times
+sakes: 1 times
+ash: 1 times
+spe: 1 times
+communing: 1 times
+lords: 1 times
+ways: 1 times
+street: 1 times
+bake: 1 times
+unleavened: 1 times
+compassed: 1 times
+quart: 1 times
+wickedly: 1 times
+shadow: 1 times
+roof: 1 times
+Stand: 1 times
+fellow: 1 times
+jud: 1 times
+worse: 1 times
+blindness: 1 times
+wearied: 1 times
+waxen: 1 times
+married: 1 times
+mocked: 1 times
+merciful: 1 times
+Escape: 1 times
+stay: 1 times
+magnified: 1 times
+saving: 1 times
+anything: 1 times
+risen: 1 times
+rained: 1 times
+brimstone: 1 times
+gat: 1 times
+Zo: 1 times
+Our: 1 times
+morrow: 1 times
+Moabites: 1 times
+Benam: 1 times
+Ammon: 1 times
+Said: 1 times
+innocency: 1 times
+sinning: 1 times
+prophet: 1 times
+deeds: 1 times
+sawest: 1 times
+wander: 1 times
+thousand: 1 times
+oth: 1 times
+prayed: 1 times
+healed: 1 times
+fast: 1 times
+wombs: 1 times
+visited: 1 times
+suck: 1 times
+mocking: 1 times
+Cast: 1 times
+putting: 1 times
+wandered: 1 times
+shrubs: 1 times
+sh: 1 times
+aileth: 1 times
+archer: 1 times
+Paran: 1 times
+doe: 1 times
+falsely: 1 times
+violently: 1 times
+mean: 1 times
+grove: 1 times
+tempt: 1 times
+lovest: 1 times
+Moriah: 1 times
+offer: 1 times
+saddled: 1 times
+Abide: 1 times
+yonder: 1 times
+worship: 1 times
+order: 1 times
+Lay: 1 times
+fearest: 1 times
+thicket: 1 times
+hor: 1 times
+Jehovahjireh: 1 times
+sworn: 1 times
+multiplying: 1 times
+shore: 1 times
+Huz: 1 times
+Buz: 1 times
+Kemuel: 1 times
+Chesed: 1 times
+Hazo: 1 times
+Pildash: 1 times
+Jidlaph: 1 times
+Reumah: 1 times
+Tebah: 1 times
+Gaham: 1 times
+Thahash: 1 times
+Maachah: 1 times
+Kirjatharba: 1 times
+mourn: 1 times
+sojourner: 1 times
+sepulchres: 1 times
+withhold: 1 times
+sepulchre: 1 times
+intreat: 1 times
+weighed: 1 times
+current: 1 times
+merchant: 1 times
+Mam: 1 times
+ruled: 1 times
+Beware: 1 times
+oa: 1 times
+Mesopotamia: 1 times
+kneel: 1 times
+speed: 1 times
+thereby: 1 times
+giving: 1 times
+trough: 1 times
+wondering: 1 times
+wit: 1 times
+golden: 1 times
+half: 1 times
+shekel: 1 times
+destitute: 1 times
+tru: 1 times
+standest: 1 times
+ungirded: 1 times
+errand: 1 times
+Speak: 1 times
+Both: 1 times
+proceedeth: 1 times
+bowing: 1 times
+Rebek: 1 times
+precious: 1 times
+Hinder: 1 times
+prospered: 1 times
+thousands: 1 times
+millions: 1 times
+damsels: 1 times
+rode: 1 times
+meditate: 1 times
+eventide: 1 times
+coming: 1 times
+walketh: 1 times
+mast: 1 times
+Zimran: 1 times
+Medan: 1 times
+Ishbak: 1 times
+Asshurim: 1 times
+Letushim: 1 times
+Leummim: 1 times
+Ephah: 1 times
+Epher: 1 times
+Abidah: 1 times
+Eldaah: 1 times
+concubines: 1 times
+gifts: 1 times
+purchased: 1 times
+Kedar: 1 times
+Adbeel: 1 times
+Mibsam: 1 times
+Mishma: 1 times
+Dumah: 1 times
+Massa: 1 times
+Tema: 1 times
+Jetur: 1 times
+Naphish: 1 times
+Kedemah: 1 times
+towns: 1 times
+castles: 1 times
+Assyr: 1 times
+barr: 1 times
+struggled: 1 times
+boys: 1 times
+cunning: 1 times
+sod: 1 times
+Feed: 1 times
+Sell: 1 times
+point: 1 times
+lentiles: 1 times
+Sojourn: 1 times
+perform: 1 times
+commandments: 1 times
+statutes: 1 times
+laws: 1 times
+sporting: 1 times
+lightly: 1 times
+lien: 1 times
+guiltiness: 1 times
+toucheth: 1 times
+sowed: 1 times
+received: 1 times
+hundredfo: 1 times
+forward: 1 times
+mightier: 1 times
+springing: 1 times
+ou: 1 times
+Esek: 1 times
+Sitnah: 1 times
+Ahuzzath: 1 times
+friends: 1 times
+army: 1 times
+pea: 1 times
+betimes: 1 times
+Shebah: 1 times
+Judith: 1 times
+Beeri: 1 times
+Hitti: 1 times
+Which: 1 times
+grief: 1 times
+dea: 1 times
+weapons: 1 times
+quiver: 1 times
+hunt: 1 times
+seem: 1 times
+deceiver: 1 times
+Upon: 1 times
+ne: 1 times
+badest: 1 times
+sit: 1 times
+felt: 1 times
+discerned: 1 times
+han: 1 times
+Art: 1 times
+wi: 1 times
+blesseth: 1 times
+scarce: 1 times
+hunting: 1 times
+trembled: 1 times
+bitter: 1 times
+Bless: 1 times
+subtilty: 1 times
+rightly: 1 times
+supplanted: 1 times
+tim: 1 times
+reserved: 1 times
+sustained: 1 times
+yoke: 1 times
+wherewith: 1 times
+touching: 1 times
+purposing: 1 times
+fury: 1 times
+Until: 1 times
+deprived: 1 times
+weary: 1 times
+Mahalath: 1 times
+ladder: 1 times
+reached: 1 times
+heav: 1 times
+ascending: 1 times
+descending: 1 times
+whereon: 1 times
+liest: 1 times
+north: 1 times
+awaked: 1 times
+dreadful: 1 times
+vowed: 1 times
+floc: 1 times
+roll: 1 times
+tidings: 1 times
+nought: 1 times
+eyed: 1 times
+beautiful: 1 times
+better: 1 times
+Fulfil: 1 times
+Reub: 1 times
+judged: 1 times
+wrestlings: 1 times
+Happy: 1 times
+wheat: 1 times
+hired: 1 times
+maiden: 1 times
+husba: 1 times
+endued: 1 times
+afterwards: 1 times
+reproa: 1 times
+add: 1 times
+tar: 1 times
+learned: 1 times
+experience: 1 times
+Appoint: 1 times
+comi: 1 times
+removing: 1 times
+goa: 1 times
+poplar: 1 times
+hazel: 1 times
+chesnut: 1 times
+strakes: 1 times
+appear: 1 times
+watering: 1 times
+troughs: 1 times
+whensoever: 1 times
+feeble: 1 times
+feebler: 1 times
+deceived: 1 times
+speckl: 1 times
+leaped: 1 times
+grisled: 1 times
+leap: 1 times
+grisl: 1 times
+doeth: 1 times
+anointedst: 1 times
+vowedst: 1 times
+Are: 1 times
+quite: 1 times
+ours: 1 times
+getting: 1 times
+stole: 1 times
+mou: 1 times
+captives: 1 times
+secretly: 1 times
+mirth: 1 times
+songs: 1 times
+tabret: 1 times
+foolishly: 1 times
+longedst: 1 times
+force: 1 times
+findest: 1 times
+discern: 1 times
+furniture: 1 times
+displease: 1 times
+custom: 1 times
+chode: 1 times
+hotly: 1 times
+Whereas: 1 times
+loss: 1 times
+drought: 1 times
+frost: 1 times
+mi: 1 times
+Jegarsahadutha: 1 times
+Mizpah: 1 times
+watch: 1 times
+absent: 1 times
+harm: 1 times
+sacrifice: 1 times
+Mahanaim: 1 times
+womenservan: 1 times
+distressed: 1 times
+worthy: 1 times
+mercies: 1 times
+Deliver: 1 times
+Thirty: 1 times
+milch: 1 times
+colts: 1 times
+bulls: 1 times
+foals: 1 times
+Pass: 1 times
+meeteth: 1 times
+asketh: 1 times
+droves: 1 times
+appease: 1 times
+accept: 1 times
+ford: 1 times
+Jabbok: 1 times
+brook: 1 times
+breaking: 1 times
+joint: 1 times
+breaketh: 1 times
+Tell: 1 times
+ask: 1 times
+Peniel: 1 times
+preserved: 1 times
+Penuel: 1 times
+halted: 1 times
+hindermost: 1 times
+handmaidens: 1 times
+meanest: 1 times
+urged: 1 times
+knoweth: 1 times
+overdrive: 1 times
+lead: 1 times
+softly: 1 times
+endure: 1 times
+folk: 1 times
+needeth: 1 times
+booths: 1 times
+Shalem: 1 times
+parcel: 1 times
+erected: 1 times
+EleloheIsrael: 1 times
+commune: 1 times
+wrought: 1 times
+folly: 1 times
+longeth: 1 times
+marriages: 1 times
+Ask: 1 times
+gift: 1 times
+deceitfully: 1 times
+reproach: 1 times
+deferred: 1 times
+delight: 1 times
+honourable: 1 times
+peaceable: 1 times
+large: 1 times
+herein: 1 times
+boldly: 1 times
+males: 1 times
+edge: 1 times
+wealth: 1 times
+stink: 1 times
+Perizzit: 1 times
+Should: 1 times
+fleddest: 1 times
+change: 1 times
+garmen: 1 times
+earrings: 1 times
+oak: 1 times
+terror: 1 times
+pursue: 1 times
+Elbethel: 1 times
+Deborah: 1 times
+beneath: 1 times
+Allonbachuth: 1 times
+na: 1 times
+sto: 1 times
+departing: 1 times
+Beno: 1 times
+Edar: 1 times
+concubi: 1 times
+twel: 1 times
+Zebul: 1 times
+Arbah: 1 times
+Amal: 1 times
+Amalek: 1 times
+Kor: 1 times
+Horite: 1 times
+inhabited: 1 times
+Hemam: 1 times
+Alvan: 1 times
+Manahath: 1 times
+Ebal: 1 times
+Shepho: 1 times
+Onam: 1 times
+Ajah: 1 times
+mules: 1 times
+Hemdan: 1 times
+Eshban: 1 times
+Ithran: 1 times
+Cheran: 1 times
+Bilhan: 1 times
+Zaavan: 1 times
+Akan: 1 times
+Aran: 1 times
+Beor: 1 times
+Dinhabah: 1 times
+Bozrah: 1 times
+Temani: 1 times
+Bedad: 1 times
+Avith: 1 times
+Masrekah: 1 times
+Pau: 1 times
+Mehetabel: 1 times
+Matred: 1 times
+Mezahab: 1 times
+Timnah: 1 times
+Alvah: 1 times
+Jetheth: 1 times
+Elah: 1 times
+Pinon: 1 times
+Mibzar: 1 times
+Magdiel: 1 times
+Iram: 1 times
+possessi: 1 times
+feeding: 1 times
+wiv: 1 times
+report: 1 times
+peaceably: 1 times
+binding: 1 times
+upright: 1 times
+Shalt: 1 times
+reign: 1 times
+moon: 1 times
+observed: 1 times
+wandering: 1 times
+seekest: 1 times
+conspired: 1 times
+dreamer: 1 times
+Some: 1 times
+Shed: 1 times
+rid: 1 times
+stript: 1 times
+spicery: 1 times
+conceal: 1 times
+sell: 1 times
+content: 1 times
+merchantmen: 1 times
+killed: 1 times
+dipped: 1 times
+fou: 1 times
+doubt: 1 times
+sackcloth: 1 times
+Shel: 1 times
+Chezib: 1 times
+marry: 1 times
+raise: 1 times
+spilled: 1 times
+Remain: 1 times
+gro: 1 times
+sheepshearers: 1 times
+wrapped: 1 times
+grown: 1 times
+widowhood: 1 times
+openly: 1 times
+shamed: 1 times
+months: 1 times
+played: 1 times
+whoredom: 1 times
+chi: 1 times
+Discern: 1 times
+acknowledged: 1 times
+travail: 1 times
+breach: 1 times
+Zarah: 1 times
+person: 1 times
+wotteth: 1 times
+business: 1 times
+loud: 1 times
+voi: 1 times
+bou: 1 times
+doer: 1 times
+butlers: 1 times
+bakers: 1 times
+continued: 1 times
+season: 1 times
+sad: 1 times
+sadly: 1 times
+interpretations: 1 times
+belong: 1 times
+budded: 1 times
+blossoms: 1 times
+clusters: 1 times
+ripe: 1 times
+grapes: 1 times
+former: 1 times
+think: 1 times
+mention: 1 times
+dungeon: 1 times
+uppermost: 1 times
+bakemeats: 1 times
+hang: 1 times
+birthday: 1 times
+butlership: 1 times
+forgat: 1 times
+meadow: 1 times
+brink: 1 times
+slept: 1 times
+faults: 1 times
+bak: 1 times
+office: 1 times
+hastily: 1 times
+dunge: 1 times
+shaved: 1 times
+canst: 1 times
+bank: 1 times
+riv: 1 times
+mead: 1 times
+poor: 1 times
+badne: 1 times
+lean: 1 times
+withered: 1 times
+declare: 1 times
+sheweth: 1 times
+forgotten: 1 times
+consume: 1 times
+following: 1 times
+doubled: 1 times
+twice: 1 times
+shortly: 1 times
+appoint: 1 times
+perish: 1 times
+Can: 1 times
+Forasmuch: 1 times
+rul: 1 times
+throne: 1 times
+ring: 1 times
+arrayed: 1 times
+vestures: 1 times
+linen: 1 times
+chain: 1 times
+ride: 1 times
+Bow: 1 times
+kn: 1 times
+Zaphnathpaaneah: 1 times
+handfuls: 1 times
+citi: 1 times
+numbering: 1 times
+plenteousness: 1 times
+famished: 1 times
+storehouses: 1 times
+Whence: 1 times
+From: 1 times
+spi: 1 times
+y: 1 times
+pris: 1 times
+hous: 1 times
+verified: 1 times
+verily: 1 times
+guilty: 1 times
+anguish: 1 times
+besought: 1 times
+Spake: 1 times
+required: 1 times
+understood: 1 times
+espied: 1 times
+befell: 1 times
+traffick: 1 times
+bundle: 1 times
+bundles: 1 times
+Me: 1 times
+childr: 1 times
+Slay: 1 times
+alo: 1 times
+solemnly: 1 times
+protest: 1 times
+straitly: 1 times
+state: 1 times
+tenor: 1 times
+wor: 1 times
+fruits: 1 times
+vessels: 1 times
+honey: 1 times
+spices: 1 times
+nuts: 1 times
+almon: 1 times
+oversig: 1 times
+dine: 1 times
+bade: 1 times
+occasion: 1 times
+sir: 1 times
+weig: 1 times
+Peace: 1 times
+treasure: 1 times
+sac: 1 times
+welfare: 1 times
+health: 1 times
+gracious: 1 times
+yearn: 1 times
+sought: 1 times
+chamber: 1 times
+refrained: 1 times
+Set: 1 times
+marvelled: 1 times
+messes: 1 times
+mess: 1 times
+merry: 1 times
+Fill: 1 times
+overtake: 1 times
+rewarded: 1 times
+drinketh: 1 times
+divineth: 1 times
+mouths: 1 times
+blameless: 1 times
+speedily: 1 times
+younge: 1 times
+deed: 1 times
+divine: 1 times
+loveth: 1 times
+bondman: 1 times
+refrain: 1 times
+Cause: 1 times
+aloud: 1 times
+hith: 1 times
+earing: 1 times
+posterity: 1 times
+deliverance: 1 times
+poverty: 1 times
+speaketh: 1 times
+fame: 1 times
+co: 1 times
+lade: 1 times
+regard: 1 times
+commandment: 1 times
+To: 1 times
+reviv: 1 times
+sacrifices: 1 times
+visions: 1 times
+nati: 1 times
+aga: 1 times
+Phallu: 1 times
+Carmi: 1 times
+Jemuel: 1 times
+Jamin: 1 times
+Ohad: 1 times
+Jachin: 1 times
+Shaul: 1 times
+Canaanitish: 1 times
+Gershon: 1 times
+Kohath: 1 times
+Merari: 1 times
+Zar: 1 times
+Hamul: 1 times
+Tola: 1 times
+Phuvah: 1 times
+Job: 1 times
+Shimron: 1 times
+Sered: 1 times
+Jahleel: 1 times
+Din: 1 times
+Ziphion: 1 times
+Haggi: 1 times
+Shuni: 1 times
+Ezbon: 1 times
+Eri: 1 times
+Arodi: 1 times
+Areli: 1 times
+Jimnah: 1 times
+Ishuah: 1 times
+Isui: 1 times
+Serah: 1 times
+Heber: 1 times
+Malchiel: 1 times
+sixteen: 1 times
+Belah: 1 times
+Becher: 1 times
+Ashbel: 1 times
+Gera: 1 times
+Naaman: 1 times
+Ehi: 1 times
+Rosh: 1 times
+Muppim: 1 times
+Huppim: 1 times
+Ard: 1 times
+Hushim: 1 times
+Jahzeel: 1 times
+Guni: 1 times
+Jezer: 1 times
+Shillem: 1 times
+direct: 1 times
+fathe: 1 times
+morever: 1 times
+pasture: 1 times
+activity: 1 times
+rulers: 1 times
+attained: 1 times
+Rameses: 1 times
+nourished: 1 times
+boug: 1 times
+faileth: 1 times
+fail: 1 times
+exchange: 1 times
+horses: 1 times
+bodies: 1 times
+lan: 1 times
+desolate: 1 times
+assigned: 1 times
+sow: 1 times
+increase: 1 times
+parts: 1 times
+saved: 1 times
+multiplied: 1 times
+nigh: 1 times
+si: 1 times
+strengthened: 1 times
+issue: 1 times
+begettest: 1 times
+Padan: 1 times
+guiding: 1 times
+wittingly: 1 times
+Angel: 1 times
+redeemed: 1 times
+lads: 1 times
+remove: 1 times
+Not: 1 times
+Manass: 1 times
+dignity: 1 times
+pow: 1 times
+Unstable: 1 times
+excel: 1 times
+wentest: 1 times
+defiledst: 1 times
+couch: 1 times
+instruments: 1 times
+cruelty: 1 times
+secret: 1 times
+assembly: 1 times
+honour: 1 times
+unit: 1 times
+selfwill: 1 times
+wall: 1 times
+fierce: 1 times
+cru: 1 times
+whelp: 1 times
+stooped: 1 times
+couched: 1 times
+rouse: 1 times
+sceptre: 1 times
+lawgiver: 1 times
+Shiloh: 1 times
+Binding: 1 times
+foal: 1 times
+colt: 1 times
+teeth: 1 times
+ships: 1 times
+Zidon: 1 times
+couching: 1 times
+burdens: 1 times
+tribute: 1 times
+adder: 1 times
+path: 1 times
+biteth: 1 times
+horse: 1 times
+heels: 1 times
+rider: 1 times
+waited: 1 times
+salvation: 1 times
+royal: 1 times
+dainties: 1 times
+hind: 1 times
+loose: 1 times
+giveth: 1 times
+run: 1 times
+wa: 1 times
+archers: 1 times
+sorely: 1 times
+arms: 1 times
+breasts: 1 times
+progenitors: 1 times
+utmost: 1 times
+hil: 1 times
+crown: 1 times
+ravin: 1 times
+wolf: 1 times
+devour: 1 times
+spoil: 1 times
+peop: 1 times
+purchase: 1 times
+commanding: 1 times
+yielded: 1 times
+past: 1 times
+chariots: 1 times
+horsemen: 1 times
+threshingfloor: 1 times
+lamentati: 1 times
+floor: 1 times
+Egyptia: 1 times
+Abelmizraim: 1 times
+requite: 1 times
+messenger: 1 times
+Forgive: 1 times
+forgive: 1 times
+meant: 1 times
+Machir: 1 times
+coffin: 1 times</code></pre>
+</div>
+</div>
+<div id="c8b32e49" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"-"</span><span class="op">*</span><span class="dv">10</span> <span class="op">+</span> <span class="st">"Unique words"</span> <span class="op">+</span> <span class="st">"-"</span><span class="op">*</span><span class="dv">10</span>)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, value <span class="kw">in</span> sorted_dict.items():</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> value <span class="op">==</span> <span class="dv">1</span> <span class="kw">and</span> <span class="bu">bool</span>(re.match(<span class="st">'^[a-zA-Z]+$'</span>, key)):</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>value<span class="sc">}</span><span class="ss"> times"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>----------Unique words----------
+form: 1 times
+void: 1 times
+Day: 1 times
+Night: 1 times
+firmame: 1 times
+Heaven: 1 times
+appe: 1 times
+Earth: 1 times
+signs: 1 times
+seasons: 1 times
+lesser: 1 times
+nig: 1 times
+darkne: 1 times
+fly: 1 times
+whales: 1 times
+winged: 1 times
+seas: 1 times
+likene: 1 times
+subdue: 1 times
+finished: 1 times
+sanctified: 1 times
+plant: 1 times
+gr: 1 times
+mist: 1 times
+breathed: 1 times
+parted: 1 times
+Pison: 1 times
+bdellium: 1 times
+onyx: 1 times
+Gihon: 1 times
+Ethiopia: 1 times
+Hiddekel: 1 times
+Assyria: 1 times
+Euphrates: 1 times
+freely: 1 times
+eatest: 1 times
+sle: 1 times
+ribs: 1 times
+rib: 1 times
+Woman: 1 times
+Man: 1 times
+cleave: 1 times
+ashamed: 1 times
+subtil: 1 times
+gard: 1 times
+knowing: 1 times
+desired: 1 times
+sewed: 1 times
+fig: 1 times
+leaves: 1 times
+aprons: 1 times
+walking: 1 times
+cool: 1 times
+whereof: 1 times
+gavest: 1 times
+belly: 1 times
+enmity: 1 times
+conception: 1 times
+Thorns: 1 times
+thistles: 1 times
+sweat: 1 times
+tak: 1 times
+coats: 1 times
+clothed: 1 times
+Cherubims: 1 times
+flaming: 1 times
+tiller: 1 times
+firstlings: 1 times
+fallen: 1 times
+crieth: 1 times
+tillest: 1 times
+henceforth: 1 times
+punishment: 1 times
+driven: 1 times
+findeth: 1 times
+whosoever: 1 times
+slayeth: 1 times
+vengeance: 1 times
+mark: 1 times
+finding: 1 times
+Nod: 1 times
+Methusa: 1 times
+Methusael: 1 times
+Jabal: 1 times
+Jubal: 1 times
+handle: 1 times
+organ: 1 times
+instructor: 1 times
+artificer: 1 times
+brass: 1 times
+ir: 1 times
+Naamah: 1 times
+spee: 1 times
+wounding: 1 times
+avenged: 1 times
+En: 1 times
+book: 1 times
+Male: 1 times
+begotten: 1 times
+Eno: 1 times
+always: 1 times
+giants: 1 times
+renown: 1 times
+thoughts: 1 times
+repented: 1 times
+repenteth: 1 times
+just: 1 times
+corrupted: 1 times
+gopher: 1 times
+rooms: 1 times
+fashion: 1 times
+height: 1 times
+cubit: 1 times
+finish: 1 times
+lower: 1 times
+stories: 1 times
+fema: 1 times
+cause: 1 times
+bird: 1 times
+hills: 1 times
+Fifteen: 1 times
+upward: 1 times
+asswaged: 1 times
+Ararat: 1 times
+decreased: 1 times
+tops: 1 times
+ma: 1 times
+raven: 1 times
+fro: 1 times
+sole: 1 times
+olive: 1 times
+leaf: 1 times
+pluckt: 1 times
+twentieth: 1 times
+breed: 1 times
+kinds: 1 times
+offerings: 1 times
+sweet: 1 times
+savour: 1 times
+While: 1 times
+remaineth: 1 times
+seedtime: 1 times
+cold: 1 times
+summer: 1 times
+winter: 1 times
+cease: 1 times
+dread: 1 times
+fishes: 1 times
+liveth: 1 times
+Whoso: 1 times
+sheddeth: 1 times
+shed: 1 times
+perpetual: 1 times
+clo: 1 times
+overspread: 1 times
+husbandman: 1 times
+vineyard: 1 times
+drunken: 1 times
+uncovered: 1 times
+shoulders: 1 times
+enlarge: 1 times
+Magog: 1 times
+Madai: 1 times
+Tubal: 1 times
+Meshech: 1 times
+Tiras: 1 times
+Ashkenaz: 1 times
+Riphath: 1 times
+Togarmah: 1 times
+Elishah: 1 times
+Tarshish: 1 times
+Kittim: 1 times
+Dodanim: 1 times
+isles: 1 times
+Gentiles: 1 times
+tongue: 1 times
+Phut: 1 times
+Seba: 1 times
+Sabtah: 1 times
+Sabtech: 1 times
+Erech: 1 times
+Accad: 1 times
+Calneh: 1 times
+Resen: 1 times
+Ludim: 1 times
+Anamim: 1 times
+Lehabim: 1 times
+Naphtuhim: 1 times
+Pathrusim: 1 times
+Casluhim: 1 times
+Philistim: 1 times
+Caphtorim: 1 times
+Jebusite: 1 times
+Girgasite: 1 times
+Arkite: 1 times
+Sinite: 1 times
+Arvadite: 1 times
+Zemarite: 1 times
+Hamathite: 1 times
+Gaza: 1 times
+Zeboim: 1 times
+Lasha: 1 times
+Lud: 1 times
+Hul: 1 times
+Gether: 1 times
+Mash: 1 times
+Almodad: 1 times
+Sheleph: 1 times
+Hazarmaveth: 1 times
+Jerah: 1 times
+Hadoram: 1 times
+Uzal: 1 times
+Diklah: 1 times
+Obal: 1 times
+Abimael: 1 times
+Ophir: 1 times
+Mesha: 1 times
+Sephar: 1 times
+natio: 1 times
+thoroughly: 1 times
+slime: 1 times
+morter: 1 times
+reach: 1 times
+begin: 1 times
+imagined: 1 times
+flo: 1 times
+nineteen: 1 times
+nativity: 1 times
+Iscah: 1 times
+blessi: 1 times
+Sichem: 1 times
+Moreh: 1 times
+having: 1 times
+enter: 1 times
+commended: 1 times
+entreated: 1 times
+plagued: 1 times
+plagues: 1 times
+rich: 1 times
+journeys: 1 times
+fir: 1 times
+Perizzite: 1 times
+sinners: 1 times
+northward: 1 times
+southward: 1 times
+westwa: 1 times
+war: 1 times
+Bera: 1 times
+Birsha: 1 times
+Shinab: 1 times
+Shemeber: 1 times
+Twelve: 1 times
+thirteenth: 1 times
+rebelled: 1 times
+fourteenth: 1 times
+Ashteroth: 1 times
+Karnaim: 1 times
+Zuzims: 1 times
+Emins: 1 times
+Kiriathaim: 1 times
+Elparan: 1 times
+Enmishpat: 1 times
+Amalekites: 1 times
+Hazezontamar: 1 times
+battle: 1 times
+slimepits: 1 times
+victuals: 1 times
+escaped: 1 times
+An: 1 times
+confederate: 1 times
+armed: 1 times
+trained: 1 times
+eighteen: 1 times
+Hobah: 1 times
+slaughter: 1 times
+dale: 1 times
+Melchizedek: 1 times
+Salem: 1 times
+tithes: 1 times
+shoelatchet: 1 times
+ri: 1 times
+Save: 1 times
+Aner: 1 times
+vision: 1 times
+Abr: 1 times
+shield: 1 times
+reward: 1 times
+childless: 1 times
+Eliezer: 1 times
+Look: 1 times
+heifer: 1 times
+goat: 1 times
+turtledove: 1 times
+pigeon: 1 times
+piece: 1 times
+carcases: 1 times
+horror: 1 times
+dark: 1 times
+smoking: 1 times
+burning: 1 times
+lamp: 1 times
+Euphrat: 1 times
+Kenites: 1 times
+Kenizzites: 1 times
+Kadmonites: 1 times
+Hittites: 1 times
+Perizzites: 1 times
+Girgashites: 1 times
+Jebusites: 1 times
+beari: 1 times
+obtain: 1 times
+wrong: 1 times
+bosom: 1 times
+hardly: 1 times
+submit: 1 times
+wild: 1 times
+Beerlahairoi: 1 times
+Bered: 1 times
+Neither: 1 times
+circumcise: 1 times
+circumcis: 1 times
+beget: 1 times
+next: 1 times
+talking: 1 times
+thirteen: 1 times
+plains: 1 times
+tr: 1 times
+morsel: 1 times
+hearts: 1 times
+measures: 1 times
+meal: 1 times
+knead: 1 times
+cakes: 1 times
+hearth: 1 times
+herd: 1 times
+fetcht: 1 times
+butter: 1 times
+dressed: 1 times
+ceased: 1 times
+pleasure: 1 times
+too: 1 times
+At: 1 times
+denied: 1 times
+Seeing: 1 times
+justice: 1 times
+judgment: 1 times
+altogether: 1 times
+wick: 1 times
+Judge: 1 times
+sakes: 1 times
+ash: 1 times
+spe: 1 times
+communing: 1 times
+lords: 1 times
+ways: 1 times
+street: 1 times
+bake: 1 times
+unleavened: 1 times
+compassed: 1 times
+quart: 1 times
+wickedly: 1 times
+shadow: 1 times
+roof: 1 times
+Stand: 1 times
+fellow: 1 times
+jud: 1 times
+worse: 1 times
+blindness: 1 times
+wearied: 1 times
+waxen: 1 times
+married: 1 times
+mocked: 1 times
+merciful: 1 times
+Escape: 1 times
+stay: 1 times
+magnified: 1 times
+saving: 1 times
+anything: 1 times
+risen: 1 times
+rained: 1 times
+brimstone: 1 times
+gat: 1 times
+Zo: 1 times
+Our: 1 times
+morrow: 1 times
+Moabites: 1 times
+Benam: 1 times
+Ammon: 1 times
+Said: 1 times
+innocency: 1 times
+sinning: 1 times
+prophet: 1 times
+deeds: 1 times
+sawest: 1 times
+wander: 1 times
+thousand: 1 times
+oth: 1 times
+prayed: 1 times
+healed: 1 times
+fast: 1 times
+wombs: 1 times
+visited: 1 times
+suck: 1 times
+mocking: 1 times
+Cast: 1 times
+putting: 1 times
+wandered: 1 times
+shrubs: 1 times
+sh: 1 times
+aileth: 1 times
+archer: 1 times
+Paran: 1 times
+doe: 1 times
+falsely: 1 times
+violently: 1 times
+mean: 1 times
+grove: 1 times
+tempt: 1 times
+lovest: 1 times
+Moriah: 1 times
+offer: 1 times
+saddled: 1 times
+Abide: 1 times
+yonder: 1 times
+worship: 1 times
+order: 1 times
+Lay: 1 times
+fearest: 1 times
+thicket: 1 times
+hor: 1 times
+Jehovahjireh: 1 times
+sworn: 1 times
+multiplying: 1 times
+shore: 1 times
+Huz: 1 times
+Buz: 1 times
+Kemuel: 1 times
+Chesed: 1 times
+Hazo: 1 times
+Pildash: 1 times
+Jidlaph: 1 times
+Reumah: 1 times
+Tebah: 1 times
+Gaham: 1 times
+Thahash: 1 times
+Maachah: 1 times
+Kirjatharba: 1 times
+mourn: 1 times
+sojourner: 1 times
+sepulchres: 1 times
+withhold: 1 times
+sepulchre: 1 times
+intreat: 1 times
+weighed: 1 times
+current: 1 times
+merchant: 1 times
+Mam: 1 times
+ruled: 1 times
+Beware: 1 times
+oa: 1 times
+Mesopotamia: 1 times
+kneel: 1 times
+speed: 1 times
+thereby: 1 times
+giving: 1 times
+trough: 1 times
+wondering: 1 times
+wit: 1 times
+golden: 1 times
+half: 1 times
+shekel: 1 times
+destitute: 1 times
+tru: 1 times
+standest: 1 times
+ungirded: 1 times
+errand: 1 times
+Speak: 1 times
+Both: 1 times
+proceedeth: 1 times
+bowing: 1 times
+Rebek: 1 times
+precious: 1 times
+Hinder: 1 times
+prospered: 1 times
+thousands: 1 times
+millions: 1 times
+damsels: 1 times
+rode: 1 times
+meditate: 1 times
+eventide: 1 times
+coming: 1 times
+walketh: 1 times
+mast: 1 times
+Zimran: 1 times
+Medan: 1 times
+Ishbak: 1 times
+Asshurim: 1 times
+Letushim: 1 times
+Leummim: 1 times
+Ephah: 1 times
+Epher: 1 times
+Abidah: 1 times
+Eldaah: 1 times
+concubines: 1 times
+gifts: 1 times
+purchased: 1 times
+Kedar: 1 times
+Adbeel: 1 times
+Mibsam: 1 times
+Mishma: 1 times
+Dumah: 1 times
+Massa: 1 times
+Tema: 1 times
+Jetur: 1 times
+Naphish: 1 times
+Kedemah: 1 times
+towns: 1 times
+castles: 1 times
+Assyr: 1 times
+barr: 1 times
+struggled: 1 times
+boys: 1 times
+cunning: 1 times
+sod: 1 times
+Feed: 1 times
+Sell: 1 times
+point: 1 times
+lentiles: 1 times
+Sojourn: 1 times
+perform: 1 times
+commandments: 1 times
+statutes: 1 times
+laws: 1 times
+sporting: 1 times
+lightly: 1 times
+lien: 1 times
+guiltiness: 1 times
+toucheth: 1 times
+sowed: 1 times
+received: 1 times
+hundredfo: 1 times
+forward: 1 times
+mightier: 1 times
+springing: 1 times
+ou: 1 times
+Esek: 1 times
+Sitnah: 1 times
+Ahuzzath: 1 times
+friends: 1 times
+army: 1 times
+pea: 1 times
+betimes: 1 times
+Shebah: 1 times
+Judith: 1 times
+Beeri: 1 times
+Hitti: 1 times
+Which: 1 times
+grief: 1 times
+dea: 1 times
+weapons: 1 times
+quiver: 1 times
+hunt: 1 times
+seem: 1 times
+deceiver: 1 times
+Upon: 1 times
+ne: 1 times
+badest: 1 times
+sit: 1 times
+felt: 1 times
+discerned: 1 times
+han: 1 times
+Art: 1 times
+wi: 1 times
+blesseth: 1 times
+scarce: 1 times
+hunting: 1 times
+trembled: 1 times
+bitter: 1 times
+Bless: 1 times
+subtilty: 1 times
+rightly: 1 times
+supplanted: 1 times
+tim: 1 times
+reserved: 1 times
+sustained: 1 times
+yoke: 1 times
+wherewith: 1 times
+touching: 1 times
+purposing: 1 times
+fury: 1 times
+Until: 1 times
+deprived: 1 times
+weary: 1 times
+Mahalath: 1 times
+ladder: 1 times
+reached: 1 times
+heav: 1 times
+ascending: 1 times
+descending: 1 times
+whereon: 1 times
+liest: 1 times
+north: 1 times
+awaked: 1 times
+dreadful: 1 times
+vowed: 1 times
+floc: 1 times
+roll: 1 times
+tidings: 1 times
+nought: 1 times
+eyed: 1 times
+beautiful: 1 times
+better: 1 times
+Fulfil: 1 times
+Reub: 1 times
+judged: 1 times
+wrestlings: 1 times
+Happy: 1 times
+wheat: 1 times
+hired: 1 times
+maiden: 1 times
+husba: 1 times
+endued: 1 times
+afterwards: 1 times
+reproa: 1 times
+add: 1 times
+tar: 1 times
+learned: 1 times
+experience: 1 times
+Appoint: 1 times
+comi: 1 times
+removing: 1 times
+goa: 1 times
+poplar: 1 times
+hazel: 1 times
+chesnut: 1 times
+strakes: 1 times
+appear: 1 times
+watering: 1 times
+troughs: 1 times
+whensoever: 1 times
+feeble: 1 times
+feebler: 1 times
+deceived: 1 times
+speckl: 1 times
+leaped: 1 times
+grisled: 1 times
+leap: 1 times
+grisl: 1 times
+doeth: 1 times
+anointedst: 1 times
+vowedst: 1 times
+Are: 1 times
+quite: 1 times
+ours: 1 times
+getting: 1 times
+stole: 1 times
+mou: 1 times
+captives: 1 times
+secretly: 1 times
+mirth: 1 times
+songs: 1 times
+tabret: 1 times
+foolishly: 1 times
+longedst: 1 times
+force: 1 times
+findest: 1 times
+discern: 1 times
+furniture: 1 times
+displease: 1 times
+custom: 1 times
+chode: 1 times
+hotly: 1 times
+Whereas: 1 times
+loss: 1 times
+drought: 1 times
+frost: 1 times
+mi: 1 times
+Jegarsahadutha: 1 times
+Mizpah: 1 times
+watch: 1 times
+absent: 1 times
+harm: 1 times
+sacrifice: 1 times
+Mahanaim: 1 times
+womenservan: 1 times
+distressed: 1 times
+worthy: 1 times
+mercies: 1 times
+Deliver: 1 times
+Thirty: 1 times
+milch: 1 times
+colts: 1 times
+bulls: 1 times
+foals: 1 times
+Pass: 1 times
+meeteth: 1 times
+asketh: 1 times
+droves: 1 times
+appease: 1 times
+accept: 1 times
+ford: 1 times
+Jabbok: 1 times
+brook: 1 times
+breaking: 1 times
+joint: 1 times
+breaketh: 1 times
+Tell: 1 times
+ask: 1 times
+Peniel: 1 times
+preserved: 1 times
+Penuel: 1 times
+halted: 1 times
+hindermost: 1 times
+handmaidens: 1 times
+meanest: 1 times
+urged: 1 times
+knoweth: 1 times
+overdrive: 1 times
+lead: 1 times
+softly: 1 times
+endure: 1 times
+folk: 1 times
+needeth: 1 times
+booths: 1 times
+Shalem: 1 times
+parcel: 1 times
+erected: 1 times
+EleloheIsrael: 1 times
+commune: 1 times
+wrought: 1 times
+folly: 1 times
+longeth: 1 times
+marriages: 1 times
+Ask: 1 times
+gift: 1 times
+deceitfully: 1 times
+reproach: 1 times
+deferred: 1 times
+delight: 1 times
+honourable: 1 times
+peaceable: 1 times
+large: 1 times
+herein: 1 times
+boldly: 1 times
+males: 1 times
+edge: 1 times
+wealth: 1 times
+stink: 1 times
+Perizzit: 1 times
+Should: 1 times
+fleddest: 1 times
+change: 1 times
+garmen: 1 times
+earrings: 1 times
+oak: 1 times
+terror: 1 times
+pursue: 1 times
+Elbethel: 1 times
+Deborah: 1 times
+beneath: 1 times
+Allonbachuth: 1 times
+na: 1 times
+sto: 1 times
+departing: 1 times
+Beno: 1 times
+Edar: 1 times
+concubi: 1 times
+twel: 1 times
+Zebul: 1 times
+Arbah: 1 times
+Amal: 1 times
+Amalek: 1 times
+Kor: 1 times
+Horite: 1 times
+inhabited: 1 times
+Hemam: 1 times
+Alvan: 1 times
+Manahath: 1 times
+Ebal: 1 times
+Shepho: 1 times
+Onam: 1 times
+Ajah: 1 times
+mules: 1 times
+Hemdan: 1 times
+Eshban: 1 times
+Ithran: 1 times
+Cheran: 1 times
+Bilhan: 1 times
+Zaavan: 1 times
+Akan: 1 times
+Aran: 1 times
+Beor: 1 times
+Dinhabah: 1 times
+Bozrah: 1 times
+Temani: 1 times
+Bedad: 1 times
+Avith: 1 times
+Masrekah: 1 times
+Pau: 1 times
+Mehetabel: 1 times
+Matred: 1 times
+Mezahab: 1 times
+Timnah: 1 times
+Alvah: 1 times
+Jetheth: 1 times
+Elah: 1 times
+Pinon: 1 times
+Mibzar: 1 times
+Magdiel: 1 times
+Iram: 1 times
+possessi: 1 times
+feeding: 1 times
+wiv: 1 times
+report: 1 times
+peaceably: 1 times
+binding: 1 times
+upright: 1 times
+Shalt: 1 times
+reign: 1 times
+moon: 1 times
+observed: 1 times
+wandering: 1 times
+seekest: 1 times
+conspired: 1 times
+dreamer: 1 times
+Some: 1 times
+Shed: 1 times
+rid: 1 times
+stript: 1 times
+spicery: 1 times
+conceal: 1 times
+sell: 1 times
+content: 1 times
+merchantmen: 1 times
+killed: 1 times
+dipped: 1 times
+fou: 1 times
+doubt: 1 times
+sackcloth: 1 times
+Shel: 1 times
+Chezib: 1 times
+marry: 1 times
+raise: 1 times
+spilled: 1 times
+Remain: 1 times
+gro: 1 times
+sheepshearers: 1 times
+wrapped: 1 times
+grown: 1 times
+widowhood: 1 times
+openly: 1 times
+shamed: 1 times
+months: 1 times
+played: 1 times
+whoredom: 1 times
+chi: 1 times
+Discern: 1 times
+acknowledged: 1 times
+travail: 1 times
+breach: 1 times
+Zarah: 1 times
+person: 1 times
+wotteth: 1 times
+business: 1 times
+loud: 1 times
+voi: 1 times
+bou: 1 times
+doer: 1 times
+butlers: 1 times
+bakers: 1 times
+continued: 1 times
+season: 1 times
+sad: 1 times
+sadly: 1 times
+interpretations: 1 times
+belong: 1 times
+budded: 1 times
+blossoms: 1 times
+clusters: 1 times
+ripe: 1 times
+grapes: 1 times
+former: 1 times
+think: 1 times
+mention: 1 times
+dungeon: 1 times
+uppermost: 1 times
+bakemeats: 1 times
+hang: 1 times
+birthday: 1 times
+butlership: 1 times
+forgat: 1 times
+meadow: 1 times
+brink: 1 times
+slept: 1 times
+faults: 1 times
+bak: 1 times
+office: 1 times
+hastily: 1 times
+dunge: 1 times
+shaved: 1 times
+canst: 1 times
+bank: 1 times
+riv: 1 times
+mead: 1 times
+poor: 1 times
+badne: 1 times
+lean: 1 times
+withered: 1 times
+declare: 1 times
+sheweth: 1 times
+forgotten: 1 times
+consume: 1 times
+following: 1 times
+doubled: 1 times
+twice: 1 times
+shortly: 1 times
+appoint: 1 times
+perish: 1 times
+Can: 1 times
+Forasmuch: 1 times
+rul: 1 times
+throne: 1 times
+ring: 1 times
+arrayed: 1 times
+vestures: 1 times
+linen: 1 times
+chain: 1 times
+ride: 1 times
+Bow: 1 times
+kn: 1 times
+Zaphnathpaaneah: 1 times
+handfuls: 1 times
+citi: 1 times
+numbering: 1 times
+plenteousness: 1 times
+famished: 1 times
+storehouses: 1 times
+Whence: 1 times
+From: 1 times
+spi: 1 times
+y: 1 times
+pris: 1 times
+hous: 1 times
+verified: 1 times
+verily: 1 times
+guilty: 1 times
+anguish: 1 times
+besought: 1 times
+Spake: 1 times
+required: 1 times
+understood: 1 times
+espied: 1 times
+befell: 1 times
+traffick: 1 times
+bundle: 1 times
+bundles: 1 times
+Me: 1 times
+childr: 1 times
+Slay: 1 times
+alo: 1 times
+solemnly: 1 times
+protest: 1 times
+straitly: 1 times
+state: 1 times
+tenor: 1 times
+wor: 1 times
+fruits: 1 times
+vessels: 1 times
+honey: 1 times
+spices: 1 times
+nuts: 1 times
+almon: 1 times
+oversig: 1 times
+dine: 1 times
+bade: 1 times
+occasion: 1 times
+sir: 1 times
+weig: 1 times
+Peace: 1 times
+treasure: 1 times
+sac: 1 times
+welfare: 1 times
+health: 1 times
+gracious: 1 times
+yearn: 1 times
+sought: 1 times
+chamber: 1 times
+refrained: 1 times
+Set: 1 times
+marvelled: 1 times
+messes: 1 times
+mess: 1 times
+merry: 1 times
+Fill: 1 times
+overtake: 1 times
+rewarded: 1 times
+drinketh: 1 times
+divineth: 1 times
+mouths: 1 times
+blameless: 1 times
+speedily: 1 times
+younge: 1 times
+deed: 1 times
+divine: 1 times
+loveth: 1 times
+bondman: 1 times
+refrain: 1 times
+Cause: 1 times
+aloud: 1 times
+hith: 1 times
+earing: 1 times
+posterity: 1 times
+deliverance: 1 times
+poverty: 1 times
+speaketh: 1 times
+fame: 1 times
+co: 1 times
+lade: 1 times
+regard: 1 times
+commandment: 1 times
+To: 1 times
+reviv: 1 times
+sacrifices: 1 times
+visions: 1 times
+nati: 1 times
+aga: 1 times
+Phallu: 1 times
+Carmi: 1 times
+Jemuel: 1 times
+Jamin: 1 times
+Ohad: 1 times
+Jachin: 1 times
+Shaul: 1 times
+Canaanitish: 1 times
+Gershon: 1 times
+Kohath: 1 times
+Merari: 1 times
+Zar: 1 times
+Hamul: 1 times
+Tola: 1 times
+Phuvah: 1 times
+Job: 1 times
+Shimron: 1 times
+Sered: 1 times
+Jahleel: 1 times
+Din: 1 times
+Ziphion: 1 times
+Haggi: 1 times
+Shuni: 1 times
+Ezbon: 1 times
+Eri: 1 times
+Arodi: 1 times
+Areli: 1 times
+Jimnah: 1 times
+Ishuah: 1 times
+Isui: 1 times
+Serah: 1 times
+Heber: 1 times
+Malchiel: 1 times
+sixteen: 1 times
+Belah: 1 times
+Becher: 1 times
+Ashbel: 1 times
+Gera: 1 times
+Naaman: 1 times
+Ehi: 1 times
+Rosh: 1 times
+Muppim: 1 times
+Huppim: 1 times
+Ard: 1 times
+Hushim: 1 times
+Jahzeel: 1 times
+Guni: 1 times
+Jezer: 1 times
+Shillem: 1 times
+direct: 1 times
+fathe: 1 times
+morever: 1 times
+pasture: 1 times
+activity: 1 times
+rulers: 1 times
+attained: 1 times
+Rameses: 1 times
+nourished: 1 times
+boug: 1 times
+faileth: 1 times
+fail: 1 times
+exchange: 1 times
+horses: 1 times
+bodies: 1 times
+lan: 1 times
+desolate: 1 times
+assigned: 1 times
+sow: 1 times
+increase: 1 times
+parts: 1 times
+saved: 1 times
+multiplied: 1 times
+nigh: 1 times
+si: 1 times
+strengthened: 1 times
+issue: 1 times
+begettest: 1 times
+Padan: 1 times
+guiding: 1 times
+wittingly: 1 times
+Angel: 1 times
+redeemed: 1 times
+lads: 1 times
+remove: 1 times
+Not: 1 times
+Manass: 1 times
+dignity: 1 times
+pow: 1 times
+Unstable: 1 times
+excel: 1 times
+wentest: 1 times
+defiledst: 1 times
+couch: 1 times
+instruments: 1 times
+cruelty: 1 times
+secret: 1 times
+assembly: 1 times
+honour: 1 times
+unit: 1 times
+selfwill: 1 times
+wall: 1 times
+fierce: 1 times
+cru: 1 times
+whelp: 1 times
+stooped: 1 times
+couched: 1 times
+rouse: 1 times
+sceptre: 1 times
+lawgiver: 1 times
+Shiloh: 1 times
+Binding: 1 times
+foal: 1 times
+colt: 1 times
+teeth: 1 times
+ships: 1 times
+Zidon: 1 times
+couching: 1 times
+burdens: 1 times
+tribute: 1 times
+adder: 1 times
+path: 1 times
+biteth: 1 times
+horse: 1 times
+heels: 1 times
+rider: 1 times
+waited: 1 times
+salvation: 1 times
+royal: 1 times
+dainties: 1 times
+hind: 1 times
+loose: 1 times
+giveth: 1 times
+run: 1 times
+wa: 1 times
+archers: 1 times
+sorely: 1 times
+arms: 1 times
+breasts: 1 times
+progenitors: 1 times
+utmost: 1 times
+hil: 1 times
+crown: 1 times
+ravin: 1 times
+wolf: 1 times
+devour: 1 times
+spoil: 1 times
+peop: 1 times
+purchase: 1 times
+commanding: 1 times
+yielded: 1 times
+past: 1 times
+chariots: 1 times
+horsemen: 1 times
+threshingfloor: 1 times
+lamentati: 1 times
+floor: 1 times
+Egyptia: 1 times
+Abelmizraim: 1 times
+requite: 1 times
+messenger: 1 times
+Forgive: 1 times
+forgive: 1 times
+meant: 1 times
+Machir: 1 times
+coffin: 1 times</code></pre>
+</div>
+</div>
+<div id="02d93854" class="cell" data-execution_count="36">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> matplotlib <span class="im">import</span> pyplot <span class="im">as</span> plt</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>freq <span class="op">=</span> {}</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, value <span class="kw">in</span> sorted_dict.items():</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">bool</span>(re.match(<span class="st">'^[a-zA-Z]+$'</span>, key)):</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">len</span>(key) <span class="kw">not</span> <span class="kw">in</span> freq:</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>            freq[<span class="bu">len</span>(key)] <span class="op">=</span> value</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>            freq[<span class="bu">len</span>(key)] <span class="op">+=</span> value</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>freq <span class="op">=</span> <span class="bu">dict</span>(<span class="bu">sorted</span>(freq.items(), key<span class="op">=</span><span class="kw">lambda</span> item: item[<span class="dv">0</span>], reverse<span class="op">=</span><span class="va">True</span>))</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>plt.plot(freq.keys(), freq.values(), marker <span class="op">=</span> <span class="st">'*'</span>,  color <span class="op">=</span> <span class="st">'darkblue'</span>) </span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">"Mapping from word length to word frequency"</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">"Length"</span>)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">"Frequency"</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Makarova_lab1_NLP_files/figure-html/cell-11-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="e344b897" class="cell" data-execution_count="34">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> sent_tokenize, word_tokenize</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>sentences <span class="op">=</span> sent_tokenize(<span class="st">" "</span>.join(text3))</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>end_freq <span class="op">=</span> Counter()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> sentence <span class="kw">in</span> sentences:</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> word_tokenize(sentence)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> word <span class="kw">in</span> words[::<span class="op">-</span><span class="dv">1</span>]:</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">bool</span>(re.match(<span class="st">'^[a-zA-Z]+$'</span>, word)):</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>            end_freq[word] <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>            </span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>sorted_freq <span class="op">=</span> <span class="bu">sorted</span>(end_freq, key<span class="op">=</span><span class="kw">lambda</span> x: end_freq[x], reverse<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"-"</span><span class="op">*</span><span class="dv">10</span> <span class="op">+</span> <span class="st">"Ten most frequen words at the end of a sentence"</span> <span class="op">+</span> <span class="st">"-"</span><span class="op">*</span><span class="dv">10</span>)</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> word <span class="kw">in</span> sorted_freq[:<span class="dv">10</span>]:</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>word<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>end_freq[word]<span class="sc">}</span><span class="ss"> times"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>----------Ten most frequen words at the end of a sentence----------
+him: 58 times
+me: 38 times
+thee: 33 times
+earth: 31 times
+them: 25 times
+son: 25 times
+wife: 20 times
+it: 19 times
+Egypt: 18 times
+day: 15 times</code></pre>
+</div>
+</div>
+</section>
+<section id="task2" class="level3">
+<h3 class="anchored" data-anchor-id="task2">Task2</h3>
+<div id="d89b601d" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> sent_tokenize, word_tokenize</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"Collins Suzanne. The hunger games.txt"</span>) <span class="im">as</span> f:</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    raw <span class="op">=</span> f.read()</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> nltk.word_tokenize(raw)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> nltk.Text(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="772a2362" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>text.concordance(<span class="st">"Katniss"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Displaying 25 of 80 matches:
+atnip , says Gale . My real name is Katniss , but when I first told him , I had
+he berries in my hand . Good luck , Katniss . You , too , I say , and the door 
+he girls ball . Twenty of them have Katniss Everdeen written on them in careful
+y arms around me like a vice . No , Katniss ! No ! You cant go ! Prim , let go 
+ Whats your name ? I swallow hard . Katniss Everdeen , I say . I bet my buttons
+of her ! I say . Ill be all right , Katniss , says Prim , clasping my face in h
+mise youll wear it into the arena , Katniss ? she asks . Promise ? Yes , I say 
+Yes , theres usually some , I say . Katniss , its just hunting . Youre the best
+s hand . I wont ! You know I wont ! Katniss , remember I he says , and they yan
+r baked are as good as any potato . Katniss , I said aloud . Its the plant I wa
+That night , we feasted on fish and Katniss roots until we were all , for the f
+g how attractive it looks . Hello , Katniss . Im Cinna , your stylist , he says
+ble . No matter , says Cinna . So , Katniss , about your costume for the openin
+oure not afraid of fire , are you , Katniss ? He sees my expression and grins .
+n the arena , says Cinna dreamily . Katniss , the girl who was on fire . It cro
+et me . Not my look , not my name . Katniss . The girl who was on fire . For th
+it were a real and tangible thing . Katniss ! Katniss ! I can hear my name bein
+real and tangible thing . Katniss ! Katniss ! I can hear my name being called f
+ with what I had to work with . How Katniss sacrificed herself for her sister .
+e like hawks . Dont be ridiculous , Katniss . How could you possibly know an Av
+unt baking bread . Sorry , I dont . Katniss . I already know youre handy with a
+ Well , then . Well , well , well . Katniss , theres no guarantee theyll be bow
+ theres no one around . All right , Katniss , he says tiredly . After that , we
+ need some players with some heat . Katniss , the girl who was on fire , says C
+ wading in shallow ponds harvesting Katniss . The only meat Id shot was a squir</code></pre>
+</div>
+</div>
+<div id="926dd37b" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>text.similar(<span class="st">"fire"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>tree capitol woods moment sky reaping it games bread lake girl crowd
+boy arena ground them her me trees feeling</code></pre>
+</div>
+</div>
+<div id="f4232170" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.draw.dispersion <span class="im">import</span> dispersion_plot</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>dispersion_plot(text, [<span class="st">"Katniss"</span>, <span class="st">"Peeta"</span>, <span class="st">"death"</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="Makarova_lab1_NLP_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="103e7d2b" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>fdist <span class="op">=</span> FreqDist(text)</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(fdist)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>&lt;FreqDist with 8521 samples and 114936 outcomes&gt;</code></pre>
+</div>
+</div>
+<div id="6ae4b0d4" class="cell" data-scrolled="true" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>fdist.most_common(<span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>[('.', 8222),
+ (',', 5995),
+ ('the', 5069),
+ ('I', 3776),
+ ('to', 2712),
+ ('and', 2173),
+ ('a', 2024),
+ ('of', 1904),
+ ('my', 1458),
+ ('in', 1409),
+ ('me', 930),
+ ('it', 871),
+ ('?', 771),
+ ('that', 759),
+ ('on', 752),
+ ('is', 663),
+ ('for', 662),
+ ('with', 613),
+ ('have', 586),
+ ('he', 581),
+ ('be', 579),
+ ('The', 573),
+ ('you', 571),
+ ('but', 561),
+ ('as', 525),
+ ('from', 517),
+ ('at', 505),
+ ('Peeta', 496),
+ ('his', 462),
+ ('up', 453),
+ ('her', 444),
+ ('out', 433),
+ ('Im', 424),
+ ('says', 418),
+ ('can', 417),
+ ('not', 408),
+ ('him', 381),
+ ('one', 377),
+ ('But', 363),
+ ('we', 347),
+ ('are', 339),
+ ('they', 316),
+ ('back', 316),
+ ('was', 313),
+ ('say', 308),
+ ('into', 305),
+ ('if', 302),
+ ('about', 300),
+ ('this', 298),
+ ('us', 289)]</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>

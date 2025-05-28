@@ -1,0 +1,1823 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Task 0. – Deep Learning/NLP course</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/quarto-nav/headroom.min.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<script src="../../site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="../../site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="../../styles.css">
+</head>
+
+<body class="nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="../../index.html">
+    <span class="navbar-title">Deep Learning/NLP course</span>
+    </a>
+  </div>
+            <div id="quarto-search" class="" title="Search"></div>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" role="menu" aria-expanded="false" aria-label="Toggle navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+  <span class="navbar-toggler-icon"></span>
+</button>
+          <div class="collapse navbar-collapse" id="navbarCollapse">
+            <ul class="navbar-nav navbar-nav-scroll me-auto">
+  <li class="nav-item">
+    <a class="nav-link" href="../../index.html"> 
+<span class="menu-text">Home</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../dl.html"> 
+<span class="menu-text">Deep Learning</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../nlp.html"> 
+<span class="menu-text">Natural Language Processing</span></a>
+  </li>  
+  <li class="nav-item">
+    <a class="nav-link" href="../../about.html"> 
+<span class="menu-text">About</span></a>
+  </li>  
+</ul>
+          </div> <!-- /navcollapse -->
+            <div class="quarto-navbar-tools">
+</div>
+      </div> <!-- /container-fluid -->
+    </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#task-1" id="toc-task-1" class="nav-link active" data-scroll-target="#task-1">Task 1</a></li>
+  <li><a href="#task-2" id="toc-task-2" class="nav-link" data-scroll-target="#task-2">Task 2</a></li>
+  <li><a href="#task-3" id="toc-task-3" class="nav-link" data-scroll-target="#task-3">Task 3</a></li>
+  <li><a href="#task-4" id="toc-task-4" class="nav-link" data-scroll-target="#task-4">Task 4</a></li>
+  <li><a href="#task-5" id="toc-task-5" class="nav-link" data-scroll-target="#task-5">Task 5</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Task 0.</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<p>Take an arbitrary text from NLTK corpora (e.g.&nbsp;text3) and implement a Bag-of-Words tagger for it.</p>
+<div id="c376f41e" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="6d678667" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.book <span class="im">import</span> <span class="op">*</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_vocabulary(corpus):</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    vocabulary <span class="op">=</span> <span class="bu">set</span>()</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text <span class="kw">in</span> corpus:</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> gutenberg.words(text)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>        cleaned_words <span class="op">=</span> {word.lower() <span class="cf">for</span> word <span class="kw">in</span> words <span class="cf">if</span> word.isalpha()}</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>        vocabulary.update(cleaned_words)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">sorted</span>(vocabulary)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>vocabulary <span class="op">=</span> get_vocabulary([<span class="st">'melville-moby_dick.txt'</span>, <span class="st">'Austen-Emma.txt'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="9531b518" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> Counter</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count(word, document):</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> Counter(gutenberg.words(document)).get(word, <span class="dv">0</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>count(<span class="st">"a"</span>, <span class="st">"melville-moby_dick.txt"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<pre><code>4569</code></pre>
+</div>
+</div>
+<div id="d68d8fc7" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bow_tagger(document, corpus):</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    vocabulary <span class="op">=</span> get_vocabulary(corpus)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    bow_representation <span class="op">=</span> np.zeros(<span class="bu">len</span>(vocabulary))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    word_count <span class="op">=</span> Counter(gutenberg.words(document))</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i,word) <span class="kw">in</span> <span class="bu">enumerate</span>(vocabulary):</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>        bow_representation[i] <span class="op">=</span> word_count.get(word, <span class="dv">0</span>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bow_representation</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>bow_md <span class="op">=</span> bow_tagger(<span class="st">'melville-moby_dick.txt'</span>, [<span class="st">'melville-moby_dick.txt'</span>, <span class="st">'Austen-Emma.txt'</span>]).astype(<span class="bu">int</span>)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>bow_md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
+<pre><code>array([4569,    2,    2, ...,    3,    1,    0])</code></pre>
+</div>
+</div>
+<section id="task-1" class="level3">
+<h3 class="anchored" data-anchor-id="task-1">Task 1</h3>
+<p>Enhance the tagger so that it will use N-grams instead of words</p>
+<div id="8aa0fabf" class="cell" data-execution_count="51">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.util <span class="im">import</span> ngrams</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_ngram_vocabulary(corpus, N):</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    voc <span class="op">=</span> []</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> document <span class="kw">in</span> corpus:</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> gutenberg.words(document)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        tokens <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> tokens <span class="cf">if</span> word.isalnum()]</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        voc.extend(<span class="bu">list</span>(ngrams(tokens, N)))</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="bu">list</span>(<span class="bu">set</span>(voc))</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>get_ngram_vocabulary([<span class="st">'melville-moby_dick.txt'</span>, <span class="st">'Austen-Emma.txt'</span>], <span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="51">
+<pre><code>[('much', 'more', 'philosophic'),
+ ('supplemental', 'casks', 'had'),
+ ('CHAPTER', '2', 'The'),
+ ('crown', 'of', 'geographical'),
+ ('what', 'drugged', 'whales'),
+ ('around', 'her', 'eager'),
+ ('on', 'with', 'the'),
+ ('could', 'command', 'that'),
+ ('mounted', 'to', 'the'),
+ ('for', 'any', 'consideration'),
+ ('takes', 'a', 'fancy'),
+ ('refusing', 'from', 'conscientious'),
+ ('laughing', 'we', 'shall'),
+ ('gore', 'capsizing', 'Flask'),
+ ('some', 'king', 's'),
+ ('man', 'has', 'a'),
+ ('and', 'model', 'thyself'),
+ ('brave', 'hearts', 'snap'),
+ ('to', 'pause', 'in'),
+ ('My', 'dear', 'dear'),
+ ('feel', 'that', 'any'),
+ ('high', 'A', 'whole'),
+ ('not', 'in', 'use'),
+ ('there', 'strangely', 'eyeing'),
+ ('Commend', 'the', 'murderous'),
+ ('just', 'as', 'I'),
+ ('There', 'is', 'one'),
+ ('part', 'of', 'his'),
+ ('that', 'you', 'might'),
+ ('and', 'sit', 'down'),
+ ('again', 'while', 'the'),
+ ('exquisite', 'feelings', 'of'),
+ ('seriously', 'of', 'Miss'),
+ ('But', 'butchers', 'also'),
+ ('it', 'And', 'I'),
+ ('she', 'let', 'it'),
+ ('in', 'a', 'squall'),
+ ('clumsy', 'left', 'handed'),
+ ('than', 'mere', 'corporeal'),
+ ('not', 'suspend', 'between'),
+ ('a', 'question', 'as'),
+ ('them', 'if', 'possible'),
+ ('trunks', 'uplifted', 'in'),
+ ('mine', 'in', 'Ceylon'),
+ ('and', 'the', 'crannies'),
+ ('Hartfield', 'as', 'he'),
+ ('willingly', 'drown', 'without'),
+ ('improve', 'as', 'he'),
+ ('young', 'man', 'but'),
+ ('bearing', 'down', 'upon'),
+ ('the', 'people', 'laugh'),
+ ('untouched', 'As', 'the'),
+ ('This', 'wooden', 'mallet'),
+ ('of', 'Jonah', 'alone'),
+ ('like', 'a', 'head'),
+ ('say', 'ye', 'pagans'),
+ ('your', 'souls', 'now'),
+ ('grateful', 'parties', 'meaning'),
+ ('sheaves', 'of', 'sea'),
+ ('biscuit', 'into', 'the'),
+ ('small', 'lightning', 'rod'),
+ ('what', 'a', 'candidate'),
+ ('gentlewoman', 'Mrs', 'Weston'),
+ ('essays', 'his', 'wretched'),
+ ('care', 'for', 'Ahab'),
+ ('Like', 'dislodged', 'trucks'),
+ ('be', 'the', 'time'),
+ ('the', 'multitude', 'of'),
+ ('the', 'grave', 'always'),
+ ('to', 'Donwell', 'she'),
+ ('to', 'the', 'increasing'),
+ ('sure', 'it', 'might'),
+ ('the', 'harpooneers', 'chewed'),
+ ('into', 'full', 'consideration'),
+ ('NAT', 'HIST', 'If'),
+ ('Those', 'narrow', 'straits'),
+ ('out', 'the', 'shafts'),
+ ('he', 'confessed', 'his'),
+ ('with', 'orders', 'so'),
+ ('owners', 'of', 'this'),
+ ('Bachelor', 'which', 'had'),
+ ('or', 'seen', 'at'),
+ ('and', 'looking', 'in'),
+ ('Jane', 'Fairfax', 'now'),
+ ('doubts', 'or', 'denials'),
+ ('lulled', 'into', 'such'),
+ ('a', 'glance', 'at'),
+ ('of', 'sailing', '20'),
+ ('shoals', 'which', 'upon'),
+ ('ever', 'given', 'her'),
+ ('out', 'She', 'had'),
+ ('very', 'true', 'That'),
+ ('a', 'long', 'standing'),
+ ('sallied', 'out', 'to'),
+ ('her', 'mind', 'could'),
+ ('think', 'ye', 'that'),
+ ('very', 'many', 'cases'),
+ ('year', 'ago', 'He'),
+ ('the', 'sea', 'chariot'),
+ ('his', 'pains', 'and'),
+ ('hair', 'cut', 'A'),
+ ('sight', 'I', 'can'),
+ ('was', 'hoisted', 'up'),
+ ('be', 'going', 'somewhere'),
+ ('John', 'Mr', 'Weston'),
+ ('polite', 'offer', 'of'),
+ ('Though', 'the', 'gregarious'),
+ ('name', 'which', 'was'),
+ ('friend', 'for', 'the'),
+ ('said', 'the', 'courage'),
+ ('he', 'had', 'it'),
+ ('so', 'O', 'Morquan'),
+ ('from', 'what', 'had'),
+ ('then', 'rapidly', 'sprung'),
+ ('Take', 'a', 'tonic'),
+ ('and', 'acknowledged', 'her'),
+ ('done', 'without', 'horses'),
+ ('fortunate', 'friend', 'towards'),
+ ('what', 'are', 'we'),
+ ('the', 'mightiest', 'animated'),
+ ('man', 'But', 'my'),
+ ('intricacies', 'was', 'then'),
+ ('to', 'signify', 'I'),
+ ('Meanwhile', 'as', 'we'),
+ ('circumstance', 'of', 'little'),
+ ('looking', 'woman', 'of'),
+ ('her', 'with', 'every'),
+ ('HIS', 'RIGHT', 'HAND'),
+ ('desultory', 'good', 'will'),
+ ('he', 'mad', 'Anyway'),
+ ('unaffected', 'and', 'the'),
+ ('her', 'countenance', 'said'),
+ ('running', 'away', 'with'),
+ ('to', 'the', 'year'),
+ ('stumble', 'over', 'an'),
+ ('of', 'man', 'yet'),
+ ('under', 'water', 'unapparent'),
+ ('disobey', 'ourselves', 'and'),
+ ('scarcely', 'enough', 'his'),
+ ('but', 'pity', 'and'),
+ ('and', 'at', 'two'),
+ ('the', 'so', 'suddenly'),
+ ('in', 'the', 'extreme'),
+ ('gowns', 'You', 'could'),
+ ('point', 'of', 'perch'),
+ ('he', 'stopt', 'a'),
+ ('yet', 'conscientiously', 'adhering'),
+ ('very', 'top', 'of'),
+ ('s', 'father', 'But'),
+ ('had', 'not', 'forgiven'),
+ ('only', 'wish', 'that'),
+ ('Rather', 'he', 'than'),
+ ('No', 'roses', 'no'),
+ ('thrilled', 'for', 'an'),
+ ('an', 'ample', 'house'),
+ ('they', 'soon', 'must'),
+ ('important', 'presuming', 'familiar'),
+ ('twenty', 'feet', 'in'),
+ ('several', 'hours', 'of'),
+ ('here', 'essayed', 'Listen'),
+ ('to', 'himself', 'perhaps'),
+ ('and', 'boat', 'furniture'),
+ ('Stubb', 'reversed', 'and'),
+ ('importance', 'with', 'consciousness'),
+ ('the', 'maw', 'of'),
+ ('most', 'desirable', 'situation'),
+ ('coiling', 'a', 'rope'),
+ ('phantoms', 'for', 'so'),
+ ('hump', 'like', 'a'),
+ ('Real', 'strength', 'never'),
+ ('We', 'are', 'growing'),
+ ('conveyed', 'he', 'would'),
+ ('recall', 'it', 'without'),
+ ('band', 'below', 'and'),
+ ('was', 'always', 'famous'),
+ ('circumstance', 'to', 'strike'),
+ ('a', 'mighty', 'deal'),
+ ('certain', 'given', 'circumstances'),
+ ('which', 'Emma', 'particularly'),
+ ('back', 'again', 'into'),
+ ('sigh', 'that', 'he'),
+ ('And', 'thus', 'with'),
+ ('sky', 'born', 'high'),
+ ('repent', 'On', 'the'),
+ ('one', 'piled', 'comber'),
+ ('about', 'worthy', 'Captain'),
+ ('undergraduate', 'If', 'he'),
+ ('thyself', 'ere', 'his'),
+ ('it', 'was', 'fit'),
+ ('crushed', 'down', 'over'),
+ ('articles', 'and', 'hence'),
+ ('opinions', 'but', 'Loose'),
+ ('contrive', 'it', 'said'),
+ ('forehead', 'against', 'mine'),
+ ('a', 'purty', 'long'),
+ ('she', 'replied', 'I'),
+ ('South', 'Sea', 'were'),
+ ('cried', 'Don', 'Sebastian'),
+ ('exertion', 'Tashtego', 'at'),
+ ('Uncle', 'Knightley', 'who'),
+ ('numbers', 'and', 'in'),
+ ('can', 'best', 'form'),
+ ('of', 'his', 'unabated'),
+ ('used', 'to', 'a'),
+ ('Bristol', 'was', 'the'),
+ ('and', 'future', 'for'),
+ ('the', 'spot', 'Yes'),
+ ('would', 'have', 'any'),
+ ('ark', 'Was', 'it'),
+ ('law', 'is', 'still'),
+ ('any', 'thing', 'of'),
+ ('stopt', 'a', 'moment'),
+ ('his', 'head', 'as'),
+ ('astern', 'that', 'is'),
+ ('good', 'cheer', 'At'),
+ ('walking', 'with', 'her'),
+ ('impression', 'in', 'her'),
+ ('flood', 'is', 'not'),
+ ('early', 'hours', 'and'),
+ ('and', 'easy', 'By'),
+ ('and', 'Ger', 'WALLEN'),
+ ('but', 'jammed', 'between'),
+ ('Heaven', 'what', 'do'),
+ ('Though', 'now', 'the'),
+ ('was', 'so', 'now'),
+ ('corporeal', 'superiority', 'involves'),
+ ('I', 'been', 'wanting'),
+ ('all', 'Herod', 's'),
+ ('flung', 'open', 'and'),
+ ('think', 'of', 'her'),
+ ('I', 'shall', 'enumerate'),
+ ('same', 'Pequod', 'here'),
+ ('you', 'for', 'any'),
+ ('So', 'in', 'a'),
+ ('you', 'could', 'compare'),
+ ('hope', 'it', 'must'),
+ ('with', 'his', 'muttering'),
+ ('moment', 'seen', 'hovering'),
+ ('their', 'veins', 'NO'),
+ ('be', 'here', 'this'),
+ ('all', 'human', 'jurisprudence'),
+ ('even', 'to', 'think'),
+ ('my', 'first', 'morning'),
+ ('fewer', 'glimpses', 'of'),
+ ('in', 'some', 'cases'),
+ ('as', 'a', 'check'),
+ ('never', 'slept', 'better'),
+ ('of', 'oil', 'Besides'),
+ ('been', 'very', 'rude'),
+ ('feelings', 'are', 'not'),
+ ('often', 'shocks', 'the'),
+ ('neat', 'gravel', 'walk'),
+ ('talked', 'in', 'ancient'),
+ ('Ahab', 'then', 'pausing'),
+ ('in', 'opposite', 'latitudes'),
+ ('from', 'its', 'gripe'),
+ ('a', 'little', 'doubtfully'),
+ ('find', 'their', 'food'),
+ ('between', 'them', 'ever'),
+ ('no', 'fire', 'at'),
+ ('marrying', 'the', 'unexceptionable'),
+ ('all', 'the', 'sailors'),
+ ('its', 'striking', 'against'),
+ ('the', 'Azores', 'where'),
+ ('and', 'gills', 'of'),
+ ('as', 'the', 'palm'),
+ ('whaleships', 'now', 'penetrating'),
+ ('have', 'some', 'sort'),
+ ('of', 'the', 'billows'),
+ ('and', 'if', 'by'),
+ ('Miss', 'Taylor', 'and'),
+ ('Christmas', 'and', 'as'),
+ ('may', 'say', 'an'),
+ ('her', 'agreeably', 'by'),
+ ('not', 'me', 'And'),
+ ('in', 'the', 'remoter'),
+ ('last', 'a', 'swift'),
+ ('his', 'perch', 'Starbuck'),
+ ('his', 'men', 'to'),
+ ('a', 'temporary', 'dive'),
+ ('a', 'smile', 'CHAPTER'),
+ ('low', 'in', 'hand'),
+ ('this', 'bearing', 'in'),
+ ('No', 'indeed', 'I'),
+ ('the', 'more', 'she'),
+ ('care', 'not', 'to'),
+ ('leg', 'he', 'll'),
+ ('still', 'shines', 'a'),
+ ('hollow', 'tree', 'Blind'),
+ ('seem', 'looking', 'up'),
+ ('handsomely', 'but', 'she'),
+ ('the', 'water', 'covering'),
+ ('talk', 'so', 'I'),
+ ('he', 'could', 'with'),
+ ('your', 'notions', 'of'),
+ ('he', 'then', 'mentioned'),
+ ('feeling', 'that', 'etherial'),
+ ('material', 'the', 'Heidelburgh'),
+ ('and', 'more', 'convinced'),
+ ('hearties', 'the', 'winds'),
+ ('catch', 'the', 'words'),
+ ('men', 'but', 'don'),
+ ('a', 'melancholy', 'tone'),
+ ('such', 'things', 'would'),
+ ('him', 'disagreeable', 'But'),
+ ('of', 'various', 'sizes'),
+ ('whaling', 'spears', 'they'),
+ ('your', 'obstinate', 'survival'),
+ ('have', 'never', 'any'),
+ ('fat', 'and', 'tender'),
+ ('THAT', 'S', 'it'),
+ ('because', 'not', 'only'),
+ ('the', 'whale', 's'),
+ ('upon', 'first', 'breaking'),
+ ('doubt', 'there', 'being'),
+ ('the', 'carpenter', 'here'),
+ ('not', 'only', 'better'),
+ ('glass', 'and', 'a'),
+ ('as', 'he', 'felt'),
+ ('the', 'whale', 'boats'),
+ ('from', 'his', 'hatband'),
+ ('Bates', 'but', 'I'),
+ ('his', 'manner', 'Emma'),
+ ('erring', 'she', 'could'),
+ ('pilgrim', 'worshipped', 'flag'),
+ ('feline', 'thing', 'When'),
+ ('flues', 'and', 'illuminated'),
+ ('mast', 'where', 'you'),
+ ('lounging', 'a', 'gigantic'),
+ ('way', 'to', 'No'),
+ ('toiling', 'not', 'pleasuring'),
+ ('the', 'crew', 'On'),
+ ('when', 'personified', 'by'),
+ ('before', 'the', 'other'),
+ ('in', 'your', 'way'),
+ ('been', 'spared', 'from'),
+ ('course', 'of', 'ten'),
+ ('shall', 'not', 'scold'),
+ ('Mrs', 'Elton', 'bears'),
+ ('the', 'whale', 'when'),
+ ('being', 'the', 'case'),
+ ('be', 'at', 'last'),
+ ('was', 'brought', 'from'),
+ ('look', 'that', 'the'),
+ ('a', 'sudden', 'resolution'),
+ ('sermonizings', 'that', 'he'),
+ ('memorable', 'occasion', 'It'),
+ ('Bildad', 'without', 'lifting'),
+ ('of', 'But', 'it'),
+ ('dashed', 'their', 'bucklers'),
+ ('not', 'fail', 'of'),
+ ('s', 'craft', 'such'),
+ ('by', 'Harriet', 's'),
+ ('hint', 'incidentally', 'so'),
+ ('had', 'she', 'to'),
+ ('but', 'from', 'the'),
+ ('business', 'he', 'suddenly'),
+ ('being', 'wished', 'joy'),
+ ('your', 'convenience', 'but'),
+ ('never', 'seen', 'it'),
+ ('I', 'saw', 'his'),
+ ('who', 'would', 'never'),
+ ('they', 'were', 'overcome'),
+ ('another', 'plate', 'the'),
+ ('in', 'his', 'seat'),
+ ('Oh', 'ye', 'whose'),
+ ('pull', 'my', 'children'),
+ ('so', 'much', 'the'),
+ ('was', 'most', 'sorrowfully'),
+ ('s', 'house', 'for'),
+ ('very', 'well', 'describe'),
+ ('conscience', 'she', 'must'),
+ ('into', 'so', 'unsavory'),
+ ('everlasting', 'itch', 'for'),
+ ('Goddard', 'and', 'Emma'),
+ ('above', 'So', 'deep'),
+ ('round', 'as', 'though'),
+ ('by', 'it', 'or'),
+ ('thus', 'hung', 'in'),
+ ('saw', 'him', 'standing'),
+ ('gentlemen', 'that', 'enraged'),
+ ('sharply', 'No', 'you'),
+ ('for', 'him', 'not'),
+ ('good', 'time', 'though'),
+ ('in', 'such', 'tones'),
+ ('same', 'thing', 'I'),
+ ('Eternity', 'I', 'had'),
+ ('shreds', 'of', 'split'),
+ ('deal', 'of', 'obscurity'),
+ ('till', 'she', 'saw'),
+ ('in', 'fact', 'been'),
+ ('and', 'only', 'made'),
+ ('again', 'Starbuck', 's'),
+ ('also', 'but', 'even'),
+ ('would', 'fain', 'give'),
+ ('laughing', 'I', 'will'),
+ ('very', 'very', 'young'),
+ ('then', 'repeated', 'some'),
+ ('his', 'plan', 'Nor'),
+ ('day', 'you', 'are'),
+ ('met', 'with', 'them'),
+ ('he', 'examined', 'the'),
+ ('my', 'age', 'you'),
+ ('have', 'a', 'sea'),
+ ('and', 'many', 'of'),
+ ('of', 'its', 'hanging'),
+ ('to', 'ruin', 'the'),
+ ('By', 'Jove', 'I'),
+ ('Are', 'all', 'my'),
+ ('information', 'as', 'could'),
+ ('at', 'her', 'humble'),
+ ('points', 'of', 'this'),
+ ('the', 'ten', 'to'),
+ ('Away', 'now', 'the'),
+ ('much', 'likelihood', 'of'),
+ ('circumstances', 'to', 'act'),
+ ('to', 'squeeze', 'these'),
+ ('his', 'boots', 'He'),
+ ('claim', 'our', 'discharge'),
+ ('in', 'the', 'earth'),
+ ('useful', 'she', 'might'),
+ ('such', 'minds', 'must'),
+ ('can', 'I', 'hope'),
+ ('drink', 'then', 'Monsieur'),
+ ('Satan', 's', 'hoof'),
+ ('kind', 'but', 'you'),
+ ('Guernseyman', 'flying', 'into'),
+ ('nameless', 'perils', 'of'),
+ ('day', 'The', 'firmaments'),
+ ('in', 'safety', 'before'),
+ ('been', 'baptized', 'right'),
+ ('of', 'uncertain', 'whales'),
+ ('tend', 'to', 'beget'),
+ ('most', 'interesting', 'consequences'),
+ ('think', 'in', 'the'),
+ ('clean', 'gain', 'of'),
+ ('will', 'not', 'hold'),
+ ('well', 'to', 'be'),
+ ('to', 'get', 'an'),
+ ('dear', 'Mrs', 'Knightley'),
+ ('he', 'begun', 'as'),
+ ('off', 'at', 'last'),
+ ('or', 'rather', 'delivery'),
+ ('scruples', 'to', 'bear'),
+ ('body', 'is', 'at'),
+ ('line', 'so', 'as'),
+ ('done', 'it', 'I'),
+ ('of', 'living', 'that'),
+ ('not', 'unwholesome', 'Serle'),
+ ('papa', 'it', 'is'),
+ ('knocked', 'off', 'or'),
+ ('of', 'communication', 'and'),
+ ('with', 'a', 'jar'),
+ ('falling', 'among', 'the'),
+ ('and', 'wine', 'of'),
+ ('seldom', 'displays', 'the'),
+ ('good', 'humour', 'with'),
+ ('how', 'Miss', 'Fairfax'),
+ ('in', 'high', 'tragedies'),
+ ('his', 'teeth', 'against'),
+ ('soon', 'resumed', 'and'),
+ ('to', 'HIM', 'said'),
+ ('to', 'defy', 'pursuit'),
+ ('sufficiently', 'hardy', 'not'),
+ ('to', 'be', 'almost'),
+ ('writer', 'hereof', 'Langsdorff'),
+ ('deeps', 'far', 'down'),
+ ('was', 'now', 'a'),
+ ('to', 'help', 'himself'),
+ ('spoken', 'ill', 'of'),
+ ('the', 'king', 'The'),
+ ('drank', 'his', 'tea'),
+ ('before', 'all', 'these'),
+ ('a', 'ledge', 'the'),
+ ('and', 'both', 'of'),
+ ('kind', 'to', 'our'),
+ ('alongside', 'and', 'beheaded'),
+ ('till', 'Christmas', 'brings'),
+ ('is', 'slowly', 'slackened'),
+ ('boat', 'without', 'its'),
+ ('thought', 'every', 'possibility'),
+ ('rate', 'that', 'no'),
+ ('underived', 'from', 'the'),
+ ('might', 'always', 'think'),
+ ('of', 'his', 'vest'),
+ ('is', 'any', 'man'),
+ ('blew', 'very', 'fresh'),
+ ('it', 'into', 'more'),
+ ('And', 'you', 'have'),
+ ('we', 'talked', 'about'),
+ ('I', 'now', 'screwed'),
+ ('of', 'her', 'assistance'),
+ ('Sail', 'on', 'the'),
+ ('Very', 'well', 'Mr'),
+ ('speech', 'was', 'more'),
+ ('bones', 'broken', 'sir'),
+ ('he', 'made', 'himself'),
+ ('sign', 'will', 'the'),
+ ('his', 'tawny', 'scorched'),
+ ('of', 'whaling', 'stop'),
+ ('must', 'have', 'delighted'),
+ ('about', 'her', 'Long'),
+ ('would', 'be', 'spent'),
+ ('that', 'time', 'was'),
+ ('crafty', 'upraising', 'of'),
+ ('seamen', 'were', 'lazily'),
+ ('well', 'Mr', 'Elton'),
+ ('carries', 'Nothing', 'at'),
+ ('I', 'go', 'to'),
+ ('gale', 'the', 'but'),
+ ('fin', 'no', 'wondrous'),
+ ('nearer', 'gentility', 'To'),
+ ('in', 'any', 'degree'),
+ ('make', 'the', 'boat'),
+ ('a', 'judge', 'He'),
+ ('to', 'rank', 'in'),
+ ('authorities', 'there', 'might'),
+ ('though', 'some', 'exceed'),
+ ('question', 'however', 'which'),
+ ('the', 'lawn', 'the'),
+ ('the', 'great', 'Black'),
+ ('and', 'that', 'in'),
+ ('had', 'so', 'long'),
+ ('She', 'still', 'intended'),
+ ('monied', 'man', 'enter'),
+ ('rejoice', 'or', 'be'),
+ ('run', 'and', 'hidden'),
+ ('was', 'continually', 'here'),
+ ('all', 'Suddenly', 'bubbles'),
+ ('round', 'in', 'five'),
+ ('woman', 'No', 'doubt'),
+ ('six', 'months', 'night'),
+ ('admire', 'him', 'now'),
+ ('to', 'acknowledge', 'in'),
+ ('days', 'But', 'I'),
+ ('express', 'arrived', 'at'),
+ ('liberal', 'and', 'unpretending'),
+ ('thorough', 'sweeping', 'comprehension'),
+ ('down', 'to', 'so'),
+ ('her', 'Sorrow', 'came'),
+ ('And', 'what', 'was'),
+ ('fathoms', 'down', 'and'),
+ ('into', 'deep', 'waters'),
+ ('in', 'them', 'capable'),
+ ('queer', 'scene', 'presented'),
+ ('kinder', 'and', 'wiser'),
+ ('glory', 'and', 'distinction'),
+ ('past', 'obliged', 'her'),
+ ('coldest', 'heart', 'and'),
+ ('every', 'fin', 'swimming'),
+ ('said', 'at', 'dinner'),
+ ('too', 'speaking', 'in'),
+ ('globe', 'who', 'so'),
+ ('all', 'sorts', 'of'),
+ ('Methinks', 'my', 'body'),
+ ('away', 'with', 'us'),
+ ('more', 'of', 'joy'),
+ ('the', 'Highbury', 'world'),
+ ('in', 'return', 'and'),
+ ('the', 'insatiate', 'sharks'),
+ ('look', 'about', 'us'),
+ ('the', 'regular', 'look'),
+ ('be', 'mightily', 'tickled'),
+ ('move', 'his', 'arm'),
+ ('solicited', 'a', 'boat'),
+ ('take', 'their', 'time'),
+ ('carried', 'home', 'so'),
+ ('as', 'could', 'be'),
+ ('with', 'powder', 'barrels'),
+ ('remained', 'but', 'a'),
+ ('Nineveh', 'Jonah', 'appalled'),
+ ('desires', 'to', 'know'),
+ ('where', 'bell', 'or'),
+ ('must', 'either', 'But'),
+ ('are', 'not', 'There'),
+ ('boat', 'hailed', 'the'),
+ ('it', 'for', 'its'),
+ ('passion', 'for', 'dining'),
+ ('evil', 'to', 'Harriet'),
+ ('for', 'him', 'The'),
+ ('your', 'plan', 'cried'),
+ ('universe', 'is', 'finished'),
+ ('to', 'Emma', 'Jane'),
+ ('the', 'packed', 'snow'),
+ ('ripe', 'Windsor', 'soap'),
+ ('reddening', 'mate', 'moving'),
+ ('he', 'takes', 'it'),
+ ('was', 'agreed', 'to'),
+ ('letters', 'through', 'to'),
+ ('to', 'the', 'amiable'),
+ ('properly', 'said', 'Very'),
+ ('the', 'floor', 'with'),
+ ('loadstone', 'virtue', 'being'),
+ ('any', 'peculiar', 'glory'),
+ ('fatality', 'if', 'unprovided'),
+ ('like', 'giants', 'palms'),
+ ('bottom', 'where', 'it'),
+ ('felt', 'that', 'to'),
+ ('Bates', 'He', 'cut'),
+ ('entry', 'and', 'seeming'),
+ ('been', 'kind', 'to'),
+ ('father', 'was', 'quite'),
+ ('the', 'Father', 'in'),
+ ('shuddered', 'as', 'you'),
+ ('with', 'him', 'You'),
+ ('least', 'you', 'admire'),
+ ('speeding', 'her', 'on'),
+ ('And', 'as', 'mechanical'),
+ ('and', 'his', 'good'),
+ ('cannot', 'say', 'the'),
+ ('Jane', 'Fairfax', 'is'),
+ ('all', 'that', 'Harriet'),
+ ('Weston', 'had', 'walked'),
+ ('noses', 'on', 'the'),
+ ('paying', 'is', 'perhaps'),
+ ('no', 'means', 'renounce'),
+ ('modified', 'form', 'is'),
+ ('shabby', 'it', 'was'),
+ ('sir', 'tolerably', 'often'),
+ ('her', 'broad', 'beams'),
+ ('illumined', 'by', 'strange'),
+ ('up', 'do', 'not'),
+ ('sea', 'did', 'not'),
+ ('both', 'abhor', 'suspense'),
+ ('now', 'indulged', 'which'),
+ ('at', 'all', 'differently'),
+ ('in', 'Africa', 'Nantucket'),
+ ('centuries', 'ago', 'an'),
+ ('he', 'turned', 'and'),
+ ('of', 'his', 'notions'),
+ ('the', 'wedding', 'cake'),
+ ('Esquimaux', 'country', 'where'),
+ ('in', 'a', 'faded'),
+ ('her', 'account', 'she'),
+ ('anything', 'about', 'it'),
+ ('very', 'often', 'That'),
+ ('yourselves', 'if', 'Ahab'),
+ ('delayed', 'so', 'as'),
+ ('persuade', 'her', 'to'),
+ ('said', 'Mr', 'Woodhouse'),
+ ('may', 'have', 'a'),
+ ('broke', 'a', 'ready'),
+ ('pyramid', 'a', 'sort'),
+ ('so', 'saying', 'the'),
+ ('and', 'fading', 'away'),
+ ('necessary', 'for', 'each'),
+ ('that', 'case', 'bottle'),
+ ('when', 'the', 'wind'),
+ ('upon', 'the', 'barren'),
+ ('statistically', 'stated', 'Nor'),
+ ('is', 'next', 'to'),
+ ('called', 'on', 'her'),
+ ('for', 'any', 'other'),
+ ('contrivance', 'considering', 'what'),
+ ('just', 'to', 'run'),
+ ('bites', 'and', 'surly'),
+ ('had', 'been', 'prepared'),
+ ('both', 'saw', 'thou'),
+ ('a', 'narwhale', 'I'),
+ ('the', 'deck', 'an'),
+ ('the', 'attentive', 'lady'),
+ ('Azores', 'where', 'the'),
+ ('broken', 'away', 'from'),
+ ('as', 'pestiferously', 'barbarous'),
+ ('tumultuous', 'white', 'water'),
+ ('drawing', 'still', 'nearer'),
+ ('knowest', 'not', 'of'),
+ ('great', 'tree', 'when'),
+ ('for', 'ever', 'who'),
+ ('So', 'deep', 'did'),
+ ('unlikely', 'that', 'he'),
+ ('supper', 'table', 'which'),
+ ('swell', 'that', 'he'),
+ ('lo', 'close', 'under'),
+ ('also', 'from', 'the'),
+ ('seem', 'the', 'very'),
+ ('and', 'feel', 'thy'),
+ ('her', 'manners', 'as'),
+ ('be', 'enchanted', 'with'),
+ ('fish', 'hitherto', 'authoritatively'),
+ ('his', 'good', 'He'),
+ ('the', 'intellects', 'of'),
+ ('buoyancy', 'and', 'simultaneousness'),
+ ('he', 'will', 'stop'),
+ ('fancy', 'a', 'proper'),
+ ('that', 'enchanted', 'calm'),
+ ('rotation', 'shall', 'mount'),
+ ('their', 'crossed', 'centre'),
+ ('a', 'boundless', 'bowling'),
+ ('Queequeg', 'was', 'soon'),
+ ('with', 'her', 'and'),
+ ('whether', 'thou', 'lookest'),
+ ('taken', 'away', 'it'),
+ ('made', 'of', 'the'),
+ ('why', 'this', 'was'),
+ ('would', 'not', 'after'),
+ ('income', 'Now', 'Bildad'),
+ ('wind', 'called', 'Euroclydon'),
+ ('sea', 'stalking', 'up'),
+ ('cigars', 'and', 'here'),
+ ('like', 'a', 'pantaloon'),
+ ('dreamt', 'of', 'getting'),
+ ('out', 'clam', 'for'),
+ ('pretence', 'for', 'going'),
+ ('might', 'have', 'prevented'),
+ ('almost', 'continual', 'command'),
+ ('presently', 'all', 'right'),
+ ('substantial', 'kind', 'not'),
+ ('of', 'your', 'head'),
+ ('body', 'seemed', 'rather'),
+ ('and', 'collected', 'as'),
+ ('me', 'a', 'caution'),
+ ('the', 'creature', 'be'),
+ ('the', 'busiest', 'part'),
+ ('as', 'well', 'All'),
+ ('being', 'silent', 'Mr'),
+ ('instant', 'I', 'faced'),
+ ('born', 'along', 'its'),
+ ('about', 'Rinaldo', 'Rinaldini'),
+ ('refusal', 'of', 'the'),
+ ('will', 'frequently', 'offer'),
+ ('here', 'you', 'sabbee'),
+ ('and', 'many', 'whalemen'),
+ ('my', 'spirits', 'And'),
+ ('tract', 'of', 'land'),
+ ('one', 'cannot', 'wonder'),
+ ('in', 'those', 'Icy'),
+ ('he', 'added', 'turning'),
+ ('me', 'who', 'ee'),
+ ('friend', 'but', 'she'),
+ ('two', 'unerring', 'binnacle'),
+ ('in', 'truth', 'he'),
+ ('that', 'my', 'brave'),
+ ('them', 'during', 'the'),
+ ('was', 'not', 'quite'),
+ ('this', 'make', 'in'),
+ ('any', 'thing', 'beyond'),
+ ('must', 'be', 'three'),
+ ('repeatedly', 'smiting', 'the'),
+ ('are', 'things', 'that'),
+ ('with', 'the', 'spout'),
+ ('was', 'now', 'becoming'),
+ ('the', 'latitude', 'So'),
+ ('of', 'his', 'voice'),
+ ('like', 'my', 'tambourine'),
+ ('come', 'mind', 'thine'),
+ ('together', 'once', 'or'),
+ ('peace', 'With', 'that'),
+ ('places', 'and', 'ocean'),
+ ('working', 'sir', 'Shall'),
+ ('match', 'but', 'it'),
+ ('leave', 'off', 'abruptly'),
+ ('right', 'classification', 'Nay'),
+ ('lamp', 'taking', 'long'),
+ ('in', 'her', 'top'),
+ ('being', 'awakened', 'from'),
+ ('I', 'heard', 'that'),
+ ('syllable', 'It', 'must'),
+ ('my', 'voice', 'But'),
+ ('thee', 'As', 'he'),
+ ('still', 'another', 'tempestuous'),
+ ('as', 'he', 'actually'),
+ ('the', 'luckiest', 'woman'),
+ ('not', 'doubt', 'when'),
+ ('joy', 'but', 'encompassed'),
+ ('by', 'the', 'acquaintance'),
+ ('been', 'so', 'deep'),
+ ('ask', 'me', 'whether'),
+ ('myself', 'Harriet', 'mine'),
+ ('rolled', 'away', 'from'),
+ ('use', 'them', 'mercifully'),
+ ('to', 'have', 'presumed'),
+ ('Miss', 'Fairfax', 'here'),
+ ('sensations', 'at', 'feeling'),
+ ('not', 'at', 'present'),
+ ('the', 'ball', 'it'),
+ ('from', 'its', 'sheath'),
+ ('be', 'allowed', 'on'),
+ ('would', 'do', 'any'),
+ ('But', 'ever', 'since'),
+ ('hardened', 'as', 'his'),
+ ('life', 'Could', 'she'),
+ ('subtler', 'form', 'Ahab'),
+ ('that', 'the', 'winds'),
+ ('her', 'telling', 'me'),
+ ('old', 'as', 'he'),
+ ('Elton', 'detained', 'him'),
+ ('soon', 'flowered', 'out'),
+ ('voyages', 'of', 'various'),
+ ('swing', 'all', 'day'),
+ ('trembling', 'traitors', 'running'),
+ ('thou', 'not', 'that'),
+ ('home', 'baked', 'apples'),
+ ('he', 'were', 'attached'),
+ ('gleams', 'has', 'moved'),
+ ('so', 'much', 'behaviour'),
+ ('the', 'boat', 'till'),
+ ('long', 'heavy', 'iron'),
+ ('when', 'I', 'may'),
+ ('in', 'coming', 'if'),
+ ('the', 'word', 'Dr'),
+ ('in', 'great', 'wooden'),
+ ('own', 'hammock', 'and'),
+ ('real', 'workmen', 'I'),
+ ('that', 'had', 'destroyed'),
+ ('mentioned', 'Oh', 'Miss'),
+ ('gestures', 'and', 'hurling'),
+ ('taffrail', 'foreboding', 'shivers'),
+ ('be', 'missed', 'every'),
+ ('of', 'the', 'sailors'),
+ ('The', 'sum', 'is'),
+ ('and', 'tossing', 'about'),
+ ('watering', 'place', 'gains'),
+ ('touched', 'with', 'that'),
+ ('that', 'Mrs', 'Weston'),
+ ('clothed', 'with', 'wood'),
+ ('can', 'be', 'any'),
+ ('they', 'said', 'therefore'),
+ ('beautiful', 'ivory', 'leg'),
+ ('queer', 'handkerchief', 'mockingly'),
+ ('that', 'many', 'inquiries'),
+ ('the', 'ball', 'completely'),
+ ('line', 'Oh', 'ye'),
+ ('portents', 'and', 'inward'),
+ ('anxious', 'to', 'see'),
+ ('design', 'in', 'her'),
+ ('would', 'but', 'slightly'),
+ ('pass', 'She', 'would'),
+ ('be', 'almost', 'asking'),
+ ('almost', 'every', 'robust'),
+ ('in', 'the', 'species'),
+ ('compass', 'at', 'the'),
+ ('the', 'waves', 'the'),
+ ('he', 'cried', 'with'),
+ ('man', 'past', 'all'),
+ ('craft', 'every', 'way'),
+ ('man', 'as', 'Mr'),
+ ('to', 'Jane', 'on'),
+ ('been', 'a', 'much'),
+ ('and', 'Queequeg', 'here'),
+ ('should', 'st', 'go'),
+ ('general', 'a', 'sensation'),
+ ('smiling', 'and', 'blushing'),
+ ('meeting', 'must', 'be'),
+ ('Ahab', 's', 'needles'),
+ ('burden', 'A', 'dreadful'),
+ ('the', 'sugary', 'musk'),
+ ('shark', 'will', 'seldom'),
+ ('and', 'then', 'send'),
+ ('wanted', 'time', 'and'),
+ ('greybeards', 'will', 'oftenest'),
+ ('the', 'unbecomingness', 'of'),
+ ('their', 'trowsers', 'rolled'),
+ ('be', 'leaving', 'him'),
+ ('smaller', 'than', 'those'),
+ ('received', 'its', 'completion'),
+ ('Mr', 'Weston', 'in'),
+ ('to', 'this', 'it'),
+ ('matter', 'by', 'I'),
+ ('were', 'given', 'when'),
+ ('with', 'its', 'broad'),
+ ('in', 'no', 'danger'),
+ ('man', 's', 'delirium'),
+ ('beef', 'his', 'would'),
+ ('she', 'must', 'for'),
+ ('coming', 'in', 'upon'),
+ ('grub', 'worm', 'of'),
+ ('furnish', 'a', 'curious'),
+ ('carefully', 'Stubb', 'further'),
+ ('end', 'incorporate', 'with'),
+ ('Your', 'soft', 'eyes'),
+ ('hardly', 'any', 'uneasiness'),
+ ('to', 'fancy', 'herself'),
+ ('ye', 'cricket', 'players'),
+ ('while', 'Stubb', 'softly'),
+ ('exterior', 'and', 'local'),
+ ('not', 'help', 'feeling'),
+ ('along', 'near', 'me'),
+ ('minute', 'this', 'entire'),
+ ('conjecture', 'She', 'was'),
+ ('gone', 'two', 'hundred'),
+ ('whale', 'and', 'perilously'),
+ ('of', 'the', 'street'),
+ ('wished', 'I', 'might'),
+ ('friends', 'Oh', 'yes'),
+ ('how', 'she', 'talked'),
+ ('more', 'the', 'merrier'),
+ ('boat', 'itself', 'Ultimately'),
+ ('ordered', 'the', 'carriage'),
+ ('s', 'negative', 'though'),
+ ('effort', 'to', 'appear'),
+ ('the', 'spring', 'time'),
+ ('and', 'she', 'would'),
+ ('it', 'needs', 'It'),
+ ('rocks', 'on', 'the'),
+ ('being', 'useful', 'To'),
+ ('have', 'soon', 'flowered'),
+ ('in', 'peculiar', 'moods'),
+ ('more', 'drawn', 'back'),
+ ('nothing', 'of', 'my'),
+ ('had', 'been', 'read'),
+ ('making', 'use', 'of'),
+ ('for', 'the', 'nonce'),
+ ('bed', 'early', 'my'),
+ ('been', 'in', 'seeing'),
+ ('interest', 'Harriet', 'may'),
+ ('from', 'London', 'She'),
+ ('I', 'thank', 'you'),
+ ('But', 'then', 'there'),
+ ('broad', 'canvas', 'belt'),
+ ('father', 'never', 'went'),
+ ('left', 'their', 'mouldings'),
+ ('daughter', 'attempted', 'it'),
+ ('thing', 'in', 'him'),
+ ('a', 'wicked', 'Nineveh'),
+ ('but', 'almost', 'before'),
+ ('mortals', 'some', 'dying'),
+ ('as', 'formal', 'and'),
+ ('much', 'relieve', 'his'),
+ ('those', 'days', 'were'),
+ ('But', 'the', 'bird'),
+ ('inferior', 'article', '550'),
+ ('entry', 'the', 'door'),
+ ('so', 'strange', 'a'),
+ ('flukes', 'with', 'at'),
+ ('great', 'value', 'for'),
+ ('small', 'for', 'any'),
+ ('captains', 'Nor', 'does'),
+ ('general', 'shape', 'Though'),
+ ('and', 'never', 'make'),
+ ('engage', 'in', 'schemes'),
+ ('books', 'of', 'the'),
+ ('imagination', 'for', 'Harriet'),
+ ('promise', 'the', 'most'),
+ ('towards', 'the', 'people'),
+ ('how', 'on', 'the'),
+ ('it', 'prose', 'or'),
+ ('immortal', 'then', 'on'),
+ ('a', 'charming', 'young'),
+ ('independence', 'and', 'set'),
+ ('sinners', 'gentlemen', 'most'),
+ ('everything', 'The', 'wind'),
+ ('arranged', 'house', 'would'),
+ ('for', 'spurs', 'would'),
+ ('knows', 'I', 'have'),
+ ('rascal', 'we', 'won'),
+ ('undulated', 'round', 'us'),
+ ('mild', 'summer', 'cool'),
+ ('themselves', 'and', 'every'),
+ ('claim', 'him', 'for'),
+ ('his', 'mind', 'is'),
+ ('encourage', 'it', 'It'),
+ ('their', 'kind', 'in'),
+ ('the', 'timeliest', 'day'),
+ ('Spermaceti', 'Whale', 'Fisheries'),
+ ('t', 'seen', 'it'),
+ ('all', 'humane', 'ages'),
+ ('State', 'or', 'the'),
+ ('my', 'congratulations', 'but'),
+ ('SAILOR', 'MEETING', 'HIM'),
+ ('old', 'wooden', 'settle'),
+ ('fancy', 'or', 'other'),
+ ('against', 'the', 'spile'),
+ ('spirits', 'and', 'her'),
+ ('was', 'placed', 'but'),
+ ('brother', 'and', 'his'),
+ ('or', 'two', 'particulars'),
+ ('not', 'allow', 'any'),
+ ('s', 'good', 'will'),
+ ('which', 'the', 'schoolmaster'),
+ ('this', 'leviathan', 'whose'),
+ ('little', 'word', 'queer'),
+ ('there', 'are', 'where'),
+ ('not', 'mentioned', 'But'),
+ ('Smith', 'and', 'Henry'),
+ ('we', 'thought', 'he'),
+ ('world', 'that', 'is'),
+ ('all', 'extraordinary', 'in'),
+ ('formless', 'somnambulistic', 'being'),
+ ('at', 'last', 'I'),
+ ('upon', 'his', 'palm'),
+ ('people', 'have', 'their'),
+ ('the', 'conversation', 'interrupted'),
+ ('aboard', 'never', 'mind'),
+ ('whale', 'goes', 'that'),
+ ('the', 'Island', 'the'),
+ ('a', 'hue', 'between'),
+ ('fish', 'and', 'call'),
+ ('s', 'ball', 'in'),
+ ('doing', 'too', 'much'),
+ ('till', 'I', 'jump'),
+ ('toes', 'against', 'that'),
+ ('be', 'cheerful', 'His'),
+ ('rude', 'shelf', 'the'),
+ ('moody', 'secrets', 'The'),
+ ('and', 'would', 'not'),
+ ('soon', 'as', 'Miss'),
+ ('never', 'fails', 'her'),
+ ('s', 'company', 'all'),
+ ('a', 'delusion', 'totally'),
+ ...]</code></pre>
+</div>
+</div>
+<div id="67d453d0" class="cell" data-execution_count="49">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> bon_tagger(document, corpus, N):</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    vocabulary <span class="op">=</span> get_ngram_vocabulary(corpus, N)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    bon_representation <span class="op">=</span> np.zeros(<span class="bu">len</span>(vocabulary))</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> gutenberg.words(document)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    tokens <span class="op">=</span> [word <span class="cf">for</span> word <span class="kw">in</span> tokens <span class="cf">if</span> word.isalnum()]</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    ngrams_count <span class="op">=</span> Counter(<span class="bu">list</span>(ngrams(tokens, N)))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> (i,ngram) <span class="kw">in</span> <span class="bu">enumerate</span>(vocabulary):</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        bon_representation[i] <span class="op">=</span> ngrams_count.get(ngram, <span class="dv">0</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> bon_representation</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="479bb7b4" class="cell" data-execution_count="50">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>bon_md <span class="op">=</span> bon_tagger(<span class="st">'melville-moby_dick.txt'</span>, [<span class="st">'melville-moby_dick.txt'</span>, <span class="st">'Austen-Emma.txt'</span>], <span class="dv">3</span>).astype(<span class="bu">int</span>)</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>bon_md</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="50">
+<pre><code>array([0, 1, 1, ..., 0, 0, 0])</code></pre>
+</div>
+</div>
+</section>
+<section id="task-2" class="level3">
+<h3 class="anchored" data-anchor-id="task-2">Task 2</h3>
+<p>Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.</p>
+<div id="858ee932" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_paragraphs(corpus):</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    paragraphs <span class="op">=</span> []</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text <span class="kw">in</span> corpus:</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>        paragraphs <span class="op">+=</span> [p.strip().lower() <span class="cf">for</span> p <span class="kw">in</span> gutenberg.raw(text).split(<span class="st">'</span><span class="ch">\r\n\r\n</span><span class="st">'</span>) <span class="cf">if</span> p.strip()]</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> paragraphs</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> co_parag(word, context, corpus):</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    paragraphs <span class="op">=</span> get_paragraphs(corpus)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    w_occurance, c_occurance, co_occurance <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> paragraph <span class="kw">in</span> paragraphs:</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>        words <span class="op">=</span> word_tokenize(paragraph)</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>        co_occurance <span class="op">+=</span> word.lower() <span class="kw">in</span> words <span class="kw">and</span> context.lower() <span class="kw">in</span> words</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        w_occurance <span class="op">+=</span> word.lower() <span class="kw">in</span> words</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        c_occurance <span class="op">+=</span> context.lower() <span class="kw">in</span> words</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([w_occurance, c_occurance, co_occurance])</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>moby_dick <span class="op">=</span> <span class="st">'melville-moby_dick.txt'</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>caesar <span class="op">=</span> <span class="st">'shakespeare-caesar.txt'</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>co_parag(<span class="st">"the"</span>, <span class="st">"a"</span>, [moby_dick, caesar])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
+<pre><code>array([2176, 1566, 1438])</code></pre>
+</div>
+</div>
+<div id="bf1b37db" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ppmi(word, context, corpus):</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    occurances <span class="op">=</span> co_parag(word, context, corpus) <span class="op">/</span> <span class="bu">len</span>(get_paragraphs(corpus))</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> np.log2(occurances[<span class="dv">2</span>] <span class="op">/</span> (occurances[<span class="dv">0</span>]<span class="op">*</span>occurances[<span class="dv">1</span>])) </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> <span class="bu">max</span>([ppmi, <span class="dv">0</span>])</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ppmi</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>ppmi(<span class="st">"the"</span>, <span class="st">"a"</span>, [moby_dick, caesar])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="15">
+<pre><code>0.23763292730738073</code></pre>
+</div>
+</div>
+<div id="4f175b57" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>ppmi(<span class="st">"Moby"</span>, <span class="st">"dick"</span>, [moby_dick, caesar])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>5.298369185904781</code></pre>
+</div>
+</div>
+</section>
+<section id="task-3" class="level3">
+<h3 class="anchored" data-anchor-id="task-3">Task 3</h3>
+<p>Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.</p>
+<div id="e951b31a" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_words(corpus):</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> []</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> text <span class="kw">in</span> corpus:</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>        words <span class="op">+=</span> <span class="bu">list</span>(gutenberg.words(text))</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> words</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> co_window(word, context, corpus):</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    words <span class="op">=</span> get_words(corpus)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    w_occurance, c_occurance, co_occurance <span class="op">=</span> <span class="dv">0</span>, <span class="dv">0</span>, <span class="dv">0</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> idx, w <span class="kw">in</span> <span class="bu">enumerate</span>(<span class="bu">list</span>(words)):</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> w.lower() <span class="op">==</span> context.lower():</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>            c_occurance <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> w.lower() <span class="op">==</span> word.lower():</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>            w_occurance <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>            co_occurance <span class="op">+=</span> context.lower() <span class="kw">in</span> <span class="bu">list</span>(<span class="bu">map</span>(<span class="kw">lambda</span> x: x.lower(), words[idx<span class="op">-</span><span class="dv">5</span>: idx<span class="op">+</span><span class="dv">5</span>]))</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array([w_occurance, c_occurance, co_occurance])</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>co_window(<span class="st">"moby"</span>, <span class="st">"dick"</span>, [moby_dick, caesar])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
+<pre><code>array([84, 84, 83])</code></pre>
+</div>
+</div>
+<div id="ccf38df6" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ppmi2(word, context, corpus):</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    occurances <span class="op">=</span> co_window(word, context, corpus) <span class="op">/</span> <span class="bu">len</span>(get_words(corpus))</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> np.log2((occurances[<span class="dv">2</span>]) <span class="op">/</span> (occurances[<span class="dv">0</span>]<span class="op">*</span>occurances[<span class="dv">1</span>])) </span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> <span class="bu">max</span>([ppmi, <span class="dv">0</span>])</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ppmi </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>ppmi2(<span class="st">"moby"</span>, <span class="st">"dick"</span>, [moby_dick, caesar])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="19">
+<pre><code>11.719345405127092</code></pre>
+</div>
+</div>
+</section>
+<section id="task-4" class="level3">
+<h3 class="anchored" data-anchor-id="task-4">Task 4</h3>
+<p>To solve the proble we can use the <code>Add-one smoothing</code> method. The problem arises because we have very small occurance values for the infrequent words. So if we added some small positive constant to the numerator and denominator in PPMMI formula, the value for the infrequent words would normilize, as adding even a very small constant will decrease the value, while value for the frequent words will not change a lot with adding a tiny constant. Let’s check it</p>
+<div id="b65f9226" class="cell" data-execution_count="61">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> ppmi2_upd(word, context, corpus):</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    occurances <span class="op">=</span> co_window(word, context, corpus) <span class="op">/</span> <span class="bu">len</span>(get_words(corpus))</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> np.log2((occurances[<span class="dv">2</span>] <span class="op">+</span> <span class="fl">1e-5</span>) <span class="op">/</span> (occurances[<span class="dv">0</span>]<span class="op">*</span>occurances[<span class="dv">1</span>] <span class="op">+</span> <span class="fl">1e-5</span>)) </span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    ppmi <span class="op">=</span> <span class="bu">max</span>([ppmi, <span class="dv">0</span>])</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> ppmi </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="bae4933b" class="cell" data-scrolled="true" data-execution_count="62">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">20</span> <span class="op">+</span> <span class="st">"For frequent words"</span> <span class="op">+</span> <span class="st">"-"</span><span class="op">*</span><span class="dv">20</span>)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Before Add-one smoothing PPMI for "the" and "a": </span><span class="sc">{</span>ppmi2(<span class="st">"the"</span>, <span class="st">"a"</span>, [moby_dick, emma])<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'After Add-one smoothing PPMI for "the" and "a": </span><span class="sc">{</span>ppmi2_upd(<span class="st">"the"</span>, <span class="st">"a"</span>, [moby_dick, emma])<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"-"</span> <span class="op">*</span> <span class="dv">20</span> <span class="op">+</span> <span class="st">"For infrequent words"</span> <span class="op">+</span> <span class="st">"-"</span><span class="op">*</span><span class="dv">20</span>)</span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'Before Add-one smoothing PPMI for "Moby" and "Dick": </span><span class="sc">{</span>ppmi2(<span class="st">"Moby"</span>, <span class="st">"Dick"</span>, [moby_dick, emma])<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f'After Add-one smoothing PPMI for "Moby" and "Dick": </span><span class="sc">{</span>ppmi2_upd(<span class="st">"Moby"</span>, <span class="st">"Dick"</span>, [moby_dick, emma])<span class="sc">}</span><span class="ss">'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>--------------------For frequent words--------------------
+Before Add-one smoothing PPMI for "the" and "a": 2.226220092372014
+After Add-one smoothing PPMI for "the" and "a": 2.2112484636462186
+--------------------For infrequent words--------------------
+Before Add-one smoothing PPMI for "Moby" and "Dick": 12.380339348136902
+After Add-one smoothing PPMI for "Moby" and "Dick": 4.266505168587376</code></pre>
+</div>
+</div>
+</section>
+<section id="task-5" class="level3">
+<h3 class="anchored" data-anchor-id="task-5">Task 5</h3>
+<p>Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g.&nbsp;using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.</p>
+<div id="6dde9e3f" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a>syns1 <span class="op">=</span> [<span class="st">"large"</span>, <span class="st">"great"</span>,<span class="st">"huge"</span>, <span class="st">"bulky"</span>, <span class="st">"grand"</span>, <span class="st">"colossal"</span>, <span class="st">"high"</span>, <span class="st">"noble"</span>]</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>word1 <span class="op">=</span> <span class="st">"big"</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>ppmis1 <span class="op">=</span> [ppmi(word, syn, [moby_dick, caesar]) <span class="cf">for</span> syn <span class="kw">in</span> syns1]</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>ppmis1</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>C:\Users\Asus\AppData\Local\Temp\ipykernel_22700\589596814.py:3: RuntimeWarning: divide by zero encountered in log2
+  ppmi = np.log2(occurances[2] / (occurances[0]*occurances[1]))</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<pre><code>[1.5382232216394212, 0.7589919004962051, 0, 0, 0, 0, 0, 0]</code></pre>
+</div>
+</div>
+
+
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/dslnu\.github\.io\/dl_nlp\/");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+<footer class="footer">
+  <div class="nav-footer">
+    <div class="nav-footer-left">
+<p>LNU</p>
+</div>   
+    <div class="nav-footer-center">
+      &nbsp;
+    </div>
+    <div class="nav-footer-right">
+      <ul class="footer-items list-unstyled">
+    <li class="nav-item compact">
+    <a class="nav-link" href="https://github.com/">
+      <i class="bi bi-github" role="img">
+</i> 
+    </a>
+  </li>  
+</ul>
+    </div>
+  </div>
+</footer>
+
+
+
+
+</body></html>
