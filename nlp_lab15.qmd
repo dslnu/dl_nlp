@@ -1,0 +1,23 @@
+---
+title: "NLP: Lab 15 (HuggingFace Transformers)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# HuggingFace Transformers
+
+This assignment is combined with [DL lab 10](./dl_lab10.qmd).

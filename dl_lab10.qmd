@@ -1,0 +1,28 @@
+---
+title: "DL: Lab 10 (HuggingFace Transformers)"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+# HuggingFace Transformers
+
+Complete the following:
+
+- <https://huggingface.co/learn/llm-course/chapter0/1>
+- <https://huggingface.co/learn/llm-course/chapter2/1>
+
+and the associated quiz.
