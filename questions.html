@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Deep Learning – Deep Learning/NLP course</title>
+<title>Questions – Deep Learning/NLP course</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -94,7 +123,7 @@ ul.task-list li input[type="checkbox"] {
 <span class="menu-text">Home</span></a>
   </li>  
   <li class="nav-item">
-    <a class="nav-link active" href="./dl.html" aria-current="page"> 
+    <a class="nav-link" href="./dl.html"> 
 <span class="menu-text">Deep Learning</span></a>
   </li>  
   <li class="nav-item">
@@ -116,38 +145,15 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
 <!-- sidebar -->
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        <nav id="TOC" role="doc-toc" class="toc-active">
-    <h2 id="toc-title">On this page</h2>
-   
-  <ul>
-  <li><a href="#lectures" id="toc-lectures" class="nav-link active" data-scroll-target="#lectures">Lectures</a>
-  <ul class="collapse">
-  <li><a href="#lec-1" id="toc-lec-1" class="nav-link" data-scroll-target="#lec-1">Lec 1</a></li>
-  <li><a href="#lec-2" id="toc-lec-2" class="nav-link" data-scroll-target="#lec-2">Lec 2</a></li>
-  <li><a href="#lec-3" id="toc-lec-3" class="nav-link" data-scroll-target="#lec-3">Lec 3</a></li>
-  <li><a href="#lec-4-regularization-and-optimization" id="toc-lec-4-regularization-and-optimization" class="nav-link" data-scroll-target="#lec-4-regularization-and-optimization">Lec 4: Regularization and Optimization</a></li>
-  <li><a href="#lec-5-intro-to-pytorch-activation-functions" id="toc-lec-5-intro-to-pytorch-activation-functions" class="nav-link" data-scroll-target="#lec-5-intro-to-pytorch-activation-functions">Lec 5: Intro to PyTorch; Activation Functions</a></li>
-  <li><a href="#lec-6-pytorch-optimization-and-initialization" id="toc-lec-6-pytorch-optimization-and-initialization" class="nav-link" data-scroll-target="#lec-6-pytorch-optimization-and-initialization">Lec 6: PyTorch: Optimization and Initialization</a></li>
-  <li><a href="#lec-7-convolutional-networks" id="toc-lec-7-convolutional-networks" class="nav-link" data-scroll-target="#lec-7-convolutional-networks">Lec 7: Convolutional networks</a></li>
-  <li><a href="#lec-8-convolutional-networks-examples" id="toc-lec-8-convolutional-networks-examples" class="nav-link" data-scroll-target="#lec-8-convolutional-networks-examples">Lec 8: Convolutional networks: examples</a></li>
-  <li><a href="#lec-9-recurrent-neural-networks" id="toc-lec-9-recurrent-neural-networks" class="nav-link" data-scroll-target="#lec-9-recurrent-neural-networks">Lec 9: Recurrent Neural Networks</a></li>
-  <li><a href="#lec-10-transformers-1" id="toc-lec-10-transformers-1" class="nav-link" data-scroll-target="#lec-10-transformers-1">Lec 10: Transformers 1</a></li>
-  <li><a href="#lec-11-transformers-2" id="toc-lec-11-transformers-2" class="nav-link" data-scroll-target="#lec-11-transformers-2">Lec 11: Transformers 2</a></li>
-  <li><a href="#lec-12-current-frontiers" id="toc-lec-12-current-frontiers" class="nav-link" data-scroll-target="#lec-12-current-frontiers">Lec 12: Current frontiers</a></li>
-  </ul></li>
-  <li><a href="#labs" id="toc-labs" class="nav-link" data-scroll-target="#labs">Labs</a></li>
-  <li><a href="#python-venv-info" id="toc-python-venv-info" class="nav-link" data-scroll-target="#python-venv-info">Python venv info</a></li>
-  <li><a href="#exam-questions" id="toc-exam-questions" class="nav-link" data-scroll-target="#exam-questions">Exam questions</a></li>
-  </ul>
-</nav>
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
+        
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Deep Learning</h1>
+<h1 class="title">Questions</h1>
 </div>
 
 
@@ -164,99 +170,158 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="lectures" class="level2">
-<h2 class="anchored" data-anchor-id="lectures">Lectures</h2>
-<section id="lec-1" class="level3">
-<h3 class="anchored" data-anchor-id="lec-1">Lec 1</h3>
-<p><a href="./dl_lec1.html">Slides</a></p>
-</section>
-<section id="lec-2" class="level3">
-<h3 class="anchored" data-anchor-id="lec-2">Lec 2</h3>
-<p><a href="./dl_lec2.html">Slides</a></p>
-</section>
-<section id="lec-3" class="level3">
-<h3 class="anchored" data-anchor-id="lec-3">Lec 3</h3>
-<p><a href="./dl_lec3.html">Slides</a></p>
-</section>
-<section id="lec-4-regularization-and-optimization" class="level3">
-<h3 class="anchored" data-anchor-id="lec-4-regularization-and-optimization">Lec 4: Regularization and Optimization</h3>
-<p><a href="./dl_lec4.html">Slides</a></p>
-</section>
-<section id="lec-5-intro-to-pytorch-activation-functions" class="level3">
-<h3 class="anchored" data-anchor-id="lec-5-intro-to-pytorch-activation-functions">Lec 5: Intro to PyTorch; Activation Functions</h3>
-<p><a href="./dl_lec5.html">Slides</a></p>
-</section>
-<section id="lec-6-pytorch-optimization-and-initialization" class="level3">
-<h3 class="anchored" data-anchor-id="lec-6-pytorch-optimization-and-initialization">Lec 6: PyTorch: Optimization and Initialization</h3>
-<p><a href="./dl_lec6.html">Slides</a></p>
-</section>
-<section id="lec-7-convolutional-networks" class="level3">
-<h3 class="anchored" data-anchor-id="lec-7-convolutional-networks">Lec 7: Convolutional networks</h3>
-<p><a href="./dl_lec7.html">Slides</a></p>
-</section>
-<section id="lec-8-convolutional-networks-examples" class="level3">
-<h3 class="anchored" data-anchor-id="lec-8-convolutional-networks-examples">Lec 8: Convolutional networks: examples</h3>
-<p><a href="./dl_lec8.html">Slides</a></p>
-</section>
-<section id="lec-9-recurrent-neural-networks" class="level3">
-<h3 class="anchored" data-anchor-id="lec-9-recurrent-neural-networks">Lec 9: Recurrent Neural Networks</h3>
-<p><a href="./dl_lec9.html">Slides</a></p>
-</section>
-<section id="lec-10-transformers-1" class="level3">
-<h3 class="anchored" data-anchor-id="lec-10-transformers-1">Lec 10: Transformers 1</h3>
-<p><a href="./dl_lec10.html">Slides</a></p>
-</section>
-<section id="lec-11-transformers-2" class="level3">
-<h3 class="anchored" data-anchor-id="lec-11-transformers-2">Lec 11: Transformers 2</h3>
-<p><a href="./dl_lec11.html">Slides</a></p>
-</section>
-<section id="lec-12-current-frontiers" class="level3">
-<h3 class="anchored" data-anchor-id="lec-12-current-frontiers">Lec 12: Current frontiers</h3>
-<p><a href="./dl_lec12.html">Slides</a></p>
-</section>
-</section>
-<section id="labs" class="level2">
-<h2 class="anchored" data-anchor-id="labs">Labs</h2>
-<p><a href="./dl_lab1.html">Lab 1: Logistic Regression using a single-layer Neural Network</a></p>
-<p><a href="./dl_lab2.html">Lab 2: 2-layer Neural Networ</a></p>
-<p><a href="./dl_lab3.html">Lab 3: Deep Neural Network from Scratch</a></p>
-<p><a href="./dl_lab4.html">Lab 4: Initialization/Regularization</a></p>
-<p><a href="./dl_lab5.html">Lab 5: Optimization</a></p>
-<p><a href="./dl_lab6.html">Lab 6: PyTorch basics</a></p>
-<p><a href="./dl_lab7.html">Lab 7: Convolutional networks</a></p>
-<p><a href="./dl_lab8.html">Lab 8: Character-Level LSTM in PyTorch</a></p>
-<p><a href="./dl_lab9.html">Lab 9: Annotated Encoder-Decoder with Attention</a></p>
-<p><a href="./dl_lab10.html">Lab 10: HuggingFace Transformers</a></p>
-</section>
-<section id="python-venv-info" class="level2">
-<h2 class="anchored" data-anchor-id="python-venv-info">Python venv info</h2>
-<p>Instructions on how to create a virtual environment for DL course:</p>
-<ol type="1">
-<li>Launch Anaconda Prompt. In it execute:</li>
-</ol>
-<pre><code>python -m venv dl_venv</code></pre>
-<ol start="2" type="1">
-<li>Activate the environment:</li>
-</ol>
-<pre><code>dl_venv\Scripts\activate</code></pre>
-<ol start="3" type="1">
-<li>Install required packages:</li>
-</ol>
-<pre><code>pip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py</code></pre>
-<ol start="4" type="1">
-<li>Run Jupyter:</li>
-</ol>
-<pre><code>jupyter notebook</code></pre>
-<ol start="5" type="1">
-<li>Voila! (pardon my French)</li>
-</ol>
-</section>
-<section id="exam-questions" class="level2">
-<h2 class="anchored" data-anchor-id="exam-questions">Exam questions</h2>
-<p><a href="./questions.html">List</a></p>
+<style>
+/* Initialize a counter for the table */
+table {
+  counter-reset: rowNumber;
+}
+
+/* Increment the counter for each row in tbody */
+tbody tr {
+  counter-increment: rowNumber;
+}
+
+/* Display the counter in the first cell of each row */
+tbody tr td:first-child::before {
+  content: counter(rowNumber) ". ";
+}
+</style>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>Питання</th>
+<th>Матеріали</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Біологія нейромереж.</td>
+<td><a href="./dl_lec1.html">Лекція 1</a></td>
+</tr>
+<tr class="even">
+<td>Опис роботи перцептрона.</td>
+<td><a href="./dl_lec1.html">Лекція 1</a>, <a href="./dl_lec2.html">Лекція 2</a></td>
+</tr>
+<tr class="odd">
+<td>Градієнтний спуск. Опис алгоритму.</td>
+<td><a href="./dl_lec1.html">Лекція 1</a>, <a href="./dl_lec2.html">Лекція 2</a>, <a href="https://d2l.ai/chapter_optimization/gd.html" class="uri">https://d2l.ai/chapter_optimization/gd.html</a></td>
+</tr>
+<tr class="even">
+<td>Логістична регресія, побудована з використанням нейронних мереж.</td>
+<td><a href="./dl_lec2.html">Лекція 2</a>, <a href="./dl_lab1.html">Лаб 1</a></td>
+</tr>
+<tr class="odd">
+<td>Функції активації та їх властивості. Теорема про тотожну функцію.</td>
+<td><a href="./dl_lec2.html">Лекція 2</a>, <a href="./dl_lec3.html">Лекція 3</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial3/Activation_Functions.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial3/Activation_Functions.html</a></td>
+</tr>
+<tr class="even">
+<td>Функції втрат. Їх диференціювання. Приклади.</td>
+<td><a href="./dl_lec2.html">Лекція 2</a>, <a href="./dl_lec3.html">Лекція 3</a></td>
+</tr>
+<tr class="odd">
+<td>Метод зворотного поширення (backpropagation)</td>
+<td><a href="./dl_lec2.html">Лекція 2</a>, <a href="./dl_lec3.html">Лекція 3</a>, <a href="https://d2l.ai/chapter_multilayer-perceptrons/backprop.html" class="uri">https://d2l.ai/chapter_multilayer-perceptrons/backprop.html</a></td>
+</tr>
+<tr class="even">
+<td>Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з <span class="math inline">\(L\)</span> шарами</td>
+<td><a href="./dl_lec3.html">Лекція 3</a>, <a href="./dl_lab3.html">Лаб 3</a></td>
+</tr>
+<tr class="odd">
+<td>Компроміс зсуву та дисперсії (bias-variance tradeoff).</td>
+<td><a href="./dl_lec4.html">Лекція 4</a></td>
+</tr>
+<tr class="even">
+<td>Регуляризація нейронних мереж: L1/L2.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a></td>
+</tr>
+<tr class="odd">
+<td>Регуляризація нейронних мереж: Dropout.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a></td>
+</tr>
+<tr class="even">
+<td>Нормалізація нейронних мереж.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a></td>
+</tr>
+<tr class="odd">
+<td>Ініціалізація нейронних мереж.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html</a></td>
+</tr>
+<tr class="even">
+<td>Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html</a></td>
+</tr>
+<tr class="odd">
+<td>Оптимізація нейронних мереж: SGD with Momentum.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html</a></td>
+</tr>
+<tr class="even">
+<td>Оптимізація нейронних мереж: Adam.</td>
+<td><a href="./dl_lec4.html">Лекція 4</a>, <a href="./dl_lab4.html">Лаб 4</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html</a></td>
+</tr>
+<tr class="odd">
+<td>Згорткові нейронні мережі.</td>
+<td><a href="./dl_lec7.html">Лекція 7</a>, <a href="./dl_lab7.html">Лаб 7</a>, <a href="https://d2l.ai/chapter_convolutional-neural-networks/index.html" class="uri">https://d2l.ai/chapter_convolutional-neural-networks/index.html</a></td>
+</tr>
+<tr class="even">
+<td>Згорткова архітектура Inception.</td>
+<td><a href="./dl_lec8.html">Лекція 8</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html</a></td>
+</tr>
+<tr class="odd">
+<td>Згорткова архітектура ResNet.</td>
+<td><a href="./dl_lec8.html">Лекція 8</a>, <a href="https://d2l.ai/chapter_convolutional-modern/resnet.html" class="uri">https://d2l.ai/chapter_convolutional-modern/resnet.html</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html</a></td>
+</tr>
+<tr class="even">
+<td>Згорткова архітектура DenseNet.</td>
+<td><a href="./dl_lec8.html">Лекція 8</a>, <a href="https://d2l.ai/chapter_convolutional-modern/densenet.html" class="uri">https://d2l.ai/chapter_convolutional-modern/densenet.html</a>, <a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html</a></td>
+</tr>
+<tr class="odd">
+<td>Рекурентні нейронні мережі.</td>
+<td><a href="./dl_lec9.html">Лекція 9</a>, <a href="https://d2l.ai/chapter_recurrent-neural-networks/index.html" class="uri">https://d2l.ai/chapter_recurrent-neural-networks/index.html</a></td>
+</tr>
+<tr class="even">
+<td>Рекурентна архітектура LSTM.</td>
+<td><a href="./dl_lec9.html">Лекція 9</a>, <a href="./dl_lab8.html">Лаб 8</a>, <a href="https://d2l.ai/chapter_recurrent-modern/index.html" class="uri">https://d2l.ai/chapter_recurrent-modern/index.html</a></td>
+</tr>
+<tr class="odd">
+<td>Рекурентна архітектура GRU.</td>
+<td><a href="./dl_lec9.html">Лекція 9</a>, <a href="https://d2l.ai/chapter_recurrent-modern/index.html" class="uri">https://d2l.ai/chapter_recurrent-modern/index.html</a></td>
+</tr>
+<tr class="even">
+<td>Архітектура кодувальника-декодувальника (encoder-decoder).</td>
+<td><a href="./dl_lec9.html">Лекція 9</a>, <a href="https://d2l.ai/chapter_recurrent-modern/encoder-decoder.html" class="uri">https://d2l.ai/chapter_recurrent-modern/encoder-decoder.html</a></td>
+</tr>
+<tr class="odd">
+<td>Механізми уваги для рекурентних мереж (seq2seq моделей).</td>
+<td><a href="./dl_lec9.html">Лекція 9</a>, <a href="./dl_lec10.html">Лекція 10</a>, <a href="https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html" class="uri">https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html</a></td>
+</tr>
+<tr class="even">
+<td>Трансформери. Self-attention.</td>
+<td><a href="./dl_lec10.html">Лекція 10</a>, <a href="./dl_lec11.html">Лекція 11</a>, <a href="./dl_lab9.html">Лаб 9</a></td>
+</tr>
+<tr class="odd">
+<td>Трансформери: Scaled dot product attention.</td>
+<td><a href="./dl_lec10.html">Лекція 10</a>, <a href="./dl_lec11.html">Лекція 11</a>, <a href="./dl_lab9.html">Лаб 9</a></td>
+</tr>
+<tr class="even">
+<td>Трансформери: multi-head attention.</td>
+<td><a href="./dl_lec10.html">Лекція 10</a>, <a href="./dl_lec11.html">Лекція 11</a>, <a href="./dl_lab9.html">Лаб 9</a></td>
+</tr>
+<tr class="odd">
+<td>Основні поняття бібліотеки PyTorch. Модулі та моделі в PyTorch</td>
+<td><a href="https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html" class="uri">https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html</a>, <a href="./dl_lab6.html">Лаб 6</a></td>
+</tr>
+<tr class="even">
+<td>Платформа HuggingFace</td>
+<td><a href="./dl_lab10.html">Лаб 10</a></td>
+</tr>
+<tr class="odd">
+<td>Огляд сучасних нейромережевих архтектур.</td>
+<td><a href="./dl_lec12.html">Лекція 12</a></td>
+</tr>
+</tbody>
+</table>
 
 
-</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">

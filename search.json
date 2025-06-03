@@ -3787,417 +3787,11 @@
     "text": "Distance\nBetween words:\n\nmodel.wv.distance('trees', 'graph')\n\n1.0236716531217098\n\n\nBetween documents:\n\nmodel.wv.wmdistance(['trees'], ['graph'])\n\n1.4308540422347924"
   },
   {
-    "objectID": "dl.html",
-    "href": "dl.html",
-    "title": "Deep Learning",
+    "objectID": "questions.html",
+    "href": "questions.html",
+    "title": "Questions",
     "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "dl.html#lectures",
-    "href": "dl.html#lectures",
-    "title": "Deep Learning",
-    "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "dl.html#labs",
-    "href": "dl.html#labs",
-    "title": "Deep Learning",
-    "section": "Labs",
-    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch\nLab 9: Annotated Encoder-Decoder with Attention\nLab 10: HuggingFace Transformers"
-  },
-  {
-    "objectID": "dl.html#python-venv-info",
-    "href": "dl.html#python-venv-info",
-    "title": "Deep Learning",
-    "section": "Python venv info",
-    "text": "Python venv info\nInstructions on how to create a virtual environment for DL course:\n\nLaunch Anaconda Prompt. In it execute:\n\npython -m venv dl_venv\n\nActivate the environment:\n\ndl_venv\\Scripts\\activate\n\nInstall required packages:\n\npip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py\n\nRun Jupyter:\n\njupyter notebook\n\nVoila! (pardon my French)"
-  },
-  {
-    "objectID": "dl_lab9.html",
-    "href": "dl_lab9.html",
-    "title": "DL: Lab 9 (Annotated Encoder-Decoder with Attention)",
-    "section": "",
-    "text": "Annotated Encoder-Decoder with Attention\nJupyter notebook attached (dl_lab9.zip)\nPlease do the following:\n\nIn Part1_EncoderDecoder.ipynb, complete notebook. Modify the code to use NLTK’s tokenizer instead of spacy.\nIn Part2_SelfAttention.ipynb, complete computation of weights/scores/final context vector for multi-head attention."
-  },
-  {
-    "objectID": "dl_lec8.html#modern-cnn-variants",
-    "href": "dl_lec8.html#modern-cnn-variants",
-    "title": "Convolutional networks: examples",
-    "section": "Modern CNN variants",
-    "text": "Modern CNN variants\nIn this tutorial, we will implement and discuss variants of modern CNN architectures. There have been many different architectures been proposed over the past few years. Some of the most impactful ones, and still relevant today, are the following:\n\nGoogleNet/Inception architecture (winner of ILSVRC 2014)\nResNet (winner of ILSVRC 2015)\nDenseNet (best paper award CVPR 2017).\n\n\n\nAll of them were state-of-the-art models when being proposed, and the core ideas of these networks are the foundations for most current state-of-the-art architectures."
-  },
-  {
-    "objectID": "dl_lec8.html#imports",
-    "href": "dl_lec8.html#imports",
-    "title": "Convolutional networks: examples",
-    "section": "Imports",
-    "text": "Imports\n\n## Standard libraries\nimport os\nimport numpy as np \nimport random\nfrom PIL import Image\nfrom types import SimpleNamespace\n\n## Imports for plotting\nimport matplotlib.pyplot as plt\n%matplotlib inline \nfrom IPython.display import set_matplotlib_formats\nset_matplotlib_formats('svg', 'pdf') # For export\nimport matplotlib\nmatplotlib.rcParams['lines.linewidth'] = 2.0\nimport seaborn as sns\nsns.reset_orig()\n\n## PyTorch\nimport torch\nimport torch.nn as nn\nimport torch.utils.data as data\nimport torch.optim as optim\n# Torchvision\nimport torchvision\nfrom torchvision.datasets import CIFAR10\nfrom torchvision import transforms"
-  },
-  {
-    "objectID": "dl_lec8.html#seeds",
-    "href": "dl_lec8.html#seeds",
-    "title": "Convolutional networks: examples",
-    "section": "Seeds",
-    "text": "Seeds\n\n# Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)\nDATASET_PATH = \"../data\"\n# Path to the folder where the pretrained models are saved\nCHECKPOINT_PATH = \"../saved_models/tutorial5\"\n\n# Function for setting the seed\ndef set_seed(seed):\n    random.seed(seed)\n    np.random.seed(seed)\n    torch.manual_seed(seed)\n    if torch.mps.is_available():\n        torch.mps.manual_seed(seed)\n        #torch.cuda.manual_seed_all(seed)\nset_seed(42)\n\n# Ensure that all operations are deterministic on GPU (if used) for reproducibility\ntorch.backends.mps.deterministic = True\ntorch.backends.mps.benchmark = False\n\ndevice = torch.device(\"mps:0\") if torch.mps.is_available() else torch.device(\"cpu\")"
-  },
-  {
-    "objectID": "dl_lec8.html#pre-trained-models",
-    "href": "dl_lec8.html#pre-trained-models",
-    "title": "Convolutional networks: examples",
-    "section": "Pre-trained models",
-    "text": "Pre-trained models\n\nimport urllib.request\nfrom urllib.error import HTTPError\n# Github URL where saved models are stored for this tutorial\nbase_url = \"https://raw.githubusercontent.com/phlippe/saved_models/main/tutorial5/\"\n# Files to download\npretrained_files = [\"GoogleNet.ckpt\", \"ResNet.ckpt\", \"ResNetPreAct.ckpt\", \"DenseNet.ckpt\",\n                    \"tensorboards/GoogleNet/events.out.tfevents.googlenet\",\n                    \"tensorboards/ResNet/events.out.tfevents.resnet\",\n                    \"tensorboards/ResNetPreAct/events.out.tfevents.resnetpreact\",\n                    \"tensorboards/DenseNet/events.out.tfevents.densenet\"]\n# Create checkpoint path if it doesn't exist yet\nos.makedirs(CHECKPOINT_PATH, exist_ok=True)\n\n# For each file, check whether it already exists. If not, try downloading it.\nfor file_name in pretrained_files:\n    file_path = os.path.join(CHECKPOINT_PATH, file_name)\n    if \"/\" in file_name:\n        os.makedirs(file_path.rsplit(\"/\",1)[0], exist_ok=True)\n    if not os.path.isfile(file_path):\n        file_url = base_url + file_name\n        print(f\"Downloading {file_url}...\")\n        try:\n            urllib.request.urlretrieve(file_url, file_path)\n        except HTTPError as e:\n            print(\"Something went wrong. Please try to download the file from the GDrive folder, or contact the author with the full output including the following error:\\n\", e)"
-  },
-  {
-    "objectID": "dl_lec8.html#meanstd",
-    "href": "dl_lec8.html#meanstd",
-    "title": "Convolutional networks: examples",
-    "section": "Mean/std",
-    "text": "Mean/std\n\n\n\n\n\n\nImportant\n\n\nAs we have learned from the previous tutorial about initialization, it is important to have the data preprocessed with a zero mean.\n\n\n\n\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, download=True)\nDATA_MEANS = (train_dataset.data / 255.0).mean(axis=(0,1,2))\nDATA_STD = (train_dataset.data / 255.0).std(axis=(0,1,2))\nprint(\"Data mean\", DATA_MEANS)\nprint(\"Data std\", DATA_STD)\n\nData mean [0.49139968 0.48215841 0.44653091]\nData std [0.24703223 0.24348513 0.26158784]"
-  },
-  {
-    "objectID": "dl_lec8.html#pre-processing",
-    "href": "dl_lec8.html#pre-processing",
-    "title": "Convolutional networks: examples",
-    "section": "Pre-processing",
-    "text": "Pre-processing\n\n\n\nAugmentations\n\n\n\nflip each image horizontally with 50% probability (transforms.RandomHorizontalFlip). The object class usually does not change when flipping an image, and we don’t expect any image information to be dependent on the horizontal orientation. This would be however different if we would try to detect digits or letters in an image, as those have a certain orientation.)\ntransforms.RandomResizedCrop. This transformation crops the image in a small range, eventually changing the aspect ratio, and scaling it back afterward to the previous size. Therefore, the actual pixel values change while the content or overall semantics of the image stays the same."
-  },
-  {
-    "objectID": "dl_lec8.html#pre-processing-1",
-    "href": "dl_lec8.html#pre-processing-1",
-    "title": "Convolutional networks: examples",
-    "section": "Pre-processing",
-    "text": "Pre-processing\n\n\n\nCode\n\n\n\ntest_transform = transforms.Compose([transforms.ToTensor(),\n                                     transforms.Normalize(DATA_MEANS, DATA_STD)\n                                     ])\n# For training, we add some augmentation. Networks are too powerful and would overfit.\ntrain_transform = transforms.Compose([transforms.RandomHorizontalFlip(),\n                                      transforms.RandomResizedCrop((32,32), scale=(0.8,1.0), ratio=(0.9,1.1)),\n                                      transforms.ToTensor(),\n                                      transforms.Normalize(DATA_MEANS, DATA_STD)\n                                     ])\n# Loading the training dataset. We need to split it into a training and validation part\n# We need to do a little trick because the validation set should not use the augmentation.\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, transform=train_transform, download=True)\nval_dataset = CIFAR10(root=DATASET_PATH, train=True, transform=test_transform, download=True)\nset_seed(42)\ntrain_set, _ = torch.utils.data.random_split(train_dataset, [45000, 5000])\nset_seed(42)\n_, val_set = torch.utils.data.random_split(val_dataset, [45000, 5000])\n\n# Loading the test set\ntest_set = CIFAR10(root=DATASET_PATH, train=False, transform=test_transform, download=True)\n\n# We define a set of data loaders that we can use for various purposes later.\ntrain_loader = data.DataLoader(train_set, batch_size=128, shuffle=True, drop_last=True, pin_memory=True, num_workers=4)\nval_loader = data.DataLoader(val_set, batch_size=128, shuffle=False, drop_last=False, num_workers=4)\ntest_loader = data.DataLoader(test_set, batch_size=128, shuffle=False, drop_last=False, num_workers=4)"
-  },
-  {
-    "objectID": "dl_lec8.html#pre-processing-2",
-    "href": "dl_lec8.html#pre-processing-2",
-    "title": "Convolutional networks: examples",
-    "section": "Pre-processing",
-    "text": "Pre-processing\n\n\n\nVerify normalization\n\n\n\nimgs, _ = next(iter(train_loader))\nprint(\"Batch mean\", imgs.mean(dim=[0,2,3]))\nprint(\"Batch std\", imgs.std(dim=[0,2,3]))\n\nBatch mean tensor([0.0231, 0.0006, 0.0005])\nBatch std tensor([0.9865, 0.9849, 0.9868])"
-  },
-  {
-    "objectID": "dl_lec8.html#visualization",
-    "href": "dl_lec8.html#visualization",
-    "title": "Convolutional networks: examples",
-    "section": "Visualization",
-    "text": "Visualization\n\nCodeResult\n\n\n\nNUM_IMAGES = 4\nimages = [train_dataset[idx][0] for idx in range(NUM_IMAGES)]\norig_images = [Image.fromarray(train_dataset.data[idx]) for idx in range(NUM_IMAGES)]\norig_images = [test_transform(img) for img in orig_images]\n\nimg_grid = torchvision.utils.make_grid(torch.stack(images + orig_images, dim=0), nrow=4, normalize=True, pad_value=0.5)\nimg_grid = img_grid.permute(1, 2, 0)\n\nplt.figure(figsize=(8,8))\nplt.title(\"Augmentation examples on CIFAR10\")\nplt.imshow(img_grid)\nplt.axis('off')\nplt.show()\nplt.close()"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning",
-    "href": "dl_lec8.html#pytorch-lightning",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n\n\nOverview\n\n\nPyTorch Lightning is a framework that simplifies your code needed to train, evaluate, and test a model in PyTorch. It also handles logging into TensorBoard, a visualization toolkit for ML experiments, and saving model checkpoints automatically with minimal code overhead from our side.\n\n\n\n!pip install pytorch-lightning\n\nimport pytorch_lightning as pl"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-1",
-    "href": "dl_lec8.html#pytorch-lightning-1",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n# Setting the seed\npl.seed_everything(42)\n\n42"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-2",
-    "href": "dl_lec8.html#pytorch-lightning-2",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n\n\nPlan\n\n\nIn PyTorch Lightning, we define pl.LightningModule’s (inheriting from torch.nn.Module) that organize our code into 5 main sections:\n\nInitialization (__init__), where we create all necessary parameters/models\nOptimizers (configure_optimizers) where we create the optimizers, learning rate scheduler, etc.\nTraining loop (training_step) where we only have to define the loss calculation for a single batch (the loop of optimizer.zero_grad(), loss.backward() and optimizer.step(), as well as any logging/saving operation, is done in the background)\nValidation loop (validation_step) where similarly to the training, we only have to define what should happen per step\nTest loop (test_step) which is the same as validation, only on a test set.\n\nTherefore, we don’t abstract the PyTorch code, but rather organize it and define some default operations that are commonly used. If you need to change something else in your training/validation/test loop, there are many possible functions you can overwrite (see the docs for details)."
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-3",
-    "href": "dl_lec8.html#pytorch-lightning-3",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\nclass CIFARModule(pl.LightningModule):\n\n    def __init__(self, model_name, model_hparams, optimizer_name, optimizer_hparams):\n        \"\"\"\n        Inputs:\n            model_name - Name of the model/CNN to run. Used for creating the model (see function below)\n            model_hparams - Hyperparameters for the model, as dictionary.\n            optimizer_name - Name of the optimizer to use. Currently supported: Adam, SGD\n            optimizer_hparams - Hyperparameters for the optimizer, as dictionary. This includes learning rate, weight decay, etc.\n        \"\"\"\n        super().__init__()\n        # Exports the hyperparameters to a YAML file, and create \"self.hparams\" namespace\n        self.save_hyperparameters()\n        # Create model\n        self.model = create_model(model_name, model_hparams)\n        # Create loss module\n        self.loss_module = nn.CrossEntropyLoss()\n        # Example input for visualizing the graph in Tensorboard\n        self.example_input_array = torch.zeros((1, 3, 32, 32), dtype=torch.float32)\n\n    def forward(self, imgs):\n        # Forward function that is run when visualizing the graph\n        return self.model(imgs)\n\n    def configure_optimizers(self):\n        # We will support Adam or SGD as optimizers.\n        if self.hparams.optimizer_name == \"Adam\":\n            # AdamW is Adam with a correct implementation of weight decay (see here for details: https://arxiv.org/pdf/1711.05101.pdf)\n            optimizer = optim.AdamW(\n                self.parameters(), **self.hparams.optimizer_hparams)\n        elif self.hparams.optimizer_name == \"SGD\":\n            optimizer = optim.SGD(self.parameters(), **self.hparams.optimizer_hparams)\n        else:\n            assert False, f\"Unknown optimizer: \\\"{self.hparams.optimizer_name}\\\"\"\n\n        # We will reduce the learning rate by 0.1 after 100 and 150 epochs\n        scheduler = optim.lr_scheduler.MultiStepLR(\n            optimizer, milestones=[100, 150], gamma=0.1)\n        return [optimizer], [scheduler]\n\n    def training_step(self, batch, batch_idx):\n        # \"batch\" is the output of the training data loader.\n        imgs, labels = batch\n        preds = self.model(imgs)\n        loss = self.loss_module(preds, labels)\n        acc = (preds.argmax(dim=-1) == labels).float().mean()\n\n        # Logs the accuracy per epoch to tensorboard (weighted average over batches)\n        self.log('train_acc', acc, on_step=False, on_epoch=True)\n        self.log('train_loss', loss)\n        return loss  # Return tensor to call \".backward\" on\n\n    def validation_step(self, batch, batch_idx):\n        imgs, labels = batch\n        preds = self.model(imgs).argmax(dim=-1)\n        acc = (labels == preds).float().mean()\n        # By default logs it per epoch (weighted average over batches)\n        self.log('val_acc', acc)\n\n    def test_step(self, batch, batch_idx):\n        imgs, labels = batch\n        preds = self.model(imgs).argmax(dim=-1)\n        acc = (labels == preds).float().mean()\n        # By default logs it per epoch (weighted average over batches), and returns it afterwards\n        self.log('test_acc', acc)"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-4",
-    "href": "dl_lec8.html#pytorch-lightning-4",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n\n\nCallbacks\n\n\nCallbacks are self-contained functions that contain the non-essential logic of your Lightning Module. They are usually called after finishing a training epoch, but can also influence other parts of your training loop. For instance, we will use the following two pre-defined callbacks:\n\nLearningRateMonitor: the learning rate monitor adds the current learning rate to our TensorBoard, which helps to verify that our learning rate scheduler works correctly.\nModelCheckpoint: allows you to customize the saving routine of your checkpoints. For instance, how many checkpoints to keep, when to save, which metric to look out for, etc.\n\n\n\n\n\n# Callbacks \nfrom pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-5",
-    "href": "dl_lec8.html#pytorch-lightning-5",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n\n\nMultiple models support\n\n\n\nmodel_dict = {}\n\ndef create_model(model_name, model_hparams):\n    if model_name in model_dict:\n        return model_dict[model_name](**model_hparams)\n    else:\n        assert False, f\"Unknown model name \\\"{model_name}\\\". Available models are: {str(model_dict.keys())}\""
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-6",
-    "href": "dl_lec8.html#pytorch-lightning-6",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\nact_fn_by_name = {\n    \"tanh\": nn.Tanh,\n    \"relu\": nn.ReLU,\n    \"leakyrelu\": nn.LeakyReLU,\n    \"gelu\": nn.GELU\n}"
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-7",
-    "href": "dl_lec8.html#pytorch-lightning-7",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n\n\nTrainer\n\n\nBesides the Lightning module, the second most important module in PyTorch Lightning is the Trainer. The trainer is responsible to execute the training steps defined in the Lightning module and completes the framework. For a full overview, see the documentation. The most important functions we use below are:\n\ntrainer.fit: Takes as input a lightning module, a training dataset, and an (optional) validation dataset. This function trains the given module on the training dataset with occasional validation (default once per epoch, can be changed)\ntrainer.test: Takes as input a model and a dataset on which we want to test. It returns the test metric on the dataset.\n\nFor training and testing, we don’t have to worry about things like setting the model to eval mode (model.eval()) as this is all done automatically."
-  },
-  {
-    "objectID": "dl_lec8.html#pytorch-lightning-8",
-    "href": "dl_lec8.html#pytorch-lightning-8",
-    "title": "Convolutional networks: examples",
-    "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\ndef train_model(model_name, save_name=None, **kwargs):\n    \"\"\"\n    Inputs:\n        model_name - Name of the model you want to run. Is used to look up the class in \"model_dict\"\n        save_name (optional) - If specified, this name will be used for creating the checkpoint and logging directory.\n    \"\"\"\n    if save_name is None:\n        save_name = model_name\n        \n    # Create a PyTorch Lightning trainer with the generation callback\n    trainer = pl.Trainer(default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),                          # Where to save models\n                         accelerator=\"gpu\" if str(device).startswith(\"cuda\") else \"cpu\",                     # We run on a GPU (if possible)\n                         devices=1,                                                                          # How many GPUs/CPUs we want to use (1 is enough for the notebooks)\n                         max_epochs=180,                                                                     # How many epochs to train for if no patience is set\n                         callbacks=[ModelCheckpoint(save_weights_only=True, mode=\"max\", monitor=\"val_acc\"),  # Save the best checkpoint based on the maximum val_acc recorded. Saves only weights and not optimizer\n                                    LearningRateMonitor(\"epoch\")],                                           # Log learning rate every epoch\n                         enable_progress_bar=True)                                                           # Set to False if you do not want a progress bar\n    trainer.logger._log_graph = True         # If True, we plot the computation graph in tensorboard\n    trainer.logger._default_hp_metric = None # Optional logging argument that we don't need\n    \n    # Check whether pretrained model exists. If yes, load it and skip training\n    pretrained_filename = os.path.join(CHECKPOINT_PATH, save_name + \".ckpt\")\n    if os.path.isfile(pretrained_filename):\n        print(f\"Found pretrained model at {pretrained_filename}, loading...\")\n        model = CIFARModule.load_from_checkpoint(pretrained_filename) # Automatically loads the model with the saved hyperparameters\n    else:\n        pl.seed_everything(42) # To be reproducable\n        model = CIFARModule(model_name=model_name, **kwargs)\n        trainer.fit(model, train_loader, val_loader)\n        model = CIFARModule.load_from_checkpoint(trainer.checkpoint_callback.best_model_path) # Load best checkpoint after training\n        \n    # Test best model on validation and test set\n    val_result = trainer.test(model, val_loader, verbose=False)\n    test_result = trainer.test(model, test_loader, verbose=False)\n    result = {\"test\": test_result[0][\"test_acc\"], \"val\": val_result[0][\"test_acc\"]}\n    \n    return model, result"
-  },
-  {
-    "objectID": "dl_lec8.html#inception",
-    "href": "dl_lec8.html#inception",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nGoogleNet (2014)\n\n\nThe GoogleNet, won the ImageNet Challenge because of its usage of the Inception modules. There have been many follow-up works (Inception-v2, Inception-v3, Inception-v4, Inception-ResNet,…). The follow-up works mainly focus on increasing efficiency and enabling very deep Inception networks."
-  },
-  {
-    "objectID": "dl_lec8.html#inception-1",
-    "href": "dl_lec8.html#inception-1",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nInception block\n\n\nAn Inception block applies four convolution blocks separately on the same feature map: a 1x1, 3x3, and 5x5 convolution, and a max pool operation.\n\nThis allows the network to look at the same data with different receptive fields. Of course, learning only 5x5 convolution would be theoretically more powerful. However, this is not only more computation and memory heavy but also tends to overfit much easier.\nThe additional 1x1 convolutions before the 3x3 and 5x5 convolutions are used for dimensionality reduction. This is especially crucial as the feature maps of all branches are merged afterward, and we don’t want any explosion of feature size. As 5x5 convolutions are 25 times more expensive than 1x1 convolutions, we can save a lot of computation and parameters by reducing the dimensionality before the large convolutions."
-  },
-  {
-    "objectID": "dl_lec8.html#inception-2",
-    "href": "dl_lec8.html#inception-2",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\nclass InceptionBlock(nn.Module):\n    \n    def __init__(self, c_in, c_red : dict, c_out : dict, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input feature maps from the previous layers\n            c_red - Dictionary with keys \"3x3\" and \"5x5\" specifying the output of the dimensionality reducing 1x1 convolutions\n            c_out - Dictionary with keys \"1x1\", \"3x3\", \"5x5\", and \"max\"\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n        \"\"\"\n        super().__init__()\n        \n        # 1x1 convolution branch\n        self.conv_1x1 = nn.Sequential(\n            nn.Conv2d(c_in, c_out[\"1x1\"], kernel_size=1),\n            nn.BatchNorm2d(c_out[\"1x1\"]),\n            act_fn()\n        )\n        \n        # 3x3 convolution branch\n        self.conv_3x3 = nn.Sequential(\n            nn.Conv2d(c_in, c_red[\"3x3\"], kernel_size=1),\n            nn.BatchNorm2d(c_red[\"3x3\"]),\n            act_fn(),\n            nn.Conv2d(c_red[\"3x3\"], c_out[\"3x3\"], kernel_size=3, padding=1),\n            nn.BatchNorm2d(c_out[\"3x3\"]),\n            act_fn()\n        )\n        \n        # 5x5 convolution branch\n        self.conv_5x5 = nn.Sequential(\n            nn.Conv2d(c_in, c_red[\"5x5\"], kernel_size=1),\n            nn.BatchNorm2d(c_red[\"5x5\"]),\n            act_fn(),\n            nn.Conv2d(c_red[\"5x5\"], c_out[\"5x5\"], kernel_size=5, padding=2),\n            nn.BatchNorm2d(c_out[\"5x5\"]),\n            act_fn()\n        )\n        \n        # Max-pool branch\n        self.max_pool = nn.Sequential(\n            nn.MaxPool2d(kernel_size=3, padding=1, stride=1),\n            nn.Conv2d(c_in, c_out[\"max\"], kernel_size=1),\n            nn.BatchNorm2d(c_out[\"max\"]),\n            act_fn()\n        )\n\n    def forward(self, x):\n        x_1x1 = self.conv_1x1(x)\n        x_3x3 = self.conv_3x3(x)\n        x_5x5 = self.conv_5x5(x)\n        x_max = self.max_pool(x)\n        x_out = torch.cat([x_1x1, x_3x3, x_5x5, x_max], dim=1)\n        return x_out"
-  },
-  {
-    "objectID": "dl_lec8.html#inception-3",
-    "href": "dl_lec8.html#inception-3",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nGoogleNet modifications\n\n\nThe GoogleNet architecture consists of stacking multiple Inception blocks with occasional max pooling to reduce the height and width of the feature maps. The original GoogleNet was designed for image sizes of ImageNet (224x224 pixels) and had almost 7 million parameters. As we train on CIFAR10 with image sizes of 32x32, we don’t require such a heavy architecture, and instead, apply a reduced version.\n\nThe number of channels for dimensionality reduction and output per filter (1x1, 3x3, 5x5, and max pooling) need to be manually specified and can be changed if interested\nThe general intuition is to have the most filters for the 3x3 convolutions, as they are powerful enough to take the context into account while requiring almost a third of the parameters of the 5x5 convolution."
-  },
-  {
-    "objectID": "dl_lec8.html#inception-4",
-    "href": "dl_lec8.html#inception-4",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\nclass GoogleNet(nn.Module):\n\n    def __init__(self, num_classes=10, act_fn_name=\"relu\", **kwargs):\n        super().__init__()\n        self.hparams = SimpleNamespace(num_classes=num_classes,\n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name])\n        self._create_network()\n        self._init_params()\n\n    def _create_network(self):\n        # A first convolution on the original image to scale up the channel size\n        self.input_net = nn.Sequential(\n            nn.Conv2d(3, 64, kernel_size=3, padding=1),\n            nn.BatchNorm2d(64),\n            self.hparams.act_fn()\n        )\n        # Stacking inception blocks\n        self.inception_blocks = nn.Sequential(\n            InceptionBlock(64, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 32, \"5x5\": 8, \"max\": 8}, act_fn=self.hparams.act_fn),\n            InceptionBlock(64, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 24, \"3x3\": 48, \"5x5\": 12, \"max\": 12}, act_fn=self.hparams.act_fn),\n            nn.MaxPool2d(3, stride=2, padding=1),  # 32x32 =&gt; 16x16\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 24, \"3x3\": 48, \"5x5\": 12, \"max\": 12}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 48, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 48, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 48, \"5x5\": 24, \"max\": 24}, act_fn=self.hparams.act_fn),\n            nn.MaxPool2d(3, stride=2, padding=1),  # 16x16 =&gt; 8x8\n            InceptionBlock(128, c_red={\"3x3\": 48, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 64, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(128, c_red={\"3x3\": 48, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 64, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn)\n        )\n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.AdaptiveAvgPool2d((1, 1)),\n            nn.Flatten(),\n            nn.Linear(128, self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(\n                    m.weight, nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.inception_blocks(x)\n        x = self.output_net(x)\n        return x"
-  },
-  {
-    "objectID": "dl_lec8.html#inception-5",
-    "href": "dl_lec8.html#inception-5",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nUpdate model dictionary\n\n\n\nmodel_dict[\"GoogleNet\"] = GoogleNet"
-  },
-  {
-    "objectID": "dl_lec8.html#inception-6",
-    "href": "dl_lec8.html#inception-6",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nTraining\n\n\n\ngooglenet_model, googlenet_results = train_model(model_name=\"GoogleNet\", \n                                                 model_hparams={\"num_classes\": 10, \n                                                                \"act_fn_name\": \"relu\"}, \n                                                 optimizer_name=\"Adam\",\n                                                 optimizer_hparams={\"lr\": 1e-3,\n                                                                    \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/GoogleNet.ckpt, loading...\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nResults\n\n\n\nprint(\"GoogleNet Results\", googlenet_results)\n\nGoogleNet Results {'test': 0.8970000147819519, 'val': 0.9039999842643738}"
-  },
-  {
-    "objectID": "dl_lec8.html#inception-7",
-    "href": "dl_lec8.html#inception-7",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\n\n\nTensorboard log\n\n\n# Load tensorboard extension\n%load_ext tensorboard\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/GoogleNet/"
-  },
-  {
-    "objectID": "dl_lec8.html#inception-8",
-    "href": "dl_lec8.html#inception-8",
-    "title": "Convolutional networks: examples",
-    "section": "Inception",
-    "text": "Inception\n\nScalar tab: track development of single numbers. Graph tab shows us the network architecture organized by building blocks from the input to the output."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet",
-    "href": "dl_lec8.html#resnet",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nOverview\n\n\nThe ResNet paper is one of the most cited AI papers, and has been the foundation for neural networks with more than 1,000 layers. Despite its simplicity, the idea of residual connections is highly effective as it supports stable gradient propagation through the network.\n\n\n\n\n\n\nModeling\n\n\nInstead of modeling \\[\nx_{l+1}=F(x_{l}),\n\\] we model \\[\nx_{l+1}=x_{l}+F(x_{l})\n\\] where \\(F\\) is a non-linear mapping (usually a sequence of NN modules likes convolutions, activation functions, and normalizations)."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-1",
-    "href": "dl_lec8.html#resnet-1",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nBackpropagation\n\n\nIf we do backpropagation on such residual connections, we obtain: \\[\n\\frac{\\partial x_{l+1}}{\\partial x_{l}} = \\mathbf{I} + \\frac{\\partial F(x_{l})}{\\partial x_{l}}\n\\]\nThe bias towards the identity matrix guarantees a stable gradient propagation being less effected by \\(F\\) itself."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-2",
-    "href": "dl_lec8.html#resnet-2",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nVariants\n\n\nThere have been many variants of ResNet proposed, which mostly concern the function \\(F\\), or operations applied on the sum. In this tutorial, we look at two of them: the original ResNet block, and the Pre-Activation ResNet block. We visually compare the blocks below (figure credit - He et al.):"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-3",
-    "href": "dl_lec8.html#resnet-3",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\nThe original ResNet block applies a non-linear activation function, usually ReLU, after the skip connection. In contrast, the pre-activation ResNet block applies the non-linearity at the beginning of \\(F\\)."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-4",
-    "href": "dl_lec8.html#resnet-4",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nPreliminaries: original ResNet block\n\n\nThe visualization above already shows what layers are included in \\(F\\). One special case we have to handle is when we want to reduce the image dimensions in terms of width and height.\n\nThe basic ResNet block requires \\(F(x_{l})\\) to be of the same shape as \\(x_{l}\\).\nThus, we need to change the dimensionality of \\(x_{l}\\) as well before adding to \\(F(x_{l})\\).\nThe original implementation used an identity mapping with stride 2 and padded additional feature dimensions with 0. However, the more common implementation is to use a 1x1 convolution with stride 2 as it allows us to change the feature dimensionality while being efficient in parameter and computation cost."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-5",
-    "href": "dl_lec8.html#resnet-5",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\nclass ResNetBlock(nn.Module):\n\n    def __init__(self, c_in, act_fn, subsample=False, c_out=-1):\n        \"\"\"\n        Inputs:\n            c_in - Number of input features\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n            subsample - If True, we want to apply a stride inside the block and reduce the output shape by 2 in height and width\n            c_out - Number of output features. Note that this is only relevant if subsample is True, as otherwise, c_out = c_in\n        \"\"\"\n        super().__init__()\n        if not subsample:\n            c_out = c_in\n            \n        # Network representing F\n        self.net = nn.Sequential(\n            nn.Conv2d(c_in, c_out, kernel_size=3, padding=1, stride=1 if not subsample else 2, bias=False),  # No bias needed as the Batch Norm handles it\n            nn.BatchNorm2d(c_out),\n            act_fn(),\n            nn.Conv2d(c_out, c_out, kernel_size=3, padding=1, bias=False),\n            nn.BatchNorm2d(c_out)\n        )\n        \n        # 1x1 convolution with stride 2 means we take the upper left value, and transform it to new output size\n        self.downsample = nn.Conv2d(c_in, c_out, kernel_size=1, stride=2) if subsample else None\n        self.act_fn = act_fn()\n\n    def forward(self, x):\n        z = self.net(x)\n        if self.downsample is not None:\n            x = self.downsample(x)\n        out = z + x\n        out = self.act_fn(out)\n        return out"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-6",
-    "href": "dl_lec8.html#resnet-6",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nPreliminaries: pre-activation ResNet block\n\n\nFor this, we have to change the order of layer in self.net, and do not apply an activation function on the output. Additionally, the downsampling operation has to apply a non-linearity as well as the input, \\(x_l\\), has not been processed by a non-linearity yet.\n\n\n\n\nclass PreActResNetBlock(nn.Module):\n\n    def __init__(self, c_in, act_fn, subsample=False, c_out=-1):\n        \"\"\"\n        Inputs:\n            c_in - Number of input features\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n            subsample - If True, we want to apply a stride inside the block and reduce the output shape by 2 in height and width\n            c_out - Number of output features. Note that this is only relevant if subsample is True, as otherwise, c_out = c_in\n        \"\"\"\n        super().__init__()\n        if not subsample:\n            c_out = c_in\n            \n        # Network representing F\n        self.net = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=3, padding=1, stride=1 if not subsample else 2, bias=False),\n            nn.BatchNorm2d(c_out),\n            act_fn(),\n            nn.Conv2d(c_out, c_out, kernel_size=3, padding=1, bias=False)\n        )\n        \n        # 1x1 convolution can apply non-linearity as well, but not strictly necessary\n        self.downsample = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=1, stride=2, bias=False)\n        ) if subsample else None\n\n    def forward(self, x):\n        z = self.net(x)\n        if self.downsample is not None:\n            x = self.downsample(x)\n        out = z + x\n        return out"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-7",
-    "href": "dl_lec8.html#resnet-7",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nDictionary mapping\n\n\nSimilarly to the model selection, we define a dictionary to create a mapping from string to block class. We will use the string name as hyperparameter value in our model to choose between the ResNet blocks.\n\nresnet_blocks_by_name = {\n    \"ResNetBlock\": ResNetBlock,\n    \"PreActResNetBlock\": PreActResNetBlock\n}"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-8",
-    "href": "dl_lec8.html#resnet-8",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nBlock stacking\n\n\nThe overall ResNet architecture consists of stacking multiple ResNet blocks, of which some are downsampling the input. Hence, if we say the ResNet has [3,3,3] blocks, it means that we have 3 times a group of 3 ResNet blocks, where a subsampling is taking place in the fourth and seventh block.\n\nThe three groups operate on the resolutions \\(32\\times32\\), \\(16\\times16\\) and \\(8\\times8\\) respectively. The blocks in orange denote ResNet blocks with downsampling. The same notation is used by many other implementations such as in the torchvision library from PyTorch."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-9",
-    "href": "dl_lec8.html#resnet-9",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\nclass ResNet(nn.Module):\n\n    def __init__(self, num_classes=10, num_blocks=[3,3,3], c_hidden=[16,32,64], act_fn_name=\"relu\", block_name=\"ResNetBlock\", **kwargs):\n        \"\"\"\n        Inputs: \n            num_classes - Number of classification outputs (10 for CIFAR10)\n            num_blocks - List with the number of ResNet blocks to use. The first block of each group uses downsampling, except the first.\n            c_hidden - List with the hidden dimensionalities in the different blocks. Usually multiplied by 2 the deeper we go.\n            act_fn_name - Name of the activation function to use, looked up in \"act_fn_by_name\"\n            block_name - Name of the ResNet block, looked up in \"resnet_blocks_by_name\"\n        \"\"\"\n        super().__init__()\n        assert block_name in resnet_blocks_by_name\n        self.hparams = SimpleNamespace(num_classes=num_classes, \n                                       c_hidden=c_hidden, \n                                       num_blocks=num_blocks, \n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name],\n                                       block_class=resnet_blocks_by_name[block_name])\n        self._create_network()\n        self._init_params()\n\n    def _create_network(self):\n        c_hidden = self.hparams.c_hidden\n        \n        # A first convolution on the original image to scale up the channel size\n        if self.hparams.block_class == PreActResNetBlock: # =&gt; Don't apply non-linearity on output\n            self.input_net = nn.Sequential(\n                nn.Conv2d(3, c_hidden[0], kernel_size=3, padding=1, bias=False)\n            )\n        else:\n            self.input_net = nn.Sequential(\n                nn.Conv2d(3, c_hidden[0], kernel_size=3, padding=1, bias=False),\n                nn.BatchNorm2d(c_hidden[0]),\n                self.hparams.act_fn()\n            )\n        \n        # Creating the ResNet blocks\n        blocks = []\n        for block_idx, block_count in enumerate(self.hparams.num_blocks):\n            for bc in range(block_count):\n                subsample = (bc == 0 and block_idx &gt; 0) # Subsample the first block of each group, except the very first one.\n                blocks.append(\n                    self.hparams.block_class(c_in=c_hidden[block_idx if not subsample else (block_idx-1)],\n                                             act_fn=self.hparams.act_fn,\n                                             subsample=subsample,\n                                             c_out=c_hidden[block_idx])\n                )\n        self.blocks = nn.Sequential(*blocks)\n        \n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.AdaptiveAvgPool2d((1,1)),\n            nn.Flatten(),\n            nn.Linear(c_hidden[-1], self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        # Fan-out focuses on the gradient distribution, and is commonly used in ResNets\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.blocks(x)\n        x = self.output_net(x)\n        return x"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-10",
-    "href": "dl_lec8.html#resnet-10",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nModel dictionary update\n\n\n\nmodel_dict[\"ResNet\"] = ResNet"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-11",
-    "href": "dl_lec8.html#resnet-11",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nTraining\n\n\nSGD instead of Adam. ResNet has been shown to produce smoother loss surfaces than networks without skip connection (see Li et al., 2018 for details). A possible visualization of the loss surface with/out skip connections is below (figure credit - Li et al.):"
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-12",
-    "href": "dl_lec8.html#resnet-12",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nOriginal ResNet training\n\n\n\nresnet_model, resnet_results = train_model(model_name=\"ResNet\", \n                                           model_hparams={\"num_classes\": 10,\n                                                          \"c_hidden\": [16,32,64],\n                                                          \"num_blocks\": [3,3,3],\n                                                          \"act_fn_name\": \"relu\"}, \n                                           optimizer_name=\"SGD\",\n                                           optimizer_hparams={\"lr\": 0.1,\n                                                              \"momentum\": 0.9,\n                                                              \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/ResNet.ckpt, loading..."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-13",
-    "href": "dl_lec8.html#resnet-13",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nPre-activation ResNet training\n\n\n\nresnetpreact_model, resnetpreact_results = train_model(model_name=\"ResNet\", \n                                                       model_hparams={\"num_classes\": 10,\n                                                                      \"c_hidden\": [16,32,64],\n                                                                      \"num_blocks\": [3,3,3],\n                                                                      \"act_fn_name\": \"relu\",\n                                                                      \"block_name\": \"PreActResNetBlock\"}, \n                                                       optimizer_name=\"SGD\",\n                                                       optimizer_hparams={\"lr\": 0.1,\n                                                                          \"momentum\": 0.9,\n                                                                          \"weight_decay\": 1e-4},\n                                                       save_name=\"ResNetPreAct\")\n\nFound pretrained model at ../saved_models/tutorial5/ResNetPreAct.ckpt, loading..."
-  },
-  {
-    "objectID": "dl_lec8.html#resnet-14",
-    "href": "dl_lec8.html#resnet-14",
-    "title": "Convolutional networks: examples",
-    "section": "ResNet",
-    "text": "ResNet\n\n\n\nTensorboard\n\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH! Feel free to change \"ResNet\" to \"ResNetPreAct\"\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/ResNet/"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet",
-    "href": "dl_lec8.html#densenet",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nOverview\n\n\nDenseNet is another architecture for enabling very deep neural networks and takes a slightly different perspective on residual connections.\nInstead of modeling the difference between layers, DenseNet considers residual connections as a possible way to reuse features across layers, removing any necessity to learn redundant feature maps.\n\nIf we go deeper into the network, the model learns abstract features to recognize patterns.\nHowever, some complex patterns consist of a combination of abstract features (e.g. hand, face, etc.), and low-level features (e.g. edges, basic color, etc.).\nTo find these low-level features in the deep layers, standard CNNs have to learn copy such feature maps, which wastes a lot of parameter complexity.\n\nDenseNet provides an efficient way of reusing features by having each convolution depends on all previous input features, but add only a small amount of filters to it. See the figure below for an illustration (figure credit - Hu et al.):"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-1",
-    "href": "dl_lec8.html#densenet-1",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\nThe last layer, called the transition layer, is responsible for reducing the dimensionality of the feature maps in height, width, and channel size."
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-2",
-    "href": "dl_lec8.html#densenet-2",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nImplementation\n\n\nWe split the implementation of the layers in DenseNet into three parts: a DenseLayer, and a DenseBlock, and a TransitionLayer.\n\n\n\n\n\n\nDenseLayer\n\n\nThe module DenseLayer implements a single layer inside a dense block. It applies a 1x1 convolution for dimensionality reduction with a subsequential 3x3 convolution. The output channels are concatenated to the originals and returned. Note that we apply the Batch Normalization as the first layer of each block. This allows slightly different activations for the same features to different layers, depending on what is needed."
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-3",
-    "href": "dl_lec8.html#densenet-3",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nDenseLayer\n\n\n\nclass DenseLayer(nn.Module):\n    \n    def __init__(self, c_in, bn_size, growth_rate, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input channels\n            bn_size - Bottleneck size (factor of growth rate) for the output of the 1x1 convolution. Typically between 2 and 4.\n            growth_rate - Number of output channels of the 3x3 convolution\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n        \"\"\"\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, bn_size * growth_rate, kernel_size=1, bias=False),\n            nn.BatchNorm2d(bn_size * growth_rate),\n            act_fn(),\n            nn.Conv2d(bn_size * growth_rate, growth_rate, kernel_size=3, padding=1, bias=False)\n        )\n        \n    def forward(self, x):\n        out = self.net(x)\n        out = torch.cat([out, x], dim=1)\n        return out"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-4",
-    "href": "dl_lec8.html#densenet-4",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nDenseBlock\n\n\n\nclass DenseBlock(nn.Module):\n    \n    def __init__(self, c_in, num_layers, bn_size, growth_rate, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input channels\n            num_layers - Number of dense layers to apply in the block\n            bn_size - Bottleneck size to use in the dense layers\n            growth_rate - Growth rate to use in the dense layers\n            act_fn - Activation function to use in the dense layers\n        \"\"\"\n        super().__init__()\n        layers = []\n        for layer_idx in range(num_layers):\n            layers.append(\n                DenseLayer(c_in=c_in + layer_idx * growth_rate, # Input channels are original plus the feature maps from previous layers\n                           bn_size=bn_size,\n                           growth_rate=growth_rate,\n                           act_fn=act_fn)\n            )\n        self.block = nn.Sequential(*layers)\n        \n    def forward(self, x):\n        out = self.block(x)\n        return out"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-5",
-    "href": "dl_lec8.html#densenet-5",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nTransitionLayer\n\n\nTakes as input the final output of a dense block and reduces its channel dimensionality using a 1x1 convolution. To reduce the height and width dimension, we take a slightly different approach than in ResNet and apply an average pooling with kernel size 2 and stride 2. This is because we don’t have an additional connection to the output that would consider the full 2x2 patch instead of a single value. Besides, it is more parameter efficient than using a 3x3 convolution with stride 2.\n\nclass TransitionLayer(nn.Module):\n    \n    def __init__(self, c_in, c_out, act_fn):\n        super().__init__()\n        self.transition = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=1, bias=False),\n            nn.AvgPool2d(kernel_size=2, stride=2) # Average the output for each 2x2 pixel group\n        )\n        \n    def forward(self, x):\n        return self.transition(x)"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-6",
-    "href": "dl_lec8.html#densenet-6",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nEverything together\n\n\n\nclass DenseNet(nn.Module):\n    \n    def __init__(self, num_classes=10, num_layers=[6,6,6,6], bn_size=2, growth_rate=16, act_fn_name=\"relu\", **kwargs):\n        super().__init__()\n        self.hparams = SimpleNamespace(num_classes=num_classes,\n                                       num_layers=num_layers,\n                                       bn_size=bn_size,\n                                       growth_rate=growth_rate,\n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name])\n        self._create_network()\n        self._init_params()\n        \n    def _create_network(self):\n        c_hidden = self.hparams.growth_rate * self.hparams.bn_size # The start number of hidden channels\n        \n        # A first convolution on the original image to scale up the channel size\n        self.input_net = nn.Sequential(\n            nn.Conv2d(3, c_hidden, kernel_size=3, padding=1) # No batch norm or activation function as done inside the Dense layers\n        )\n        \n        # Creating the dense blocks, eventually including transition layers\n        blocks = []\n        for block_idx, num_layers in enumerate(self.hparams.num_layers):\n            blocks.append( \n                DenseBlock(c_in=c_hidden, \n                           num_layers=num_layers, \n                           bn_size=self.hparams.bn_size,\n                           growth_rate=self.hparams.growth_rate,\n                           act_fn=self.hparams.act_fn)\n            )\n            c_hidden = c_hidden + num_layers * self.hparams.growth_rate # Overall output of the dense block\n            if block_idx &lt; len(self.hparams.num_layers)-1: # Don't apply transition layer on last block\n                blocks.append(\n                    TransitionLayer(c_in=c_hidden,\n                                    c_out=c_hidden // 2,\n                                    act_fn=self.hparams.act_fn))\n                c_hidden = c_hidden // 2\n                \n        self.blocks = nn.Sequential(*blocks)\n        \n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.BatchNorm2d(c_hidden), # The features have not passed a non-linearity until here.\n            self.hparams.act_fn(),\n            nn.AdaptiveAvgPool2d((1,1)),\n            nn.Flatten(),\n            nn.Linear(c_hidden, self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(m.weight, nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.blocks(x)\n        x = self.output_net(x)\n        return x"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-7",
-    "href": "dl_lec8.html#densenet-7",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nDictionary update\n\n\n\nmodel_dict[\"DenseNet\"] = DenseNet"
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-8",
-    "href": "dl_lec8.html#densenet-8",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nTraining\n\n\nDenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.\n\ndensenet_model, densenet_results = train_model(model_name=\"DenseNet\", \n                                               model_hparams={\"num_classes\": 10,\n                                                              \"num_layers\": [6,6,6,6],\n                                                              \"bn_size\": 2,\n                                                              \"growth_rate\": 16,\n                                                              \"act_fn_name\": \"relu\"}, \n                                               optimizer_name=\"Adam\",\n                                               optimizer_hparams={\"lr\": 1e-3,\n                                                                  \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/DenseNet.ckpt, loading..."
-  },
-  {
-    "objectID": "dl_lec8.html#densenet-9",
-    "href": "dl_lec8.html#densenet-9",
-    "title": "Convolutional networks: examples",
-    "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nTensorboard\n\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/DenseNet/"
-  },
-  {
-    "objectID": "dl_lec8.html#comparison",
-    "href": "dl_lec8.html#comparison",
-    "title": "Convolutional networks: examples",
-    "section": "Comparison",
-    "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))\n\n\n\n\nModel\nVal Accuracy\nTest Accuracy\nNum Parameters\n\n\n\n\nGoogleNet\n90.40%\n89.70%\n260,650\n\n\nResNet\n91.84%\n91.06%\n272,378\n\n\nResNetPreAct\n91.80%\n91.07%\n272,250\n\n\nDenseNet\n90.72%\n90.23%\n239,146"
-  },
-  {
-    "objectID": "dl_lab8.html",
-    "href": "dl_lab8.html",
-    "title": "DL: Lab 8",
-    "section": "",
-    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
+    "text": "Питання\nМатеріали\n\n\n\n\nБіологія нейромереж.\nЛекція 1\n\n\nОпис роботи перцептрона.\nЛекція 1, Лекція 2\n\n\nГрадієнтний спуск. Опис алгоритму.\nЛекція 1, Лекція 2, https://d2l.ai/chapter_optimization/gd.html\n\n\nЛогістична регресія, побудована з використанням нейронних мереж.\nЛекція 2, Лаб 1\n\n\nФункції активації та їх властивості. Теорема про тотожну функцію.\nЛекція 2, Лекція 3, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial3/Activation_Functions.html\n\n\nФункції втрат. Їх диференціювання. Приклади.\nЛекція 2, Лекція 3\n\n\nМетод зворотного поширення (backpropagation)\nЛекція 2, Лекція 3, https://d2l.ai/chapter_multilayer-perceptrons/backprop.html\n\n\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nЛекція 3, Лаб 3\n\n\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nЛекція 4\n\n\nРегуляризація нейронних мереж: L1/L2.\nЛекція 4, Лаб 4\n\n\nРегуляризація нейронних мереж: Dropout.\nЛекція 4, Лаб 4\n\n\nНормалізація нейронних мереж.\nЛекція 4, Лаб 4\n\n\nІніціалізація нейронних мереж.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: SGD with Momentum.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: Adam.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nЗгорткові нейронні мережі.\nЛекція 7, Лаб 7, https://d2l.ai/chapter_convolutional-neural-networks/index.html\n\n\nЗгорткова архітектура Inception.\nЛекція 8, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nЗгорткова архітектура ResNet.\nЛекція 8, https://d2l.ai/chapter_convolutional-modern/resnet.html, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nЗгорткова архітектура DenseNet.\nЛекція 8, https://d2l.ai/chapter_convolutional-modern/densenet.html, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nРекурентні нейронні мережі.\nЛекція 9, https://d2l.ai/chapter_recurrent-neural-networks/index.html\n\n\nРекурентна архітектура LSTM.\nЛекція 9, Лаб 8, https://d2l.ai/chapter_recurrent-modern/index.html\n\n\nРекурентна архітектура GRU.\nЛекція 9, https://d2l.ai/chapter_recurrent-modern/index.html\n\n\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nЛекція 9, https://d2l.ai/chapter_recurrent-modern/encoder-decoder.html\n\n\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЛекція 9, Лекція 10, https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html\n\n\nТрансформери. Self-attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nТрансформери: Scaled dot product attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nТрансформери: multi-head attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nОсновні поняття бібліотеки PyTorch. Модулі та моделі в PyTorch\nhttps://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html, Лаб 6\n\n\nПлатформа HuggingFace\nЛаб 10\n\n\nОгляд сучасних нейромережевих архтектур.\nЛекція 12"
   },
   {
     "objectID": "dl_lec9.html#recurrent-neural-networks",
@@ -4597,6 +4191,426 @@
     "title": "Recurrent neural networks",
     "section": "Encoder-Decoder Architecture",
     "text": "Encoder-Decoder Architecture\n\n\n\nEncoder computation\n\n\nEncoder transforms the hidden states at all time steps into a context variable \\(\\boldsymbol{C}\\) through a customized function \\(q\\): \\[\n\\boldsymbol{C} = q\\left(\\boldsymbol{H}_1, \\dots, \\boldsymbol{H}_T\\right)\n\\]\n\n\n\n\n\n\nDecoder computation\n\n\nDecoder assigns a predicted probability to each possible token occurring at step \\(t'+1\\) conditioned upon the previous tokens in the target \\(y_1, \\dots, y_{t'}\\) and the context variable \\(\\boldsymbol{C}\\), i.e. \\(P(y_{t'+1} | y_1, \\dots, y_{t'}, \\boldsymbol{C})\\).\n\\[\n\\boldsymbol{S}_{t'} = g\\left(y_{t'-1}, \\boldsymbol{C}, \\boldsymbol{S}_{t'-1}\\right)\n\\]"
+  },
+  {
+    "objectID": "dl_lab8.html",
+    "href": "dl_lab8.html",
+    "title": "DL: Lab 8",
+    "section": "",
+    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
+  },
+  {
+    "objectID": "dl_lec8.html#modern-cnn-variants",
+    "href": "dl_lec8.html#modern-cnn-variants",
+    "title": "Convolutional networks: examples",
+    "section": "Modern CNN variants",
+    "text": "Modern CNN variants\nIn this tutorial, we will implement and discuss variants of modern CNN architectures. There have been many different architectures been proposed over the past few years. Some of the most impactful ones, and still relevant today, are the following:\n\nGoogleNet/Inception architecture (winner of ILSVRC 2014)\nResNet (winner of ILSVRC 2015)\nDenseNet (best paper award CVPR 2017).\n\n\n\nAll of them were state-of-the-art models when being proposed, and the core ideas of these networks are the foundations for most current state-of-the-art architectures."
+  },
+  {
+    "objectID": "dl_lec8.html#imports",
+    "href": "dl_lec8.html#imports",
+    "title": "Convolutional networks: examples",
+    "section": "Imports",
+    "text": "Imports\n\n## Standard libraries\nimport os\nimport numpy as np \nimport random\nfrom PIL import Image\nfrom types import SimpleNamespace\n\n## Imports for plotting\nimport matplotlib.pyplot as plt\n%matplotlib inline \nfrom IPython.display import set_matplotlib_formats\nset_matplotlib_formats('svg', 'pdf') # For export\nimport matplotlib\nmatplotlib.rcParams['lines.linewidth'] = 2.0\nimport seaborn as sns\nsns.reset_orig()\n\n## PyTorch\nimport torch\nimport torch.nn as nn\nimport torch.utils.data as data\nimport torch.optim as optim\n# Torchvision\nimport torchvision\nfrom torchvision.datasets import CIFAR10\nfrom torchvision import transforms"
+  },
+  {
+    "objectID": "dl_lec8.html#seeds",
+    "href": "dl_lec8.html#seeds",
+    "title": "Convolutional networks: examples",
+    "section": "Seeds",
+    "text": "Seeds\n\n# Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)\nDATASET_PATH = \"../data\"\n# Path to the folder where the pretrained models are saved\nCHECKPOINT_PATH = \"../saved_models/tutorial5\"\n\n# Function for setting the seed\ndef set_seed(seed):\n    random.seed(seed)\n    np.random.seed(seed)\n    torch.manual_seed(seed)\n    if torch.mps.is_available():\n        torch.mps.manual_seed(seed)\n        #torch.cuda.manual_seed_all(seed)\nset_seed(42)\n\n# Ensure that all operations are deterministic on GPU (if used) for reproducibility\ntorch.backends.mps.deterministic = True\ntorch.backends.mps.benchmark = False\n\ndevice = torch.device(\"mps:0\") if torch.mps.is_available() else torch.device(\"cpu\")"
+  },
+  {
+    "objectID": "dl_lec8.html#pre-trained-models",
+    "href": "dl_lec8.html#pre-trained-models",
+    "title": "Convolutional networks: examples",
+    "section": "Pre-trained models",
+    "text": "Pre-trained models\n\nimport urllib.request\nfrom urllib.error import HTTPError\n# Github URL where saved models are stored for this tutorial\nbase_url = \"https://raw.githubusercontent.com/phlippe/saved_models/main/tutorial5/\"\n# Files to download\npretrained_files = [\"GoogleNet.ckpt\", \"ResNet.ckpt\", \"ResNetPreAct.ckpt\", \"DenseNet.ckpt\",\n                    \"tensorboards/GoogleNet/events.out.tfevents.googlenet\",\n                    \"tensorboards/ResNet/events.out.tfevents.resnet\",\n                    \"tensorboards/ResNetPreAct/events.out.tfevents.resnetpreact\",\n                    \"tensorboards/DenseNet/events.out.tfevents.densenet\"]\n# Create checkpoint path if it doesn't exist yet\nos.makedirs(CHECKPOINT_PATH, exist_ok=True)\n\n# For each file, check whether it already exists. If not, try downloading it.\nfor file_name in pretrained_files:\n    file_path = os.path.join(CHECKPOINT_PATH, file_name)\n    if \"/\" in file_name:\n        os.makedirs(file_path.rsplit(\"/\",1)[0], exist_ok=True)\n    if not os.path.isfile(file_path):\n        file_url = base_url + file_name\n        print(f\"Downloading {file_url}...\")\n        try:\n            urllib.request.urlretrieve(file_url, file_path)\n        except HTTPError as e:\n            print(\"Something went wrong. Please try to download the file from the GDrive folder, or contact the author with the full output including the following error:\\n\", e)"
+  },
+  {
+    "objectID": "dl_lec8.html#meanstd",
+    "href": "dl_lec8.html#meanstd",
+    "title": "Convolutional networks: examples",
+    "section": "Mean/std",
+    "text": "Mean/std\n\n\n\n\n\n\nImportant\n\n\nAs we have learned from the previous tutorial about initialization, it is important to have the data preprocessed with a zero mean.\n\n\n\n\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, download=True)\nDATA_MEANS = (train_dataset.data / 255.0).mean(axis=(0,1,2))\nDATA_STD = (train_dataset.data / 255.0).std(axis=(0,1,2))\nprint(\"Data mean\", DATA_MEANS)\nprint(\"Data std\", DATA_STD)\n\nData mean [0.49139968 0.48215841 0.44653091]\nData std [0.24703223 0.24348513 0.26158784]"
+  },
+  {
+    "objectID": "dl_lec8.html#pre-processing",
+    "href": "dl_lec8.html#pre-processing",
+    "title": "Convolutional networks: examples",
+    "section": "Pre-processing",
+    "text": "Pre-processing\n\n\n\nAugmentations\n\n\n\nflip each image horizontally with 50% probability (transforms.RandomHorizontalFlip). The object class usually does not change when flipping an image, and we don’t expect any image information to be dependent on the horizontal orientation. This would be however different if we would try to detect digits or letters in an image, as those have a certain orientation.)\ntransforms.RandomResizedCrop. This transformation crops the image in a small range, eventually changing the aspect ratio, and scaling it back afterward to the previous size. Therefore, the actual pixel values change while the content or overall semantics of the image stays the same."
+  },
+  {
+    "objectID": "dl_lec8.html#pre-processing-1",
+    "href": "dl_lec8.html#pre-processing-1",
+    "title": "Convolutional networks: examples",
+    "section": "Pre-processing",
+    "text": "Pre-processing\n\n\n\nCode\n\n\n\ntest_transform = transforms.Compose([transforms.ToTensor(),\n                                     transforms.Normalize(DATA_MEANS, DATA_STD)\n                                     ])\n# For training, we add some augmentation. Networks are too powerful and would overfit.\ntrain_transform = transforms.Compose([transforms.RandomHorizontalFlip(),\n                                      transforms.RandomResizedCrop((32,32), scale=(0.8,1.0), ratio=(0.9,1.1)),\n                                      transforms.ToTensor(),\n                                      transforms.Normalize(DATA_MEANS, DATA_STD)\n                                     ])\n# Loading the training dataset. We need to split it into a training and validation part\n# We need to do a little trick because the validation set should not use the augmentation.\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, transform=train_transform, download=True)\nval_dataset = CIFAR10(root=DATASET_PATH, train=True, transform=test_transform, download=True)\nset_seed(42)\ntrain_set, _ = torch.utils.data.random_split(train_dataset, [45000, 5000])\nset_seed(42)\n_, val_set = torch.utils.data.random_split(val_dataset, [45000, 5000])\n\n# Loading the test set\ntest_set = CIFAR10(root=DATASET_PATH, train=False, transform=test_transform, download=True)\n\n# We define a set of data loaders that we can use for various purposes later.\ntrain_loader = data.DataLoader(train_set, batch_size=128, shuffle=True, drop_last=True, pin_memory=True, num_workers=4)\nval_loader = data.DataLoader(val_set, batch_size=128, shuffle=False, drop_last=False, num_workers=4)\ntest_loader = data.DataLoader(test_set, batch_size=128, shuffle=False, drop_last=False, num_workers=4)"
+  },
+  {
+    "objectID": "dl_lec8.html#pre-processing-2",
+    "href": "dl_lec8.html#pre-processing-2",
+    "title": "Convolutional networks: examples",
+    "section": "Pre-processing",
+    "text": "Pre-processing\n\n\n\nVerify normalization\n\n\n\nimgs, _ = next(iter(train_loader))\nprint(\"Batch mean\", imgs.mean(dim=[0,2,3]))\nprint(\"Batch std\", imgs.std(dim=[0,2,3]))\n\nBatch mean tensor([0.0231, 0.0006, 0.0005])\nBatch std tensor([0.9865, 0.9849, 0.9868])"
+  },
+  {
+    "objectID": "dl_lec8.html#visualization",
+    "href": "dl_lec8.html#visualization",
+    "title": "Convolutional networks: examples",
+    "section": "Visualization",
+    "text": "Visualization\n\nCodeResult\n\n\n\nNUM_IMAGES = 4\nimages = [train_dataset[idx][0] for idx in range(NUM_IMAGES)]\norig_images = [Image.fromarray(train_dataset.data[idx]) for idx in range(NUM_IMAGES)]\norig_images = [test_transform(img) for img in orig_images]\n\nimg_grid = torchvision.utils.make_grid(torch.stack(images + orig_images, dim=0), nrow=4, normalize=True, pad_value=0.5)\nimg_grid = img_grid.permute(1, 2, 0)\n\nplt.figure(figsize=(8,8))\nplt.title(\"Augmentation examples on CIFAR10\")\nplt.imshow(img_grid)\nplt.axis('off')\nplt.show()\nplt.close()"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning",
+    "href": "dl_lec8.html#pytorch-lightning",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n\n\nOverview\n\n\nPyTorch Lightning is a framework that simplifies your code needed to train, evaluate, and test a model in PyTorch. It also handles logging into TensorBoard, a visualization toolkit for ML experiments, and saving model checkpoints automatically with minimal code overhead from our side.\n\n\n\n!pip install pytorch-lightning\n\nimport pytorch_lightning as pl"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-1",
+    "href": "dl_lec8.html#pytorch-lightning-1",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n# Setting the seed\npl.seed_everything(42)\n\n42"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-2",
+    "href": "dl_lec8.html#pytorch-lightning-2",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n\n\nPlan\n\n\nIn PyTorch Lightning, we define pl.LightningModule’s (inheriting from torch.nn.Module) that organize our code into 5 main sections:\n\nInitialization (__init__), where we create all necessary parameters/models\nOptimizers (configure_optimizers) where we create the optimizers, learning rate scheduler, etc.\nTraining loop (training_step) where we only have to define the loss calculation for a single batch (the loop of optimizer.zero_grad(), loss.backward() and optimizer.step(), as well as any logging/saving operation, is done in the background)\nValidation loop (validation_step) where similarly to the training, we only have to define what should happen per step\nTest loop (test_step) which is the same as validation, only on a test set.\n\nTherefore, we don’t abstract the PyTorch code, but rather organize it and define some default operations that are commonly used. If you need to change something else in your training/validation/test loop, there are many possible functions you can overwrite (see the docs for details)."
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-3",
+    "href": "dl_lec8.html#pytorch-lightning-3",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\nclass CIFARModule(pl.LightningModule):\n\n    def __init__(self, model_name, model_hparams, optimizer_name, optimizer_hparams):\n        \"\"\"\n        Inputs:\n            model_name - Name of the model/CNN to run. Used for creating the model (see function below)\n            model_hparams - Hyperparameters for the model, as dictionary.\n            optimizer_name - Name of the optimizer to use. Currently supported: Adam, SGD\n            optimizer_hparams - Hyperparameters for the optimizer, as dictionary. This includes learning rate, weight decay, etc.\n        \"\"\"\n        super().__init__()\n        # Exports the hyperparameters to a YAML file, and create \"self.hparams\" namespace\n        self.save_hyperparameters()\n        # Create model\n        self.model = create_model(model_name, model_hparams)\n        # Create loss module\n        self.loss_module = nn.CrossEntropyLoss()\n        # Example input for visualizing the graph in Tensorboard\n        self.example_input_array = torch.zeros((1, 3, 32, 32), dtype=torch.float32)\n\n    def forward(self, imgs):\n        # Forward function that is run when visualizing the graph\n        return self.model(imgs)\n\n    def configure_optimizers(self):\n        # We will support Adam or SGD as optimizers.\n        if self.hparams.optimizer_name == \"Adam\":\n            # AdamW is Adam with a correct implementation of weight decay (see here for details: https://arxiv.org/pdf/1711.05101.pdf)\n            optimizer = optim.AdamW(\n                self.parameters(), **self.hparams.optimizer_hparams)\n        elif self.hparams.optimizer_name == \"SGD\":\n            optimizer = optim.SGD(self.parameters(), **self.hparams.optimizer_hparams)\n        else:\n            assert False, f\"Unknown optimizer: \\\"{self.hparams.optimizer_name}\\\"\"\n\n        # We will reduce the learning rate by 0.1 after 100 and 150 epochs\n        scheduler = optim.lr_scheduler.MultiStepLR(\n            optimizer, milestones=[100, 150], gamma=0.1)\n        return [optimizer], [scheduler]\n\n    def training_step(self, batch, batch_idx):\n        # \"batch\" is the output of the training data loader.\n        imgs, labels = batch\n        preds = self.model(imgs)\n        loss = self.loss_module(preds, labels)\n        acc = (preds.argmax(dim=-1) == labels).float().mean()\n\n        # Logs the accuracy per epoch to tensorboard (weighted average over batches)\n        self.log('train_acc', acc, on_step=False, on_epoch=True)\n        self.log('train_loss', loss)\n        return loss  # Return tensor to call \".backward\" on\n\n    def validation_step(self, batch, batch_idx):\n        imgs, labels = batch\n        preds = self.model(imgs).argmax(dim=-1)\n        acc = (labels == preds).float().mean()\n        # By default logs it per epoch (weighted average over batches)\n        self.log('val_acc', acc)\n\n    def test_step(self, batch, batch_idx):\n        imgs, labels = batch\n        preds = self.model(imgs).argmax(dim=-1)\n        acc = (labels == preds).float().mean()\n        # By default logs it per epoch (weighted average over batches), and returns it afterwards\n        self.log('test_acc', acc)"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-4",
+    "href": "dl_lec8.html#pytorch-lightning-4",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n\n\nCallbacks\n\n\nCallbacks are self-contained functions that contain the non-essential logic of your Lightning Module. They are usually called after finishing a training epoch, but can also influence other parts of your training loop. For instance, we will use the following two pre-defined callbacks:\n\nLearningRateMonitor: the learning rate monitor adds the current learning rate to our TensorBoard, which helps to verify that our learning rate scheduler works correctly.\nModelCheckpoint: allows you to customize the saving routine of your checkpoints. For instance, how many checkpoints to keep, when to save, which metric to look out for, etc.\n\n\n\n\n\n# Callbacks \nfrom pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-5",
+    "href": "dl_lec8.html#pytorch-lightning-5",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n\n\nMultiple models support\n\n\n\nmodel_dict = {}\n\ndef create_model(model_name, model_hparams):\n    if model_name in model_dict:\n        return model_dict[model_name](**model_hparams)\n    else:\n        assert False, f\"Unknown model name \\\"{model_name}\\\". Available models are: {str(model_dict.keys())}\""
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-6",
+    "href": "dl_lec8.html#pytorch-lightning-6",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\nact_fn_by_name = {\n    \"tanh\": nn.Tanh,\n    \"relu\": nn.ReLU,\n    \"leakyrelu\": nn.LeakyReLU,\n    \"gelu\": nn.GELU\n}"
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-7",
+    "href": "dl_lec8.html#pytorch-lightning-7",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\n\n\nTrainer\n\n\nBesides the Lightning module, the second most important module in PyTorch Lightning is the Trainer. The trainer is responsible to execute the training steps defined in the Lightning module and completes the framework. For a full overview, see the documentation. The most important functions we use below are:\n\ntrainer.fit: Takes as input a lightning module, a training dataset, and an (optional) validation dataset. This function trains the given module on the training dataset with occasional validation (default once per epoch, can be changed)\ntrainer.test: Takes as input a model and a dataset on which we want to test. It returns the test metric on the dataset.\n\nFor training and testing, we don’t have to worry about things like setting the model to eval mode (model.eval()) as this is all done automatically."
+  },
+  {
+    "objectID": "dl_lec8.html#pytorch-lightning-8",
+    "href": "dl_lec8.html#pytorch-lightning-8",
+    "title": "Convolutional networks: examples",
+    "section": "PyTorch Lightning",
+    "text": "PyTorch Lightning\n\ndef train_model(model_name, save_name=None, **kwargs):\n    \"\"\"\n    Inputs:\n        model_name - Name of the model you want to run. Is used to look up the class in \"model_dict\"\n        save_name (optional) - If specified, this name will be used for creating the checkpoint and logging directory.\n    \"\"\"\n    if save_name is None:\n        save_name = model_name\n        \n    # Create a PyTorch Lightning trainer with the generation callback\n    trainer = pl.Trainer(default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),                          # Where to save models\n                         accelerator=\"gpu\" if str(device).startswith(\"cuda\") else \"cpu\",                     # We run on a GPU (if possible)\n                         devices=1,                                                                          # How many GPUs/CPUs we want to use (1 is enough for the notebooks)\n                         max_epochs=180,                                                                     # How many epochs to train for if no patience is set\n                         callbacks=[ModelCheckpoint(save_weights_only=True, mode=\"max\", monitor=\"val_acc\"),  # Save the best checkpoint based on the maximum val_acc recorded. Saves only weights and not optimizer\n                                    LearningRateMonitor(\"epoch\")],                                           # Log learning rate every epoch\n                         enable_progress_bar=True)                                                           # Set to False if you do not want a progress bar\n    trainer.logger._log_graph = True         # If True, we plot the computation graph in tensorboard\n    trainer.logger._default_hp_metric = None # Optional logging argument that we don't need\n    \n    # Check whether pretrained model exists. If yes, load it and skip training\n    pretrained_filename = os.path.join(CHECKPOINT_PATH, save_name + \".ckpt\")\n    if os.path.isfile(pretrained_filename):\n        print(f\"Found pretrained model at {pretrained_filename}, loading...\")\n        model = CIFARModule.load_from_checkpoint(pretrained_filename) # Automatically loads the model with the saved hyperparameters\n    else:\n        pl.seed_everything(42) # To be reproducable\n        model = CIFARModule(model_name=model_name, **kwargs)\n        trainer.fit(model, train_loader, val_loader)\n        model = CIFARModule.load_from_checkpoint(trainer.checkpoint_callback.best_model_path) # Load best checkpoint after training\n        \n    # Test best model on validation and test set\n    val_result = trainer.test(model, val_loader, verbose=False)\n    test_result = trainer.test(model, test_loader, verbose=False)\n    result = {\"test\": test_result[0][\"test_acc\"], \"val\": val_result[0][\"test_acc\"]}\n    \n    return model, result"
+  },
+  {
+    "objectID": "dl_lec8.html#inception",
+    "href": "dl_lec8.html#inception",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nGoogleNet (2014)\n\n\nThe GoogleNet, won the ImageNet Challenge because of its usage of the Inception modules. There have been many follow-up works (Inception-v2, Inception-v3, Inception-v4, Inception-ResNet,…). The follow-up works mainly focus on increasing efficiency and enabling very deep Inception networks."
+  },
+  {
+    "objectID": "dl_lec8.html#inception-1",
+    "href": "dl_lec8.html#inception-1",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nInception block\n\n\nAn Inception block applies four convolution blocks separately on the same feature map: a 1x1, 3x3, and 5x5 convolution, and a max pool operation.\n\nThis allows the network to look at the same data with different receptive fields. Of course, learning only 5x5 convolution would be theoretically more powerful. However, this is not only more computation and memory heavy but also tends to overfit much easier.\nThe additional 1x1 convolutions before the 3x3 and 5x5 convolutions are used for dimensionality reduction. This is especially crucial as the feature maps of all branches are merged afterward, and we don’t want any explosion of feature size. As 5x5 convolutions are 25 times more expensive than 1x1 convolutions, we can save a lot of computation and parameters by reducing the dimensionality before the large convolutions."
+  },
+  {
+    "objectID": "dl_lec8.html#inception-2",
+    "href": "dl_lec8.html#inception-2",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\nclass InceptionBlock(nn.Module):\n    \n    def __init__(self, c_in, c_red : dict, c_out : dict, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input feature maps from the previous layers\n            c_red - Dictionary with keys \"3x3\" and \"5x5\" specifying the output of the dimensionality reducing 1x1 convolutions\n            c_out - Dictionary with keys \"1x1\", \"3x3\", \"5x5\", and \"max\"\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n        \"\"\"\n        super().__init__()\n        \n        # 1x1 convolution branch\n        self.conv_1x1 = nn.Sequential(\n            nn.Conv2d(c_in, c_out[\"1x1\"], kernel_size=1),\n            nn.BatchNorm2d(c_out[\"1x1\"]),\n            act_fn()\n        )\n        \n        # 3x3 convolution branch\n        self.conv_3x3 = nn.Sequential(\n            nn.Conv2d(c_in, c_red[\"3x3\"], kernel_size=1),\n            nn.BatchNorm2d(c_red[\"3x3\"]),\n            act_fn(),\n            nn.Conv2d(c_red[\"3x3\"], c_out[\"3x3\"], kernel_size=3, padding=1),\n            nn.BatchNorm2d(c_out[\"3x3\"]),\n            act_fn()\n        )\n        \n        # 5x5 convolution branch\n        self.conv_5x5 = nn.Sequential(\n            nn.Conv2d(c_in, c_red[\"5x5\"], kernel_size=1),\n            nn.BatchNorm2d(c_red[\"5x5\"]),\n            act_fn(),\n            nn.Conv2d(c_red[\"5x5\"], c_out[\"5x5\"], kernel_size=5, padding=2),\n            nn.BatchNorm2d(c_out[\"5x5\"]),\n            act_fn()\n        )\n        \n        # Max-pool branch\n        self.max_pool = nn.Sequential(\n            nn.MaxPool2d(kernel_size=3, padding=1, stride=1),\n            nn.Conv2d(c_in, c_out[\"max\"], kernel_size=1),\n            nn.BatchNorm2d(c_out[\"max\"]),\n            act_fn()\n        )\n\n    def forward(self, x):\n        x_1x1 = self.conv_1x1(x)\n        x_3x3 = self.conv_3x3(x)\n        x_5x5 = self.conv_5x5(x)\n        x_max = self.max_pool(x)\n        x_out = torch.cat([x_1x1, x_3x3, x_5x5, x_max], dim=1)\n        return x_out"
+  },
+  {
+    "objectID": "dl_lec8.html#inception-3",
+    "href": "dl_lec8.html#inception-3",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nGoogleNet modifications\n\n\nThe GoogleNet architecture consists of stacking multiple Inception blocks with occasional max pooling to reduce the height and width of the feature maps. The original GoogleNet was designed for image sizes of ImageNet (224x224 pixels) and had almost 7 million parameters. As we train on CIFAR10 with image sizes of 32x32, we don’t require such a heavy architecture, and instead, apply a reduced version.\n\nThe number of channels for dimensionality reduction and output per filter (1x1, 3x3, 5x5, and max pooling) need to be manually specified and can be changed if interested\nThe general intuition is to have the most filters for the 3x3 convolutions, as they are powerful enough to take the context into account while requiring almost a third of the parameters of the 5x5 convolution."
+  },
+  {
+    "objectID": "dl_lec8.html#inception-4",
+    "href": "dl_lec8.html#inception-4",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\nclass GoogleNet(nn.Module):\n\n    def __init__(self, num_classes=10, act_fn_name=\"relu\", **kwargs):\n        super().__init__()\n        self.hparams = SimpleNamespace(num_classes=num_classes,\n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name])\n        self._create_network()\n        self._init_params()\n\n    def _create_network(self):\n        # A first convolution on the original image to scale up the channel size\n        self.input_net = nn.Sequential(\n            nn.Conv2d(3, 64, kernel_size=3, padding=1),\n            nn.BatchNorm2d(64),\n            self.hparams.act_fn()\n        )\n        # Stacking inception blocks\n        self.inception_blocks = nn.Sequential(\n            InceptionBlock(64, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 32, \"5x5\": 8, \"max\": 8}, act_fn=self.hparams.act_fn),\n            InceptionBlock(64, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 24, \"3x3\": 48, \"5x5\": 12, \"max\": 12}, act_fn=self.hparams.act_fn),\n            nn.MaxPool2d(3, stride=2, padding=1),  # 32x32 =&gt; 16x16\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 24, \"3x3\": 48, \"5x5\": 12, \"max\": 12}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 48, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 16, \"3x3\": 48, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(96, c_red={\"3x3\": 32, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 48, \"5x5\": 24, \"max\": 24}, act_fn=self.hparams.act_fn),\n            nn.MaxPool2d(3, stride=2, padding=1),  # 16x16 =&gt; 8x8\n            InceptionBlock(128, c_red={\"3x3\": 48, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 64, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn),\n            InceptionBlock(128, c_red={\"3x3\": 48, \"5x5\": 16}, c_out={\"1x1\": 32, \"3x3\": 64, \"5x5\": 16, \"max\": 16}, act_fn=self.hparams.act_fn)\n        )\n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.AdaptiveAvgPool2d((1, 1)),\n            nn.Flatten(),\n            nn.Linear(128, self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(\n                    m.weight, nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.inception_blocks(x)\n        x = self.output_net(x)\n        return x"
+  },
+  {
+    "objectID": "dl_lec8.html#inception-5",
+    "href": "dl_lec8.html#inception-5",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nUpdate model dictionary\n\n\n\nmodel_dict[\"GoogleNet\"] = GoogleNet"
+  },
+  {
+    "objectID": "dl_lec8.html#inception-6",
+    "href": "dl_lec8.html#inception-6",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nTraining\n\n\n\ngooglenet_model, googlenet_results = train_model(model_name=\"GoogleNet\", \n                                                 model_hparams={\"num_classes\": 10, \n                                                                \"act_fn_name\": \"relu\"}, \n                                                 optimizer_name=\"Adam\",\n                                                 optimizer_hparams={\"lr\": 1e-3,\n                                                                    \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/GoogleNet.ckpt, loading...\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nResults\n\n\n\nprint(\"GoogleNet Results\", googlenet_results)\n\nGoogleNet Results {'test': 0.8970000147819519, 'val': 0.9039999842643738}"
+  },
+  {
+    "objectID": "dl_lec8.html#inception-7",
+    "href": "dl_lec8.html#inception-7",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\n\n\nTensorboard log\n\n\n# Load tensorboard extension\n%load_ext tensorboard\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/GoogleNet/"
+  },
+  {
+    "objectID": "dl_lec8.html#inception-8",
+    "href": "dl_lec8.html#inception-8",
+    "title": "Convolutional networks: examples",
+    "section": "Inception",
+    "text": "Inception\n\nScalar tab: track development of single numbers. Graph tab shows us the network architecture organized by building blocks from the input to the output."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet",
+    "href": "dl_lec8.html#resnet",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nOverview\n\n\nThe ResNet paper is one of the most cited AI papers, and has been the foundation for neural networks with more than 1,000 layers. Despite its simplicity, the idea of residual connections is highly effective as it supports stable gradient propagation through the network.\n\n\n\n\n\n\nModeling\n\n\nInstead of modeling \\[\nx_{l+1}=F(x_{l}),\n\\] we model \\[\nx_{l+1}=x_{l}+F(x_{l})\n\\] where \\(F\\) is a non-linear mapping (usually a sequence of NN modules likes convolutions, activation functions, and normalizations)."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-1",
+    "href": "dl_lec8.html#resnet-1",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nBackpropagation\n\n\nIf we do backpropagation on such residual connections, we obtain: \\[\n\\frac{\\partial x_{l+1}}{\\partial x_{l}} = \\mathbf{I} + \\frac{\\partial F(x_{l})}{\\partial x_{l}}\n\\]\nThe bias towards the identity matrix guarantees a stable gradient propagation being less effected by \\(F\\) itself."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-2",
+    "href": "dl_lec8.html#resnet-2",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nVariants\n\n\nThere have been many variants of ResNet proposed, which mostly concern the function \\(F\\), or operations applied on the sum. In this tutorial, we look at two of them: the original ResNet block, and the Pre-Activation ResNet block. We visually compare the blocks below (figure credit - He et al.):"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-3",
+    "href": "dl_lec8.html#resnet-3",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\nThe original ResNet block applies a non-linear activation function, usually ReLU, after the skip connection. In contrast, the pre-activation ResNet block applies the non-linearity at the beginning of \\(F\\)."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-4",
+    "href": "dl_lec8.html#resnet-4",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nPreliminaries: original ResNet block\n\n\nThe visualization above already shows what layers are included in \\(F\\). One special case we have to handle is when we want to reduce the image dimensions in terms of width and height.\n\nThe basic ResNet block requires \\(F(x_{l})\\) to be of the same shape as \\(x_{l}\\).\nThus, we need to change the dimensionality of \\(x_{l}\\) as well before adding to \\(F(x_{l})\\).\nThe original implementation used an identity mapping with stride 2 and padded additional feature dimensions with 0. However, the more common implementation is to use a 1x1 convolution with stride 2 as it allows us to change the feature dimensionality while being efficient in parameter and computation cost."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-5",
+    "href": "dl_lec8.html#resnet-5",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\nclass ResNetBlock(nn.Module):\n\n    def __init__(self, c_in, act_fn, subsample=False, c_out=-1):\n        \"\"\"\n        Inputs:\n            c_in - Number of input features\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n            subsample - If True, we want to apply a stride inside the block and reduce the output shape by 2 in height and width\n            c_out - Number of output features. Note that this is only relevant if subsample is True, as otherwise, c_out = c_in\n        \"\"\"\n        super().__init__()\n        if not subsample:\n            c_out = c_in\n            \n        # Network representing F\n        self.net = nn.Sequential(\n            nn.Conv2d(c_in, c_out, kernel_size=3, padding=1, stride=1 if not subsample else 2, bias=False),  # No bias needed as the Batch Norm handles it\n            nn.BatchNorm2d(c_out),\n            act_fn(),\n            nn.Conv2d(c_out, c_out, kernel_size=3, padding=1, bias=False),\n            nn.BatchNorm2d(c_out)\n        )\n        \n        # 1x1 convolution with stride 2 means we take the upper left value, and transform it to new output size\n        self.downsample = nn.Conv2d(c_in, c_out, kernel_size=1, stride=2) if subsample else None\n        self.act_fn = act_fn()\n\n    def forward(self, x):\n        z = self.net(x)\n        if self.downsample is not None:\n            x = self.downsample(x)\n        out = z + x\n        out = self.act_fn(out)\n        return out"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-6",
+    "href": "dl_lec8.html#resnet-6",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nPreliminaries: pre-activation ResNet block\n\n\nFor this, we have to change the order of layer in self.net, and do not apply an activation function on the output. Additionally, the downsampling operation has to apply a non-linearity as well as the input, \\(x_l\\), has not been processed by a non-linearity yet.\n\n\n\n\nclass PreActResNetBlock(nn.Module):\n\n    def __init__(self, c_in, act_fn, subsample=False, c_out=-1):\n        \"\"\"\n        Inputs:\n            c_in - Number of input features\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n            subsample - If True, we want to apply a stride inside the block and reduce the output shape by 2 in height and width\n            c_out - Number of output features. Note that this is only relevant if subsample is True, as otherwise, c_out = c_in\n        \"\"\"\n        super().__init__()\n        if not subsample:\n            c_out = c_in\n            \n        # Network representing F\n        self.net = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=3, padding=1, stride=1 if not subsample else 2, bias=False),\n            nn.BatchNorm2d(c_out),\n            act_fn(),\n            nn.Conv2d(c_out, c_out, kernel_size=3, padding=1, bias=False)\n        )\n        \n        # 1x1 convolution can apply non-linearity as well, but not strictly necessary\n        self.downsample = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=1, stride=2, bias=False)\n        ) if subsample else None\n\n    def forward(self, x):\n        z = self.net(x)\n        if self.downsample is not None:\n            x = self.downsample(x)\n        out = z + x\n        return out"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-7",
+    "href": "dl_lec8.html#resnet-7",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nDictionary mapping\n\n\nSimilarly to the model selection, we define a dictionary to create a mapping from string to block class. We will use the string name as hyperparameter value in our model to choose between the ResNet blocks.\n\nresnet_blocks_by_name = {\n    \"ResNetBlock\": ResNetBlock,\n    \"PreActResNetBlock\": PreActResNetBlock\n}"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-8",
+    "href": "dl_lec8.html#resnet-8",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nBlock stacking\n\n\nThe overall ResNet architecture consists of stacking multiple ResNet blocks, of which some are downsampling the input. Hence, if we say the ResNet has [3,3,3] blocks, it means that we have 3 times a group of 3 ResNet blocks, where a subsampling is taking place in the fourth and seventh block.\n\nThe three groups operate on the resolutions \\(32\\times32\\), \\(16\\times16\\) and \\(8\\times8\\) respectively. The blocks in orange denote ResNet blocks with downsampling. The same notation is used by many other implementations such as in the torchvision library from PyTorch."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-9",
+    "href": "dl_lec8.html#resnet-9",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\nclass ResNet(nn.Module):\n\n    def __init__(self, num_classes=10, num_blocks=[3,3,3], c_hidden=[16,32,64], act_fn_name=\"relu\", block_name=\"ResNetBlock\", **kwargs):\n        \"\"\"\n        Inputs: \n            num_classes - Number of classification outputs (10 for CIFAR10)\n            num_blocks - List with the number of ResNet blocks to use. The first block of each group uses downsampling, except the first.\n            c_hidden - List with the hidden dimensionalities in the different blocks. Usually multiplied by 2 the deeper we go.\n            act_fn_name - Name of the activation function to use, looked up in \"act_fn_by_name\"\n            block_name - Name of the ResNet block, looked up in \"resnet_blocks_by_name\"\n        \"\"\"\n        super().__init__()\n        assert block_name in resnet_blocks_by_name\n        self.hparams = SimpleNamespace(num_classes=num_classes, \n                                       c_hidden=c_hidden, \n                                       num_blocks=num_blocks, \n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name],\n                                       block_class=resnet_blocks_by_name[block_name])\n        self._create_network()\n        self._init_params()\n\n    def _create_network(self):\n        c_hidden = self.hparams.c_hidden\n        \n        # A first convolution on the original image to scale up the channel size\n        if self.hparams.block_class == PreActResNetBlock: # =&gt; Don't apply non-linearity on output\n            self.input_net = nn.Sequential(\n                nn.Conv2d(3, c_hidden[0], kernel_size=3, padding=1, bias=False)\n            )\n        else:\n            self.input_net = nn.Sequential(\n                nn.Conv2d(3, c_hidden[0], kernel_size=3, padding=1, bias=False),\n                nn.BatchNorm2d(c_hidden[0]),\n                self.hparams.act_fn()\n            )\n        \n        # Creating the ResNet blocks\n        blocks = []\n        for block_idx, block_count in enumerate(self.hparams.num_blocks):\n            for bc in range(block_count):\n                subsample = (bc == 0 and block_idx &gt; 0) # Subsample the first block of each group, except the very first one.\n                blocks.append(\n                    self.hparams.block_class(c_in=c_hidden[block_idx if not subsample else (block_idx-1)],\n                                             act_fn=self.hparams.act_fn,\n                                             subsample=subsample,\n                                             c_out=c_hidden[block_idx])\n                )\n        self.blocks = nn.Sequential(*blocks)\n        \n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.AdaptiveAvgPool2d((1,1)),\n            nn.Flatten(),\n            nn.Linear(c_hidden[-1], self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        # Fan-out focuses on the gradient distribution, and is commonly used in ResNets\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(m.weight, mode='fan_out', nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.blocks(x)\n        x = self.output_net(x)\n        return x"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-10",
+    "href": "dl_lec8.html#resnet-10",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nModel dictionary update\n\n\n\nmodel_dict[\"ResNet\"] = ResNet"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-11",
+    "href": "dl_lec8.html#resnet-11",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nTraining\n\n\nSGD instead of Adam. ResNet has been shown to produce smoother loss surfaces than networks without skip connection (see Li et al., 2018 for details). A possible visualization of the loss surface with/out skip connections is below (figure credit - Li et al.):"
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-12",
+    "href": "dl_lec8.html#resnet-12",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nOriginal ResNet training\n\n\n\nresnet_model, resnet_results = train_model(model_name=\"ResNet\", \n                                           model_hparams={\"num_classes\": 10,\n                                                          \"c_hidden\": [16,32,64],\n                                                          \"num_blocks\": [3,3,3],\n                                                          \"act_fn_name\": \"relu\"}, \n                                           optimizer_name=\"SGD\",\n                                           optimizer_hparams={\"lr\": 0.1,\n                                                              \"momentum\": 0.9,\n                                                              \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/ResNet.ckpt, loading..."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-13",
+    "href": "dl_lec8.html#resnet-13",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nPre-activation ResNet training\n\n\n\nresnetpreact_model, resnetpreact_results = train_model(model_name=\"ResNet\", \n                                                       model_hparams={\"num_classes\": 10,\n                                                                      \"c_hidden\": [16,32,64],\n                                                                      \"num_blocks\": [3,3,3],\n                                                                      \"act_fn_name\": \"relu\",\n                                                                      \"block_name\": \"PreActResNetBlock\"}, \n                                                       optimizer_name=\"SGD\",\n                                                       optimizer_hparams={\"lr\": 0.1,\n                                                                          \"momentum\": 0.9,\n                                                                          \"weight_decay\": 1e-4},\n                                                       save_name=\"ResNetPreAct\")\n\nFound pretrained model at ../saved_models/tutorial5/ResNetPreAct.ckpt, loading..."
+  },
+  {
+    "objectID": "dl_lec8.html#resnet-14",
+    "href": "dl_lec8.html#resnet-14",
+    "title": "Convolutional networks: examples",
+    "section": "ResNet",
+    "text": "ResNet\n\n\n\nTensorboard\n\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH! Feel free to change \"ResNet\" to \"ResNetPreAct\"\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/ResNet/"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet",
+    "href": "dl_lec8.html#densenet",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nOverview\n\n\nDenseNet is another architecture for enabling very deep neural networks and takes a slightly different perspective on residual connections.\nInstead of modeling the difference between layers, DenseNet considers residual connections as a possible way to reuse features across layers, removing any necessity to learn redundant feature maps.\n\nIf we go deeper into the network, the model learns abstract features to recognize patterns.\nHowever, some complex patterns consist of a combination of abstract features (e.g. hand, face, etc.), and low-level features (e.g. edges, basic color, etc.).\nTo find these low-level features in the deep layers, standard CNNs have to learn copy such feature maps, which wastes a lot of parameter complexity.\n\nDenseNet provides an efficient way of reusing features by having each convolution depends on all previous input features, but add only a small amount of filters to it. See the figure below for an illustration (figure credit - Hu et al.):"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-1",
+    "href": "dl_lec8.html#densenet-1",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\nThe last layer, called the transition layer, is responsible for reducing the dimensionality of the feature maps in height, width, and channel size."
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-2",
+    "href": "dl_lec8.html#densenet-2",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nImplementation\n\n\nWe split the implementation of the layers in DenseNet into three parts: a DenseLayer, and a DenseBlock, and a TransitionLayer.\n\n\n\n\n\n\nDenseLayer\n\n\nThe module DenseLayer implements a single layer inside a dense block. It applies a 1x1 convolution for dimensionality reduction with a subsequential 3x3 convolution. The output channels are concatenated to the originals and returned. Note that we apply the Batch Normalization as the first layer of each block. This allows slightly different activations for the same features to different layers, depending on what is needed."
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-3",
+    "href": "dl_lec8.html#densenet-3",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nDenseLayer\n\n\n\nclass DenseLayer(nn.Module):\n    \n    def __init__(self, c_in, bn_size, growth_rate, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input channels\n            bn_size - Bottleneck size (factor of growth rate) for the output of the 1x1 convolution. Typically between 2 and 4.\n            growth_rate - Number of output channels of the 3x3 convolution\n            act_fn - Activation class constructor (e.g. nn.ReLU)\n        \"\"\"\n        super().__init__()\n        self.net = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, bn_size * growth_rate, kernel_size=1, bias=False),\n            nn.BatchNorm2d(bn_size * growth_rate),\n            act_fn(),\n            nn.Conv2d(bn_size * growth_rate, growth_rate, kernel_size=3, padding=1, bias=False)\n        )\n        \n    def forward(self, x):\n        out = self.net(x)\n        out = torch.cat([out, x], dim=1)\n        return out"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-4",
+    "href": "dl_lec8.html#densenet-4",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nDenseBlock\n\n\n\nclass DenseBlock(nn.Module):\n    \n    def __init__(self, c_in, num_layers, bn_size, growth_rate, act_fn):\n        \"\"\"\n        Inputs:\n            c_in - Number of input channels\n            num_layers - Number of dense layers to apply in the block\n            bn_size - Bottleneck size to use in the dense layers\n            growth_rate - Growth rate to use in the dense layers\n            act_fn - Activation function to use in the dense layers\n        \"\"\"\n        super().__init__()\n        layers = []\n        for layer_idx in range(num_layers):\n            layers.append(\n                DenseLayer(c_in=c_in + layer_idx * growth_rate, # Input channels are original plus the feature maps from previous layers\n                           bn_size=bn_size,\n                           growth_rate=growth_rate,\n                           act_fn=act_fn)\n            )\n        self.block = nn.Sequential(*layers)\n        \n    def forward(self, x):\n        out = self.block(x)\n        return out"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-5",
+    "href": "dl_lec8.html#densenet-5",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nTransitionLayer\n\n\nTakes as input the final output of a dense block and reduces its channel dimensionality using a 1x1 convolution. To reduce the height and width dimension, we take a slightly different approach than in ResNet and apply an average pooling with kernel size 2 and stride 2. This is because we don’t have an additional connection to the output that would consider the full 2x2 patch instead of a single value. Besides, it is more parameter efficient than using a 3x3 convolution with stride 2.\n\nclass TransitionLayer(nn.Module):\n    \n    def __init__(self, c_in, c_out, act_fn):\n        super().__init__()\n        self.transition = nn.Sequential(\n            nn.BatchNorm2d(c_in),\n            act_fn(),\n            nn.Conv2d(c_in, c_out, kernel_size=1, bias=False),\n            nn.AvgPool2d(kernel_size=2, stride=2) # Average the output for each 2x2 pixel group\n        )\n        \n    def forward(self, x):\n        return self.transition(x)"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-6",
+    "href": "dl_lec8.html#densenet-6",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nEverything together\n\n\n\nclass DenseNet(nn.Module):\n    \n    def __init__(self, num_classes=10, num_layers=[6,6,6,6], bn_size=2, growth_rate=16, act_fn_name=\"relu\", **kwargs):\n        super().__init__()\n        self.hparams = SimpleNamespace(num_classes=num_classes,\n                                       num_layers=num_layers,\n                                       bn_size=bn_size,\n                                       growth_rate=growth_rate,\n                                       act_fn_name=act_fn_name,\n                                       act_fn=act_fn_by_name[act_fn_name])\n        self._create_network()\n        self._init_params()\n        \n    def _create_network(self):\n        c_hidden = self.hparams.growth_rate * self.hparams.bn_size # The start number of hidden channels\n        \n        # A first convolution on the original image to scale up the channel size\n        self.input_net = nn.Sequential(\n            nn.Conv2d(3, c_hidden, kernel_size=3, padding=1) # No batch norm or activation function as done inside the Dense layers\n        )\n        \n        # Creating the dense blocks, eventually including transition layers\n        blocks = []\n        for block_idx, num_layers in enumerate(self.hparams.num_layers):\n            blocks.append( \n                DenseBlock(c_in=c_hidden, \n                           num_layers=num_layers, \n                           bn_size=self.hparams.bn_size,\n                           growth_rate=self.hparams.growth_rate,\n                           act_fn=self.hparams.act_fn)\n            )\n            c_hidden = c_hidden + num_layers * self.hparams.growth_rate # Overall output of the dense block\n            if block_idx &lt; len(self.hparams.num_layers)-1: # Don't apply transition layer on last block\n                blocks.append(\n                    TransitionLayer(c_in=c_hidden,\n                                    c_out=c_hidden // 2,\n                                    act_fn=self.hparams.act_fn))\n                c_hidden = c_hidden // 2\n                \n        self.blocks = nn.Sequential(*blocks)\n        \n        # Mapping to classification output\n        self.output_net = nn.Sequential(\n            nn.BatchNorm2d(c_hidden), # The features have not passed a non-linearity until here.\n            self.hparams.act_fn(),\n            nn.AdaptiveAvgPool2d((1,1)),\n            nn.Flatten(),\n            nn.Linear(c_hidden, self.hparams.num_classes)\n        )\n\n    def _init_params(self):\n        # Based on our discussion in Tutorial 4, we should initialize the convolutions according to the activation function\n        for m in self.modules():\n            if isinstance(m, nn.Conv2d):\n                nn.init.kaiming_normal_(m.weight, nonlinearity=self.hparams.act_fn_name)\n            elif isinstance(m, nn.BatchNorm2d):\n                nn.init.constant_(m.weight, 1)\n                nn.init.constant_(m.bias, 0)\n\n    def forward(self, x):\n        x = self.input_net(x)\n        x = self.blocks(x)\n        x = self.output_net(x)\n        return x"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-7",
+    "href": "dl_lec8.html#densenet-7",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nDictionary update\n\n\n\nmodel_dict[\"DenseNet\"] = DenseNet"
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-8",
+    "href": "dl_lec8.html#densenet-8",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nTraining\n\n\nDenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.\n\ndensenet_model, densenet_results = train_model(model_name=\"DenseNet\", \n                                               model_hparams={\"num_classes\": 10,\n                                                              \"num_layers\": [6,6,6,6],\n                                                              \"bn_size\": 2,\n                                                              \"growth_rate\": 16,\n                                                              \"act_fn_name\": \"relu\"}, \n                                               optimizer_name=\"Adam\",\n                                               optimizer_hparams={\"lr\": 1e-3,\n                                                                  \"weight_decay\": 1e-4})\n\nFound pretrained model at ../saved_models/tutorial5/DenseNet.ckpt, loading..."
+  },
+  {
+    "objectID": "dl_lec8.html#densenet-9",
+    "href": "dl_lec8.html#densenet-9",
+    "title": "Convolutional networks: examples",
+    "section": "DenseNet",
+    "text": "DenseNet\n\n\n\nTensorboard\n\n\n# Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!\n%tensorboard --logdir ../saved_models/tutorial5/tensorboards/DenseNet/"
+  },
+  {
+    "objectID": "dl_lec8.html#comparison",
+    "href": "dl_lec8.html#comparison",
+    "title": "Convolutional networks: examples",
+    "section": "Comparison",
+    "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))\n\n\n\n\nModel\nVal Accuracy\nTest Accuracy\nNum Parameters\n\n\n\n\nGoogleNet\n90.40%\n89.70%\n260,650\n\n\nResNet\n91.84%\n91.06%\n272,378\n\n\nResNetPreAct\n91.80%\n91.07%\n272,250\n\n\nDenseNet\n90.72%\n90.23%\n239,146"
+  },
+  {
+    "objectID": "dl_lab9.html",
+    "href": "dl_lab9.html",
+    "title": "DL: Lab 9 (Annotated Encoder-Decoder with Attention)",
+    "section": "",
+    "text": "Annotated Encoder-Decoder with Attention\nJupyter notebook attached (dl_lab9.zip)\nPlease do the following:\n\nIn Part1_EncoderDecoder.ipynb, complete notebook. Modify the code to use NLTK’s tokenizer instead of spacy.\nIn Part2_SelfAttention.ipynb, complete computation of weights/scores/final context vector for multi-head attention."
+  },
+  {
+    "objectID": "dl.html",
+    "href": "dl.html",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#lectures",
+    "href": "dl.html#lectures",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+  },
+  {
+    "objectID": "dl.html#labs",
+    "href": "dl.html#labs",
+    "title": "Deep Learning",
+    "section": "Labs",
+    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch\nLab 9: Annotated Encoder-Decoder with Attention\nLab 10: HuggingFace Transformers"
+  },
+  {
+    "objectID": "dl.html#python-venv-info",
+    "href": "dl.html#python-venv-info",
+    "title": "Deep Learning",
+    "section": "Python venv info",
+    "text": "Python venv info\nInstructions on how to create a virtual environment for DL course:\n\nLaunch Anaconda Prompt. In it execute:\n\npython -m venv dl_venv\n\nActivate the environment:\n\ndl_venv\\Scripts\\activate\n\nInstall required packages:\n\npip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py\n\nRun Jupyter:\n\njupyter notebook\n\nVoila! (pardon my French)"
+  },
+  {
+    "objectID": "dl.html#exam-questions",
+    "href": "dl.html#exam-questions",
+    "title": "Deep Learning",
+    "section": "Exam questions",
+    "text": "Exam questions\nList"
   },
   {
     "objectID": "nlp_lab9.html",
