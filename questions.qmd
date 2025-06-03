@@ -1,0 +1,72 @@
+---
+title: "Questions"
+execute:
+  enabled: true
+  echo: true
+  cache: true
+format:
+  html:
+    code-fold: false
+jupyter: python3
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+filters:
+  - diagram
+---
+
+```{=html}
+<style>
+/* Initialize a counter for the table */
+table {
+  counter-reset: rowNumber;
+}
+
+/* Increment the counter for each row in tbody */
+tbody tr {
+  counter-increment: rowNumber;
+}
+
+/* Display the counter in the first cell of each row */
+tbody tr td:first-child::before {
+  content: counter(rowNumber) ". ";
+}
+</style>
+```
+
+|Питання|Матеріали|
+|----|----|
+|Біологія нейромереж.|[Лекція 1](dl_lec1.qmd)|
+|Опис роботи перцептрона.|[Лекція 1](dl_lec1.qmd), [Лекція 2](dl_lec2.qmd) |
+|Градієнтний спуск. Опис алгоритму.|[Лекція 1](dl_lec1.qmd), [Лекція 2](dl_lec2.qmd),  <https://d2l.ai/chapter_optimization/gd.html>|
+|Логістична регресія, побудована з використанням нейронних мереж.|[Лекція 2](dl_lec2.qmd), [Лаб 1](dl_lab1.qmd)|
+|Функції активації та їх властивості. Теорема про тотожну функцію.|[Лекція 2](dl_lec2.qmd), [Лекція 3](dl_lec3.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial3/Activation_Functions.html>|
+|Функції втрат. Їх диференціювання. Приклади. |[Лекція 2](dl_lec2.qmd), [Лекція 3](dl_lec3.qmd)|
+|Метод зворотного поширення (backpropagation)|[Лекція 2](dl_lec2.qmd), [Лекція 3](dl_lec3.qmd), <https://d2l.ai/chapter_multilayer-perceptrons/backprop.html>|
+|Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з $L$ шарами|[Лекція 3](dl_lec3.qmd), [Лаб 3](dl_lab3.qmd)|
+|Компроміс зсуву та дисперсії (bias-variance tradeoff). |[Лекція 4](dl_lec4.qmd)|
+|Регуляризація нейронних мереж: L1/L2. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd)|
+|Регуляризація нейронних мереж: Dropout. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd)|
+|Нормалізація  нейронних мереж. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd)|
+|Ініціалізація нейронних мереж.|[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html>|
+|Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html>|
+|Оптимізація нейронних мереж: SGD with Momentum. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html>|
+|Оптимізація нейронних мереж: Adam. |[Лекція 4](dl_lec4.qmd), [Лаб 4](dl_lab4.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html>|
+|Згорткові нейронні мережі. |[Лекція 7](dl_lec7.qmd), [Лаб 7](dl_lab7.qmd), <https://d2l.ai/chapter_convolutional-neural-networks/index.html>|
+|Згорткова архітектура Inception.|[Лекція 8](dl_lec8.qmd), <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html>|
+|Згорткова архітектура ResNet.|[Лекція 8](dl_lec8.qmd), <https://d2l.ai/chapter_convolutional-modern/resnet.html>, <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html>|
+|Згорткова архітектура DenseNet.|[Лекція 8](dl_lec8.qmd), <https://d2l.ai/chapter_convolutional-modern/densenet.html>, <https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html>|
+|Рекурентні нейронні мережі. |[Лекція 9](dl_lec9.qmd), <https://d2l.ai/chapter_recurrent-neural-networks/index.html>|
+|Рекурентна архітектура LSTM.|[Лекція 9](dl_lec9.qmd), [Лаб 8](dl_lab8.qmd), <https://d2l.ai/chapter_recurrent-modern/index.html>|
+|Рекурентна архітектура GRU.|[Лекція 9](dl_lec9.qmd), <https://d2l.ai/chapter_recurrent-modern/index.html>|
+|Архітектура кодувальника-декодувальника (encoder-decoder).|[Лекція 9](dl_lec9.qmd), <https://d2l.ai/chapter_recurrent-modern/encoder-decoder.html>|
+|Механізми уваги для рекурентних мереж (seq2seq моделей). |[Лекція 9](dl_lec9.qmd), [Лекція 10](dl_lec10.qmd), <https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html>|
+|Трансформери. Self-attention. |[Лекція 10](dl_lec10.qmd), [Лекція 11](dl_lec11.qmd), [Лаб 9](dl_lab9.qmd)|
+|Трансформери: Scaled dot product attention. |[Лекція 10](dl_lec10.qmd), [Лекція 11](dl_lec11.qmd), [Лаб 9](dl_lab9.qmd)|
+|Трансформери: multi-head attention. |[Лекція 10](dl_lec10.qmd), [Лекція 11](dl_lec11.qmd), [Лаб 9](dl_lab9.qmd)|
+|Основні поняття бібліотеки PyTorch. Модулі та моделі в PyTorch|<https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html>, [Лаб 6](dl_lab6.qmd)|
+|Платформа HuggingFace|[Лаб 10](dl_lab10.qmd)|
+|Огляд сучасних нейромережевих архтектур. |[Лекція 12](dl_lec12.qmd)|
