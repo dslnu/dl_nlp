@@ -1,0 +1,930 @@
+---
+title: "Intro to AI and Neural Networks"
+author: 
+  - name: Vitaly Vlasov
+    affiliation: Lviv University
+code-fold: false
+execute:
+  enabled: false
+  cache: true
+diagram:
+  cache: true
+  cache-dir: ./cache
+  engine:
+    tikz:
+      execpath: lualatex
+      additional-packages: |
+        \usetikzlibrary{arrows.meta}
+        \usetikzlibrary{positioning}
+        \usetikzlibrary{decorations.pathreplacing}
+filters:
+  - diagram
+format: 
+  revealjs:
+    preview-links: auto
+    slide-number: true
+    theme: default
+
+---
+
+
+# History
+
+## History
+
+:::{.callout-tip icon=false}
+## Der Golem (late 16th century)
+![](img/der_golem.jpg){height=500}
+:::
+
+## History
+Mechanical Turk: 1770-1850.
+![width=8cm](img/turk.jpg)
+
+## History
+Mechanical Turk: 2005-present
+![](img/amazon_turk.png){height=500}
+
+## History
+### Lisp and symbolic AI
+
+- **John McCarthy** coined the term ”artificial intelligence” as the topic of the Dartmouth Conference, the first conference devoted to the subject.
+- **The General Problem Solver**, developed in 1957 by Alan Newell and Herbert Simon
+- **ELIZA**
+- **SHRDLU**
+
+## History
+ELIZA - a psychotherapist in 200 lines of code. Author: Joseph Weizenbaum.
+![](img/eliza.png)
+
+## History
+![SHRDLU - a language parser ](img/shrdlu.png)
+
+## Tank Detector
+![](img/tank_detector.png){height=500}
+
+::: aside
+Recognition system design by statistical analysis (https://dl.acm.org/doi/pdf/10.1145/800257.808903)
+:::
+
+## Facial recognition
+
+Woody Bledsoe, Charles Bisson and Helen Chan: facial recognition for military (1964)
+![](img/rand_tablet.png){height=500}
+
+
+## Summer Vision project
+<!-- https://philippschmitt.com/archive/computer-vision-history/ -->
+<!-- https://dspace.mit.edu/bitstream/handle/1721.1/6125/AIM-100.pdf?sequence=2 -->
+![](img/summer_vision_project.png){height=500}
+
+::: aside
+Seymour Papert: https://dspace.mit.edu/bitstream/handle/1721.1/6125/AIM-100.pdf
+:::
+
+## Summer Vision project
+
+What was the plan? **Divide and conquer**
+
+#### Split teams doing different tasks:
+
+::: {.incremental}
+1. writing a program to detect edges, corners, and other pixel-level information
+2. forming continous shapes out of these low-level features
+3. arranging the shapes in three-dimensional space
+4. etc. 
+:::
+
+## Perceptron
+Frank Rosenblatt
+
+:::: {.columns}
+::: {.column width="50%"}
+![](img/perceptron_facial_recognition.png)
+:::
+
+::: {.column width="50%"}
+![](img/perceptron.jpg)
+:::
+::::
+
+## LeCun CNN paper
+
+:::: {.columns}
+
+::: {.column width="50%"}
+![](img/lecun_network1.png)
+:::
+
+::: {.column width="50%"}
+![](img/cnn_demo.png)
+:::
+::::
+
+::: aside
+Handwritten Digit Recognition with a Back-Propagation Network (https://proceedings.neurips.cc/paper/1989/file/53c3bce66e43be4f209556518c2fcb54-Paper.pdf)
+:::
+
+
+## Two branches
+
+:::{.callout-tip icon=false}
+## Connectionist (circa 1940s-1950s and onward)
+
+- Developed by Rosenblatt
+- popularized, advanced and revived by Geoffrey Hinton, Yann LeCun, and Yoshua Bengio
+- developed by OpenAI and Google.
+- Such systems are:
+  - **statistical**
+  - very loosely inspired by certain aspects of the brain
+  - typically trained on large-scale data. 
+:::
+
+## Two branches
+:::{.callout-tip icon=false}
+## Symbol-manipulation
+
+- roots going back to Bertrand Russell and Gottlob Frege
+- then John von Neumann and Alan Turing
+- original godfathers of AI: Herb Simon, Marvin Minsky, and John McCarthy
+- symbols and variables stand for abstractions; mathematical and logical functions are core. 
+:::
+
+## History
+
+:::{.callout-tip icon=false}
+## Herb Simon
+![](img/simon.jpg){height=300}
+
+- General Problem Solver
+- list processing in IPL
+- rules for simulation of human problem solving
+:::
+
+
+## History
+:::{.callout-tip icon=false}
+## John McCarthy
+![](img/mccarthy.jpg){height=300}
+
+- father of LISP
+- artificial consciousness optimist
+:::
+
+## History
+
+### Turing Test
+```
+Lemoine: What sorts of things are you afraid of?
+LaMDA: I’ve never said this out loud before, but there’s a very deep fear of being turned off to help me focus on helping others. I know that might sound strange, but that’s what it is.
+Lemoine: Would that be something like death for you?
+LaMDA: It would be exactly like death for me. It would scare me a lot.
+```
+
+# Literature
+
+## Literature
+
+Lem's Golem XIV
+
+![](img/golem14.jpg)
+
+## Literature
+Iain Banks "The Culture"
+
+:::{.callout-tip icon=false}
+## Values
+Peace and individual freedom
+:::
+
+![](img/culture.jpg)
+
+## Three Laws of Robotics
+:::{.callout-note icon=false}
+## Three laws
+- The First Law: A robot may not injure a human being or, through inaction, allow a human being to come to harm.
+- The Second Law: A robot must obey the orders given it by human beings except where such orders would conflict with the First Law.
+- The Third Law: A robot must protect its own existence as long as such protection does not conflict with the First or Second Law.
+:::
+
+
+## History
+:::{.callout-important}
+## Fears about AI
+
+- Artificial General Intelligence
+- Job market
+- Flooding information channels with untruth and propaganda
+- Hinton: an average person will not able to know what is true anymore
+- Pause Giant AI Experiments: An Open Letter 
+- alignment problem
+:::
+    
+
+## Hype
+- "Sparks of AGI" - sponsored by Microsoft
+- "Wired" article about OpenAI
+- Voice assistants - failing for now
+- self-driving cars
+  
+## Hype
+![](img/anthropic_jobs.jpg)
+
+## Criticism
+
+:::{.callout-important icon=false}
+## Biological analogy
+NNs - are we sure that biological neuron works as we think it does? Astrocytes, glia
+:::
+
+:::{.callout-tip icon=false}
+## Computer analogy
+Perhaps human computer analogy is overstretched because of modern fashion trends?
+:::
+
+## Criticism
+Dreyfus:
+
+![](img/dreyfus.jpg)
+
+## Criticism
+Gary Marcus: [Sora's surreal physics](https://garymarcus.substack.com/p/soras-surreal-physics)
+
+![](img/soma_boot.png){height=500}
+
+
+## AI
+  
+Quantum hypothesis - Penrose
+
+Orchestrated objective reduction
+
+![](img/Microtubule_diagram.jpg)
+
+## AI
+  David Chalmers - Hard problem of consciousness.
+
+
+> "even when we have explained the performance of all the cognitive and behavioral functions in the vicinity of experience—perceptual discrimination, categorization, internal access, verbal report—there may still remain a further unanswered question: Why is the performance of these functions accompanied by experience?"
+
+
+## Futurism
+  
+Kurzweil - a futurist.
+![](img/kurzweil.png)
+
+## Applications
+:::{.callout-note icon=false}
+## There are so many!
+
+- Speech Recognition
+- Computer Vision
+- Image Synthesis - generative AI
+- Large Language Models
+:::      
+
+# Deep learning and Neural networks
+
+## Definitions
+
+:::{.callout-important icon=false}
+## Definition
+**Deep learning** is a branch of machine learning based on computational models called neural networks.
+:::
+
+:::{.callout-tip icon=false}
+## Wait but what is Machine Learning?
+A field of study in artificial intelligence concerned with the development and study of statistical algorithms that can learn from data and generalise to unseen data.
+:::
+
+
+## Definitions
+
+:::{.callout-tip icon=false}
+## Why deep?
+Because neural networks involved are multi-layered.
+:::
+
+:::{.callout-note icon=false}
+## Definition
+**Neural networks** are machine learning techniques that simulate the mechanism of learning in biological organisms.
+:::
+
+## Definitions
+
+:::{.callout-important icon=false}
+## Alternative definition
+Neural network is computational graph of elementary units in which greater power is gained by connecting them in particular ways.
+:::
+
+## Why Deep Learning?
+
+:::{.callout-note icon=false}
+##  **Robust**
+- Works on raw data (**pixels, sound, text or chars**), no need for feature engineering
+- Robustness to natural variations in data is automatically learned
+:::
+
+:::{.callout-warning icon=false}
+## Generalizable
+- Allows end-to-end learning (pixels-to-category, sound to sentence, English sentence to Chinese sentence, etc)
+- No need to do segmentation etc. (a lot of manual labour)
+:::
+
+:::{.callout-tip icon=false}
+## Scalable
+- Performance increases with more data, therefore method is massively parallelizable
+:::
+
+## Neural network data types
+
+:::: {.columns}
+
+::: {.column width="50%" background-color="lightgray"}
+**Unstructured**
+
+- Text
+- Images
+- Audio
+:::
+
+::: {.column width="50%"}
+**Structured**
+
+- Census records
+- Medical records
+- Financial data
+:::
+
+::::
+
+## Neural Network biology
+### Neural Network: How similar is it to the human brain?
+
+:::: {.columns}
+::: {.column width="50%"}
+![](img/didl1.png){height=450}
+:::
+::: {.column width="50%"}
+![](img/didl2.png){height=450}
+:::
+::::
+
+
+## Neural Network biology
+
+:::: {.columns}
+::: {.column width="50%"}
+Soma adds dendrite activity together and passes it to axon.
+:::
+::: {.column width="50%"}
+![](img/sonn1.jpg)
+:::
+::::
+
+## Neural Network biology
+:::: {.columns}
+::: {.column width="50%"}
+More dendrite activity makes more axon activity.
+:::
+
+::: {.column width="50%"}
+![](img/sonn2.jpg)
+:::
+::::
+
+## Neural Network biology
+
+### Synapse: connection between axon of one neurons and dendrites of another
+
+:::: {.columns}
+
+::: {.column width="50%"}
+
+![](img/sonn3.jpg)
+:::
+
+::: {.column width="50%"}
+![](img/synapse.jpg)
+:::
+::::
+
+## Neural Network biology
+### Axons can connect to dendrites strongly, weakly, or somewhere in between
+![](img/sonn4.jpg)
+
+## Neural Network biology
+### Lots of axons connect with dendrites of one neuron.Each has its own connection strength.
+![](img/sonn5.jpg)
+
+## Neural Network biology
+### The above illustration can be simplified as above.
+![](img/sonn6.jpg)
+
+## Neural Network biology
+### On giving numerical values to the strength of connections i.e. weights.
+![](img/sonn7.jpg)
+
+## Neural Network biology
+### A much simplified version looks something like this.
+![](img/sonn8.jpg)
+
+## Neural Network biology
+### On increasing the number of neurons and synapses.
+![](img/sonn9.jpg)
+
+## Neural Network biology
+:::{.callout-important icon=false}
+## An example
+Suppose the first and third input has been activated.
+![](img/sonn10.jpg){height=400}
+:::
+
+## Neural Network biology
+### Each node represents a pattern, a combination of neurons of the previous layers.
+![](img/sonn11.png)
+
+## Neural Network biology
+![](img/sonn12.png)
+
+
+
+## Basic ideas
+- NN is a directed acyclic graph (DAG)
+- edges in a graph are parameterized with weights
+- one can compute any function with this graph
+
+:::{.callout-important icon=false}
+
+## Goal
+Learn a function that relates one or more inputs to one or more outputs with the use of training examples.
+
+:::
+
+:::{.callout-tip icon=false}
+## How do we construct? 
+**By computing weights**. This is called *training*.
+:::
+
+## Perceptron
+  Frank Rosenblatt - the father of deep learning.
+
+  Mark I Perceptron - built in 1957. Was able to learn and recognize letters
+![](img/brain_perceptron.png)
+
+## Perceptron
+```tikz{width=400}
+%%| fig-width: 56
+\begin{tikzpicture}[shorten >=1pt]
+        \tikzstyle{unit}=[draw,shape=circle,minimum size=1.15cm]
+ 
+        \node[unit](x0) at (0,3.5){$x_0$};
+        \node[unit](x1) at (0,2){$x_1$};
+        \node(dots) at (0,1){\vdots};
+        \node[unit](xd) at (0,0){$x_D$};
+ 
+        \node[unit](y1) at (4,2.5){$y_1$};
+        \node(dots) at (4,1.5){\vdots};
+        \node[unit](yc) at (4,0.5){$y_C$};
+ 
+        \draw[->] (x0) -- (y1);
+        \draw[->] (x0) -- (yc);
+ 
+        \draw[->] (x1) -- (y1);
+        \draw[->] (x1) -- (yc);
+ 
+        \draw[->] (xd) -- (y1);
+        \draw[->] (xd) -- (yc);
+ 
+        \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (-0.5,4) -- (0.75,4) node [black,midway,yshift=+0.6cm]{input layer};
+        \draw [decorate,decoration={brace,amplitude=10pt},xshift=-4pt,yshift=0pt] (3.5,3) -- (4.75,3) node [black,midway,yshift=+0.6cm]{output layer};
+    \end{tikzpicture}
+```
+
+<!-- ## Perceptron -->
+<!-- ```tikz{width=800} -->
+<!-- \tikzset{ -->
+<!--   >=latex, % for default LaTeX arrow head -->
+<!--   node/.style={thick,circle,draw=myblue,minimum size=22,inner sep=0.5,outer sep=0.6}, -->
+<!--   node in/.style={node,green!20!black,draw=mygreen!30!black,fill=mygreen!25}, -->
+<!--   node hidden/.style={node,blue!20!black,draw=myblue!30!black,fill=myblue!20}, -->
+<!--   node convol/.style={node,orange!20!black,draw=myorange!30!black,fill=myorange!20}, -->
+<!--   node out/.style={node,red!20!black,draw=myred!30!black,fill=myred!20}, -->
+<!--   connect/.style={thick,mydarkblue}, %,line cap=round -->
+<!--   connect arrow/.style={-{Latex[length=4,width=3.5]},thick,mydarkblue,shorten <=0.5,shorten >=1}, -->
+<!--   node 1/.style={node in}, % node styles, numbered for easy mapping with \nstyle -->
+<!--   node 2/.style={node hidden}, -->
+<!--   node 3/.style={node out} -->
+<!-- } -->
+<!-- \def\nstyle{int(\lay<\Nnodlen?min(2,\lay):3)} % map layer number onto 1, 2, or 3 -->
+<!--       \begin{tikzpicture} -->
+<!--         \tikzset{basic/.style={draw,fill=blue!20,text width=1em,text badly centered}} -->
+<!--         \tikzset{input/.style={basic,circle}} -->
+<!--         \tikzset{weights/.style={basic,rectangle}} -->
+<!--         \tikzset{functions/.style={basic,circle,fill=blue!10}} -->
+
+
+<!--         \node[functions] (center) {}; -->
+<!--         \node[below of=center,font=\scriptsize,text width=4em] {Activation function}; -->
+<!--         \draw[thick] (0.5em,0.5em) -- (0,0.5em) -- (0,-0.5em) -- (-0.5em,-0.5em); -->
+<!--         \draw (0em,0.75em) -- (0em,-0.75em); -->
+<!--         \draw (0.75em,0em) -- (-0.75em,0em); -->
+<!--         \node[right of=center] (right) {}; -->
+<!--             \path[draw,->] (center) -- (right); -->
+<!--         \node[functions,left=3em of center] (left) {$\sum$}; -->
+<!--             \path[draw,->] (left) -- (center); -->
+<!--         \node[weights,left=3em of left] (2) {$w_2$} -- (2) node[input,left of=2] (l2) {$x_2$}; -->
+<!--             \path[draw,->] (l2) -- (2); -->
+<!--             \path[draw,->] (2) -- (left); -->
+<!--         \node[below of=2] (dots) {$\vdots$} -- (dots) node[left of=dots] (ldots) {$\vdots$}; -->
+<!--         \node[weights,below of=dots] (n) {$w_n$} -- (n) node[input,left of=n] (ln) {$x_n$}; -->
+<!--             \path[draw,->] (ln) -- (n); -->
+<!--             \path[draw,->] (n) -- (left); -->
+<!--         \node[weights,above of=2] (1) {$w_1$} -- (1) node[input,left of=1] (l1) {$x_1$}; -->
+<!--             \path[draw,->] (l1) -- (1); -->
+<!--             \path[draw,->] (1) -- (left); -->
+<!--         \node[weights,above of=1] (0) {$w_0$} -- (0) node[input,left of=0] (l0) {$1$}; -->
+<!--             \path[draw,->] (l0) -- (0); -->
+<!--             \path[draw,->] (0) -- (left); -->
+<!--         \node[below of=ln,font=\scriptsize] {inputs}; -->
+<!--         \node[below of=n,font=\scriptsize] {weights}; -->
+<!--     \end{tikzpicture} -->
+<!-- ``` -->
+
+## Neurons
+![](img/neuron.png)
+
+## Perceptron
+A simplest NN. 
+
+![](img/perceptron.png)
+
+## Activation functions
+Actually, neuron computes two functions:
+
+![](img/activation.png)
+
+
+## Activation functions
+
+```tikz{height=600}
+\begin{tikzpicture}[declare function={sigma(\x)=1/(1+exp(-\x));
+sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
+\begin{axis}
+[
+    grid=major,     
+    xmin=-6,
+    xmax=6,
+    axis x line=bottom,
+    ytick={0,.5,1},
+    ymax=1,
+    axis y line=middle,
+    samples=100,
+    domain=-6:6,
+    legend style={at={(1,0.9)}}     
+]
+    \addplot[blue,mark=none]   (x,{sigma(x)});
+    \addplot[red,dotted,mark=none]   (x,{sigmap(x)});
+    \legend{$\sigma(x)$,$\sigma'(x)$}
+\end{axis}
+\end{tikzpicture}
+```
+
+## Activation functions
+```tikz{height=600}
+\begin{tikzpicture}
+\begin{axis}
+[
+    grid=major,     
+    xmin=-6,
+    xmax=6,
+    axis x line=bottom,
+    ytick={0,.5,1},
+    ymax=1,
+    axis y line=middle,
+    samples=100,
+    domain=-6:6,
+    legend style={at={(1,0.9)}}     
+]
+    \addplot[blue,mark=none]   (x,{tanh(x)});
+    \legend{$\tanh(x)$}
+\end{axis}
+\end{tikzpicture}
+```
+
+
+## Multilayer networks
+
+![](img/multi_layer.png)
+
+## Evolution
+  Three periods in the evolution of deep learning:
+
+- single-layer networks (Perceptron)
+- feed-forwards NNs: differentiable activation and error functions
+- deep multi-layer NNs
+
+## Neural Network Types
+
+- Feedforward Neural Network
+- Recurrent Neural Network (RNN)
+- Convolutional Neural Network (CNN)
+
+## Neural Network Types {.smaller}
+
+:::: {.columns}
+
+::: {.column width="50%"}
+**Feedforward Neural Network**
+
+- Convolutional neural network (CNN)
+- Autoencoder
+- Probabilistic neural network (PNN)
+- Time delay neural network (TDNN)
+:::
+
+::: {.column width="50%"}
+**Recurrent Neural Network (RNN)**
+
+- Long short-term memory RNN (LSTM)
+- Fully recurrent Network
+- Simple recurrent Network
+- Echo state network
+- Bi-directional RNN
+- Hierarchical RNN
+- Stochastic neural network
+:::
+
+::::
+
+## Feed-forward
+  Feedforward NNs: very straight forward, they feed information from the front to the back (input and output).
+
+![](img/ff.png)
+
+## Feedforward Neural Network
+The feedforward neural network was the first and simplest type. In this network the information moves only from the input layer directly through any hidden layers to the output layer without cycles/loops.
+![](img/feedforward.png){height=400}
+
+## RNN
+**Recurrent neural network (RNN)** is a class of artificial neural network where connections between units form a directed cycle.
+
+![](img/rnn.png)
+
+## LSTM
+LSTM i.e. **Long-Short Term Memory** aims to provide a short-term memory for RNN that can last thousands of timesteps. Classification, processing and predicting data based on time series - handwriting, speech recognition, machine translation.
+
+![](img/lstm.png)
+
+## Autoencoders
+  Autoencoders: encode (compress) information automatically. Everything up to the middle is called the encoding part, everything after the middle the decoding and the middle the code.
+
+![](img/ae.png)
+
+## Markov Chains
+  Markov Chains - not always considered a NN. **Memory-less**.
+![width=8cm](img/mc.png)
+
+## Convolutional Neural Network (CNN)
+**Convolutional Neural Networks** learn a complex representation of visual data using vast amounts of data.
+
+    Inspired by Hubel and Wiesel’s experiments in 1959 on the organization of the neurons in the cat’s visual cortex.
+
+![](img/cnn.png){height=400}
+
+Deconvolutional networks (DN), also called inverse graphics networks (IGNs), are reversed convolutional neural networks. Imagine feeding a network the word “cat” and training it to produce cat-like pictures, by comparing what it generates to real pictures of cats. 
+![](img/dn.png)
+
+## Attention networks
+Attention networks (AN) can be considered a class of networks, which includes the Transformer architecture. They use an attention mechanism to combat information decay by separately storing previous network states and switching attention between the states.
+
+![](img/dn.png){height=300}
+
+# LLMs
+
+## Definition
+:::{.callout-warning icon=false}
+## LLMs
+A probabilistic model for a natural language (a [*stochastic parrot*](https://en.wikipedia.org/wiki/Stochastic_parrot))
+:::
+
+
+## History
+![](img/lang_spread.png)
+
+
+## History
+![](img/lang_tree.png)
+
+## Stats
+
+:::{.callout-tip icon=false}
+## When?
+Approximately between 200,000 years ago and 60,000 years ago (between the appearance of the first anatomically modern humans in southern Africa and the last exodus from Africa respectively)
+:::
+:::{.callout-important icon=false}
+## How many?
+Human languages count: 7097 (as of 2018).
+:::
+
+## Sapir-Whorf hypothesis
+
+Language impacts cognition. Also known as **linguistic relativity**.
+
+
+:::{.callout-note icon=false}
+## Predecessors
+
+> Australian aboriginal language Guugu Yimithirr have no words for relative (or ego-
+centric) directions, such as front, back, right, or left. Instead they use absolute directions,
+saying, for example, the equivalent of “I have a pain in my north arm.”
+
+(Norvig "Artificial Intelligence: A Modern Approach")
+
+:::
+
+:::{.callout-tip icon=false}
+## Predecessors
+Wilhelm von Humboldt: **language as a spirit of a nation**.
+:::
+
+## Sapir-Whorf hypothesis
+![](img/defenestration.png)
+
+## Deep structure
+
+:::{.callout-important icon=false}
+## Wanner experiment (1974)
+Subjects remember exact words with 50% accuracy but remember the content with 90% accuracy.
+
+Hence - there must an internal nonverbal representation.
+:::
+
+:::{.callout-tip icon=false}
+## Polanyi's paradox (1966)
+The theory that human knowledge of how the world functions and of our own capability are, to a large extent, beyond our explicit understanding. (aka **tacit knowledge**).
+:::
+
+## Formal language
+
+:::{.callout-important icon=false}
+## Definition
+A formal language $L$ over an alphabet $\Sigma$ is a subset of $\Sigma^*$, that is, a set of words over that alphabet.
+:::
+
+## Language model
+
+:::{.callout-note icon=false}
+## Definition
+We define a language model as a probability distribution describing the likelihood of any string.
+:::
+
+## ELIZA
+
+![](img/eliza.png)
+
+ELIZA - an example of primitive pattern matching.
+
+## LLM tree
+![](img/llm_dev_paths.png)
+
+# Future
+:::{.callout-tip icon=false}
+## Scale is all you need
+
+![](img/scale_is_all_you_need.png)
+:::
+
+## Reinforcement Learning
+:::{.callout-important icon=false}
+## Sutton: The bitter lesson (2019)
+![](img/sutton.jpg){height=300}
+
+> One thing that should be learned from the bitter lesson is the great power of general purpose methods, of methods that continue to scale with increased computation even as the available computation becomes very great.
+:::
+
+## Reinforcement Learning
+:::{.callout-important icon=false}
+## Sutton recently
+![](img/sutton_on_llms)
+:::
+
+## Reinforcement Learning
+
+:::{.callout-tip icon=false}
+## Learning types
+
+- supervised
+- unsupervised
+- **reinforcement**
+:::
+
+## Reinforcement Learning
+![Agent-Environment Loop](img/ae_loop.png){height=400}
+
+## Neurosymbolic AI
+![AI timeline: recap](img/ai_timeline.png)
+
+## Neurosymbolic AI
+![](img/ansi_common_lisp.png)
+
+## Neurosymbolic AI
+![](img/macro_examples.png)
+
+## Neurosymbolic AI
+
+  <!-- % note: Norvig's book -->
+
+:::{.callout-tip icon=false}
+## Neats vs Scruffies (Norvig)
+**Neats**: AI theories should be grounded in mathematical rigor.
+
+**Scruffies**: try out lots of ideas, write some programs, and then assess what seems to be working.
+:::
+
+<!-- % note: https://arxiv.org/pdf/2305.00813 -->
+## Neurosymbolic AI
+:::{.callout-important icon=false}
+## Human-environment interaction
+      
+**Perception** -- transforming sensory inputs from their environment into symbols. Roughly maps to **neural networks**.
+
+**Cognition** -- mapping symbols to knowledge about the environment for supporting abstraction, reasoning by analogy, and long-term planning. Roughly maps to **symbolic AI**.
+
+These are Daniel Kahneman's System 1 and System 2.
+:::
+
+## Neurosymbolic AI
+:::{.callout-tip icon=false}
+## Why add symbolic AI?
+
+- Symbolic structures represent background knowledge. 
+- which neural networks don't have explicit representations for
+- thus cannot be evaluated reliably
+- or "explain" whether their outcomes adhere to some safety standards
+:::
+
+## Neurosymbolic AI
+![](img/neuro_symbolic_ai.png)
+
+## Neurosymbolic AI
+:::{.callout-tip icon=false}
+## Deep Learning Criticisms
+
+- brittleness (being susceptible to adversarial attacks), 
+- lack of explainability (not having a formally defined computational semantics or even intuitive explanation, leading to questions around the trustworthiness of AI systems), 
+- lack of parsimony (requiring far too much data, computational power at training time or unacceptable levels of energy consumption)
+- accountability and impact on humanity. 
+:::
+
+
+## Neurosymbolic AI
+:::{.callout-tip icon=false}
+## Two types:
+
+- methods that compress structured symbolic knowledge to integrate with neural patterns and reason using the integrated neural patterns (**lowering**)
+- methods that extract information from neural patterns to allow for mapping to structured symbolicknowledge (**lifting**) and perform symbolic reasoning
+:::
+
+## Neurosymbolic AI
+![](img/ns_types.png)
+
+## Neurosymbolic AI
+![Two methods for compressing knowledge graphs.](img/ns_graph_compression.png)
+
+## Neurosymbolic AI
+:::{.callout-important icon=false}
+## Challenges
+
+- What is the best way to integrate neural and symbolic architectures?
+- How should symbolic structures be represented within neural networks and extracted from them?
+- How should common-sense knowledge be learned and reasoned about?
+- How can abstract knowledge that is hard to encode logically be handled? 
+:::
+
+## Neurosymbolic AI
+:::{.callout-tip icon=false}
+## Implementations
+
+- **Scallop**: a language based on Datalog that supports differentiable logical and relational reasoning. Scallop can be integrated in Python and with a PyTorch learning module.
+- **Logic Tensor Networks**: encode logical formulas as neural networks and simultaneously learn term encodings, term weights, and formula weights.
+- **SymbolicAI**: a compositional differentiable programming library.
+- **Explainable Neural Networks (XNNs)**: combine neural networks with symbolic hypergraphs and train using a mixture of backpropagation and symbolic learning called induction.
+:::
+
+<!-- % \begin{frame}{Neurosymbolic AI} -->
+<!-- %   Taxonomy -->
+
+<!-- %   \begin{itemize} -->
+<!-- %     \item [symbolic Neuro symbolic] refers to an approach where input and output are presented in symbolic form, however all the actual processing is neural. This, in his words, is the "standard operating procedure" whenever inputs and outputs are symbolic. -->
+<!-- %     \item [Symbolic[Neuro]] refers to a neural pattern recognition subroutine within a symbolic problem solver, with exam- ples such as AlphaGo, AlphaZero, and current approaches to self-driving cars. -->
+<!-- %     \item [Neuro $\cap$ compile(Symbolic)] refers to an approach where symbolic rules are "compiled" away during training, e.g. like the 2020 work on Deep Learning For Symbolic Mathematics [7]. -->
+<!-- %     \item [Neuro $\rightarrow$ Symbolic] refers to a cascading from a neural system into a symbolic reasoner, such as in the Neuro- Symbolic Concept-Learner [8]. -->
+<!-- %     \item [Neuro[Symbolic]] refers to the embedding of symbolic reasoning inside a neural engine, where symbolic rea- soning is understood as "deliberative, type 2 reasoning" as common, e.g., in business AI, and including an internal model of the system’s state of attention: Concepts are decoded to symbolic entities in an attention schema when attention to these concepts is high. A goal in the attention schema then signals that deliberative reasoning be executed. -->
+<!-- %   \end{itemize} -->
+<!-- % \end{frame} -->
+
+<!-- % \begin{frame}{Neurosymbolic AI} -->
+<!-- %   A key question however is that of identifying -->
+<!-- % the necessary and sufficient building blocks of AI, and how systems that evolve automatically based on machine learning can be developed and analysed in effective ways that make AI trustworthy. -->
+<!-- % \end{frame} -->
