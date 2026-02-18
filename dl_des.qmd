@@ -27,6 +27,11 @@ format:
 
 ---
 
+## Beginning
+![](img/robot_dragons1)
+
+## Beginning
+![](img/robot_dragons2)
 
 # History
 
@@ -46,12 +51,14 @@ Mechanical Turk: 2005-present
 ![](img/amazon_turk.png){height=500}
 
 ## History
-### Lisp and symbolic AI
+:::{.callout-note icon=false}
+## Lisp and symbolic AI
 
 - **John McCarthy** coined the term ”artificial intelligence” as the topic of the Dartmouth Conference, the first conference devoted to the subject.
 - **The General Problem Solver**, developed in 1957 by Alan Newell and Herbert Simon
 - **ELIZA**
 - **SHRDLU**
+:::
 
 ## History
 ELIZA - a psychotherapist in 200 lines of code. Author: Joseph Weizenbaum.
@@ -221,12 +228,16 @@ Peace and individual freedom
 :::
     
 
+## History
+:::{.callout-warning icon=false}
 ## Hype
 - "Sparks of AGI" - sponsored by Microsoft
 - "Wired" article about OpenAI
-- Voice assistants - failing for now
+- voice assistants - failing for now
 - self-driving cars
-  
+- where is meaningful economy impact?
+:::
+
 ## Hype
 ![](img/anthropic_jobs.jpg)
 
@@ -308,32 +319,6 @@ Because neural networks involved are multi-layered.
 :::{.callout-note icon=false}
 ## Definition
 **Neural networks** are machine learning techniques that simulate the mechanism of learning in biological organisms.
-:::
-
-## Definitions
-
-:::{.callout-important icon=false}
-## Alternative definition
-Neural network is computational graph of elementary units in which greater power is gained by connecting them in particular ways.
-:::
-
-## Why Deep Learning?
-
-:::{.callout-note icon=false}
-##  **Robust**
-- Works on raw data (**pixels, sound, text or chars**), no need for feature engineering
-- Robustness to natural variations in data is automatically learned
-:::
-
-:::{.callout-warning icon=false}
-## Generalizable
-- Allows end-to-end learning (pixels-to-category, sound to sentence, English sentence to Chinese sentence, etc)
-- No need to do segmentation etc. (a lot of manual labour)
-:::
-
-:::{.callout-tip icon=false}
-## Scalable
-- Performance increases with more data, therefore method is massively parallelizable
 :::
 
 ## Neural network data types
@@ -618,44 +603,13 @@ sigmap(\x)=sigma(\x)*(1-sigma(\x));}]
 ![](img/multi_layer.png)
 
 ## Evolution
-  Three periods in the evolution of deep learning:
+:::{.callout-note icon=false}
+## Three periods in the evolution of deep learning:
 
 - single-layer networks (Perceptron)
 - feed-forwards NNs: differentiable activation and error functions
 - deep multi-layer NNs
-
-## Neural Network Types
-
-- Feedforward Neural Network
-- Recurrent Neural Network (RNN)
-- Convolutional Neural Network (CNN)
-
-## Neural Network Types {.smaller}
-
-:::: {.columns}
-
-::: {.column width="50%"}
-**Feedforward Neural Network**
-
-- Convolutional neural network (CNN)
-- Autoencoder
-- Probabilistic neural network (PNN)
-- Time delay neural network (TDNN)
 :::
-
-::: {.column width="50%"}
-**Recurrent Neural Network (RNN)**
-
-- Long short-term memory RNN (LSTM)
-- Fully recurrent Network
-- Simple recurrent Network
-- Echo state network
-- Bi-directional RNN
-- Hierarchical RNN
-- Stochastic neural network
-:::
-
-::::
 
 ## Feed-forward
   Feedforward NNs: very straight forward, they feed information from the front to the back (input and output).
@@ -677,13 +631,9 @@ LSTM i.e. **Long-Short Term Memory** aims to provide a short-term memory for RNN
 ![](img/lstm.png)
 
 ## Autoencoders
-  Autoencoders: encode (compress) information automatically. Everything up to the middle is called the encoding part, everything after the middle the decoding and the middle the code.
 
-![](img/ae.png)
 
-## Markov Chains
-  Markov Chains - not always considered a NN. **Memory-less**.
-![width=8cm](img/mc.png)
+![Autoencoders: encode (compress) information automatically. Everything up to the middle is called the encoding part, everything after the middle the decoding and the middle the code.](img/ae.png)
 
 ## Convolutional Neural Network (CNN)
 **Convolutional Neural Networks** learn a complex representation of visual data using vast amounts of data.
@@ -706,6 +656,11 @@ Attention networks (AN) can be considered a class of networks, which includes th
 :::{.callout-warning icon=false}
 ## LLMs
 A probabilistic model for a natural language (a [*stochastic parrot*](https://en.wikipedia.org/wiki/Stochastic_parrot))
+:::
+
+:::{.callout-note icon=false}
+## Definition
+We define a language model as a probability distribution describing the likelihood of any string.
 :::
 
 
@@ -765,34 +720,25 @@ Hence - there must an internal nonverbal representation.
 The theory that human knowledge of how the world functions and of our own capability are, to a large extent, beyond our explicit understanding. (aka **tacit knowledge**).
 :::
 
-## Formal language
-
-:::{.callout-important icon=false}
-## Definition
-A formal language $L$ over an alphabet $\Sigma$ is a subset of $\Sigma^*$, that is, a set of words over that alphabet.
-:::
-
-## Language model
-
-:::{.callout-note icon=false}
-## Definition
-We define a language model as a probability distribution describing the likelihood of any string.
-:::
-
 ## ELIZA
 
 ![](img/eliza.png)
 
 ELIZA - an example of primitive pattern matching.
 
+## Word vectors
+![](img/semantic_feature_space3.png){height=600}
+
 ## LLM tree
 ![](img/llm_dev_paths.png)
 
 # Future
+
+## Reinforcement Learning
 :::{.callout-tip icon=false}
 ## Scale is all you need
 
-![](img/scale_is_all_you_need.png)
+![](img/scale_is_all_you_need.png){height=500}
 :::
 
 ## Reinforcement Learning
@@ -912,19 +858,8 @@ These are Daniel Kahneman's System 1 and System 2.
 - **Explainable Neural Networks (XNNs)**: combine neural networks with symbolic hypergraphs and train using a mixture of backpropagation and symbolic learning called induction.
 :::
 
-<!-- % \begin{frame}{Neurosymbolic AI} -->
-<!-- %   Taxonomy -->
+## Thank you
 
-<!-- %   \begin{itemize} -->
-<!-- %     \item [symbolic Neuro symbolic] refers to an approach where input and output are presented in symbolic form, however all the actual processing is neural. This, in his words, is the "standard operating procedure" whenever inputs and outputs are symbolic. -->
-<!-- %     \item [Symbolic[Neuro]] refers to a neural pattern recognition subroutine within a symbolic problem solver, with exam- ples such as AlphaGo, AlphaZero, and current approaches to self-driving cars. -->
-<!-- %     \item [Neuro $\cap$ compile(Symbolic)] refers to an approach where symbolic rules are "compiled" away during training, e.g. like the 2020 work on Deep Learning For Symbolic Mathematics [7]. -->
-<!-- %     \item [Neuro $\rightarrow$ Symbolic] refers to a cascading from a neural system into a symbolic reasoner, such as in the Neuro- Symbolic Concept-Learner [8]. -->
-<!-- %     \item [Neuro[Symbolic]] refers to the embedding of symbolic reasoning inside a neural engine, where symbolic rea- soning is understood as "deliberative, type 2 reasoning" as common, e.g., in business AI, and including an internal model of the system’s state of attention: Concepts are decoded to symbolic entities in an attention schema when attention to these concepts is high. A goal in the attention schema then signals that deliberative reasoning be executed. -->
-<!-- %   \end{itemize} -->
-<!-- % \end{frame} -->
+Book screenshots used:
 
-<!-- % \begin{frame}{Neurosymbolic AI} -->
-<!-- %   A key question however is that of identifying -->
-<!-- % the necessary and sufficient building blocks of AI, and how systems that evolve automatically based on machine learning can be developed and analysed in effective ways that make AI trustworthy. -->
-<!-- % \end{frame} -->
+- Understanding Computers (Artificial Intelligence). Time-Life books

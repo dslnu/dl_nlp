@@ -32,6 +32,7 @@ format:
     include-in-header: mathjax.html
     slide-number: true
     theme: default
+    html-math-method: mathjax
     multiplex:
       url: 'https://mplex.vitv.ly'
       secret: 'fdd91dbdb59bf98655380d35740c6ff5'

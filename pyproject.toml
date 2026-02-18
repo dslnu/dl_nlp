@@ -1,0 +1,20 @@
+[project]
+name = "dl-nlp"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "jupyter>=1.1.1",
+    "jupyter-cache>=1.0.1",
+    "matplotlib>=3.10.8",
+    "nltk>=3.9.2",
+    "notebook>=7.5.3",
+    "numpy>=2.4.2",
+    "pandas>=3.0.0",
+    "pillow>=12.1.1",
+    "pytorch-lightning>=2.6.1",
+    "seaborn>=0.13.2",
+    "torch>=2.10.0",
+    "torchvision>=0.25.0",
+]
