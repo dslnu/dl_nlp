@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -197,20 +198,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="gensim-installation" class="level1">
 <h1>Gensim installation</h1>
 <p>Install gensim:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install gensim</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pip install pot</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>pip install gensim</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>pip install pot</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="fetching-word-vectors" class="level1">
 <h1>Fetching word vectors</h1>
 <section id="train-your-own-word2vec" class="level2">
 <h2 class="anchored" data-anchor-id="train-your-own-word2vec">Train your own word2vec</h2>
-<div id="ea8f14ea" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.test.utils <span class="im">import</span> common_texts</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models <span class="im">import</span> Word2Vec</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ce23ffd7" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.test.utils <span class="im">import</span> common_texts</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gensim.models <span class="im">import</span> Word2Vec</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Check <code>common_texts</code>:</p>
-<div id="45f02b64" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>common_texts</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="8f75ba9d" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>common_texts</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="2">
 <pre><code>[['human', 'interface', 'computer'],
  ['survey', 'user', 'computer', 'system', 'response', 'time'],
@@ -224,28 +225,28 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <p>Train your model:</p>
-<div id="39199a1d" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Word2Vec(sentences<span class="op">=</span>common_texts, vector_size<span class="op">=</span><span class="dv">100</span>, window<span class="op">=</span><span class="dv">5</span>, min_count<span class="op">=</span><span class="dv">1</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="0323eebb" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>model <span class="op">=</span> Word2Vec(sentences<span class="op">=</span>common_texts, vector_size<span class="op">=</span><span class="dv">100</span>, window<span class="op">=</span><span class="dv">5</span>, min_count<span class="op">=</span><span class="dv">1</span>, workers<span class="op">=</span><span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Now you have your vectors:</p>
-<div id="520d3283" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.wv</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="71aa9109" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>model.wv</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="4">
-<pre><code>&lt;gensim.models.keyedvectors.KeyedVectors at 0x1285048c0&gt;</code></pre>
+<pre><code>&lt;gensim.models.keyedvectors.KeyedVectors at 0x11104aba0&gt;</code></pre>
 </div>
 </div>
 </section>
 <section id="downloading-pre-trained" class="level2">
 <h2 class="anchored" data-anchor-id="downloading-pre-trained">Downloading pre-trained</h2>
 <p>First, check what models are available:</p>
-<div id="c16adfbe" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
+<div id="cd802dd1" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gensim.downloader</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> gensim.downloader.info()[<span class="st">'models'</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>models <span class="op">=</span> gensim.downloader.info()[<span class="st">'models'</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Download the light one:</p>
-<div id="d55221bc" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>glove_vectors <span class="op">=</span> gensim.downloader.load(<span class="st">'glove-wiki-gigaword-50'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="687c301d" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>glove_vectors <span class="op">=</span> gensim.downloader.load(<span class="st">'glove-wiki-gigaword-50'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>glove_vectors</code> will also be a <code>KeyedVectors</code> object.</p>
 </section>
@@ -255,31 +256,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>What can one do with these vectors?</p>
 <section id="similarity" class="level2">
 <h2 class="anchored" data-anchor-id="similarity">Similarity</h2>
-<div id="70b49a59" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.wv.most_similar(<span class="st">'trees'</span>, topn<span class="op">=</span><span class="dv">10</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="ba0ed9f7" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>model.wv.most_similar(<span class="st">'trees'</span>, topn<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="7">
-<pre><code>[('survey', 0.19912061095237732),
- ('human', 0.17272791266441345),
+<pre><code>[('survey', 0.1991206258535385),
+ ('human', 0.17272792756557465),
  ('minors', 0.17018885910511017),
- ('time', 0.14595060050487518),
- ('eps', 0.06408978998661041),
- ('response', -0.00276578264310956),
- ('user', -0.013535063713788986),
- ('graph', -0.023671653121709824),
- ('computer', -0.03284316137433052),
- ('system', -0.05234672874212265)]</code></pre>
+ ('time', 0.145950585603714),
+ ('eps', 0.06408978253602982),
+ ('response', -0.0027657784521579742),
+ ('user', -0.013535079546272755),
+ ('graph', -0.02367166243493557),
+ ('computer', -0.03284314647316933),
+ ('system', -0.052346739917993546)]</code></pre>
 </div>
 </div>
 <p>Between two words:</p>
-<div id="2012e2de" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.wv.similarity(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="e1e0c627" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>model.wv.similarity(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="8">
-<pre><code>-0.023671653</code></pre>
+<pre><code>np.float32(-0.023671657)</code></pre>
 </div>
 </div>
 <p>Odd ones:</p>
-<div id="a0a6fa0b" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.wv.doesnt_match([<span class="st">'minors'</span>, <span class="st">'human'</span>, <span class="st">'interface'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="9595b517" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>model.wv.doesnt_match([<span class="st">'minors'</span>, <span class="st">'human'</span>, <span class="st">'interface'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>'minors'</code></pre>
 </div>
@@ -288,15 +289,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="distance" class="level2">
 <h2 class="anchored" data-anchor-id="distance">Distance</h2>
 <p>Between words:</p>
-<div id="b35c386b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model.wv.distance(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="45cbf6d9" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>model.wv.distance(<span class="st">'trees'</span>, <span class="st">'graph'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="10">
-<pre><code>1.0236716531217098</code></pre>
+<pre><code>np.float32(1.0236716)</code></pre>
 </div>
 </div>
 <p>Between documents:</p>
-<div id="4465587f" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model.wv.wmdistance([<span class="st">'trees'</span>], [<span class="st">'graph'</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="46ac7cdd" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>model.wv.wmdistance([<span class="st">'trees'</span>], [<span class="st">'graph'</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>1.4308540422347924</code></pre>
 </div>
@@ -375,13 +376,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

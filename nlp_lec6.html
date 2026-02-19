@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="MSDE">
   <title>Deep Learning/NLP course – CNNs for NLP</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -451,7 +451,7 @@ MSDE
 <p><strong>convolve() in Python</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="kw">def</span> convolve(inpt, kernel):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="kw">def</span> convolve(inpt, kernel):</span>
 <span id="cb1-2"><a></a>  output <span class="op">=</span> []</span>
 <span id="cb1-3"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(inpt) <span class="op">-</span> <span class="bu">len</span>(kernel) <span class="op">+</span> <span class="dv">1</span>):  <span class="co"># #1</span></span>
 <span id="cb1-4"><a></a>      output.append(</span>
@@ -460,7 +460,7 @@ MSDE
 <span id="cb1-7"><a></a>                  inpt[i <span class="op">+</span> k] <span class="op">*</span> kernel[k]</span>
 <span id="cb1-8"><a></a>                  <span class="cf">for</span> k <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(kernel))  <span class="co"># #2</span></span>
 <span id="cb1-9"><a></a>              ]))</span>
-<span id="cb1-10"><a></a>  <span class="cf">return</span> output</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-10"><a></a>  <span class="cf">return</span> output</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -493,13 +493,13 @@ MSDE
 <p><strong>PyTorch example</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>batch_size <span class="op">=</span> <span class="dv">16</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>batch_size <span class="op">=</span> <span class="dv">16</span></span>
 <span id="cb2-2"><a></a>word_embed_size <span class="op">=</span> <span class="dv">4</span></span>
 <span id="cb2-3"><a></a>seq_len <span class="op">=</span> <span class="dv">7</span></span>
 <span id="cb2-4"><a></a><span class="bu">input</span> <span class="op">=</span> torch.randn(batch_size, word_embed_size, seq_len)</span>
 <span id="cb2-5"><a></a>conv1 <span class="op">=</span> Conv1d(in_channels<span class="op">=</span>word_embed_size, out_channels<span class="op">=</span><span class="dv">3</span>, kernel_size<span class="op">=</span><span class="dv">3</span>) <span class="co"># can add: padding=1</span></span>
 <span id="cb2-6"><a></a>hidden1 <span class="op">=</span> conv1(<span class="bu">input</span>)</span>
-<span id="cb2-7"><a></a>hidden2 <span class="op">=</span> torch.<span class="bu">max</span>(hidden1, dim<span class="op">=</span><span class="dv">2</span>) <span class="co"># max pool</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-7"><a></a>hidden2 <span class="op">=</span> torch.<span class="bu">max</span>(hidden1, dim<span class="op">=</span><span class="dv">2</span>) <span class="co"># max pool</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -526,7 +526,7 @@ MSDE
 </div>
 <div class="callout-content">
 <p>Let’s start with a manual kernel first.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
 <span id="cb3-2"><a></a><span class="im">from</span> nltk.tag <span class="im">import</span> pos_tag</span>
 <span id="cb3-3"><a></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb3-4"><a></a></span>
@@ -536,7 +536,7 @@ MSDE
 <span id="cb3-8"><a></a>tagged_words <span class="op">=</span> [[word] <span class="op">+</span> [<span class="bu">int</span>(tag <span class="op">==</span> t) <span class="cf">for</span> t <span class="kw">in</span> tags] <span class="cf">for</span> word, tag <span class="kw">in</span> tokens]</span>
 <span id="cb3-9"><a></a></span>
 <span id="cb3-10"><a></a>df <span class="op">=</span> pd.DataFrame(tagged_words, columns<span class="op">=</span>[<span class="st">'token'</span>] <span class="op">+</span> tags).T</span>
-<span id="cb3-11"><a></a><span class="bu">print</span>(df)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-11"><a></a><span class="bu">print</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -565,11 +565,11 @@ MSDE
 <p><strong>Tensor</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb5-2"><a></a>x <span class="op">=</span> torch.tensor(</span>
 <span id="cb5-3"><a></a>      df.iloc[<span class="dv">1</span>:].astype(<span class="bu">float</span>).values,</span>
 <span id="cb5-4"><a></a>      dtype<span class="op">=</span>torch.float32)  <span class="co"># #1</span></span>
-<span id="cb5-5"><a></a>x <span class="op">=</span> x.unsqueeze(<span class="dv">0</span>) <span class="co"># #2</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-5"><a></a>x <span class="op">=</span> x.unsqueeze(<span class="dv">0</span>) <span class="co"># #2</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -580,12 +580,12 @@ MSDE
 </div>
 <div class="callout-content">
 <p>Now you construct that pattern that we want to search for in the text: adverb, verb, then noun.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>kernel <span class="op">=</span> pd.DataFrame(</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>kernel <span class="op">=</span> pd.DataFrame(</span>
 <span id="cb6-2"><a></a>[[<span class="dv">1</span>, <span class="dv">0</span>, <span class="fl">0.</span>],</span>
 <span id="cb6-3"><a></a> [<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">0.</span>],</span>
 <span id="cb6-4"><a></a> [<span class="dv">0</span>, <span class="dv">1</span>, <span class="fl">0.</span>],</span>
 <span id="cb6-5"><a></a> [<span class="dv">0</span>, <span class="dv">0</span>, <span class="fl">1.</span>]], index<span class="op">=</span>tags)</span>
-<span id="cb6-6"><a></a><span class="bu">print</span>(kernel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a></a><span class="bu">print</span>(kernel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -596,22 +596,22 @@ MSDE
 <img data-src="img/1d_cnn_example.png" class="r-stretch"></section>
 <section id="cnns-in-nlp-19" class="slide level2">
 <h2>CNNs in NLP</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>kernel <span class="op">=</span> torch.tensor(kernel.values, dtype<span class="op">=</span>torch.float32)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>kernel <span class="op">=</span> torch.tensor(kernel.values, dtype<span class="op">=</span>torch.float32)</span>
 <span id="cb7-2"><a></a>kernel <span class="op">=</span> kernel.unsqueeze(<span class="dv">0</span>)  <span class="co"># #1</span></span>
 <span id="cb7-3"><a></a>conv <span class="op">=</span> torch.nn.Conv1d(in_channels<span class="op">=</span><span class="dv">4</span>,</span>
 <span id="cb7-4"><a></a>                     out_channels<span class="op">=</span><span class="dv">1</span>,</span>
 <span id="cb7-5"><a></a>                     kernel_size<span class="op">=</span><span class="dv">3</span>,</span>
 <span id="cb7-6"><a></a>                     bias<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb7-7"><a></a>conv.load_state_dict({<span class="st">'weight'</span>: kernel})</span>
-<span id="cb7-8"><a></a><span class="bu">print</span>(conv.weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-8"><a></a><span class="bu">print</span>(conv.weight)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="cnns-in-nlp-20" class="slide level2">
 <h2>CNNs in NLP</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb8-2"><a></a></span>
 <span id="cb8-3"><a></a>y <span class="op">=</span> np.array(conv.forward(x).detach()).squeeze()</span>
 <span id="cb8-4"><a></a>df.loc[<span class="st">'y'</span>] <span class="op">=</span> pd.Series(y)</span>
-<span id="cb8-5"><a></a>df</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-5"><a></a>df</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="cnns-in-nlp-21" class="slide level2">
 <h2>CNNs in NLP</h2>
@@ -661,11 +661,11 @@ MSDE
 <li>vocabulary size</li>
 <li>size of encoded representation</li>
 </ul>
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb9-3"><a></a></span>
 <span id="cb9-4"><a></a><span class="co"># Define the embedding layer with 10 vocab size and 50 vector embeddings.</span></span>
-<span id="cb9-5"><a></a>embedding <span class="op">=</span> nn.Embedding(<span class="dv">10</span>, <span class="dv">50</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-5"><a></a>embedding <span class="op">=</span> nn.Embedding(<span class="dv">10</span>, <span class="dv">50</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -693,7 +693,7 @@ MSDE
 </div>
 <div class="callout-content">
 <p>To examine the embeddings for a given word (eg. first word in the table), run:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>embedding(torch.LongTensor([<span class="dv">0</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>embedding(torch.LongTensor([<span class="dv">0</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Output is a vector of size 50: <img data-src="img/embedding_sample.png"></p>
 </div>
 </div>
@@ -714,11 +714,11 @@ MSDE
 <ul>
 <li><strong>Normal</strong>: initializes the weights with random values drawn from a normal distribution with a mean of 0 and a standard deviation of 1. It is also known as Gaussian initialization.</li>
 </ul>
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>nn.init.normal_(embedding.weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>nn.init.normal_(embedding.weight)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><strong>Constant</strong>: initializes the weights with a specific constant value.</li>
 </ul>
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>nn.init.constant_(embedding.weight, <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>nn.init.constant_(embedding.weight, <span class="dv">0</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -734,11 +734,11 @@ MSDE
 <ul>
 <li><strong>Xavier</strong>: based on the work of Xavier Glorot and Yoshua Bengio, and they are designed to work well with sigmoid and tanh activation functions. They initialize the weights to values that are close to zero, but not too small.</li>
 </ul>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>nn.init.xavier_uniform_(embedding.weight)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>nn.init.xavier_uniform_(embedding.weight)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><strong>Kaiming</strong>: based on the work of He et al., and they are designed to work well with ReLU and its variants (LeakyReLU, PReLU, RReLU, etc.). They also initialize the weights to values that are close to zero, but not too small.</li>
 </ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>nn.init.kaiming_normal_(embedding.weight, nonlinearity<span class="op">=</span><span class="st">'leaky_relu'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>nn.init.kaiming_normal_(embedding.weight, nonlinearity<span class="op">=</span><span class="st">'leaky_relu'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <ul>
 <li><strong>Pre-trained</strong>: pre-trained word vectors such as GloVe or word2vec, which have been trained on large corpora and have been shown to be useful for many natural language processing tasks. The process of using a pre-trained word vectors is called <strong>fine-tuning</strong>.</li>
 </ul>
@@ -771,16 +771,16 @@ MSDE
 <p><strong>Pre-trained embeddings example</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb15-2"><a></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb15-3"><a></a></span>
 <span id="cb15-4"><a></a><span class="co"># Load a pre-trained embedding model</span></span>
 <span id="cb15-5"><a></a>pretrained_embeddings <span class="op">=</span> torch.randn(<span class="dv">10</span>, <span class="dv">50</span>) <span class="co"># Example only, not actual pre-trained embeddings</span></span>
 <span id="cb15-6"><a></a></span>
 <span id="cb15-7"><a></a><span class="co"># Initialize the embedding layer with the pre-trained embeddings</span></span>
-<span id="cb15-8"><a></a>embedding.weight.data.copy_(pretrained_embeddings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-8"><a></a>embedding.weight.data.copy_(pretrained_embeddings)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>OR:</strong></p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>embedding_layer <span class="op">=</span> nn.Embedding.from_pretrained(pretrained_embeddings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>embedding_layer <span class="op">=</span> nn.Embedding.from_pretrained(pretrained_embeddings)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -793,11 +793,11 @@ MSDE
 <p><strong>Use pre-trained embeddings from popular libraries like GloVe or fastText:</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">import</span> torchtext</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="im">import</span> torchtext</span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a><span class="co"># Load pre-trained GloVe embeddings</span></span>
 <span id="cb17-4"><a></a>glove <span class="op">=</span> torchtext.vocab.GloVe(name<span class="op">=</span><span class="st">'6B'</span>, dim<span class="op">=</span><span class="dv">300</span>)</span>
-<span id="cb17-5"><a></a>embedding_layer <span class="op">=</span> nn.Embedding.from_pretrained(glove.vectors)   </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb17-5"><a></a>embedding_layer <span class="op">=</span> nn.Embedding.from_pretrained(glove.vectors)   </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -815,7 +815,7 @@ MSDE
 </div>
 <div class="callout-content">
 <p>In some cases when performing transfer learning, you may need to freeze the pre-trained embeddings during training process, so that they are not updated during the backpropagation step and only the last dense layer is updated. To do this:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a>embedding_layer.weight.requiresGrad <span class="op">=</span> <span class="va">False</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a>embedding_layer.weight.requiresGrad <span class="op">=</span> <span class="va">False</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1313,7 +1313,7 @@ h(y) = \max\limits_{x=1}^k g(y\cdot d - x + c).
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1387,13 +1387,14 @@ h(y) = \max\limits_{x=1}^k g(y\cdot d - x + c).
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Principal Component Analysis</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -1407,7 +1407,7 @@ A^T = (E D E^T)^T = E^{TT}D^T E^T = E D E^T = A
 </section>
 <section id="pca-in-python-1" class="slide level2">
 <h2>PCA in Python</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a> <span class="co"># Import libraries </span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a> <span class="co"># Import libraries </span></span>
 <span id="cb1-2"><a></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
 <span id="cb1-3"><a></a></span>
 <span id="cb1-4"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
@@ -1418,11 +1418,11 @@ A^T = (E D E^T)^T = E^{TT}D^T E^T = E D E^T = A
 <span id="cb1-9"><a></a><span class="co"># Normalize data</span></span>
 <span id="cb1-10"><a></a>mean <span class="op">=</span> np.mean(data, axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb1-11"><a></a>std <span class="op">=</span> np.std(data, axis<span class="op">=</span><span class="dv">0</span>)</span>
-<span id="cb1-12"><a></a>data <span class="op">=</span> (data <span class="op">-</span> mean) <span class="op">/</span> std</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-12"><a></a>data <span class="op">=</span> (data <span class="op">-</span> mean) <span class="op">/</span> std</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="pca-in-python-2" class="slide level2">
 <h2>PCA in Python</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>  <span class="co"># Compute covariance matrix</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>  <span class="co"># Compute covariance matrix</span></span>
 <span id="cb2-2"><a></a>  cov_matrix <span class="op">=</span> np.cov(data, rowvar<span class="op">=</span><span class="va">False</span>)</span>
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a>  <span class="co"># Compute eigenvectors and eigenvalues</span></span>
@@ -1435,14 +1435,14 @@ A^T = (E D E^T)^T = E^{TT}D^T E^T = E D E^T = A
 <span id="cb2-11"><a></a></span>
 <span id="cb2-12"><a></a>  <span class="co"># Select top principal components</span></span>
 <span id="cb2-13"><a></a>  k <span class="op">=</span> <span class="dv">2</span></span>
-<span id="cb2-14"><a></a>  eigenvectors <span class="op">=</span> eigenvectors[:,:k]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a></a>  eigenvectors <span class="op">=</span> eigenvectors[:,:k]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="pca-in-python-3" class="slide level2">
 <h2>PCA in Python</h2>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>  <span class="co"># Project the data onto the principal components</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>  <span class="co"># Project the data onto the principal components</span></span>
 <span id="cb3-2"><a></a>  projected_data <span class="op">=</span> np.dot(data, eigenvectors.T)</span>
 <span id="cb3-3"><a></a>  <span class="co"># Visualize the results using scatter from matplotlib</span></span>
-<span id="cb3-4"><a></a>  plt.scatter(projected_data[:,<span class="dv">0</span>], projected)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a></a>  plt.scatter(projected_data[:,<span class="dv">0</span>], projected)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section></section>
 <section>
 <section id="non-linear-reduction-methods" class="title-slide slide level1 center">
@@ -1745,7 +1745,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 </section>
 <section id="t-sne-4" class="slide level2">
 <h2>t-SNE</h2>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> sklearn.manifold <span class="im">import</span> TSNE</span>
 <span id="cb4-2"><a></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb4-3"><a></a></span>
 <span id="cb4-4"><a></a><span class="kw">def</span> read_glove(file_path):</span>
@@ -1767,7 +1767,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb4-20"><a></a>    plt.annotate(word,</span>
 <span id="cb4-21"><a></a>plt.xlim(<span class="dv">25</span>, <span class="dv">55</span>)</span>
 <span id="cb4-22"><a></a>plt.ylim(<span class="op">-</span><span class="dv">15</span>, <span class="dv">15</span>)</span>
-<span id="cb4-23"><a></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-23"><a></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="t-sne-5" class="slide level2">
 <h2>t-SNE</h2>
@@ -1787,7 +1787,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Get libraries</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>  <span class="im">from</span> __future__ <span class="im">import</span> print_function</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>  <span class="im">from</span> __future__ <span class="im">import</span> print_function</span>
 <span id="cb5-2"><a></a>  <span class="im">import</span> time</span>
 <span id="cb5-3"><a></a></span>
 <span id="cb5-4"><a></a>  <span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -1801,7 +1801,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb5-12"><a></a>  <span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb5-13"><a></a>  <span class="im">from</span> mpl_toolkits.mplot3d <span class="im">import</span> Axes3D</span>
 <span id="cb5-14"><a></a></span>
-<span id="cb5-15"><a></a>  <span class="im">import</span> seaborn <span class="im">as</span> sns</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-15"><a></a>  <span class="im">import</span> seaborn <span class="im">as</span> sns</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1814,13 +1814,13 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Load data</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>   mnist <span class="op">=</span> fetch_mldata(<span class="st">"MNIST original"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>   mnist <span class="op">=</span> fetch_mldata(<span class="st">"MNIST original"</span>)</span>
 <span id="cb6-2"><a></a>   X <span class="op">=</span> mnist.data <span class="op">/</span> <span class="fl">255.0</span></span>
 <span id="cb6-3"><a></a>   y <span class="op">=</span> mnist.target</span>
 <span id="cb6-4"><a></a></span>
 <span id="cb6-5"><a></a>   <span class="bu">print</span>(X.shape, y.shape)</span>
 <span id="cb6-6"><a></a></span>
-<span id="cb6-7"><a></a>   [out] (<span class="dv">70000</span>, <span class="dv">784</span>) (<span class="dv">70000</span>,) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-7"><a></a>   [out] (<span class="dv">70000</span>, <span class="dv">784</span>) (<span class="dv">70000</span>,) </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1833,7 +1833,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Convert to Pandas and randomize</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>    feat_cols <span class="op">=</span> [ <span class="st">'pixel'</span><span class="op">+</span><span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X.shape[<span class="dv">1</span>]) ]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>    feat_cols <span class="op">=</span> [ <span class="st">'pixel'</span><span class="op">+</span><span class="bu">str</span>(i) <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(X.shape[<span class="dv">1</span>]) ]</span>
 <span id="cb7-2"><a></a></span>
 <span id="cb7-3"><a></a>    df <span class="op">=</span> pd.DataFrame(X,columns<span class="op">=</span>feat_cols)</span>
 <span id="cb7-4"><a></a>    df[<span class="st">'y'</span>] <span class="op">=</span> y</span>
@@ -1848,7 +1848,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb7-13"><a></a>    <span class="co"># For reproducibility of the results</span></span>
 <span id="cb7-14"><a></a>    np.random.seed(<span class="dv">42</span>)</span>
 <span id="cb7-15"><a></a></span>
-<span id="cb7-16"><a></a>    rndperm <span class="op">=</span> np.random.permutation(df.shape[<span class="dv">0</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-16"><a></a>    rndperm <span class="op">=</span> np.random.permutation(df.shape[<span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1861,12 +1861,12 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Check some numbers</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>    plt.gray()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>    plt.gray()</span>
 <span id="cb8-2"><a></a>    fig <span class="op">=</span> plt.figure( figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">7</span>) )</span>
 <span id="cb8-3"><a></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>,<span class="dv">15</span>):</span>
 <span id="cb8-4"><a></a>        ax <span class="op">=</span> fig.add_subplot(<span class="dv">3</span>,<span class="dv">5</span>,i<span class="op">+</span><span class="dv">1</span>, title<span class="op">=</span><span class="st">"Digit: </span><span class="sc">{}</span><span class="st">"</span>.<span class="bu">format</span>(<span class="bu">str</span>(df.loc[rndperm[i],<span class="st">'label'</span>])) )</span>
 <span id="cb8-5"><a></a>    ax.matshow(df.loc[rndperm[i],feat_cols].values.reshape((<span class="dv">28</span>,<span class="dv">28</span>)).astype(<span class="bu">float</span>))</span>
-<span id="cb8-6"><a></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-6"><a></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1880,7 +1880,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Use Scikit-learn for PCA</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>    pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">3</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>    pca <span class="op">=</span> PCA(n_components<span class="op">=</span><span class="dv">3</span>)</span>
 <span id="cb9-2"><a></a>    pca_result <span class="op">=</span> pca.fit_transform(df[feat_cols].values)</span>
 <span id="cb9-3"><a></a></span>
 <span id="cb9-4"><a></a>    df[<span class="st">'pca-one'</span>] <span class="op">=</span> pca_result[:,<span class="dv">0</span>]</span>
@@ -1889,7 +1889,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb9-7"><a></a></span>
 <span id="cb9-8"><a></a>    <span class="bu">print</span>(<span class="st">'Explained variation per principal component: </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(pca.explained_variance_ratio_))</span>
 <span id="cb9-9"><a></a></span>
-<span id="cb9-10"><a></a>    Explained variation per principal component: [<span class="fl">0.09746116</span> <span class="fl">0.07155445</span> <span class="fl">0.06149531</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-10"><a></a>    Explained variation per principal component: [<span class="fl">0.09746116</span> <span class="fl">0.07155445</span> <span class="fl">0.06149531</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1902,7 +1902,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Scatterplot of first 2 PCs</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">10</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">10</span>))</span>
 <span id="cb10-2"><a></a>    sns.scatterplot(</span>
 <span id="cb10-3"><a></a>        x<span class="op">=</span><span class="st">"pca-one"</span>, y<span class="op">=</span><span class="st">"pca-two"</span>,</span>
 <span id="cb10-4"><a></a>        hue<span class="op">=</span><span class="st">"y"</span>,</span>
@@ -1910,7 +1910,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb10-6"><a></a>        data<span class="op">=</span>df.loc[rndperm,:],</span>
 <span id="cb10-7"><a></a>        legend<span class="op">=</span><span class="st">"full"</span>,</span>
 <span id="cb10-8"><a></a>        alpha<span class="op">=</span><span class="fl">0.3</span></span>
-<span id="cb10-9"><a></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-9"><a></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1927,7 +1927,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Scatterplot of first 2 PCs in 3D</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>    ax <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">10</span>)).gca(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>    ax <span class="op">=</span> plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">10</span>)).gca(projection<span class="op">=</span><span class="st">'3d'</span>)</span>
 <span id="cb11-2"><a></a>    ax.scatter(</span>
 <span id="cb11-3"><a></a>        xs<span class="op">=</span>df.loc[rndperm,:][<span class="st">"pca-one"</span>], </span>
 <span id="cb11-4"><a></a>        ys<span class="op">=</span>df.loc[rndperm,:][<span class="st">"pca-two"</span>], </span>
@@ -1938,7 +1938,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb11-9"><a></a>    ax.set_xlabel(<span class="st">'pca-one'</span>)</span>
 <span id="cb11-10"><a></a>    ax.set_ylabel(<span class="st">'pca-two'</span>)</span>
 <span id="cb11-11"><a></a>    ax.set_zlabel(<span class="st">'pca-three'</span>)</span>
-<span id="cb11-12"><a></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-12"><a></a>    plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1955,7 +1955,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Run PCA</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>    N <span class="op">=</span> <span class="dv">10000</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>    N <span class="op">=</span> <span class="dv">10000</span></span>
 <span id="cb12-2"><a></a>    df_subset <span class="op">=</span> df.loc[rndperm[:N],:].copy()</span>
 <span id="cb12-3"><a></a>    data_subset <span class="op">=</span> df_subset[feat_cols].values</span>
 <span id="cb12-4"><a></a></span>
@@ -1968,7 +1968,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb12-11"><a></a></span>
 <span id="cb12-12"><a></a>    <span class="bu">print</span>(<span class="st">'Explained variation per principal component: </span><span class="sc">{}</span><span class="st">'</span>.<span class="bu">format</span>(pca.explained_variance_ratio_))</span>
 <span id="cb12-13"><a></a></span>
-<span id="cb12-14"><a></a>    [out] Explained variation per principal component: [<span class="fl">0.09730166</span> <span class="fl">0.07135901</span> <span class="fl">0.06183721</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a></a>    [out] Explained variation per principal component: [<span class="fl">0.09730166</span> <span class="fl">0.07135901</span> <span class="fl">0.06183721</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1981,7 +1981,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Run t-SNE</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>    time_start <span class="op">=</span> time.time()</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>    time_start <span class="op">=</span> time.time()</span>
 <span id="cb13-2"><a></a>    tsne <span class="op">=</span> TSNE(n_components<span class="op">=</span><span class="dv">2</span>, verbose<span class="op">=</span><span class="dv">1</span>, perplexity<span class="op">=</span><span class="dv">40</span>, n_iter<span class="op">=</span><span class="dv">300</span>)</span>
 <span id="cb13-3"><a></a>    tsne_results <span class="op">=</span> tsne.fit_transform(data_subset)</span>
 <span id="cb13-4"><a></a>    <span class="bu">print</span>(<span class="st">'t-SNE done! Time elapsed: </span><span class="sc">{}</span><span class="st"> seconds'</span>.<span class="bu">format</span>(time.time()<span class="op">-</span>time_start))</span>
@@ -1993,7 +1993,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb13-10"><a></a>    ...</span>
 <span id="cb13-11"><a></a>    [t<span class="op">-</span>SNE] Mean sigma: <span class="fl">2.129023</span></span>
 <span id="cb13-12"><a></a>    [t<span class="op">-</span>SNE] KL divergence after <span class="dv">300</span> iterations: <span class="fl">2.823509</span></span>
-<span id="cb13-13"><a></a>    t<span class="op">-</span>SNE done<span class="op">!</span> Time elapsed: <span class="fl">157.3975932598114</span> seconds</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-13"><a></a>    t<span class="op">-</span>SNE done<span class="op">!</span> Time elapsed: <span class="fl">157.3975932598114</span> seconds</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -2006,7 +2006,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <p><strong>Plot t-SNE</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>    df_subset[<span class="st">'tsne-2d-one'</span>] <span class="op">=</span> tsne_results[:,<span class="dv">0</span>]</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>    df_subset[<span class="st">'tsne-2d-one'</span>] <span class="op">=</span> tsne_results[:,<span class="dv">0</span>]</span>
 <span id="cb14-2"><a></a>    df_subset[<span class="st">'tsne-2d-two'</span>] <span class="op">=</span> tsne_results[:,<span class="dv">1</span>]</span>
 <span id="cb14-3"><a></a></span>
 <span id="cb14-4"><a></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">16</span>,<span class="dv">10</span>))</span>
@@ -2017,7 +2017,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
 <span id="cb14-9"><a></a>        data<span class="op">=</span>df_subset,</span>
 <span id="cb14-10"><a></a>        legend<span class="op">=</span><span class="st">"full"</span>,</span>
 <span id="cb14-11"><a></a>        alpha<span class="op">=</span><span class="fl">0.3</span></span>
-<span id="cb14-12"><a></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb14-12"><a></a>    )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -2222,7 +2222,7 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -2296,13 +2296,14 @@ C = \sum\limits_i \sum\limits_j \tilde{p}_{ij} log\dfrac{\tilde{p}_{ij}}{q_{ij}}
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

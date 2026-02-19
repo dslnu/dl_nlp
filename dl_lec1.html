@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Deep learning: intro</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -921,7 +921,7 @@ db=0
 <section id="vectorization" class="slide level2">
 <h2>Vectorization</h2>
 <p>We have to compute <span class="math inline">\(z=w^T x + b\)</span>, where <span class="math inline">\(w,x \in R^{n_x}\)</span>, and for this we can naturally use a for loop. A vectorized Python command is</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>z <span class="op">=</span> np.dot(w,x)<span class="op">+</span>b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>z <span class="op">=</span> np.dot(w,x)<span class="op">+</span>b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <!-- An jupyter example follows, comparing times of for-loop and vectorized code samples. -->
 <!-- SIMD calculations on GPUs and CPUs. -->
 </section>
@@ -947,8 +947,8 @@ db=0
     \end{bmatrix}
   \end{align*}
   \]</span> A code listing is</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="im">import</span> numpy <span class="im">as</span> np</span>
-<span id="cb4-2"><a></a>  u <span class="op">=</span> np.exp(v)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb4-2"><a></a>  u <span class="op">=</span> np.exp(v)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>So we can modify the above code to get rid of for loops (except for the one for <span class="math inline">\(m\)</span>).</p>
 </section>
 <section id="vectorizing-logistic-regression" class="slide level2">
@@ -982,7 +982,7 @@ X = \begin{bmatrix}
 Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
 = [w^T x^{(1)}+b, \dots, w^T x^{(m)}+b].
 \]</span></p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>  z <span class="op">=</span> np.dot(w.T, x) <span class="op">+</span> b</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>  z <span class="op">=</span> np.dot(w.T, x) <span class="op">+</span> b</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><span class="math inline">\(b\)</span> is a raw number, Python will automatically take care of expanding it into a vector - this is called <em>broadcasting</em>.</p>
 <p>For predictions we can also compute it similarly: <span class="math display">\[
 \begin{align*}
@@ -1043,6 +1043,8 @@ Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
   <script src="site_libs/revealjs/plugin/pdf-export/pdfexport.js"></script>
   <script src="site_libs/revealjs/plugin/reveal-menu/menu.js"></script>
   <script src="site_libs/revealjs/plugin/reveal-menu/quarto-menu.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/socket.io.js"></script>
+  <script src="site_libs/revealjs/plugin/multiplex/multiplex.js"></script>
   <script src="site_libs/revealjs/plugin/quarto-support/support.js"></script>
   
 
@@ -1065,6 +1067,7 @@ Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
 'autoAnimateUnmatched': true,
 'jumpToSlide': true,
 'menu': {"side":"left","useTextContentForMissingTitles":true,"markers":false,"loadIcons":false,"custom":[{"title":"Tools","icon":"<i class=\"fas fa-gear\"></i>","content":"<ul class=\"slide-menu-items\">\n<li class=\"slide-tool-item active\" data-item=\"0\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.fullscreen(event)\"><kbd>f</kbd> Fullscreen</a></li>\n<li class=\"slide-tool-item\" data-item=\"1\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.speakerMode(event)\"><kbd>s</kbd> Speaker View</a></li>\n<li class=\"slide-tool-item\" data-item=\"2\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.overview(event)\"><kbd>o</kbd> Slide Overview</a></li>\n<li class=\"slide-tool-item\" data-item=\"3\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.togglePdfExport(event)\"><kbd>e</kbd> PDF Export Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"4\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.toggleScrollView(event)\"><kbd>r</kbd> Scroll View Mode</a></li>\n<li class=\"slide-tool-item\" data-item=\"5\"><a href=\"#\" onclick=\"RevealMenuToolHandlers.keyboardHelp(event)\"><kbd>?</kbd> Keyboard Help</a></li>\n</ul>"}],"openButton":true},
+'multiplex': {"url":"https://mplex.vitv.ly","secret":null,"id":"f08dc3a18abc7497a125a0d8fab426618f11e5ace83cdab099f667f362bff154"},
 'smaller': false,
  
         // Display controls in the bottom right corner
@@ -1218,7 +1221,7 @@ Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1238,7 +1241,7 @@ Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
         plugins: [QuartoLineHighlight, PdfExport, RevealMenu, QuartoSupport,
 
           RevealMath,
-          RevealNotes,
+          
           RevealSearch,
           RevealZoom
         ]
@@ -1292,13 +1295,14 @@ Z = [z^{(1)}, \dots, z^{(m)}] = w^T X + [b, b, \dots, b] = \\
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

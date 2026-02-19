@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Natural Language Processing: Intro</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -1134,7 +1134,7 @@ cf_i = ci^k.
 <p><strong>nltk.regexp_tokenize</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="op">&gt;&gt;&gt;</span> text <span class="op">=</span> ’That U.S.A. poster<span class="op">-</span><span class="bu">print</span> costs $<span class="fl">12.40</span>...’</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="op">&gt;&gt;&gt;</span> text <span class="op">=</span> ’That U.S.A. poster<span class="op">-</span><span class="bu">print</span> costs $<span class="fl">12.40</span>...’</span>
 <span id="cb7-2"><a></a><span class="op">&gt;&gt;&gt;</span> pattern <span class="op">=</span> r’’’(?x) <span class="co"># set flag to allow verbose regexps</span></span>
 <span id="cb7-3"><a></a>... (?:[A<span class="op">-</span>Z]\.)<span class="op">+</span> <span class="co"># abbreviations, e.g. U.S.A.</span></span>
 <span id="cb7-4"><a></a>... <span class="op">|</span> \w<span class="op">+</span>(?:<span class="op">-</span>\w<span class="op">+</span>)<span class="op">*</span> <span class="co"># words with optional internal hyphens</span></span>
@@ -1143,7 +1143,7 @@ cf_i = ci^k.
 <span id="cb7-7"><a></a>... <span class="op">|</span> [][.,<span class="op">;</span><span class="st">"’?():_‘-] # these are separate tokens; includes ], [</span></span>
 <span id="cb7-8"><a></a><span class="er">... ’’’</span></span>
 <span id="cb7-9"><a></a><span class="op">&gt;&gt;&gt;</span> nltk.regexp_tokenize(text, pattern)</span>
-<span id="cb7-10"><a></a>[’That’, ’U.S.A.’, ’poster<span class="op">-</span>print’, ’costs’, ’$<span class="fl">12.40</span>’, ’...’]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-10"><a></a>[’That’, ’U.S.A.’, ’poster<span class="op">-</span>print’, ’costs’, ’$<span class="fl">12.40</span>’, ’...’]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1672,7 +1672,7 @@ D[i-1,j-1] + \begin{cases}
 </div>
 </div>
 </div>
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="kw">def</span> hamming_distance(string1: <span class="bu">str</span>, string2: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="kw">def</span> hamming_distance(string1: <span class="bu">str</span>, string2: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
 <span id="cb8-2"><a></a>    <span class="co">"""Return the Hamming distance between two strings."""</span></span>
 <span id="cb8-3"><a></a>    <span class="cf">if</span> <span class="bu">len</span>(string1) <span class="op">!=</span> <span class="bu">len</span>(string2):</span>
 <span id="cb8-4"><a></a>        <span class="cf">raise</span> <span class="pp">ValueError</span>(<span class="st">"Strings must be of equal length."</span>)</span>
@@ -1680,7 +1680,7 @@ D[i-1,j-1] + \begin{cases}
 <span id="cb8-6"><a></a>    <span class="cf">for</span> n <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(string1)):</span>
 <span id="cb8-7"><a></a>        <span class="cf">if</span> string1[n] <span class="op">!=</span> string2[n]:</span>
 <span id="cb8-8"><a></a>            dist_counter <span class="op">+=</span> <span class="dv">1</span></span>
-<span id="cb8-9"><a></a>    <span class="cf">return</span> dist_counter</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-9"><a></a>    <span class="cf">return</span> dist_counter</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 
 
 </section>
@@ -1878,7 +1878,7 @@ D[i-1,j-1] + \begin{cases}
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1952,13 +1952,14 @@ D[i-1,j-1] + \begin{cases}
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

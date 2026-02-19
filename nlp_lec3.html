@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Natural Language Processing: word embeddings</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -874,7 +874,7 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 </section>
 <section id="construction-1" class="slide level2">
 <h2>Construction</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Import libraries</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Import libraries</span></span>
 <span id="cb2-2"><a></a><span class="im">from</span> sklearn.feature_extraction.text <span class="im">import</span> CountVectorizer</span>
 <span id="cb2-3"><a></a></span>
 <span id="cb2-4"><a></a><span class="co"># Create sample documents</span></span>
@@ -887,7 +887,7 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 <span id="cb2-11"><a></a>X <span class="op">=</span> vectorizer.fit_transform(documents)</span>
 <span id="cb2-12"><a></a></span>
 <span id="cb2-13"><a></a><span class="co"># Print the feature names and the document-term matrix</span></span>
-<span id="cb2-14"><a></a><span class="bu">print</span>(<span class="st">"Feature Names:"</span>, vectorizer.get_feature_names_out())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-14"><a></a><span class="bu">print</span>(<span class="st">"Feature Names:"</span>, vectorizer.get_feature_names_out())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="construction-2" class="slide level2">
 <h2>Construction</h2>
@@ -1201,7 +1201,7 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1275,13 +1275,14 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.7.31">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.8.27">
 
   <meta name="author" content="MSDE">
   <title>Deep Learning/NLP course – Nearest-neighbor search</title>
@@ -95,7 +95,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-f563837468303362081e247dddd440d0.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -503,11 +503,11 @@ MSDE
 <p><strong>Python example</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="kw">def</span> shingle(text: <span class="bu">str</span>, k: <span class="bu">int</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="kw">def</span> shingle(text: <span class="bu">str</span>, k: <span class="bu">int</span>):</span>
 <span id="cb1-2"><a></a>  shingle_set <span class="op">=</span> []</span>
 <span id="cb1-3"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(text) <span class="op">-</span> k<span class="op">+</span><span class="dv">1</span>):</span>
 <span id="cb1-4"><a></a>    shingle_set.append(text[i:i<span class="op">+</span>k])</span>
-<span id="cb1-5"><a></a>  <span class="cf">return</span> <span class="bu">set</span>(shingle_set)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-5"><a></a>  <span class="cf">return</span> <span class="bu">set</span>(shingle_set)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -617,10 +617,10 @@ MSDE
 <p><strong>Unshuffled</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>  hash_ex <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>))</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a>  hash_ex <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>))</span>
 <span id="cb2-2"><a></a>  <span class="bu">print</span>(hash_ex)  <span class="co"># we haven't shuffled yet</span></span>
 <span id="cb2-3"><a></a></span>
-<span id="cb2-4"><a></a>  Out: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, ..., <span class="dv">101</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-4"><a></a>  Out: [<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>, ..., <span class="dv">101</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -630,12 +630,12 @@ MSDE
 <p><strong>Shuffled</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>  <span class="im">from</span> random <span class="im">import</span> shuffle</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a>  <span class="im">from</span> random <span class="im">import</span> shuffle</span>
 <span id="cb3-2"><a></a></span>
 <span id="cb3-3"><a></a>  shuffle(hash_ex)</span>
 <span id="cb3-4"><a></a>  <span class="bu">print</span>(hash_ex)</span>
 <span id="cb3-5"><a></a></span>
-<span id="cb3-6"><a></a>  Out: [<span class="dv">63</span>, <span class="dv">7</span>, <span class="dv">94</span>, ..., <span class="dv">56</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a></a>  Out: [<span class="dv">63</span>, <span class="dv">7</span>, <span class="dv">94</span>, ..., <span class="dv">56</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -651,9 +651,9 @@ MSDE
 <div class="callout-content">
 <p>Match the index of each value to the equivalent values in the sparse vector <code>a_1hot</code>.</p>
 <p>If we find a 1 — that index is our signature value.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="bu">print</span>(<span class="ss">f"7 -&gt; </span><span class="sc">{</span>hash_ex<span class="sc">.</span>index(<span class="dv">7</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>  <span class="bu">print</span>(<span class="ss">f"7 -&gt; </span><span class="sc">{</span>hash_ex<span class="sc">.</span>index(<span class="dv">7</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb4-2"><a></a></span>
-<span id="cb4-3"><a></a>  Out: <span class="dv">7</span> <span class="op">-&gt;</span> <span class="dv">1</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-3"><a></a>  Out: <span class="dv">7</span> <span class="op">-&gt;</span> <span class="dv">1</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We now have a randomized list of integers which we can use in creating our <strong>hashed</strong> signatures.</p>
 </div>
 </div>
@@ -669,7 +669,7 @@ MSDE
 </div>
 <div class="callout-content">
 <p>Count up from 1 to len(vocab) + 1 and find if <code>hash_ex.index(i)</code> position in our one-hot encoded vectors contains 1 in that position:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>):</span>
 <span id="cb5-2"><a></a>  idx <span class="op">=</span> hash_ex.index(i)</span>
 <span id="cb5-3"><a></a>  signature_val <span class="op">=</span> a_1hot[idx]</span>
 <span id="cb5-4"><a></a>  <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>idx<span class="sc">}</span><span class="ss"> -&gt; </span><span class="sc">{</span>signature_val<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -683,7 +683,7 @@ MSDE
 <span id="cb5-12"><a></a>      <span class="dv">4</span> <span class="op">-&gt;</span> <span class="dv">92</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
 <span id="cb5-13"><a></a>      <span class="dv">5</span> <span class="op">-&gt;</span> <span class="dv">83</span> <span class="op">-&gt;</span> <span class="dv">0</span></span>
 <span id="cb5-14"><a></a>      <span class="dv">6</span> <span class="op">-&gt;</span> <span class="dv">98</span> <span class="op">-&gt;</span> <span class="dv">1</span></span>
-<span id="cb5-15"><a></a>      match<span class="op">!</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-15"><a></a>      match<span class="op">!</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -697,7 +697,7 @@ MSDE
 <p><strong>Minhash vectors</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> create_hash_func(size: <span class="bu">int</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="kw">def</span> create_hash_func(size: <span class="bu">int</span>):</span>
 <span id="cb6-2"><a></a>  <span class="co"># function for creating the hash vector/function</span></span>
 <span id="cb6-3"><a></a>  hash_ex <span class="op">=</span> <span class="bu">list</span>(<span class="bu">range</span>(<span class="dv">1</span>, <span class="bu">len</span>(vocab)<span class="op">+</span><span class="dv">1</span>))</span>
 <span id="cb6-4"><a></a>  shuffle(hash_ex)</span>
@@ -711,7 +711,7 @@ MSDE
 <span id="cb6-12"><a></a>  <span class="cf">return</span> hashes</span>
 <span id="cb6-13"><a></a></span>
 <span id="cb6-14"><a></a><span class="co"># we create 20 minhash vectors</span></span>
-<span id="cb6-15"><a></a>minhash_func <span class="op">=</span> build_minhash_func(<span class="bu">len</span>(vocab), <span class="dv">20</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-15"><a></a>minhash_func <span class="op">=</span> build_minhash_func(<span class="bu">len</span>(vocab), <span class="dv">20</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -724,7 +724,7 @@ MSDE
 <p><strong>Create hash</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> create_hash(vector: <span class="bu">list</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">def</span> create_hash(vector: <span class="bu">list</span>):</span>
 <span id="cb7-2"><a></a>  <span class="co"># use this function for creating our signatures (eg the matching)</span></span>
 <span id="cb7-3"><a></a>  signature <span class="op">=</span> []</span>
 <span id="cb7-4"><a></a>  <span class="cf">for</span> func <span class="kw">in</span> minhash_func:</span>
@@ -734,7 +734,7 @@ MSDE
 <span id="cb7-8"><a></a>          <span class="cf">if</span> signature_val <span class="op">==</span> <span class="dv">1</span>:</span>
 <span id="cb7-9"><a></a>              signature.append(idx)</span>
 <span id="cb7-10"><a></a>              <span class="cf">break</span></span>
-<span id="cb7-11"><a></a>  <span class="cf">return</span> signature</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-11"><a></a>  <span class="cf">return</span> signature</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -747,7 +747,7 @@ MSDE
 <p><strong>Signatures creation</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="co"># now create signatures</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="co"># now create signatures</span></span>
 <span id="cb8-2"><a></a>a_sig <span class="op">=</span> create_hash(a_1hot)</span>
 <span id="cb8-3"><a></a>b_sig <span class="op">=</span> create_hash(b_1hot)</span>
 <span id="cb8-4"><a></a>c_sig <span class="op">=</span> create_hash(c_1hot)</span>
@@ -757,7 +757,7 @@ MSDE
 <span id="cb8-8"><a></a>  </span>
 <span id="cb8-9"><a></a>Out: </span>
 <span id="cb8-10"><a></a>[<span class="dv">44</span>, <span class="dv">21</span>, <span class="dv">73</span>, <span class="dv">14</span>, <span class="dv">2</span>, <span class="dv">13</span>, <span class="dv">62</span>, <span class="dv">70</span>, <span class="dv">17</span>, <span class="dv">5</span>, <span class="dv">12</span>, <span class="dv">86</span>, <span class="dv">21</span>, <span class="dv">18</span>, <span class="dv">10</span>, <span class="dv">10</span>, <span class="dv">86</span>, <span class="dv">47</span>, <span class="dv">17</span>, <span class="dv">78</span>]</span>
-<span id="cb8-11"><a></a>[<span class="dv">97</span>, <span class="dv">96</span>, <span class="dv">57</span>, <span class="dv">82</span>, <span class="dv">43</span>, <span class="dv">67</span>, <span class="dv">75</span>, <span class="dv">24</span>, <span class="dv">49</span>, <span class="dv">28</span>, <span class="dv">67</span>, <span class="dv">56</span>, <span class="dv">96</span>, <span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">85</span>, <span class="dv">86</span>, <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">75</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-11"><a></a>[<span class="dv">97</span>, <span class="dv">96</span>, <span class="dv">57</span>, <span class="dv">82</span>, <span class="dv">43</span>, <span class="dv">67</span>, <span class="dv">75</span>, <span class="dv">24</span>, <span class="dv">49</span>, <span class="dv">28</span>, <span class="dv">67</span>, <span class="dv">56</span>, <span class="dv">96</span>, <span class="dv">18</span>, <span class="dv">11</span>, <span class="dv">85</span>, <span class="dv">86</span>, <span class="dv">19</span>, <span class="dv">65</span>, <span class="dv">75</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -806,9 +806,9 @@ MSDE
 <p><strong>Jaccard fn</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="kw">def</span> jaccard(a: <span class="bu">set</span>, b: <span class="bu">set</span>):</span>
-<span id="cb9-2"><a></a>  <span class="cf">return</span> <span class="bu">len</span>(a.intersection(b)) <span class="op">/</span> <span class="bu">len</span>(a.union(b))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Jaccard a and b</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="kw">def</span> jaccard(a: <span class="bu">set</span>, b: <span class="bu">set</span>):</span>
+<span id="cb9-2"><a></a>  <span class="cf">return</span> <span class="bu">len</span>(a.intersection(b)) <span class="op">/</span> <span class="bu">len</span>(a.union(b))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Jaccard a and b</span></span>
 <span id="cb10-2"><a></a>jaccard(a, b), jaccard(<span class="bu">set</span>(a_sig), <span class="bu">set</span>(b_sig))</span>
 <span id="cb10-3"><a></a></span>
 <span id="cb10-4"><a></a>(<span class="fl">0.14814814814814814</span>, <span class="fl">0.10344827586206896</span>)</span>
@@ -816,7 +816,7 @@ MSDE
 <span id="cb10-6"><a></a><span class="co"># Jaccard b and c</span></span>
 <span id="cb10-7"><a></a>jaccard(b, c), jaccard(<span class="bu">set</span>(b_sig), <span class="bu">set</span>(c_sig))</span>
 <span id="cb10-8"><a></a></span>
-<span id="cb10-9"><a></a>(<span class="fl">0.45652173913043476</span>, <span class="fl">0.34615384615384615</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb10-9"><a></a>(<span class="fl">0.45652173913043476</span>, <span class="fl">0.34615384615384615</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -933,14 +933,14 @@ MSDE
 <p><strong>Split fn</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> split_vector(signature, b):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> split_vector(signature, b):</span>
 <span id="cb11-2"><a></a>  <span class="cf">assert</span> <span class="bu">len</span>(signature) <span class="op">%</span> b <span class="op">==</span> <span class="dv">0</span></span>
 <span id="cb11-3"><a></a>  r <span class="op">=</span> <span class="bu">int</span>(<span class="bu">len</span>(signature) <span class="op">/</span> b)</span>
 <span id="cb11-4"><a></a>  <span class="co"># code splitting signature in b parts</span></span>
 <span id="cb11-5"><a></a>  subvecs <span class="op">=</span> []</span>
 <span id="cb11-6"><a></a>  <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">0</span>, <span class="bu">len</span>(signature), r):</span>
 <span id="cb11-7"><a></a>      subvecs.append(signature[i : i<span class="op">+</span>r])</span>
-<span id="cb11-8"><a></a>  <span class="cf">return</span> subvecs </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-8"><a></a>  <span class="cf">return</span> subvecs </span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -953,7 +953,7 @@ MSDE
 <p><strong>Output</strong></p>
 </div>
 <div class="callout-content">
-<div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>band_a <span class="op">=</span> split_vector(a_sig, <span class="dv">10</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>band_a <span class="op">=</span> split_vector(a_sig, <span class="dv">10</span>)</span>
 <span id="cb12-2"><a></a>band_b <span class="op">=</span> split_vector(b_sig, <span class="dv">10</span>)</span>
 <span id="cb12-3"><a></a>band_c <span class="op">=</span> split_vector(c_sig, <span class="dv">10</span>)</span>
 <span id="cb12-4"><a></a></span>
@@ -966,7 +966,7 @@ MSDE
 <span id="cb12-11"><a></a>     [<span class="dv">29</span>, <span class="dv">5</span>],</span>
 <span id="cb12-12"><a></a>     [<span class="dv">53</span>, <span class="dv">33</span>],</span>
 <span id="cb12-13"><a></a>     [<span class="dv">40</span>, <span class="dv">94</span>],</span>
-<span id="cb12-14"><a></a>     [<span class="dv">96</span>, <span class="dv">70</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-14"><a></a>     [<span class="dv">96</span>, <span class="dv">70</span>]]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -980,13 +980,13 @@ MSDE
 </div>
 <div class="callout-content">
 <p>Then we loop through the lists to identify any matches between sub-vectors. If we find any matches — we take those vectors as candidate pairs.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="cf">for</span> b_rows, c_rows <span class="kw">in</span> <span class="bu">zip</span>(band_b, band_c):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a><span class="cf">for</span> b_rows, c_rows <span class="kw">in</span> <span class="bu">zip</span>(band_b, band_c):</span>
 <span id="cb13-2"><a></a>  <span class="cf">if</span> b_rows <span class="op">==</span> c_rows:</span>
 <span id="cb13-3"><a></a>      <span class="bu">print</span>(<span class="ss">f"Candidate pair: </span><span class="sc">{</span>b_rows<span class="sc">}</span><span class="ss"> == </span><span class="sc">{</span>c_rows<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb13-4"><a></a>      <span class="co"># we only need one band to match</span></span>
 <span id="cb13-5"><a></a>      <span class="cf">break</span></span>
 <span id="cb13-6"><a></a></span>
-<span id="cb13-7"><a></a>Out: Candidate pair: [<span class="dv">69</span>, <span class="dv">55</span>] <span class="op">==</span> [<span class="dv">69</span>, <span class="dv">55</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb13-7"><a></a>Out: Candidate pair: [<span class="dv">69</span>, <span class="dv">55</span>] <span class="op">==</span> [<span class="dv">69</span>, <span class="dv">55</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>We find that our two more similar sentences, <strong>b</strong>, and <strong>c</strong> are identified as candidate pairs.</p>
 <p>The less similar of the trio, a — is not identified as a candidate. This is a good result, but if we want to really test LSH, we will need to work with more data.</p>
 </div>
@@ -1322,7 +1322,7 @@ MSDE
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],
@@ -1396,13 +1396,14 @@ MSDE
           e.clearSelection();
         }
         const getTextToCopy = function(trigger) {
-            const codeEl = trigger.previousElementSibling.cloneNode(true);
-            for (const childEl of codeEl.children) {
-              if (isCodeAnnotation(childEl)) {
-                childEl.remove();
-              }
+          const outerScaffold = trigger.parentElement.cloneNode(true);
+          const codeEl = outerScaffold.querySelector('code');
+          for (const childEl of codeEl.children) {
+            if (isCodeAnnotation(childEl)) {
+              childEl.remove();
             }
-            return codeEl.innerText;
+          }
+          return codeEl.innerText;
         }
         const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
           text: getTextToCopy

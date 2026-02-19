@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +118,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -233,7 +234,7 @@ window.Quarto = {
 <section id="preliminaries" class="level2">
 <h2 class="anchored" data-anchor-id="preliminaries">Preliminaries</h2>
 <p>Import libraries:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
@@ -243,26 +244,26 @@ window.Quarto = {
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="op">%</span>matplotlib inline</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <section id="data-loading" class="level3">
 <h3 class="anchored" data-anchor-id="data-loading">Data loading</h3>
 <p>Fetch spam detection dataset from Huggingface: <a href="https://huggingface.co/datasets/Deysi/spam-detection-dataset" class="uri">https://huggingface.co/datasets/Deysi/spam-detection-dataset</a>.</p>
 <p>It will download 2 <code>parquet</code> files - this is a special data format. In order to be able to read it, run:</p>
 <p><code>pip install fastparquet</code></p>
 <p>Invoke <code>pandas.read_parquet(&lt;path&gt;)</code> in order to read parquet file contents into a Pandas DataFrame.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># parquet_data = ...</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="create-data-sets" class="level3">
 <h3 class="anchored" data-anchor-id="create-data-sets">Create data sets</h3>
 <p>Now, create 2 Numpy arrays of same size: <code>texts</code> and <code>labels</code>, where <code>texts</code> is a Numpy array of all texts from parquet file above (<code>parquet_data</code>), and labels is an array containing <code>0</code> when text is not spam and <code>1</code> otherwise.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># texts = ... # some Numpy array</span></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># labels = ... # some Numpy array</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># assert(len(texts) == len(labels))</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="get-pre-trained-word-embeddings" class="level3">
 <h3 class="anchored" data-anchor-id="get-pre-trained-word-embeddings">Get pre-trained word embeddings</h3>
@@ -275,7 +276,7 @@ window.Quarto = {
 <p>An <strong>embedding layer</strong> serves as a look-up table which take word indexes in the vocabulary as input and output word vectors. Hence, the embedding layer has shape <span class="math inline">\((N, d)\)</span> where <span class="math inline">\(N\)</span> is the size of the vocabulary and <span class="math inline">\(d\)</span> is the embedding dimension. In order to fine-tune pretrained word vectors, we need to create an embedding layer in our <code>nn.Modules</code> class. Our input to the model will then be <code>input_ids</code>, which is the tokens’ index in the vocabulary.</p>
 <p>The function <code>tokenize</code> will tokenize our sentences, build a vocabulary and fine the maximum sentence length. The function <code>encode</code> will take in the outputs of <code>tokenize</code>, perform sentence padding and return <code>input_ids</code> as a numpy array.</p>
 <p>Use the below two functions to tokenize and encode texts:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tokenize <span class="im">import</span> word_tokenize</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> collections <span class="im">import</span> defaultdict</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tokenize(texts):</span>
@@ -338,11 +339,11 @@ window.Quarto = {
 <span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>        input_id <span class="op">=</span> [word2idx.get(token) <span class="cf">for</span> token <span class="kw">in</span> tokenized_sent]</span>
 <span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a>        input_ids.append(input_id)</span>
 <span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(input_ids)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> np.array(input_ids)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="pre-trained-vectors" class="level2">
 <h2 class="anchored" data-anchor-id="pre-trained-vectors">Pre-trained vectors</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm_notebook</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> tqdm <span class="im">import</span> tqdm_notebook</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> load_pretrained_vectors(word2idx, fname):</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Load pretrained vectors and create embedding layers.</span></span>
@@ -384,11 +385,11 @@ window.Quarto = {
 <span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a><span class="co"># Load pretrained vectors</span></span>
 <span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> load_pretrained_vectors(word2idx, <span class="st">"../imdb/crawl-300d-2M.vec"</span>)</span>
-<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> torch.tensor(embeddings)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>embeddings <span class="op">=</span> torch.tensor(embeddings)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="pytorch-data-loaders" class="level2">
 <h2 class="anchored" data-anchor-id="pytorch-data-loaders">PyTorch data loaders</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> (TensorDataset, DataLoader, RandomSampler,</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> torch.utils.data <span class="im">import</span> (TensorDataset, DataLoader, RandomSampler,</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                              SequentialSampler)</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> data_loader(train_inputs, val_inputs, train_labels, val_labels,</span>
@@ -414,9 +415,9 @@ window.Quarto = {
 <span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># val_dataloader = ...</span></span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># CODE_END</span></span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> train_dataloader, val_dataloader</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> train_dataloader, val_dataloader</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Use <code>train_test_split</code> function from scikit-learn library:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.model_selection <span class="im">import</span> train_test_split</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Train Test Split with test set size = 5%</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
@@ -427,16 +428,16 @@ window.Quarto = {
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Use batch_size = 50</span></span>
 <span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
 <span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># train_dataloader, val_dataloader = ...</span></span>
-<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="cnn-model" class="level2">
 <h2 class="anchored" data-anchor-id="cnn-model">CNN Model</h2>
 <p>The picture below is the illustration of the CNN architecture that we are going to build with three filter sizes: 2, 3, and 4, each of which has 2 filters.</p>
 <p><img src="https://github.com/chriskhanhtran/CNN-Sentence-Classification-PyTorch/blob/master/cnn-architecture.JPG?raw=true" class="img-fluid"></p>
 <p><em>CNN Architecture (Source: Zhang, 2015)</em></p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample configuration:</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Sample configuration:</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>filter_sizes <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>]</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>num_filters <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>num_filters <span class="op">=</span> [<span class="dv">2</span>, <span class="dv">2</span>, <span class="dv">2</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Suppose that we are classifying the sentence “<strong><em>I like this movie very much!</em></strong>” (<span class="math inline">\(N = 7\)</span> tokens) and the dimensionality of word vectors is <span class="math inline">\(d=5\)</span>. After applying the embedding layer on the input token ids, the sample sentence is presented as a 2D tensor with shape (7, 5) like an image.</p>
 <p><span class="math display">\[\mathrm{x_{emb}} \quad \in \mathbb{R}^{7 \times 5}\]</span></p>
 <p>We then use 1-dimesional convolution to extract features from the sentence. In this example, we have 6 filters in total, and each filter has shape <span class="math inline">\((f_i, d)\)</span> where <span class="math inline">\(f_i\)</span> is the filter size for <span class="math inline">\(i \in \{1,...,6\}\)</span>. Each filter will then scan over <span class="math inline">\(\mathrm{x_{emb}}\)</span> and returns a feature map:</p>
@@ -448,7 +449,7 @@ window.Quarto = {
 <p>Finally, we use a fully connected layer with the weight matrix $ ^{2 } $ and dropout to compute <span class="math inline">\(\mathrm{logits}\)</span>, which is a vector of length 2 that keeps the scores for 2 classes.</p>
 <p><span class="math display">\[\mathrm{logits = Dropout(\mathbf{W_{fc}}x_{fc})}  \in \mathbb{R}^2\]</span></p>
 <p>An in-depth explanation of CNN can be found in this <a href="https://cs231n.github.io/convolutional-networks/">article</a> and this <a href="https://www.youtube.com/watch?v=YRhxdVk_sIs">video</a>.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -548,14 +549,14 @@ window.Quarto = {
 <span id="cb9-98"><a href="#cb9-98" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Compute logits. Output shape: (b, n_classes)</span></span>
 <span id="cb9-99"><a href="#cb9-99" aria-hidden="true" tabindex="-1"></a>        logits <span class="op">=</span> <span class="va">self</span>.fc(<span class="va">self</span>.dropout(x_fc))</span>
 <span id="cb9-100"><a href="#cb9-100" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> logits</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-101"><a href="#cb9-101" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> logits</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Set device to either <code>cpu</code>, <code>cuda</code>, or <code>mps</code>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">'cpu`</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>device <span class="op">=</span> <span class="st">'cpu`</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="optimizer" class="level2">
 <h2 class="anchored" data-anchor-id="optimizer">Optimizer</h2>
 <p>A helper function here, plus optimizer creation.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> torch.optim <span class="im">as</span> optim</span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> initialize_model(pretrained_embedding<span class="op">=</span><span class="va">None</span>,</span>
 <span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                    freeze_embedding<span class="op">=</span><span class="va">False</span>,</span>
@@ -589,12 +590,12 @@ window.Quarto = {
 <span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="co"># optimizer = ...</span></span>
 <span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># CODE_END</span></span>
 <span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cnn_model, optimizer</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cnn_model, optimizer</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="training-loop" class="level2">
 <h2 class="anchored" data-anchor-id="training-loop">Training loop</h2>
 <p>For each epoch, the code below will perform a forward step to compute the <em>Cross Entropy</em> loss, a backward step to compute gradients and use the optimizer to update weights/parameters. At the end of each epoch, the loss on training data and the accuracy over the validation data will be printed to help us keep track of the model’s performance. The code is heavily annotated with detailed explanations.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> random</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Specify loss function</span></span>
@@ -718,35 +719,35 @@ window.Quarto = {
 <span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>    val_loss <span class="op">=</span> np.mean(val_loss)</span>
 <span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a>    val_accuracy <span class="op">=</span> np.mean(val_accuracy)</span>
 <span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> val_loss, val_accuracy</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> val_loss, val_accuracy</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="model-evaluation" class="level2">
 <h2 class="anchored" data-anchor-id="model-evaluation">Model evaluation</h2>
-<div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-rand: Word vectors are randomly initialized.</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-rand: Word vectors are randomly initialized.</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>cnn_rand, optimizer <span class="op">=</span> initialize_model(vocab_size<span class="op">=</span><span class="bu">len</span>(word2idx),</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>                                      embed_dim<span class="op">=</span><span class="dv">300</span>,</span>
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>                                      learning_rate<span class="op">=</span><span class="fl">0.25</span>,</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>                                      dropout<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>train(cnn_rand, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-static: fastText pretrained word vectors are used and freezed during training.</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>train(cnn_rand, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-static: fastText pretrained word vectors are used and freezed during training.</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>cnn_static, optimizer <span class="op">=</span> initialize_model(pretrained_embedding<span class="op">=</span>embeddings,</span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>                                        freeze_embedding<span class="op">=</span><span class="va">True</span>,</span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>                                        learning_rate<span class="op">=</span><span class="fl">0.25</span>,</span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>                                        dropout<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>train(cnn_static, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-non-static: fastText pretrained word vectors are fine-tuned during training.</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>train(cnn_static, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CNN-non-static: fastText pretrained word vectors are fine-tuned during training.</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>set_seed(<span class="dv">42</span>)</span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>cnn_non_static, optimizer <span class="op">=</span> initialize_model(pretrained_embedding<span class="op">=</span>embeddings,</span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>                                            freeze_embedding<span class="op">=</span><span class="va">False</span>,</span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>                                            learning_rate<span class="op">=</span><span class="fl">0.25</span>,</span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>                                            dropout<span class="op">=</span><span class="fl">0.5</span>)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>train(cnn_non_static, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>train(cnn_non_static, optimizer, train_dataloader, val_dataloader, epochs<span class="op">=</span><span class="dv">3</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="test-predictions" class="level2">
 <h2 class="anchored" data-anchor-id="test-predictions">Test predictions</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(text, model<span class="op">=</span>cnn_rand.to(<span class="st">"cpu"</span>), max_len<span class="op">=</span><span class="dv">62</span>):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> predict(text, model<span class="op">=</span>cnn_rand.to(<span class="st">"cpu"</span>), max_len<span class="op">=</span><span class="dv">62</span>):</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Predict probability that a review is positive."""</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Tokenize, pad and encode text</span></span>
@@ -763,7 +764,7 @@ window.Quarto = {
 <span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">#  Compute probability</span></span>
 <span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    probs <span class="op">=</span> F.softmax(logits, dim<span class="op">=</span><span class="dv">1</span>).squeeze(dim<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"This entry is </span><span class="sc">{</span>probs[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">% not spam."</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"This entry is </span><span class="sc">{</span>probs[<span class="dv">1</span>] <span class="op">*</span> <span class="dv">100</span><span class="sc">:.2f}</span><span class="ss">% not spam."</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Invoke <code>predict()</code> function on some text to see how this model works.</p>
 
 
@@ -822,13 +823,14 @@ window.Quarto = {
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy

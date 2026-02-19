@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.7.31">
+<meta name="generator" content="quarto-1.8.27">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -67,14 +67,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <meta name="quarto:offset" content="./">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-c1fac2584b48ed01fb6e278e36375074.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-5b4ad623e5705c0698d39aec6f10cf02.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -117,7 +118,7 @@ const typesetMath = (el) => {
     var macros = [];
     for (var i = 0; i < mathElements.length; i++) {
       var texText = mathElements[i].firstChild;
-      if (mathElements[i].tagName == "SPAN") {
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
         window.katex.render(texText.data, mathElements[i], {
           displayMode: mathElements[i].classList.contains('display'),
           throwOnError: false,
@@ -247,58 +248,57 @@ window.Quarto = {
 <section id="preparation" class="level2">
 <h2 class="anchored" data-anchor-id="preparation">Preparation</h2>
 <p>First, we’ll download Twitter samples from NLTK:</p>
-<div id="dbcfa744" class="cell" data-execution_count="2">
-<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
+<div id="351df534" class="cell" data-execution_count="2">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> nltk</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'twitter_samples'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'twitter_samples'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package twitter_samples to
 [nltk_data]     /Users/vitvly/nltk_data...
-[nltk_data]   Package twitter_samples is already up-to-date!</code></pre>
+[nltk_data]   Unzipping corpora/twitter_samples.zip.</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="22">
+<div class="cell-output cell-output-display" data-execution_count="1">
 <pre><code>True</code></pre>
 </div>
 </div>
 <p>And import these:</p>
-<div id="cd53554d" class="cell" data-execution_count="3">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> twitter_samples</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="b13a91fa" class="cell" data-execution_count="3">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> twitter_samples</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>These contain positive/negative tweet samples.</p>
 <p>We can check the string content of these tweets:</p>
-<div id="cb9f5810" class="cell" data-execution_count="4">
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>positive_tweets <span class="op">=</span> twitter_samples.strings(<span class="st">'positive_tweets.json'</span>)</span>
+<div id="dd6b4bb4" class="cell" data-execution_count="4">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>positive_tweets <span class="op">=</span> twitter_samples.strings(<span class="st">'positive_tweets.json'</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>negative_tweets <span class="op">=</span> twitter_samples.strings(<span class="st">'negative_tweets.json'</span>)</span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>positive_tweets[<span class="dv">50</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="24">
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>positive_tweets[<span class="dv">50</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="3">
 <pre><code>'@groovinshawn they are rechargeable and it normally comes with a charger when u buy it :)'</code></pre>
 </div>
 </div>
 <p>Or we can get a list of tokens using <a href="https://www.nltk.org/howto/twitter.html">tokenized</a> method on <code>twitter_samples</code>.</p>
-<div id="98264843" class="cell" data-execution_count="5">
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tweet_tokens <span class="op">=</span> twitter_samples.tokenized(<span class="st">'positive_tweets.json'</span>)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tweet_tokens[<span class="dv">50</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="df0b80ac" class="cell" data-execution_count="5">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>tweet_tokens <span class="op">=</span> twitter_samples.tokenized(<span class="st">'positive_tweets.json'</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(tweet_tokens[<span class="dv">50</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['@groovinshawn', 'they', 'are', 'rechargeable', 'and', 'it', 'normally', 'comes', 'with', 'a', 'charger', 'when', 'u', 'buy', 'it', ':)']</code></pre>
 </div>
 </div>
 <p>Now let’s setup a Part-of-Speech tagger. We will use it for lemmatization.</p>
 <p>Download and import a perceptron tagger that will be used by the PoS tagger.</p>
-<div id="9f95fe1d" class="cell" data-execution_count="6">
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger_eng'</span>)</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tag <span class="im">import</span> pos_tag</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="896c5178" class="cell" data-execution_count="6">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'averaged_perceptron_tagger_eng'</span>)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.tag <span class="im">import</span> pos_tag</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package averaged_perceptron_tagger_eng to
 [nltk_data]     /Users/vitvly/nltk_data...
-[nltk_data]   Package averaged_perceptron_tagger_eng is already up-to-
-[nltk_data]       date!</code></pre>
+[nltk_data]   Unzipping taggers/averaged_perceptron_tagger_eng.zip.</code></pre>
 </div>
 </div>
 <p>Check how it works. Note that it returns tuples, where second element is a Part-of-Speech identifier.</p>
-<div id="7d66751d" class="cell" data-execution_count="7">
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pos_tag(tweet_tokens[<span class="dv">50</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="27">
+<div id="8a6d7d58" class="cell" data-execution_count="7">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>pos_tag(tweet_tokens[<span class="dv">50</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
 <pre><code>[('@groovinshawn', 'NN'),
  ('they', 'PRP'),
  ('are', 'VBP'),
@@ -322,25 +322,24 @@ window.Quarto = {
 <h2 class="anchored" data-anchor-id="wordnet">WordNet</h2>
 <p>WordNet is a semantically-oriented dictionary of English. It contains words along with their synonyms etc., organized in a <strong>semantic hierarchy</strong>.</p>
 <p>Next, we will use it’s lemmatizer functionality. But first let’s check how the hierarchy-focused features work.</p>
-<div id="275f439b" class="cell" data-execution_count="8">
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="82737087" class="cell" data-execution_count="8">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'wordnet'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
-<pre><code>[nltk_data] Downloading package wordnet to /Users/vitvly/nltk_data...
-[nltk_data]   Package wordnet is already up-to-date!</code></pre>
+<pre><code>[nltk_data] Downloading package wordnet to /Users/vitvly/nltk_data...</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="28">
+<div class="cell-output cell-output-display" data-execution_count="7">
 <pre><code>True</code></pre>
 </div>
 </div>
 <section id="synonyms" class="level3">
 <h3 class="anchored" data-anchor-id="synonyms">Synonyms</h3>
 <p>E.g., in order to fetch synonym sets for word <code>car</code>, you do:</p>
-<div id="7d0ce1fc" class="cell" data-execution_count="9">
-<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> wordnet <span class="im">as</span> wn</span>
+<div id="e4a5e4a9" class="cell" data-execution_count="9">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> wordnet <span class="im">as</span> wn</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>word_synset <span class="op">=</span> wn.synsets(<span class="st">"car"</span>)</span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"synsets:"</span>, word_synset)</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"lemma names:"</span>, word_synset[<span class="dv">0</span>].lemma_names())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"lemma names:"</span>, word_synset[<span class="dv">0</span>].lemma_names())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>synsets: [Synset('car.n.01'), Synset('car.n.02'), Synset('car.n.03'), Synset('car.n.04'), Synset('cable_car.n.01')]
 lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
@@ -348,27 +347,27 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 </div>
 <p>So, using WordNet, we can say that <code>lemma</code>s are pairings of synsets and words.</p>
 <p>We can now show definitions and examples:</p>
-<div id="297d42c6" class="cell" data-execution_count="10">
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].definition()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="30">
+<div id="91766642" class="cell" data-execution_count="10">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].definition()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="9">
 <pre><code>'a motor vehicle with four wheels; usually propelled by an internal combustion engine'</code></pre>
 </div>
 </div>
-<div id="555df62b" class="cell" data-execution_count="11">
-<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].examples()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="31">
+<div id="55bdb6e5" class="cell" data-execution_count="11">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].examples()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="10">
 <pre><code>['he needs a car to get to work']</code></pre>
 </div>
 </div>
-<div id="0f52ae74" class="cell" data-execution_count="12">
-<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">1</span>].definition()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="32">
+<div id="7c9f19bb" class="cell" data-execution_count="12">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">1</span>].definition()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="11">
 <pre><code>'a wheeled vehicle adapted to the rails of railroad'</code></pre>
 </div>
 </div>
-<div id="c4f9c6f2" class="cell" data-execution_count="13">
-<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">1</span>].examples()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="33">
+<div id="7a765398" class="cell" data-execution_count="13">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">1</span>].examples()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="12">
 <pre><code>['three cars had jumped the rails']</code></pre>
 </div>
 </div>
@@ -376,58 +375,58 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 <section id="hyponyms" class="level3">
 <h3 class="anchored" data-anchor-id="hyponyms">Hyponyms</h3>
 <p>Concepts that are <strong>more specific</strong>:</p>
-<div id="b352d67c" class="cell" data-execution_count="14">
-<div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].hyponyms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="34">
-<pre><code>[Synset('hot_rod.n.01'),
+<div id="f9191ee5" class="cell" data-execution_count="14">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].hyponyms()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="13">
+<pre><code>[Synset('loaner.n.02'),
+ Synset('minicar.n.01'),
+ Synset('compact.n.03'),
+ Synset('hot_rod.n.01'),
  Synset('cruiser.n.01'),
  Synset('hatchback.n.01'),
  Synset('sedan.n.01'),
- Synset('stock_car.n.01'),
  Synset('sports_car.n.01'),
- Synset('racer.n.02'),
  Synset('hardtop.n.01'),
+ Synset('stock_car.n.01'),
  Synset('model_t.n.01'),
  Synset('cab.n.03'),
  Synset('minivan.n.01'),
+ Synset('racer.n.02'),
  Synset('limousine.n.01'),
  Synset('used-car.n.01'),
  Synset('bus.n.04'),
- Synset('horseless_carriage.n.01'),
  Synset('sport_utility.n.01'),
+ Synset('horseless_carriage.n.01'),
  Synset('ambulance.n.01'),
  Synset('roadster.n.01'),
  Synset('convertible.n.01'),
- Synset('gas_guzzler.n.01'),
  Synset('subcompact.n.01'),
  Synset('touring_car.n.01'),
- Synset('coupe.n.01'),
+ Synset('gas_guzzler.n.01'),
  Synset('pace_car.n.01'),
  Synset('beach_wagon.n.01'),
+ Synset('coupe.n.01'),
  Synset('stanley_steamer.n.01'),
  Synset('jeep.n.01'),
- Synset('electric.n.01'),
- Synset('loaner.n.02'),
- Synset('minicar.n.01'),
- Synset('compact.n.03')]</code></pre>
+ Synset('electric.n.01')]</code></pre>
 </div>
 </div>
 </section>
 <section id="hypernyms" class="level3">
 <h3 class="anchored" data-anchor-id="hypernyms">Hypernyms</h3>
 <p>Concepts that are <strong>more generic</strong>:</p>
-<div id="1b7894d3" class="cell" data-execution_count="15">
-<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].hypernyms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="35">
+<div id="9d5fa9c1" class="cell" data-execution_count="15">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>word_synset[<span class="dv">0</span>].hypernyms()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="14">
 <pre><code>[Synset('motor_vehicle.n.01')]</code></pre>
 </div>
 </div>
 <p>This only gave us the concept immediately above. In order to list all hypernyms, we can use <strong>paths</strong>:</p>
-<div id="1400bfe4" class="cell" data-execution_count="16">
-<div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> wn.synsets(<span class="st">"tree"</span>)[<span class="dv">0</span>]</span>
+<div id="2b06e650" class="cell" data-execution_count="16">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>tree <span class="op">=</span> wn.synsets(<span class="st">"tree"</span>)[<span class="dv">0</span>]</span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>paths <span class="op">=</span> tree.hypernym_paths()</span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> paths:</span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>([synset.name() <span class="cf">for</span> synset <span class="kw">in</span> p])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">print</span>([synset.name() <span class="cf">for</span> synset <span class="kw">in</span> p])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>['entity.n.01', 'physical_entity.n.01', 'object.n.01', 'whole.n.02', 'living_thing.n.01', 'organism.n.01', 'plant.n.02', 'vascular_plant.n.01', 'woody_plant.n.01', 'tree.n.01']</code></pre>
 </div>
@@ -436,30 +435,30 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 <section id="meronyms" class="level3">
 <h3 class="anchored" data-anchor-id="meronyms">Meronyms</h3>
 <p>Concept parts:</p>
-<div id="b93871e4" class="cell" data-execution_count="17">
-<div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tree.part_meronyms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="37">
-<pre><code>[Synset('stump.n.01'),
- Synset('crown.n.07'),
+<div id="1f62a67a" class="cell" data-execution_count="17">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>tree.part_meronyms()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="16">
+<pre><code>[Synset('crown.n.07'),
  Synset('burl.n.02'),
  Synset('trunk.n.01'),
- Synset('limb.n.02')]</code></pre>
+ Synset('limb.n.02'),
+ Synset('stump.n.01')]</code></pre>
 </div>
 </div>
 <p>Or the substance it’s made of:</p>
-<div id="eccf59ee" class="cell" data-execution_count="18">
-<div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tree.substance_meronyms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="38">
-<pre><code>[Synset('sapwood.n.01'), Synset('heartwood.n.01')]</code></pre>
+<div id="5486e87f" class="cell" data-execution_count="18">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a>tree.substance_meronyms()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="17">
+<pre><code>[Synset('heartwood.n.01'), Synset('sapwood.n.01')]</code></pre>
 </div>
 </div>
 </section>
 <section id="holonyms" class="level3">
 <h3 class="anchored" data-anchor-id="holonyms">Holonyms</h3>
 <p>Entities concept is <strong>part of</strong>:</p>
-<div id="681d1fa7" class="cell" data-execution_count="19">
-<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tree.member_holonyms()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="cell-output cell-output-display" data-execution_count="39">
+<div id="ae84ad0b" class="cell" data-execution_count="19">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a>tree.member_holonyms()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-display" data-execution_count="18">
 <pre><code>[Synset('forest.n.01')]</code></pre>
 </div>
 </div>
@@ -470,10 +469,10 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 <p>Let’s write a function that will lemmatize twitter tokens.</p>
 <p>Use documentation for <a href="https://www.nltk.org/api/nltk.stem.wordnet.html#nltk.stem.wordnet.WordNetLemmatizer.lemmatize">lemmatize</a>.</p>
 <p>First fetch PoS tokens so that they can be passed to <code>WordNetLemmatizer</code>.</p>
-<div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.wordnet <span class="im">import</span> WordNetLemmatizer</span>
-<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> tweet_tokens[<span class="dv">50</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-<div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a lemmatizer</span></span>
-<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.stem.wordnet <span class="im">import</span> WordNetLemmatizer</span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a>tokens <span class="op">=</span> tweet_tokens[<span class="dv">50</span>]</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a lemmatizer</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>lemmatizer <span class="op">=</span> WordNetLemmatizer()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now write the code that will produce an array of lemmatized tokens inside <code>lemmatized_sentence</code>.</p>
 <p>Convert PoS tags into a format used by the lemmatizer using the following rules:</p>
 <ul>
@@ -483,7 +482,7 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 </ul>
 <p>Then on each token use <code>lemmatizer.lemmatize()</code> using the converted part-of-speech tag.</p>
 <p>And append it to <code>lemmatized_sentence</code>.</p>
-<div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lemmatize_sentence(tokens)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> lemmatize_sentence(tokens)</span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>  lemmatized_sentence <span class="op">=</span> []</span>
 <span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-4"><a href="#cb40-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># CODE_START</span></span>
@@ -492,7 +491,7 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 <span id="cb40-7"><a href="#cb40-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb40-8"><a href="#cb40-8" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> lemmatized_sentence</span>
 <span id="cb40-9"><a href="#cb40-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>lemmatize_sentence(tokens)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb40-10"><a href="#cb40-10" aria-hidden="true" tabindex="-1"></a>lemmatize_sentence(tokens)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Note that lemmatizer converts words to their base forms (<code>are</code> <span class="math inline">\(\rightarrow\)</span> <code>be</code>, <code>comes</code> <span class="math inline">\(\rightarrow\)</span> <code>come</code>).</p>
 </section>
 <section id="processing" class="level2">
@@ -502,24 +501,24 @@ lemma names: ['car', 'auto', 'automobile', 'machine', 'motorcar']</code></pre>
 <li>remove URLs and mentions using regexes</li>
 <li>after lemmatization, remove <em>stopwords</em></li>
 </ul>
-<div id="95d4aba1" class="cell" data-execution_count="20">
-<div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div id="cad5706c" class="cell" data-execution_count="20">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a>nltk.download(<span class="st">'stopwords'</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>[nltk_data] Downloading package stopwords to
 [nltk_data]     /Users/vitvly/nltk_data...
-[nltk_data]   Package stopwords is already up-to-date!</code></pre>
+[nltk_data]   Unzipping corpora/stopwords.zip.</code></pre>
 </div>
-<div class="cell-output cell-output-display" data-execution_count="40">
+<div class="cell-output cell-output-display" data-execution_count="19">
 <pre><code>True</code></pre>
 </div>
 </div>
 <p>What are these stopwords? Let’s see some.</p>
-<div id="c019ddf5" class="cell" data-execution_count="21">
-<div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
+<div id="8a6d3cbe" class="cell" data-execution_count="21">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk.corpus <span class="im">import</span> stopwords</span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>stop_words <span class="op">=</span> stopwords.words(<span class="st">'english'</span>)</span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="bu">len</span>(stop_words))</span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">10</span>):</span>
-<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(stop_words[i])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(stop_words[i])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell-output cell-output-stdout">
 <pre><code>198
 a
@@ -544,7 +543,7 @@ an</code></pre>
 <li>Lemmatize using <code>WordNetLemmatizer</code>.</li>
 <li>Return the list of <code>cleaned_tokens</code>.</li>
 </ol>
-<div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re, string</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re, string</span>
 <span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> process_tokens(tweet_tokens):</span>
 <span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -556,12 +555,12 @@ an</code></pre>
 <span id="cb46-10"><a href="#cb46-10" aria-hidden="true" tabindex="-1"></a>      <span class="co"># CODE_START</span></span>
 <span id="cb46-11"><a href="#cb46-11" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ...</span></span>
 <span id="cb46-12"><a href="#cb46-12" aria-hidden="true" tabindex="-1"></a>      <span class="co"># CODE_END</span></span>
-<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cleaned_tokens</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb46-13"><a href="#cb46-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> cleaned_tokens</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Test your function:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Before:"</span>, tweet_tokens[<span class="dv">50</span>])</span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"After:"</span>, process_tokens(tweet_tokens[<span class="dv">50</span>]))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"Before:"</span>, tweet_tokens[<span class="dv">50</span>])</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"After:"</span>, process_tokens(tweet_tokens[<span class="dv">50</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now run <code>process_tokens</code> on all positive/negative tokens (use <code>tokenized</code> method as mentioned above).</p>
-<div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="co"># positive_tweet_tokens =</span></span>
 <span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a><span class="co"># negative_tweet_tokens =</span></span>
@@ -569,24 +568,24 @@ an</code></pre>
 <span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a><span class="co"># positive_cleaned_tokens_list =</span></span>
 <span id="cb48-7"><a href="#cb48-7" aria-hidden="true" tabindex="-1"></a><span class="co"># negative_cleaned_tokens_list =</span></span>
 <span id="cb48-8"><a href="#cb48-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb48-9"><a href="#cb48-9" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Let’s see how did the processing go.</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(positive_tweet_tokens[<span class="dv">500</span>])</span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(positive_cleaned_tokens_list[<span class="dv">500</span>])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(positive_tweet_tokens[<span class="dv">500</span>])</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(positive_cleaned_tokens_list[<span class="dv">500</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Now, let’s check what words are most common.</p>
 <p>First, add a helper function <code>get_all_words</code>:</p>
-<div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_all_words(cleaned_tokens_list):</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_all_words(cleaned_tokens_list):</span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># CODE_START</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># ...</span></span>
 <span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>  <span class="co"># CODE_END</span></span>
-<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>all_pos_words <span class="op">=</span> get_all_words(positive_cleaned_tokens_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb50-5"><a href="#cb50-5" aria-hidden="true" tabindex="-1"></a>all_pos_words <span class="op">=</span> get_all_words(positive_cleaned_tokens_list)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>Perform frequency analysis using <code>FreqDist</code> and print 10 words most commonly used in positive tweets:</p>
-<div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk <span class="im">import</span> FreqDist</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> nltk <span class="im">import</span> FreqDist</span>
 <span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_START</span></span>
 <span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co"># use all_pos_words</span></span>
 <span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a><span class="co"># ...</span></span>
-<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb51-6"><a href="#cb51-6" aria-hidden="true" tabindex="-1"></a><span class="co"># CODE_END</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="exercises" class="level1">
@@ -657,13 +656,14 @@ an</code></pre>
       e.clearSelection();
     }
     const getTextToCopy = function(trigger) {
-        const codeEl = trigger.previousElementSibling.cloneNode(true);
-        for (const childEl of codeEl.children) {
-          if (isCodeAnnotation(childEl)) {
-            childEl.remove();
-          }
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
         }
-        return codeEl.innerText;
+      }
+      return codeEl.innerText;
     }
     const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
       text: getTextToCopy
