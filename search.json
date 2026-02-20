@@ -3231,28 +3231,7 @@
     "href": "nlp_lab1.html",
     "title": "NLP: Lab 1 (NLTK basics)",
     "section": "",
-    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use three libraries (mostly):\n\nNLTK\nScattertext\nSpacy"
-  },
-  {
-    "objectID": "nlp_lab1.html#through-requirements.txt",
-    "href": "nlp_lab1.html#through-requirements.txt",
-    "title": "NLP: Lab 1 (NLTK basics)",
-    "section": "Through requirements.txt",
-    "text": "Through requirements.txt\nYou can install all dependencies through requirements.txt:\npip install -r requirements.txt\nAlternatively, or if any issues occur, we can proceed manually via the following steps:"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-python-nltk-package",
-    "href": "nlp_lab1.html#install-python-nltk-package",
-    "title": "NLP: Lab 1 (NLTK basics)",
-    "section": "1. Install Python NLTK package",
-    "text": "1. Install Python NLTK package\nFrom here.\n   pip install nltk\n   pip install matplotlib\nIn order to install Python Tkinter library, look here.\nAlso install additional data by\n   import nltk; \n   nltk.download('popular')\nSet up the texts:\n\n   import nltk\n   nltk.download('nps_chat')\n   nltk.download('webtext')\n   nltk.download('genesis')\n   nltk.download('inaugural')\n   nltk.download('treebank')\n   from nltk.book import *\n\n[nltk_data] Downloading package nps_chat to /Users/vitvly/nltk_data...\n[nltk_data]   Package nps_chat is already up-to-date!\n[nltk_data] Downloading package webtext to /Users/vitvly/nltk_data...\n[nltk_data]   Package webtext is already up-to-date!\n[nltk_data] Downloading package genesis to /Users/vitvly/nltk_data...\n[nltk_data]   Package genesis is already up-to-date!\n[nltk_data] Downloading package inaugural to\n[nltk_data]     /Users/vitvly/nltk_data...\n[nltk_data]   Package inaugural is already up-to-date!\n[nltk_data] Downloading package treebank to /Users/vitvly/nltk_data...\n[nltk_data]   Unzipping corpora/treebank.zip.\n\n\n*** Introductory Examples for the NLTK Book ***\nLoading text1, ..., text9 and sent1, ..., sent9\nType the name of the text or sentence to view it.\nType: 'texts()' or 'sents()' to list the materials.\ntext1: Moby Dick by Herman Melville 1851\ntext2: Sense and Sensibility by Jane Austen 1811\ntext3: The Book of Genesis\ntext4: Inaugural Address Corpus\ntext5: Chat Corpus\ntext6: Monty Python and the Holy Grail\ntext7: Wall Street Journal\ntext8: Personals Corpus\ntext9: The Man Who Was Thursday by G . K . Chesterton 1908"
-  },
-  {
-    "objectID": "nlp_lab1.html#install-scattertext-and-spacy",
-    "href": "nlp_lab1.html#install-scattertext-and-spacy",
-    "title": "NLP: Lab 1 (NLTK basics)",
-    "section": "2. Install Scattertext and Spacy",
-    "text": "2. Install Scattertext and Spacy\npip install spacy scattertext\nAnd then update Spacy:\n!python -m spacy download en_core_web_sm"
+    "text": "We’ll start with basic text analysis via statistical methods.\nFor this purpose, we’ll use NLTK library."
   },
   {
     "objectID": "nlp_lab1.html#example-concordance",

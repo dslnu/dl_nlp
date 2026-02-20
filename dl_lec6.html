@@ -254,7 +254,7 @@ Vitaly Vlasov
 </section>
 <section id="imports" class="slide level2">
 <h2>Imports</h2>
-<div id="c33dd0eb" class="cell">
+<div id="d64d6dbe" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co">## Standard libraries</span></span>
 <span id="cb1-2"><a></a><span class="im">import</span> os</span>
 <span id="cb1-3"><a></a><span class="im">import</span> json</span>
@@ -284,7 +284,7 @@ Vitaly Vlasov
 </section>
 <section id="preparation" class="slide level2">
 <h2>Preparation</h2>
-<div id="d3a66bbb" class="cell">
+<div id="19e5cb6e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Path to the folder where the datasets are/should be downloaded (e.g. MNIST)</span></span>
 <span id="cb2-2"><a></a>DATASET_PATH <span class="op">=</span> <span class="st">"../data"</span></span>
 <span id="cb2-3"><a></a><span class="co"># Path to the folder where the pretrained models are saved</span></span>
@@ -310,7 +310,7 @@ Vitaly Vlasov
 </section>
 <section id="download" class="slide level2">
 <h2>Download</h2>
-<div id="0dfb4701" class="cell">
+<div id="095c1cc3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> urllib.request</span>
 <span id="cb3-2"><a></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
 <span id="cb3-3"><a></a><span class="co"># Github URL where saved models are stored for this tutorial</span></span>
@@ -342,7 +342,7 @@ Vitaly Vlasov
 <p><strong>Preload FashionMNIST</strong></p>
 </div>
 <div class="callout-content">
-<div id="c39368fe" class="cell">
+<div id="4403f308" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a><span class="im">from</span> torchvision.datasets <span class="im">import</span> FashionMNIST</span>
 <span id="cb4-2"><a></a><span class="im">from</span> torchvision <span class="im">import</span> transforms</span>
 <span id="cb4-3"><a></a></span>
@@ -385,7 +385,7 @@ Vitaly Vlasov
 <p>the normalization is now designed to give us an expected mean of 0 and a standard deviation of 1 across pixels</p>
 </blockquote>
 <p>We can calculate the normalization parameters by determining the mean and standard deviation on the original images:</p>
-<div id="93340d8e" class="cell">
+<div id="fb55683b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a><span class="bu">print</span>(<span class="st">"Mean"</span>, (train_dataset.data.<span class="bu">float</span>() <span class="op">/</span> <span class="fl">255.0</span>).mean().item())</span>
 <span id="cb5-2"><a></a><span class="bu">print</span>(<span class="st">"Std"</span>, (train_dataset.data.<span class="bu">float</span>() <span class="op">/</span> <span class="fl">255.0</span>).std().item())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -401,7 +401,7 @@ Vitaly Vlasov
 <p><strong>Verification</strong></p>
 </div>
 <div class="callout-content">
-<div id="e54cf410" class="cell">
+<div id="3f916471" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>imgs, _ <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb6-2"><a></a><span class="bu">print</span>(<span class="ss">f"Mean: </span><span class="sc">{</span>imgs<span class="sc">.</span>mean()<span class="sc">.</span>item()<span class="sc">:5.3f}</span><span class="ss">"</span>)</span>
 <span id="cb6-3"><a></a><span class="bu">print</span>(<span class="ss">f"Standard deviation: </span><span class="sc">{</span>imgs<span class="sc">.</span>std()<span class="sc">.</span>item()<span class="sc">:5.3f}</span><span class="ss">"</span>)</span>
@@ -427,7 +427,7 @@ Vitaly Vlasov
 </section>
 <section id="linear-network" class="slide level2">
 <h2>Linear network</h2>
-<div id="ace5d057" class="cell">
+<div id="988b9f02" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="kw">class</span> BaseNetwork(nn.Module):</span>
 <span id="cb7-2"><a></a>    </span>
 <span id="cb7-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, act_fn, input_size<span class="op">=</span><span class="dv">784</span>, num_classes<span class="op">=</span><span class="dv">10</span>, hidden_sizes<span class="op">=</span>[<span class="dv">512</span>, <span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">128</span>]):</span>
@@ -460,7 +460,7 @@ Vitaly Vlasov
 </section>
 <section id="activation" class="slide level2">
 <h2>Activation</h2>
-<div id="ff1e3385" class="cell">
+<div id="ee213394" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="kw">class</span> Identity(nn.Module):</span>
 <span id="cb8-2"><a></a>    <span class="kw">def</span> forward(<span class="va">self</span>, x):</span>
 <span id="cb8-3"><a></a>        <span class="cf">return</span> x</span>
@@ -489,7 +489,7 @@ Vitaly Vlasov
 </ul>
 </div>
 <div id="tabset-1-2">
-<div id="314709f1" class="cell">
+<div id="3aa6d9e1" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="kw">def</span> plot_dists(val_dict, color<span class="op">=</span><span class="st">"C0"</span>, xlabel<span class="op">=</span><span class="va">None</span>, stat<span class="op">=</span><span class="st">"count"</span>, use_kde<span class="op">=</span><span class="va">True</span>):</span>
 <span id="cb9-2"><a></a>    columns <span class="op">=</span> <span class="bu">len</span>(val_dict)</span>
 <span id="cb9-3"><a></a>    fig, ax <span class="op">=</span> plt.subplots(<span class="dv">1</span>, columns, figsize<span class="op">=</span>(columns<span class="op">*</span><span class="dv">3</span>, <span class="fl">2.5</span>))</span>
@@ -507,7 +507,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-1-3">
-<div id="3ecfe280" class="cell">
+<div id="71d20e94" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="kw">def</span> visualize_weight_distribution(model, color<span class="op">=</span><span class="st">"C0"</span>):</span>
 <span id="cb10-2"><a></a>    weights <span class="op">=</span> {}</span>
 <span id="cb10-3"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
@@ -524,7 +524,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-1-4">
-<div id="2d41cb42" class="cell">
+<div id="2d699879" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">def</span> visualize_gradients(model, color<span class="op">=</span><span class="st">"C0"</span>, print_variance<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb11-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb11-3"><a></a><span class="co">    Inputs:</span></span>
@@ -557,7 +557,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-1-5">
-<div id="8cd1cd63" class="cell">
+<div id="d0e04b88" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="kw">def</span> visualize_activations(model, color<span class="op">=</span><span class="st">"C0"</span>, print_variance<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb12-2"><a></a>    model.<span class="bu">eval</span>()</span>
 <span id="cb12-3"><a></a>    small_loader <span class="op">=</span> data.DataLoader(train_set, batch_size<span class="op">=</span><span class="dv">1024</span>, shuffle<span class="op">=</span><span class="va">False</span>)</span>
@@ -622,7 +622,7 @@ Vitaly Vlasov
 </div>
 </div>
 </div>
-<div id="2354fe5e" class="cell">
+<div id="ada0a03f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>model <span class="op">=</span> BaseNetwork(act_fn<span class="op">=</span>Identity()).to(device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
@@ -634,7 +634,7 @@ Vitaly Vlasov
 <p><strong>Constant initialization</strong></p>
 </div>
 <div class="callout-content">
-<div id="ce5c730f" class="cell">
+<div id="4b8a3530" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a><span class="kw">def</span> const_init(model, c<span class="op">=</span><span class="fl">0.0</span>):</span>
 <span id="cb14-2"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb14-3"><a></a>        param.data.fill_(c)</span>
@@ -687,7 +687,7 @@ Vitaly Vlasov
 <p><strong>Constant variance</strong></p>
 </div>
 <div class="callout-content">
-<div id="be5f28ef" class="cell">
+<div id="1d747b42" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="kw">def</span> var_init(model, std<span class="op">=</span><span class="fl">0.01</span>):</span>
 <span id="cb15-2"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb15-3"><a></a>        param.data.normal_(std<span class="op">=</span>std)</span>
@@ -710,7 +710,7 @@ Vitaly Vlasov
 <p><strong>Constant variance: higher std</strong></p>
 </div>
 <div class="callout-content">
-<div id="8a5923fd" class="cell">
+<div id="565d7c37" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>var_init(model, std<span class="op">=</span><span class="fl">0.1</span>)</span>
 <span id="cb16-2"><a></a>visualize_activations(model, print_variance<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -799,7 +799,7 @@ mean(y_i) = 0
 <section id="initialization-9" class="slide level2 scrollable">
 <h2>Initialization</h2>
 <p>Thus, we should initialize the weight distribution with a variance of the inverse of the input dimension <span class="math inline">\(d_x\)</span>.</p>
-<div id="91d2a85e" class="cell">
+<div id="dcd31ceb" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="kw">def</span> equal_var_init(model):</span>
 <span id="cb17-2"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb17-3"><a></a>        <span class="cf">if</span> name.endswith(<span class="st">".bias"</span>):</span>
@@ -851,7 +851,7 @@ mean(y_i) = 0
 </section>
 <section id="initialization-12" class="slide level2 scrollable">
 <h2>Initialization</h2>
-<div id="0d2f8f30" class="cell">
+<div id="e04d11c0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a><span class="kw">def</span> xavier_init(model):</span>
 <span id="cb18-2"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb18-3"><a></a>        <span class="cf">if</span> name.endswith(<span class="st">".bias"</span>):</span>
@@ -893,7 +893,7 @@ mean(y_i) = 0
 </div>
 </div>
 </div>
-<div id="7427b521" class="cell">
+<div id="3db528a2" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>model <span class="op">=</span> BaseNetwork(act_fn<span class="op">=</span>nn.Tanh()).to(device)</span>
 <span id="cb19-2"><a></a>xavier_init(model)</span>
 <span id="cb19-3"><a></a>visualize_gradients(model, print_variance<span class="op">=</span><span class="va">True</span>)</span>
@@ -970,7 +970,7 @@ mean(y_i) = 0
 </div>
 </div>
 </div>
-<div id="79c7d3d3" class="cell">
+<div id="592fd8e6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="kw">def</span> kaiming_init(model):</span>
 <span id="cb20-2"><a></a>    <span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb20-3"><a></a>        <span class="cf">if</span> name.endswith(<span class="st">".bias"</span>):</span>
@@ -1015,7 +1015,7 @@ mean(y_i) = 0
 <p><strong>Preparation</strong></p>
 </div>
 <div class="callout-content">
-<div id="f2066c23" class="cell">
+<div id="c02fdecc" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="kw">def</span> _get_config_file(model_path, model_name):</span>
 <span id="cb21-2"><a></a>    <span class="cf">return</span> os.path.join(model_path, model_name <span class="op">+</span> <span class="st">".config"</span>)</span>
 <span id="cb21-3"><a></a></span>
@@ -1185,7 +1185,7 @@ mean(y_i) = 0
 <p><strong>Optimizer template</strong></p>
 </div>
 <div class="callout-content">
-<div id="abcab3d9" class="cell">
+<div id="de53a717" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a><span class="kw">class</span> OptimizerTemplate:</span>
 <span id="cb22-2"><a></a>    </span>
 <span id="cb22-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, params, lr):</span>
@@ -1232,7 +1232,7 @@ mean(y_i) = 0
 </div>
 </div>
 </div>
-<div id="ff075fd8" class="cell">
+<div id="38544961" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="kw">class</span> SGD(OptimizerTemplate):</span>
 <span id="cb23-2"><a></a>    </span>
 <span id="cb23-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, params, lr):</span>
@@ -1264,7 +1264,7 @@ mean(y_i) = 0
 </section>
 <section id="optimization-5" class="slide level2 scrollable">
 <h2>Optimization</h2>
-<div id="20135438" class="cell">
+<div id="f146462e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a><span class="kw">class</span> SGDMomentum(OptimizerTemplate):</span>
 <span id="cb24-2"><a></a>    </span>
 <span id="cb24-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, params, lr, momentum<span class="op">=</span><span class="fl">0.0</span>):</span>
@@ -1302,7 +1302,7 @@ mean(y_i) = 0
 </section>
 <section id="optimization-7" class="slide level2">
 <h2>Optimization</h2>
-<div id="1922357f" class="cell">
+<div id="d7a9d70c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a><span class="kw">class</span> Adam(OptimizerTemplate):</span>
 <span id="cb25-2"><a></a>    </span>
 <span id="cb25-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, params, lr, beta1<span class="op">=</span><span class="fl">0.9</span>, beta2<span class="op">=</span><span class="fl">0.999</span>, eps<span class="op">=</span><span class="fl">1e-8</span>):</span>
@@ -1343,13 +1343,13 @@ mean(y_i) = 0
 <ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Model creation</a></li><li><a href="#tabset-2-2">SGD</a></li><li><a href="#tabset-2-3">Momentum</a></li><li><a href="#tabset-2-4">Adam</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
-<div id="accf50c9" class="cell">
+<div id="8b5f7f81" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>base_model <span class="op">=</span> BaseNetwork(act_fn<span class="op">=</span>nn.ReLU(), hidden_sizes<span class="op">=</span>[<span class="dv">512</span>,<span class="dv">256</span>,<span class="dv">256</span>,<span class="dv">128</span>])</span>
 <span id="cb26-2"><a></a>kaiming_init(base_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-2-2">
-<div id="1630dea0" class="cell">
+<div id="3c431560" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>SGD_model <span class="op">=</span> copy.deepcopy(base_model).to(device)</span>
 <span id="cb27-2"><a></a>SGD_results <span class="op">=</span> train_model(SGD_model, <span class="st">"FashionMNIST_SGD"</span>, </span>
 <span id="cb27-3"><a></a>                          <span class="kw">lambda</span> params: SGD(params, lr<span class="op">=</span><span class="fl">1e-1</span>), </span>
@@ -1357,7 +1357,7 @@ mean(y_i) = 0
 </div>
 </div>
 <div id="tabset-2-3">
-<div id="5b0c445b" class="cell">
+<div id="52776a83" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a>SGDMom_model <span class="op">=</span> copy.deepcopy(base_model).to(device)</span>
 <span id="cb28-2"><a></a>SGDMom_results <span class="op">=</span> train_model(SGDMom_model, <span class="st">"FashionMNIST_SGDMom"</span>, </span>
 <span id="cb28-3"><a></a>                             <span class="kw">lambda</span> params: SGDMomentum(params, lr<span class="op">=</span><span class="fl">1e-1</span>, momentum<span class="op">=</span><span class="fl">0.9</span>), </span>
@@ -1365,7 +1365,7 @@ mean(y_i) = 0
 </div>
 </div>
 <div id="tabset-2-4">
-<div id="0166a5e7" class="cell">
+<div id="b7c7e1e4" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a>Adam_model <span class="op">=</span> copy.deepcopy(base_model).to(device)</span>
 <span id="cb29-2"><a></a>Adam_results <span class="op">=</span> train_model(Adam_model, <span class="st">"FashionMNIST_Adam"</span>, </span>
 <span id="cb29-3"><a></a>                           <span class="kw">lambda</span> params: Adam(params, lr<span class="op">=</span><span class="fl">1e-3</span>), </span>
@@ -1391,14 +1391,14 @@ mean(y_i) = 0
 </div>
 </div>
 </div>
-<div id="4259a89d" class="cell">
+<div id="1a16ff72" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a></a><span class="kw">def</span> pathological_curve_loss(w1, w2):</span>
 <span id="cb30-2"><a></a>    <span class="co"># Example of a pathological curvature. There are many more possible, feel free to experiment here!</span></span>
 <span id="cb30-3"><a></a>    x1_loss <span class="op">=</span> torch.tanh(w1)<span class="op">**</span><span class="dv">2</span> <span class="op">+</span> <span class="fl">0.01</span> <span class="op">*</span> torch.<span class="bu">abs</span>(w1)</span>
 <span id="cb30-4"><a></a>    x2_loss <span class="op">=</span> torch.sigmoid(w2)</span>
 <span id="cb30-5"><a></a>    <span class="cf">return</span> x1_loss <span class="op">+</span> x2_loss</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="c737cbc7" class="cell">
+<div id="bc866861" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a><span class="kw">def</span> plot_curve(curve_fn, x_range<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), y_range<span class="op">=</span>(<span class="op">-</span><span class="dv">5</span>,<span class="dv">5</span>), plot_3d<span class="op">=</span><span class="va">False</span>, cmap<span class="op">=</span>cm.viridis, title<span class="op">=</span><span class="st">"Pathological curvature"</span>):</span>
 <span id="cb31-2"><a></a>    fig <span class="op">=</span> plt.figure()</span>
 <span id="cb31-3"><a></a>    ax <span class="op">=</span> plt.axes(projection<span class="op">=</span><span class="st">'3d'</span>) <span class="cf">if</span> plot_3d <span class="cf">else</span> plt.axes()</span>
@@ -1447,7 +1447,7 @@ mean(y_i) = 0
 </section>
 <section id="optimization-12" class="slide level2">
 <h2>Optimization</h2>
-<div id="543e039f" class="cell">
+<div id="3c3cb01f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a><span class="kw">def</span> train_curve(optimizer_func, curve_func<span class="op">=</span>pathological_curve_loss, num_updates<span class="op">=</span><span class="dv">100</span>, init<span class="op">=</span>[<span class="dv">5</span>,<span class="dv">5</span>]):</span>
 <span id="cb32-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb32-3"><a></a><span class="co">    Inputs:</span></span>
@@ -1480,7 +1480,7 @@ mean(y_i) = 0
 <p><strong>Train</strong></p>
 </div>
 <div class="callout-content">
-<div id="cb3b2b74" class="cell">
+<div id="e4c9764e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a>SGD_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: SGD(params, lr<span class="op">=</span><span class="dv">10</span>))</span>
 <span id="cb33-2"><a></a>SGDMom_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: SGDMomentum(params, lr<span class="op">=</span><span class="dv">10</span>, momentum<span class="op">=</span><span class="fl">0.9</span>))</span>
 <span id="cb33-3"><a></a>Adam_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: Adam(params, lr<span class="op">=</span><span class="dv">1</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1497,7 +1497,7 @@ mean(y_i) = 0
 <p><strong>Visualize</strong></p>
 </div>
 <div class="callout-content">
-<div id="a5a4dc17" class="cell">
+<div id="1ee93685" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a>all_points <span class="op">=</span> np.concatenate([SGD_points, SGDMom_points, Adam_points], axis<span class="op">=</span><span class="dv">0</span>)</span>
 <span id="cb34-2"><a></a>ax <span class="op">=</span> plot_curve(pathological_curve_loss,</span>
 <span id="cb34-3"><a></a>                x_range<span class="op">=</span>(<span class="op">-</span>np.absolute(all_points[:,<span class="dv">0</span>]).<span class="bu">max</span>(), np.absolute(all_points[:,<span class="dv">0</span>]).<span class="bu">max</span>()),</span>
@@ -1526,7 +1526,7 @@ mean(y_i) = 0
 </div>
 </div>
 </div>
-<div id="b501236b" class="cell">
+<div id="ad7ed59f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a><span class="kw">def</span> bivar_gaussian(w1, w2, x_mean<span class="op">=</span><span class="fl">0.0</span>, y_mean<span class="op">=</span><span class="fl">0.0</span>, x_sig<span class="op">=</span><span class="fl">1.0</span>, y_sig<span class="op">=</span><span class="fl">1.0</span>):</span>
 <span id="cb35-2"><a></a>    norm <span class="op">=</span> <span class="dv">1</span> <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> np.pi <span class="op">*</span> x_sig <span class="op">*</span> y_sig)</span>
 <span id="cb35-3"><a></a>    x_exp <span class="op">=</span> (<span class="op">-</span><span class="dv">1</span> <span class="op">*</span> (w1 <span class="op">-</span> x_mean)<span class="op">**</span><span class="dv">2</span>) <span class="op">/</span> (<span class="dv">2</span> <span class="op">*</span> x_sig<span class="op">**</span><span class="dv">2</span>)</span>
@@ -1553,7 +1553,7 @@ mean(y_i) = 0
 <p><strong>Train</strong></p>
 </div>
 <div class="callout-content">
-<div id="58503d98" class="cell">
+<div id="b00c0eac" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a>SGD_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: SGD(params, lr<span class="op">=</span><span class="fl">.5</span>), comb_func, init<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>])</span>
 <span id="cb36-2"><a></a>SGDMom_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: SGDMomentum(params, lr<span class="op">=</span><span class="dv">1</span>, momentum<span class="op">=</span><span class="fl">0.9</span>), comb_func, init<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>])</span>
 <span id="cb36-3"><a></a>Adam_points <span class="op">=</span> train_curve(<span class="kw">lambda</span> params: Adam(params, lr<span class="op">=</span><span class="fl">0.2</span>), comb_func, init<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">0</span>])</span>
