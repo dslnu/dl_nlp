@@ -278,7 +278,7 @@ Vitaly Vlasov
 <p><strong>Generic</strong></p>
 </div>
 <div class="callout-content">
-<div id="c05c372a" class="cell">
+<div id="f9ec8516" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co">## Standard libraries</span></span>
 <span id="cb2-2"><a></a><span class="im">import</span> os</span>
 <span id="cb2-3"><a></a><span class="im">import</span> math</span>
@@ -306,7 +306,7 @@ Vitaly Vlasov
 <p><strong>Basic PyTorch import</strong></p>
 </div>
 <div class="callout-content">
-<div id="5a47de3e" class="cell">
+<div id="7cdb8e90" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> torch</span>
 <span id="cb3-2"><a></a><span class="bu">print</span>(<span class="st">"Using torch"</span>, torch.__version__)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -316,13 +316,13 @@ Vitaly Vlasov
 </section>
 <section id="set-the-seed" class="slide level2">
 <h2>Set the seed</h2>
-<div id="ba13a75b" class="cell">
+<div id="90db5ef8" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>torch.manual_seed(<span class="dv">42</span>) <span class="co"># Setting the seed</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="tensors-1" class="slide level2">
 <h2>Tensors</h2>
-<div id="d2919fbc" class="cell">
+<div id="9d9f2184" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>x <span class="op">=</span> torch.Tensor(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
 <span id="cb5-2"><a></a><span class="bu">print</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -350,7 +350,7 @@ Vitaly Vlasov
 </section>
 <section id="tensors-3" class="slide level2">
 <h2>Tensors</h2>
-<div id="754ad99e" class="cell">
+<div id="b539c487" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a><span class="co"># Create a tensor from a (nested) list</span></span>
 <span id="cb6-2"><a></a>x <span class="op">=</span> torch.Tensor([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])</span>
 <span id="cb6-3"><a></a><span class="bu">print</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -358,7 +358,7 @@ Vitaly Vlasov
 </section>
 <section id="tensors-4" class="slide level2">
 <h2>Tensors</h2>
-<div id="34d3e9eb" class="cell">
+<div id="270f181d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a><span class="co"># Create a tensor with random values between 0 and 1 with the shape [2, 3, 4]</span></span>
 <span id="cb7-2"><a></a>x <span class="op">=</span> torch.rand(<span class="dv">2</span>, <span class="dv">3</span>, <span class="dv">4</span>)</span>
 <span id="cb7-3"><a></a><span class="bu">print</span>(x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -372,7 +372,7 @@ Vitaly Vlasov
 <p><strong>Tensor shape</strong></p>
 </div>
 <div class="callout-content">
-<div id="6923fb13" class="cell">
+<div id="1046a7ba" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a>shape <span class="op">=</span> x.shape</span>
 <span id="cb8-2"><a></a><span class="bu">print</span>(<span class="st">"Shape:"</span>, x.shape)</span>
 <span id="cb8-3"><a></a></span>
@@ -394,7 +394,7 @@ Vitaly Vlasov
 <p><strong>To Numpy and back again</strong></p>
 </div>
 <div class="callout-content">
-<div id="7ad7114a" class="cell">
+<div id="61446be4" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a>np_arr <span class="op">=</span> np.array([[<span class="dv">1</span>, <span class="dv">2</span>], [<span class="dv">3</span>, <span class="dv">4</span>]])</span>
 <span id="cb9-2"><a></a>tensor <span class="op">=</span> torch.from_numpy(np_arr)</span>
 <span id="cb9-3"><a></a></span>
@@ -402,7 +402,7 @@ Vitaly Vlasov
 <span id="cb9-5"><a></a><span class="bu">print</span>(<span class="st">"PyTorch tensor:"</span>, tensor)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <!-- To transform a PyTorch tensor back to a numpy array, we can use the function .numpy() on tensors: -->
-<div id="6e87f1bf" class="cell">
+<div id="255e35d0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a>tensor <span class="op">=</span> torch.arange(<span class="dv">4</span>)</span>
 <span id="cb10-2"><a></a>np_arr <span class="op">=</span> tensor.numpy()</span>
 <span id="cb10-3"><a></a></span>
@@ -434,7 +434,7 @@ Vitaly Vlasov
 <p><strong>Addition</strong></p>
 </div>
 <div class="callout-content">
-<div id="bc1c0431" class="cell">
+<div id="6ed19532" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a>x1 <span class="op">=</span> torch.rand(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb11-2"><a></a>x2 <span class="op">=</span> torch.rand(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb11-3"><a></a>y <span class="op">=</span> x1 <span class="op">+</span> x2</span>
@@ -468,7 +468,7 @@ Vitaly Vlasov
 <p><strong>In-place</strong></p>
 </div>
 <div class="callout-content">
-<div id="f8431a6d" class="cell">
+<div id="ab0e05d7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a>x1 <span class="op">=</span> torch.rand(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb12-2"><a></a>x2 <span class="op">=</span> torch.rand(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb12-3"><a></a><span class="bu">print</span>(<span class="st">"X1 (before)"</span>, x1)</span>
@@ -494,16 +494,16 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Another common operation aims at changing the shape of a tensor. A tensor of size (2,3) can be re-organized to any other shape with the same number of elements (e.g.&nbsp;a tensor of size (6), or (3,2), …). In PyTorch, this operation is called <code>view</code>:</p>
-<div id="a1beb826" class="cell">
+<div id="27d7f9ea" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>x <span class="op">=</span> torch.arange(<span class="dv">6</span>)</span>
 <span id="cb13-2"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="6b7873db" class="cell">
+<div id="bf090a23" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>x <span class="op">=</span> x.view(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb14-2"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>You can also swap dimensions:</p>
-<div id="0c75fe1e" class="cell">
+<div id="8d52c254" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a>x <span class="op">=</span> x.permute(<span class="dv">1</span>, <span class="dv">0</span>) <span class="co"># Swapping dimension 0 and 1</span></span>
 <span id="cb15-2"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -566,16 +566,16 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>We can try a matrix multiplication with <code>torch.matmul</code>:</p>
-<div id="f6a9ff23" class="cell">
+<div id="66c5ac24" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a>x <span class="op">=</span> torch.arange(<span class="dv">6</span>)</span>
 <span id="cb16-2"><a></a>x <span class="op">=</span> x.view(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb16-3"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="4de2f213" class="cell">
+<div id="2b273365" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a>W <span class="op">=</span> torch.arange(<span class="dv">9</span>).view(<span class="dv">3</span>, <span class="dv">3</span>) <span class="co"># We can also stack multiple operations in a single line</span></span>
 <span id="cb17-2"><a></a><span class="bu">print</span>(<span class="st">"W"</span>, W)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="db896200" class="cell">
+<div id="3808958e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a>h <span class="op">=</span> torch.matmul(x, W) <span class="co"># Verify the result by calculating it by hand too!</span></span>
 <span id="cb18-2"><a></a><span class="bu">print</span>(<span class="st">"h"</span>, h)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -592,20 +592,20 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>We often have the situation where we need to select a part of a tensor. Indexing works just like in numpy, so let’s try it:</p>
-<div id="f16f921f" class="cell">
+<div id="e58232a9" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>x <span class="op">=</span> torch.arange(<span class="dv">12</span>).view(<span class="dv">3</span>, <span class="dv">4</span>)</span>
 <span id="cb19-2"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="de47ca0a" class="cell">
+<div id="83c0414c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="bu">print</span>(x[:, <span class="dv">1</span>])   <span class="co"># Second column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="88152a06" class="cell">
+<div id="8c77c634" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb21"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a></a><span class="bu">print</span>(x[<span class="dv">0</span>])      <span class="co"># First row</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="75641da7" class="cell">
+<div id="2499bec5" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a><span class="bu">print</span>(x[:<span class="dv">2</span>, <span class="op">-</span><span class="dv">1</span>]) <span class="co"># First two rows, last column</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<div id="eb9e59de" class="cell">
+<div id="24e80ffe" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="bu">print</span>(x[<span class="dv">1</span>:<span class="dv">3</span>, :]) <span class="co"># Middle two rows</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -639,7 +639,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>The first thing we have to do is to specify which tensors require gradients. By default, when we create a tensor, it does not require gradients.</p>
-<div id="e6904fd5" class="cell">
+<div id="a7a7c689" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>x <span class="op">=</span> torch.ones((<span class="dv">3</span>,))</span>
 <span id="cb24-2"><a></a><span class="bu">print</span>(x.requires_grad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -653,7 +653,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>We can change this for an existing tensor using the function <code>requires_grad_()</code> (underscore indicating that this is a in-place operation). Alternatively, when creating a tensor, you can pass the argument <code>requires_grad=True</code> to most initializers we have seen above.</p>
-<div id="c6b106b1" class="cell">
+<div id="43cf30b0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a>x.requires_grad_(<span class="va">True</span>)</span>
 <span id="cb25-2"><a></a><span class="bu">print</span>(x.requires_grad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -673,7 +673,7 @@ Vitaly Vlasov
 <p><span class="math display">\[y = \frac{1}{\ell(x)}\sum_i \left[(x_i + 2)^2 + 3\right],\]</span></p>
 <p>where we use <span class="math inline">\(\ell(x)\)</span> to denote the number of elements in <span class="math inline">\(x\)</span>.</p>
 <p>We want to optimize (either maximize or minimize) the output <span class="math inline">\(y\)</span>. For this, we want to obtain the gradients <span class="math inline">\(\partial y / \partial \mathbf{x}\)</span>. For our example, we’ll use <span class="math inline">\(\mathbf{x}=[0,1,2]\)</span> as our input.</p>
-<div id="f9ccc895" class="cell">
+<div id="e716c24e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>x <span class="op">=</span> torch.arange(<span class="dv">3</span>, dtype<span class="op">=</span>torch.float32, requires_grad<span class="op">=</span><span class="va">True</span>) <span class="co"># Only float tensors can have gradients</span></span>
 <span id="cb26-2"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -690,7 +690,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <!-- Now let's build the computation graph step by step. -->
-<div id="4e240385" class="cell">
+<div id="16b4d54a" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>a <span class="op">=</span> x <span class="op">+</span> <span class="dv">2</span></span>
 <span id="cb27-2"><a></a>b <span class="op">=</span> a <span class="op">**</span> <span class="dv">2</span></span>
 <span id="cb27-3"><a></a>c <span class="op">=</span> b <span class="op">+</span> <span class="dv">3</span></span>
@@ -727,11 +727,11 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>We can perform backpropagation on the computation graph by calling the function <code>backward()</code> on the last output, which effectively calculates the gradients for each tensor that has the property <code>requires_grad=True</code>:</p>
-<div id="d99fe411" class="cell">
+<div id="d23d7d99" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a>y.backward()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p><code>x.grad</code> will now contain the gradient <span class="math inline">\(\partial y/ \partial \mathcal{x}\)</span>, and this gradient indicates how a change in <span class="math inline">\(\mathbf{x}\)</span> will affect output <span class="math inline">\(y\)</span> given the current input <span class="math inline">\(\mathbf{x}=[0,1,2]\)</span>:</p>
-<div id="4b97621a" class="cell">
+<div id="23c2813b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb29"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a></a><span class="bu">print</span>(x.grad)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -791,7 +791,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>First, let’s check whether you have a GPU available:</p>
-<div id="76c9781e" class="cell">
+<div id="44318640" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a></a>gpu_avail <span class="op">=</span> torch.cuda.is_available()</span>
 <span id="cb30-2"><a></a><span class="bu">print</span>(<span class="ss">f"Is the Nvidia GPU available? </span><span class="sc">{</span>gpu_avail<span class="sc">}</span><span class="ss">"</span>)</span>
 <span id="cb30-3"><a></a></span>
@@ -825,7 +825,7 @@ Vitaly Vlasov
 <div class="callout-content">
 <p>It is often a good practice to define a <code>device</code> object in your code which points to the GPU if you have one, and otherwise to the CPU. Then, you can write your code with respect to this device object, and it allows you to run the same code on both a CPU-only system, and one with a GPU.</p>
 <p>We can specify the device as follows:</p>
-<div id="6b5aa8d3" class="cell">
+<div id="10c4bd84" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a>device <span class="op">=</span> torch.device(<span class="st">"mps"</span>) <span class="cf">if</span> torch.mps.is_available() <span class="cf">else</span> torch.device(<span class="st">"cpu"</span>)</span>
 <span id="cb31-2"><a></a><span class="bu">print</span>(<span class="st">"Device"</span>, device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -842,7 +842,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Let’s create a tensor and push it now:</p>
-<div id="e242e7a9" class="cell">
+<div id="4d35d6c7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a>x <span class="op">=</span> torch.zeros(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb32-2"><a></a>x <span class="op">=</span> x.to(device)</span>
 <span id="cb32-3"><a></a><span class="bu">print</span>(<span class="st">"X"</span>, x)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -872,7 +872,7 @@ Vitaly Vlasov
 <p><strong>GPU-to-CPU comparison</strong></p>
 </div>
 <div class="callout-content">
-<div id="66b75dd1" class="cell">
+<div id="998c4f16" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a>x <span class="op">=</span> torch.randn(<span class="dv">5000</span>, <span class="dv">5000</span>)</span>
 <span id="cb33-2"><a></a></span>
 <span id="cb33-3"><a></a><span class="co">## CPU version</span></span>
@@ -907,7 +907,7 @@ Vitaly Vlasov
 <div class="callout-content">
 <p>When generating random numbers, the seed between CPU and GPU is <strong>not synchronized</strong>.</p>
 <p>Hence, we need to set the seed on the GPU separately to ensure a <strong>reproducible</strong> code.</p>
-<div id="b9f601f5" class="cell">
+<div id="721f0a12" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a><span class="co"># GPU operations have a separate seed we also want to set</span></span>
 <span id="cb34-2"><a></a><span class="cf">if</span> torch.mps.is_available():</span>
 <span id="cb34-3"><a></a>    torch.mps.manual_seed(<span class="dv">42</span>)</span>
@@ -971,7 +971,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>The package <code>torch.nn</code> defines a series of useful classes like linear networks layers, activation functions, loss functions etc. A full list can be found <a href="https://pytorch.org/docs/stable/nn.html">here</a>.</p>
-<div id="240466cc" class="cell">
+<div id="225840db" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a><span class="im">import</span> torch.nn <span class="im">as</span> nn</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -984,7 +984,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Additionally to <code>torch.nn</code>, there is also <code>torch.nn.functional</code>. It contains functions that are used in network layers. This is in contrast to <code>torch.nn</code> which defines them as <code>nn.Modules</code>, and <code>torch.nn</code> actually uses a lot of functionalities from <code>torch.nn.functional</code>.</p>
-<div id="be3147f9" class="cell">
+<div id="e4979f8e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb36"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a></a><span class="im">import</span> torch.nn.functional <span class="im">as</span> F</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1000,7 +1000,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>In PyTorch, a neural network is built up out of modules. Modules can contain other modules, and a neural network is considered to be a module itself as well. The basic template of a module is as follows:</p>
-<div id="25d6f744" class="cell">
+<div id="81279178" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a></a><span class="kw">class</span> MyModule(nn.Module):</span>
 <span id="cb37-2"><a></a></span>
 <span id="cb37-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
@@ -1050,7 +1050,7 @@ Vitaly Vlasov
 <p><strong>Simple classifier: Module def</strong></p>
 </div>
 <div class="callout-content">
-<div id="3073f98c" class="cell">
+<div id="0925c1b5" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb38"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a></a><span class="kw">class</span> SimpleClassifier(nn.Module):</span>
 <span id="cb38-2"><a></a></span>
 <span id="cb38-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_inputs, num_hidden, num_outputs):</span>
@@ -1092,7 +1092,7 @@ Vitaly Vlasov
 <p><strong>Simple classifier: Module creation</strong></p>
 </div>
 <div class="callout-content">
-<div id="275e5570" class="cell">
+<div id="21fa1178" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb39"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a></a>model <span class="op">=</span> SimpleClassifier(num_inputs<span class="op">=</span><span class="dv">2</span>, num_hidden<span class="op">=</span><span class="dv">4</span>, num_outputs<span class="op">=</span><span class="dv">1</span>)</span>
 <span id="cb39-2"><a></a><span class="co"># Printing a module shows all its submodules</span></span>
 <span id="cb39-3"><a></a><span class="bu">print</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1110,7 +1110,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>The parameters of a module can be obtained by using its <code>parameters()</code> functions, or <code>named_parameters()</code> to get a name to each parameter object. For our small neural network, we have the following parameters:</p>
-<div id="31003065" class="cell">
+<div id="1d98a089" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb40"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a></a><span class="cf">for</span> name, param <span class="kw">in</span> model.named_parameters():</span>
 <span id="cb40-2"><a></a>    <span class="bu">print</span>(<span class="ss">f"Parameter </span><span class="sc">{</span>name<span class="sc">}</span><span class="ss">, shape </span><span class="sc">{</span>param<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1156,7 +1156,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>PyTorch also provides a few functionalities to load the training and test data efficiently, summarized in the package <code>torch.utils.data</code>.</p>
-<div id="8b8a4da9" class="cell">
+<div id="297166d0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb41"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a></a><span class="im">import</span> torch.utils.data <span class="im">as</span> data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1205,7 +1205,7 @@ Vitaly Vlasov
 <p><strong>Dataset class</strong></p>
 </div>
 <div class="callout-content">
-<div id="70dc3095" class="cell">
+<div id="99450d17" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb42"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a></a><span class="kw">class</span> XORDataset(data.Dataset):</span>
 <span id="cb42-2"><a></a></span>
 <span id="cb42-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, size, std<span class="op">=</span><span class="fl">0.1</span>):</span>
@@ -1255,7 +1255,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Let’s create and inspect:</p>
-<div id="74076292" class="cell">
+<div id="bc48f121" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb43"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a></a>dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">200</span>)</span>
 <span id="cb43-2"><a></a><span class="bu">print</span>(<span class="st">"Size of dataset:"</span>, <span class="bu">len</span>(dataset))</span>
 <span id="cb43-3"><a></a><span class="bu">print</span>(<span class="st">"Data point 0:"</span>, dataset[<span class="dv">0</span>])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1276,7 +1276,7 @@ Vitaly Vlasov
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Func definition</a></li><li><a href="#tabset-1-2">Result</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
-<div id="87b0115c" class="cell">
+<div id="81cf1707" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb44"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a></a><span class="kw">def</span> visualize_samples(data, label):</span>
 <span id="cb44-2"><a></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(data, torch.Tensor):</span>
 <span id="cb44-3"><a></a>        data <span class="op">=</span> data.cpu().numpy()</span>
@@ -1295,7 +1295,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-1-2">
-<div id="3c7b51a0" class="cell">
+<div id="946d2a5d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb45"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a></a>visualize_samples(dataset.data, dataset.label)</span>
 <span id="cb45-2"><a></a>plt.show()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1349,11 +1349,11 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Create:</p>
-<div id="eaf8b284" class="cell">
+<div id="ada95c08" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb46"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a></a>data_loader <span class="op">=</span> data.DataLoader(dataset, batch_size<span class="op">=</span><span class="dv">8</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Fetch some data:</p>
-<div id="1db35c5d" class="cell">
+<div id="c54136c3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb47"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a></a><span class="co"># next(iter(...)) catches the first batch of the data loader</span></span>
 <span id="cb47-2"><a></a><span class="co"># If shuffle is True, this will return a different batch every time we run this cell</span></span>
 <span id="cb47-3"><a></a><span class="co"># For iterating over the whole dataset, we can simple use "for batch in data_loader: ..."</span></span>
@@ -1434,7 +1434,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>For our model defined above, we therefore use the module <code>nn.BCEWithLogitsLoss</code>.</p>
-<div id="5bce885a" class="cell">
+<div id="381b623e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb48"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a></a>loss_module <span class="op">=</span> nn.BCEWithLogitsLoss()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1452,7 +1452,7 @@ Vitaly Vlasov
 <p>For updating the parameters, PyTorch provides the package <code>torch.optim</code> that has most popular optimizers implemented.</p>
 <p><code>torch.optim.SGD</code> (<strong>Stochastic Gradient Descent</strong>). Updates parameters by multiplying the gradients with a small constant, called learning rate, and subtracting those from the parameters (hence minimizing the loss).</p>
 <p>A good default value of the learning rate for a small network as ours is 0.1.</p>
-<div id="4fe0a5a6" class="cell">
+<div id="d1e92afb" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb49"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a></a><span class="co"># Input to the optimizer are the parameters of the model: model.parameters()</span></span>
 <span id="cb49-2"><a></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.1</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1499,12 +1499,12 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Finally, we are ready to train our model. As a first step, we create a slightly larger dataset and specify a data loader with a larger batch size.</p>
-<div id="33747140" class="cell">
+<div id="a0b38d28" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb50"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a></a>train_dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">2500</span>)</span>
 <span id="cb50-2"><a></a>train_data_loader <span class="op">=</span> data.DataLoader(train_dataset, batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>Then, push to GPU:</p>
-<div id="a2aa81dc" class="cell">
+<div id="f5a40f5c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb51"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a></a><span class="co"># Push model to device. Has to be only done once</span></span>
 <span id="cb51-2"><a></a>model.to(device)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -1521,7 +1521,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Set model to training mode via <code>model.train()</code> (there is also <code>model.eval()</code>):</p>
-<div id="3b8a4757" class="cell">
+<div id="e49c6279" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb52"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a></a><span class="kw">def</span> train_model(model, optimizer, data_loader, loss_module, num_epochs<span class="op">=</span><span class="dv">100</span>):</span>
 <span id="cb52-2"><a></a>    <span class="co"># Set model to train mode</span></span>
 <span id="cb52-3"><a></a>    model.train()</span>
@@ -1564,7 +1564,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Train:</p>
-<div id="2607a828" class="cell">
+<div id="f1f9a7f6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb53"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a></a>train_model(model, optimizer, train_data_loader, loss_module)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1580,14 +1580,14 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>After finish training a model, we save the model to disk so that we can load the same weights at a later time. For this, we extract the so-called <code>state_dict</code> from the model which contains all learnable parameters.</p>
-<div id="7129af10" class="cell">
+<div id="77b47384" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb54"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a></a>state_dict <span class="op">=</span> model.state_dict()</span>
 <span id="cb54-2"><a></a><span class="bu">print</span>(state_dict)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <p>To save the state dictionary, we can use <code>torch.save</code>:</p>
-<div id="4afef9fe" class="cell">
+<div id="ce3dbcf9" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb55"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a></a><span class="co"># torch.save(object, filename). For the filename, any extension can be used</span></span>
-<span id="cb55-2"><a></a>torch.save(state_dict, <span class="st">"our_model.tar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb55-2"><a></a>torch.save(state_dict, <span class="st">"_data/our_model.tar"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 </div>
@@ -1602,9 +1602,9 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>To load a model from a state dict, we use the function torch.load to load the state dict from the disk, and the module function load_state_dict to overwrite our parameters with the new values:</p>
-<div id="6d20cb04" class="cell">
+<div id="9948385a" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb56"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a></a><span class="co"># Load state dict from the disk (make sure it is the same name as above)</span></span>
-<span id="cb56-2"><a></a>state_dict <span class="op">=</span> torch.load(<span class="st">"our_model.tar"</span>)</span>
+<span id="cb56-2"><a></a>state_dict <span class="op">=</span> torch.load(<span class="st">"_data/our_model.tar"</span>)</span>
 <span id="cb56-3"><a></a></span>
 <span id="cb56-4"><a></a><span class="co"># Create a new model and load the state</span></span>
 <span id="cb56-5"><a></a>new_model <span class="op">=</span> SimpleClassifier(num_inputs<span class="op">=</span><span class="dv">2</span>, num_hidden<span class="op">=</span><span class="dv">4</span>, num_outputs<span class="op">=</span><span class="dv">1</span>)</span>
@@ -1627,7 +1627,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Once we have trained a model, it is time to evaluate it on a held-out test set. As our dataset consist of randomly generated data points, we need to first create a test set with a corresponding data loader.</p>
-<div id="81b44398" class="cell">
+<div id="de198b84" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb57"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a></a>test_dataset <span class="op">=</span> XORDataset(size<span class="op">=</span><span class="dv">500</span>)</span>
 <span id="cb57-2"><a></a><span class="co"># drop_last -&gt; Don't drop the last batch although it is smaller than 128</span></span>
 <span id="cb57-3"><a></a>test_data_loader <span class="op">=</span> data.DataLoader(test_dataset, batch_size<span class="op">=</span><span class="dv">128</span>, shuffle<span class="op">=</span><span class="va">False</span>, drop_last<span class="op">=</span><span class="va">False</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1651,7 +1651,7 @@ Vitaly Vlasov
 <li>we don’t need to keep track of the computation graph as we don’t intend to calculate the gradients. In PyTorch this is done via <code>with torch.no_grad(): ...</code>.</li>
 <li>remember to additionally set the model to <code>eval</code> mode.</li>
 </ul>
-<div id="8a78a1c3" class="cell">
+<div id="dd6b0449" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb58"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a></a><span class="kw">def</span> eval_model(model, data_loader):</span>
 <span id="cb58-2"><a></a>    model.<span class="bu">eval</span>() <span class="co"># Set model to eval mode</span></span>
 <span id="cb58-3"><a></a>    true_preds, num_preds <span class="op">=</span> <span class="fl">0.</span>, <span class="fl">0.</span></span>
@@ -1685,7 +1685,7 @@ Vitaly Vlasov
 <p><strong>Evaluation</strong></p>
 </div>
 <div class="callout-content">
-<div id="40516530" class="cell">
+<div id="1ee56725" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb59"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a></a>eval_model(model, test_data_loader)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1702,7 +1702,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>To visualize what our model has learned, we can perform a prediction for every data point in a range of <span class="math inline">\([-0.5, 1.5]\)</span>, and visualize the predicted class (class 0 is blue and class 1 is orange).</p>
-<div id="30032542" class="cell">
+<div id="72acb90c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb60"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb60-1"><a></a><span class="at">@torch.no_grad</span>() <span class="co"># Decorator, same effect as "with torch.no_grad(): ..." over the whole function.</span></span>
 <span id="cb60-2"><a></a><span class="kw">def</span> visualize_classification(model, data, label):</span>
 <span id="cb60-3"><a></a>    <span class="cf">if</span> <span class="bu">isinstance</span>(data, torch.Tensor):</span>
@@ -1752,7 +1752,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>TensorBoard is a logging and visualization tool that is a popular choice for training deep learning models.</p>
-<div id="c79c5f16" class="cell">
+<div id="120cf7d8" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb61"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb61-1"><a></a><span class="co"># Import tensorboard logger from PyTorch</span></span>
 <span id="cb61-2"><a></a><span class="im">from</span> torch.utils.tensorboard <span class="im">import</span> SummaryWriter</span>
 <span id="cb61-3"><a></a></span>
@@ -1788,7 +1788,7 @@ Vitaly Vlasov
 <p><strong>Tensorboard</strong></p>
 </div>
 <div class="callout-content">
-<div id="1e7fdee2" class="cell">
+<div id="dada2896" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb62"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb62-1"><a></a><span class="kw">def</span> train_model_with_logger(model, optimizer, data_loader, loss_module, val_dataset, num_epochs<span class="op">=</span><span class="dv">100</span>, logging_dir<span class="op">=</span><span class="st">'runs/our_experiment'</span>):</span>
 <span id="cb62-2"><a></a>    <span class="co"># Create TensorBoard logger</span></span>
 <span id="cb62-3"><a></a>    writer <span class="op">=</span> SummaryWriter(logging_dir)</span>
@@ -1860,7 +1860,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Train:</p>
-<div id="e27c2033" class="cell">
+<div id="120c462f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb63"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb63-1"><a></a>model <span class="op">=</span> SimpleClassifier(num_inputs<span class="op">=</span><span class="dv">2</span>, num_hidden<span class="op">=</span><span class="dv">4</span>, num_outputs<span class="op">=</span><span class="dv">1</span>).to(device)</span>
 <span id="cb63-2"><a></a>optimizer <span class="op">=</span> torch.optim.SGD(model.parameters(), lr<span class="op">=</span><span class="fl">0.1</span>)</span>
 <span id="cb63-3"><a></a>train_model_with_logger(model, optimizer, train_data_loader, loss_module, val_dataset<span class="op">=</span>dataset)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -1872,7 +1872,7 @@ Vitaly Vlasov
 <section id="additional-features-4" class="slide level2">
 <h2>Additional features</h2>
 <!-- The TensorBoard file in the folder `runs/our_experiment` now contains a loss curve, the computation graph of our network, and a visualization of the learned predictions over number of epochs. -->
-<div id="27b64b7d" class="cell">
+<div id="0cfc71e8" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb64"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb64-1"><a></a><span class="op">%</span>tensorboard <span class="op">--</span>logdir runs<span class="op">/</span>our_experiment</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 
@@ -1888,11 +1888,11 @@ Vitaly Vlasov
 <ul id="tabset-2" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-2-1">Setup</a></li><li><a href="#tabset-2-2">Data fetch</a></li></ul>
 <div class="tab-content">
 <div id="tabset-2-1">
-<div id="ebcfb6bb" class="cell">
+<div id="dc22c2d8" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb65"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb65-1"><a></a><span class="co"># Path to the folder where the datasets are/should be downloaded (e.g. MNIST)</span></span>
-<span id="cb65-2"><a></a>DATASET_PATH <span class="op">=</span> <span class="st">"./data"</span></span>
+<span id="cb65-2"><a></a>DATASET_PATH <span class="op">=</span> <span class="st">"./_data"</span></span>
 <span id="cb65-3"><a></a><span class="co"># Path to the folder where the pretrained models are saved</span></span>
-<span id="cb65-4"><a></a>CHECKPOINT_PATH <span class="op">=</span> <span class="st">"./saved_models/activation_funcs"</span></span>
+<span id="cb65-4"><a></a>CHECKPOINT_PATH <span class="op">=</span> <span class="st">"./_saved_models/activation_funcs"</span></span>
 <span id="cb65-5"><a></a></span>
 <span id="cb65-6"><a></a><span class="co"># Function for setting the seed</span></span>
 <span id="cb65-7"><a></a><span class="kw">def</span> set_seed(seed):</span>
@@ -1905,7 +1905,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-2-2">
-<div id="f5458592" class="cell">
+<div id="f3fdce40" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb66"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb66-1"><a></a><span class="im">import</span> urllib.request</span>
 <span id="cb66-2"><a></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
 <span id="cb66-3"><a></a><span class="co"># Github URL where saved models are stored for this tutorial</span></span>
@@ -1944,7 +1944,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Let’s implement some ourselves. Start with the base class</p>
-<div id="01e00ff9" class="cell">
+<div id="c8a9b7bf" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb67"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb67-1"><a></a><span class="kw">class</span> ActivationFunction(nn.Module):</span>
 <span id="cb67-2"><a></a>    </span>
 <span id="cb67-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
@@ -1964,7 +1964,7 @@ Vitaly Vlasov
 <p><strong>Basic funcs:</strong></p>
 </div>
 <div class="callout-content">
-<div id="024f0050" class="cell">
+<div id="bd8d2161" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb68"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb68-1"><a></a><span class="co">##############################</span></span>
 <span id="cb68-2"><a></a></span>
 <span id="cb68-3"><a></a><span class="kw">class</span> Sigmoid(ActivationFunction):</span>
@@ -1994,7 +1994,7 @@ Vitaly Vlasov
 <p><strong>Activation functions: RELU and friend</strong></p>
 </div>
 <div class="callout-content">
-<div id="84303c82" class="cell">
+<div id="c5963a18" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb69"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb69-1"><a></a><span class="co">##############################</span></span>
 <span id="cb69-2"><a></a></span>
 <span id="cb69-3"><a></a><span class="kw">class</span> ReLU(ActivationFunction):</span>
@@ -2044,7 +2044,7 @@ Vitaly Vlasov
 <p><strong>Activation functions: convenience dict</strong></p>
 </div>
 <div class="callout-content">
-<div id="de2081e0" class="cell">
+<div id="f2d39f44" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb70"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb70-1"><a></a>act_fn_by_name <span class="op">=</span> {</span>
 <span id="cb70-2"><a></a>    <span class="st">"sigmoid"</span>: Sigmoid,</span>
 <span id="cb70-3"><a></a>    <span class="st">"tanh"</span>: Tanh,</span>
@@ -2067,7 +2067,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>First, a helper function:</p>
-<div id="5e94c8b8" class="cell">
+<div id="f5e46f8c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb71"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb71-1"><a></a><span class="kw">def</span> get_grads(act_fn, x):</span>
 <span id="cb71-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb71-3"><a></a><span class="co">    Computes the gradients of an activation function at specified positions.</span></span>
@@ -2095,7 +2095,7 @@ Vitaly Vlasov
 <p><strong>Activation functions: visualizing</strong></p>
 </div>
 <div class="callout-content">
-<div id="10fe282e" class="cell">
+<div id="25007658" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb72"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb72-1"><a></a><span class="kw">def</span> vis_act_fn(act_fn, ax, x):</span>
 <span id="cb72-2"><a></a>    <span class="co"># Run activation function</span></span>
 <span id="cb72-3"><a></a>    y <span class="op">=</span> act_fn(x)</span>
@@ -2133,7 +2133,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Model:</p>
-<div id="4fddca0b" class="cell">
+<div id="93ceb823" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb73"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb73-1"><a></a><span class="kw">class</span> BaseNetwork(nn.Module):</span>
 <span id="cb73-2"><a></a>    </span>
 <span id="cb73-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, act_fn, input_size<span class="op">=</span><span class="dv">784</span>, num_classes<span class="op">=</span><span class="dv">10</span>, hidden_sizes<span class="op">=</span>[<span class="dv">512</span>, <span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">128</span>]):</span>
@@ -2176,7 +2176,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Save/load:</p>
-<div id="962a246a" class="cell">
+<div id="84eb7220" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb74"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb74-1"><a></a><span class="im">import</span> json</span>
 <span id="cb74-2"><a></a></span>
 <span id="cb74-3"><a></a><span class="kw">def</span> _get_config_file(model_path, model_name):</span>
@@ -2237,7 +2237,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Dataset:</p>
-<div id="c56d09bf" class="cell">
+<div id="4bc92e0e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb75"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb75-1"><a></a><span class="im">import</span> torchvision</span>
 <span id="cb75-2"><a></a><span class="im">from</span> torchvision.datasets <span class="im">import</span> FashionMNIST</span>
 <span id="cb75-3"><a></a><span class="im">from</span> torchvision <span class="im">import</span> transforms</span>
@@ -2273,7 +2273,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Dataset samples:</p>
-<div id="5b566ae9" class="cell">
+<div id="a2b8a559" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb76"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb76-1"><a></a>exmp_imgs <span class="op">=</span> [train_set[i][<span class="dv">0</span>] <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="dv">16</span>)]</span>
 <span id="cb76-2"><a></a><span class="co"># Organize the images into a grid for nicer visualization</span></span>
 <span id="cb76-3"><a></a>img_grid <span class="op">=</span> torchvision.utils.make_grid(torch.stack(exmp_imgs, dim<span class="op">=</span><span class="dv">0</span>), nrow<span class="op">=</span><span class="dv">4</span>, normalize<span class="op">=</span><span class="va">True</span>, pad_value<span class="op">=</span><span class="fl">0.5</span>)</span>
@@ -2299,7 +2299,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>To get a feeling of how every activation function influences the gradients, we can look at a freshly initialized network and measure the gradients for each parameter for a batch of 256 images:</p>
-<div id="8b7d58cd" class="cell">
+<div id="4cadb746" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb77"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb77-1"><a></a><span class="kw">def</span> visualize_gradients(net, color<span class="op">=</span><span class="st">"C0"</span>):</span>
 <span id="cb77-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb77-3"><a></a><span class="co">    Inputs:</span></span>
@@ -2348,7 +2348,7 @@ Vitaly Vlasov
 </div>
 <div class="callout-content">
 <p>Result:</p>
-<div id="932c9895" class="cell">
+<div id="893b3f21" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb78"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb78-1"><a></a><span class="co"># Seaborn prints warnings if histogram has small values. We can ignore them for now</span></span>
 <span id="cb78-2"><a></a><span class="im">import</span> warnings</span>
 <span id="cb78-3"><a></a>warnings.filterwarnings(<span class="st">'ignore'</span>)</span>
@@ -2375,7 +2375,7 @@ Vitaly Vlasov
 <ul id="tabset-3" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-3-1">Definition</a></li><li><a href="#tabset-3-2">Execution</a></li></ul>
 <div class="tab-content">
 <div id="tabset-3-1">
-<div id="9c6352e4" class="cell">
+<div id="9c9e5ace" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb79"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb79-1"><a></a><span class="kw">def</span> train_model(net, model_name, max_epochs<span class="op">=</span><span class="dv">50</span>, patience<span class="op">=</span><span class="dv">7</span>, batch_size<span class="op">=</span><span class="dv">256</span>, overwrite<span class="op">=</span><span class="va">False</span>):</span>
 <span id="cb79-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb79-3"><a></a><span class="co">    Train a model on the training set of FashionMNIST</span></span>
@@ -2470,7 +2470,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-3-2">
-<div id="d072bad3" class="cell">
+<div id="ae7f3cc6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb80"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb80-1"><a></a><span class="cf">for</span> act_fn_name <span class="kw">in</span> act_fn_by_name:</span>
 <span id="cb80-2"><a></a>    <span class="bu">print</span>(<span class="ss">f"Training BaseNetwork with </span><span class="sc">{</span>act_fn_name<span class="sc">}</span><span class="ss"> activation..."</span>)</span>
 <span id="cb80-3"><a></a>    set_seed(<span class="dv">42</span>)</span>
@@ -2497,7 +2497,7 @@ Vitaly Vlasov
 <ul id="tabset-4" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-4-1">Definition</a></li><li><a href="#tabset-4-2">Figures</a></li></ul>
 <div class="tab-content">
 <div id="tabset-4-1">
-<div id="0900164b" class="cell">
+<div id="b64eb2ef" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb81"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb81-1"><a></a><span class="kw">def</span> visualize_activations(net, color<span class="op">=</span><span class="st">"C0"</span>):</span>
 <span id="cb81-2"><a></a>    activations <span class="op">=</span> {}</span>
 <span id="cb81-3"><a></a>    </span>
@@ -2530,7 +2530,7 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-4-2">
-<div id="a82e54de" class="cell">
+<div id="76c2585e" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb82"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb82-1"><a></a><span class="cf">for</span> i, act_fn_name <span class="kw">in</span> <span class="bu">enumerate</span>(act_fn_by_name):</span>
 <span id="cb82-2"><a></a>    net_actfn <span class="op">=</span> load_model(model_path<span class="op">=</span>CHECKPOINT_PATH, model_name<span class="op">=</span><span class="ss">f"FashionMNIST_</span><span class="sc">{</span>act_fn_name<span class="sc">}</span><span class="ss">"</span>).to(device)</span>
 <span id="cb82-3"><a></a>    visualize_activations(net_actfn, color<span class="op">=</span><span class="ss">f"C</span><span class="sc">{</span>i<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2565,7 +2565,7 @@ Vitaly Vlasov
 <ul id="tabset-5" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-5-1">Definition</a></li><li><a href="#tabset-5-2">Untrained</a></li><li><a href="#tabset-5-3">Trained</a></li><li><a href="#tabset-5-4">Inc.&nbsp;layer depth</a></li></ul>
 <div class="tab-content">
 <div id="tabset-5-1">
-<div id="2eea89e8" class="cell">
+<div id="d30c638a" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb83"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb83-1"><a></a><span class="kw">def</span> measure_number_dead_neurons(net):</span>
 <span id="cb83-2"><a></a></span>
 <span id="cb83-3"><a></a>    <span class="co"># For each neuron, we create a boolean variable initially set to 1. If it has an activation unequals 0 at any time,</span></span>
@@ -2592,20 +2592,20 @@ Vitaly Vlasov
 </div>
 </div>
 <div id="tabset-5-2">
-<div id="ec8001c4" class="cell">
+<div id="3bdbca31" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb84"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb84-1"><a></a>set_seed(<span class="dv">42</span>)</span>
 <span id="cb84-2"><a></a>net_relu <span class="op">=</span> BaseNetwork(act_fn<span class="op">=</span>ReLU()).to(device)</span>
 <span id="cb84-3"><a></a>measure_number_dead_neurons(net_relu)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-5-3">
-<div id="bcd86af8" class="cell">
+<div id="65952061" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb85"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb85-1"><a></a>net_relu <span class="op">=</span> load_model(model_path<span class="op">=</span>CHECKPOINT_PATH, model_name<span class="op">=</span><span class="st">"FashionMNIST_relu"</span>).to(device)</span>
 <span id="cb85-2"><a></a>measure_number_dead_neurons(net_relu)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 <div id="tabset-5-4">
-<div id="4e48731d" class="cell">
+<div id="2ad3fca3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb86"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb86-1"><a></a>set_seed(<span class="dv">42</span>)</span>
 <span id="cb86-2"><a></a>net_relu <span class="op">=</span> BaseNetwork(act_fn<span class="op">=</span>ReLU(), hidden_sizes<span class="op">=</span>[<span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">256</span>, <span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>, <span class="dv">128</span>]).to(device)</span>
 <span id="cb86-3"><a></a>measure_number_dead_neurons(net_relu)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
