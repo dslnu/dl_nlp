@@ -27,7 +27,9 @@ format:
     preview-links: auto
     slide-number: true
     theme: default
-    html-math-method: mathjax
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
     multiplex:
       url: 'https://mplex.vitv.ly'
       id: '6b0eb1e8a6defbc8021b1dde146e54f32a57225d1bc9bf126899fa4f4537a85b'

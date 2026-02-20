@@ -5,6 +5,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
+    "gensim>=4.4.0",
     "jupyter>=1.1.1",
     "jupyter-cache>=1.0.1",
     "matplotlib>=3.10.8",
@@ -13,8 +14,11 @@ dependencies = [
     "numpy>=2.4.2",
     "pandas>=3.0.0",
     "pillow>=12.1.1",
+    "pot>=0.9.6.post1",
     "pytorch-lightning>=2.6.1",
     "seaborn>=0.13.2",
+    "tensorboard>=2.20.0",
     "torch>=2.10.0",
     "torchvision>=0.25.0",
+    "transformers>=5.2.0",
 ]

@@ -5,7 +5,7 @@ author:
     affiliation: Lviv University
 code-fold: false
 execute:
-  enabled: true
+  enabled: false
   echo: true
   cache: true
 diagram:
@@ -90,7 +90,7 @@ import time
 ## Imports for plotting
 import matplotlib.pyplot as plt
 %matplotlib inline
-from IPython.display import set_matplotlib_formats
+from matplotlib_inline.backend_inline import set_matplotlib_formats
 set_matplotlib_formats('svg', 'pdf') # For export
 from matplotlib.colors import to_rgba
 import seaborn as sns

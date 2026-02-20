@@ -21,35 +21,18 @@ filters:
 We'll start with basic text analysis via statistical methods.
 
 
-For this purpose, we'll use three libraries (mostly): 
-
-1. NLTK
-2. Scattertext
-3. Spacy
+For this purpose, we'll use NLTK library. 
 
 
 # Installation
 
-## Through requirements.txt
-
-You can install all dependencies through [requirements.txt](./requirements.txt):
+We'll use `uv`:
 ```bash
-pip install -r requirements.txt
+   uv add nltk
+   uv add matplotlib
 ```
 
-Alternatively, or if any issues occur, we can proceed manually via the following steps:
-
-## 1. Install Python NLTK package
-
-From [here](https://www.nltk.org/install.html).
-```bash
-   pip install nltk
-   pip install matplotlib
-```
-
-In order to install Python Tkinter library, look [here](https://stackoverflow.com/questions/69603788/how-to-pip-install-tkinter).
-
-Also install additional data by 
+Then, inside a Jupyter notebook, install additional data by 
 ```python
    import nltk; 
    nltk.download('popular')
@@ -60,19 +43,11 @@ Set up the texts:
    import nltk
    nltk.download('nps_chat')
    nltk.download('webtext')
+   nltk.download('genesis')
+   nltk.download('inaugural')
+   nltk.download('treebank')
    from nltk.book import *
 ```
-## 2. Install Scattertext and Spacy
-
-```bash
-pip install spacy scattertext
-```
-And then update Spacy:
-
-```python
-!python -m spacy download en_core_web_sm
-```
-
 # NLTK overview
 
 Some basic functions:
@@ -134,11 +109,13 @@ fdist.plot(50, cumulative=True)
 ```
  Practice using `concordance`, `similar`, `dispersion_plot`, `FreqDist` on the resulting text.
 
+**Task 3.** Fetch a HuggingFace dataset with news data, for example <https://huggingface.co/datasets/momentum-lab/news-categories>, or any other recent news dataset. 
+
+  - pick some news category, e.g. "politics" or "entertainment", and up to 10 keywords that you want to track
+  - for these keywords, plot graphs of usage frequency by date and source
+
 # Recommended reading 
 - Chapter 1 from [NLTK book](https://www.nltk.org/book/ch01.html).
 - Chapter 2.1 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/). Plus related slides.
-- Official Python [Regex package documentation](https://docs.python.org/3/howto/regex.html).
-- [Regex cheatsheet](https://www.debuggex.com/cheatsheet/regex/python)
-- [Another version with examples](https://images.datacamp.com/image/upload/v1665049611/Marketing/Blog/Regular_Expressions_Cheat_Sheet.pdf)
 
 
