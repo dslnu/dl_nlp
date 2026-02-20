@@ -94,9 +94,9 @@ import torch.optim as optim
 
 ```{python}
 # Path to the folder where the datasets are/should be downloaded (e.g. MNIST)
-DATASET_PATH = "../data"
+DATASET_PATH = "./_data"
 # Path to the folder where the pretrained models are saved
-CHECKPOINT_PATH = "../saved_models/tutorial4"
+CHECKPOINT_PATH = "./_saved_models/tutorial4"
 
 # Function for setting the seed
 def set_seed(seed):
@@ -1226,7 +1226,7 @@ $$
 f(x,y) = x^2 + y^2 -ae^{-\frac{(x-1)^2+y^2}{c}} -be^{-\frac{(x+1)^2+y^2}{c}}
 $$
 ```{=html}
-<iframe width="1920" height="1080" src="./resources/dl_optimization.html" title="Optimization"></iframe>
+<iframe width="1920" height="1080" src="./_resources/dl_optimization.html" title="Optimization"></iframe>
 ```
 
 ## Optimization {.smaller}
@@ -1238,7 +1238,7 @@ f(x,y) = An + x^2- Acos(2\pi x) + y^2 - Acos(2\pi y), \, A=10, \; x,y \in [-5.12
 $$
 :::
 ```{=html}
-<iframe width="1920" height="1080" src="./resources/dl_rastrigin.html" title="Optimization"></iframe>
+<iframe width="1920" height="1080" src="./_resources/dl_rastrigin.html" title="Optimization"></iframe>
 ```
 ## Optimization {.smaller}
 :::{.callout-tip icon=false}
@@ -1248,5 +1248,5 @@ f(x,y) = (a-x)^2 + b(y-x^2)^2
 $$
 :::
 ```{=html}
-<iframe width="1920" height="1080" src="./resources/dl_rosenbrock.html" title="Optimization"></iframe>
+<iframe width="1920" height="1080" src="./_resources/dl_rosenbrock.html" title="Optimization"></iframe>
 ```

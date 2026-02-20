@@ -5,7 +5,7 @@ author:
     affiliation: Lviv University
 code-fold: false
 execute:
-  enabled: true
+  enabled: false
   echo: true
   cache: true
 diagram:
@@ -89,9 +89,9 @@ from torchvision import transforms
 
 ```{python}
 # Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)
-DATASET_PATH = "../data"
+DATASET_PATH = "./_data"
 # Path to the folder where the pretrained models are saved
-CHECKPOINT_PATH = "../saved_models/tutorial5"
+CHECKPOINT_PATH = "./_saved_models/tutorial5"
 
 # Function for setting the seed
 def set_seed(seed):
@@ -627,7 +627,7 @@ print("GoogleNet Results", googlenet_results)
 %load_ext tensorboard
 
 # Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!
-%tensorboard --logdir ../saved_models/tutorial5/tensorboards/GoogleNet/
+%tensorboard --logdir ./_saved_models/tutorial5/tensorboards/GoogleNet/
 ```
 :::
 
@@ -920,7 +920,7 @@ resnetpreact_model, resnetpreact_results = train_model(model_name="ResNet",
 ## Tensorboard
 ```python
 # Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH! Feel free to change "ResNet" to "ResNetPreAct"
-%tensorboard --logdir ../saved_models/tutorial5/tensorboards/ResNet/
+%tensorboard --logdir ./_saved_models/tutorial5/tensorboards/ResNet/
 ```
 :::
 ![](img/tensorboard_screenshot_ResNet.png)
@@ -1137,7 +1137,7 @@ densenet_model, densenet_results = train_model(model_name="DenseNet",
 
 ```python
 # Opens tensorboard in notebook. Adjust the path to your CHECKPOINT_PATH!
-%tensorboard --logdir ../saved_models/tutorial5/tensorboards/DenseNet/
+%tensorboard --logdir ./_saved_models/tutorial5/tensorboards/DenseNet/
 ```
 :::
 ![](img/tensorboard_screenshot_DenseNet.png)

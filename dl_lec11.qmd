@@ -5,7 +5,7 @@ author:
     affiliation: Lviv University
 code-fold: false
 execute:
-  enabled: true
+  enabled: false
   echo: true
   cache: true
 diagram:
@@ -88,7 +88,7 @@ from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 # Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)
 DATASET_PATH = "../data"
 # Path to the folder where the pretrained models are saved
-CHECKPOINT_PATH = "../saved_models/tutorial6"
+CHECKPOINT_PATH = "./_saved_models/tutorial6"
 
 # Setting the seed
 pl.seed_everything(42)
@@ -1536,7 +1536,7 @@ from pytorch_lightning.callbacks import LearningRateMonitor, ModelCheckpoint
 # Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)
 DATASET_PATH = "../data"
 # Path to the folder where the pretrained models are saved
-CHECKPOINT_PATH = "../saved_models/tutorial15"
+CHECKPOINT_PATH = "./_saved_models/tutorial15"
 
 # Setting the seed
 pl.seed_everything(42)

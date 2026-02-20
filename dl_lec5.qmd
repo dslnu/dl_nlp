@@ -954,7 +954,7 @@ print(state_dict)
 To save the state dictionary, we can use `torch.save`:
 ```{python}
 # torch.save(object, filename). For the filename, any extension can be used
-torch.save(state_dict, "our_model.tar")
+torch.save(state_dict, "_data/our_model.tar")
 ```
 :::
 
@@ -964,7 +964,7 @@ torch.save(state_dict, "our_model.tar")
 To load a model from a state dict, we use the function torch.load to load the state dict from the disk, and the module function load_state_dict to overwrite our parameters with the new values:
 ```{python}
 # Load state dict from the disk (make sure it is the same name as above)
-state_dict = torch.load("our_model.tar")
+state_dict = torch.load("_data/our_model.tar")
 
 # Create a new model and load the state
 new_model = SimpleClassifier(num_inputs=2, num_hidden=4, num_outputs=1)
@@ -1191,9 +1191,9 @@ train_model_with_logger(model, optimizer, train_data_loader, loss_module, val_da
 ### Setup
 ```{python}
 # Path to the folder where the datasets are/should be downloaded (e.g. MNIST)
-DATASET_PATH = "./data"
+DATASET_PATH = "./_data"
 # Path to the folder where the pretrained models are saved
-CHECKPOINT_PATH = "./saved_models/activation_funcs"
+CHECKPOINT_PATH = "./_saved_models/activation_funcs"
 
 # Function for setting the seed
 def set_seed(seed):
