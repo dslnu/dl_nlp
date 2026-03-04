@@ -32,6 +32,9 @@ format:
     include-in-header: mathjax.html
     slide-number: true
     theme: default
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
     multiplex:
       url: 'https://mplex.vitv.ly'
       secret: '9eea8372bd1d5b26e533c9f62ac3ded8'
