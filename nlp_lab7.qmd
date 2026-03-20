@@ -25,6 +25,23 @@ Let's agree on terminology:
 - **sentence** is a sequence of words
 - **word** is synonymous to **term**
 
+# One-hot representation
+
+1. Collect unique words in a corpus - build a **vocabulary** $V$ of size $N=|V|$.
+2. Each word with index $i \in [0,N)$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$ at $i$-th coordinate.
+3. Each document $d$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$s at coordinates $i$, where $i \in \left\{i: t_i \in d \right\}$.
+
+# Bag-of-Words tagging
+Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting $1$ whenever we encounter a word, we put the total number of times it occurs in a given document.
+
+ So, what we need to do is:
+
+- create a vocabulary of all words in a given corpus: $t_i,\, i \in [0,N)$, where $N$ is the size of the vocabulary;
+- now, given a document $d$, calculate number of times each word $t_i$ occurs and denote it $count(t_i, d)$;
+- map this document to an $N$-dimensional vector, where on each $i$-th position we'll have $count(t_i, d)$;
+- compute distances between two documents via dot product.
+
+
 ## TF-IDF vectorizer
 
 In this model,  the meaning of a word is defined by a simple function of the counts of distinct words.
@@ -61,7 +78,11 @@ TFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).
 $$
 
 # Exercises
-**Task 0**. Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g. Treebank corpus
+**Task 1.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
+
+**Task 2.** Enhance the tagger so that it will use N-grams instead of words
+
+**Task 3**. Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g. Treebank corpus
 
 # Recommended reading 
 

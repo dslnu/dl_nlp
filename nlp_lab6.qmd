@@ -17,6 +17,7 @@ diagram:
 filters:
   - diagram
 ---
+
 # Terms
 Let's agree on terminology:
 
@@ -24,22 +25,6 @@ Let's agree on terminology:
 - **document** is a sequence of sentences. Say, a paragraph, or a chapter
 - **sentence** is a sequence of words
 - **word** is synonymous to **term**
-
-# One-hot representation
-
-1. Collect unique words in a corpus - build a **vocabulary** $V$ of size $N=|V|$.
-2. Each word with index $i \in [0,N)$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$ at $i$-th coordinate.
-3. Each document $d$ will be represented by a $N$-dimensional vector with zeroes everywhere, except for $1$s at coordinates $i$, where $i \in \left\{i: t_i \in d \right\}$.
-
-# Bag-of-Words tagging
-Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting $1$ whenever we encounter a word, we put the total number of times it occurs in a given document.
-
- So, what we need to do is:
-
-- create a vocabulary of all words in a given corpus: $t_i,\, i \in [0,N)$, where $N$ is the size of the vocabulary;
-- now, given a document $d$, calculate number of times each word $t_i$ occurs and denote it $count(t_i, d)$;
-- map this document to an $N$-dimensional vector, where on each $i$-th position we'll have $count(t_i, d)$;
-- compute distances between two documents via dot product.
 
 # Vector semantics
 The idea of vector semantics is to represent a word as a point in a multidimensional semantic space that is derived (in ways we’ll see) from the distributions of word neighbors.
@@ -94,17 +79,13 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 
 # Exercises
 
-**Task 0.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
+**Task 1.** Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.
 
-**Task 1.** Enhance the tagger so that it will use N-grams instead of words
+**Task 2.** Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.
 
-**Task 2.** Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.
+**Task 3.** Very rare words might will have high PMI values. How would you solve the problem?
 
-**Task 3.** Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.
-
-**Task 4.** Very rare words might will have high PMI values. How would you solve the problem?
-
-**Task 5.** Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g. using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.
+**Task 4.** Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g. using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.
 
 # Recommended reading 
 
