@@ -152,8 +152,6 @@ window.Quarto = {
    
   <ul>
   <li><a href="#terms" id="toc-terms" class="nav-link active" data-scroll-target="#terms">Terms</a></li>
-  <li><a href="#one-hot-representation" id="toc-one-hot-representation" class="nav-link" data-scroll-target="#one-hot-representation">One-hot representation</a></li>
-  <li><a href="#bag-of-words-tagging" id="toc-bag-of-words-tagging" class="nav-link" data-scroll-target="#bag-of-words-tagging">Bag-of-Words tagging</a></li>
   <li><a href="#vector-semantics" id="toc-vector-semantics" class="nav-link" data-scroll-target="#vector-semantics">Vector semantics</a>
   <ul class="collapse">
   <li><a href="#term-document-matrix" id="toc-term-document-matrix" class="nav-link" data-scroll-target="#term-document-matrix">term-document matrix</a></li>
@@ -197,25 +195,6 @@ window.Quarto = {
 <li><strong>word</strong> is synonymous to <strong>term</strong></li>
 </ul>
 </section>
-<section id="one-hot-representation" class="level1">
-<h1>One-hot representation</h1>
-<ol type="1">
-<li>Collect unique words in a corpus - build a <strong>vocabulary</strong> <span class="math inline">\(V\)</span> of size <span class="math inline">\(N=|V|\)</span>.</li>
-<li>Each word with index <span class="math inline">\(i \in [0,N)\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span> at <span class="math inline">\(i\)</span>-th coordinate.</li>
-<li>Each document <span class="math inline">\(d\)</span> will be represented by a <span class="math inline">\(N\)</span>-dimensional vector with zeroes everywhere, except for <span class="math inline">\(1\)</span>s at coordinates <span class="math inline">\(i\)</span>, where <span class="math inline">\(i \in \left\{i: t_i \in d \right\}\)</span>.</li>
-</ol>
-</section>
-<section id="bag-of-words-tagging" class="level1">
-<h1>Bag-of-Words tagging</h1>
-<p>Bag-of-Words is very similar to one-hot representation. One difference is that instead of putting <span class="math inline">\(1\)</span> whenever we encounter a word, we put the total number of times it occurs in a given document.</p>
-<p>So, what we need to do is:</p>
-<ul>
-<li>create a vocabulary of all words in a given corpus: <span class="math inline">\(t_i,\, i \in [0,N)\)</span>, where <span class="math inline">\(N\)</span> is the size of the vocabulary;</li>
-<li>now, given a document <span class="math inline">\(d\)</span>, calculate number of times each word <span class="math inline">\(t_i\)</span> occurs and denote it <span class="math inline">\(count(t_i, d)\)</span>;</li>
-<li>map this document to an <span class="math inline">\(N\)</span>-dimensional vector, where on each <span class="math inline">\(i\)</span>-th position we’ll have <span class="math inline">\(count(t_i, d)\)</span>;</li>
-<li>compute distances between two documents via dot product.</li>
-</ul>
-</section>
 <section id="vector-semantics" class="level1">
 <h1>Vector semantics</h1>
 <p>The idea of vector semantics is to represent a word as a point in a multidimensional semantic space that is derived (in ways we’ll see) from the distributions of word neighbors. Vectors for representing words are called <strong>embeddings</strong> (although the term is sometimes more strictly applied only to dense vectors like word2vec, rather than sparse tf-idf or PPMI vectors. (Jurafsky)</p>
@@ -253,12 +232,10 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 </section>
 <section id="exercises" class="level1">
 <h1>Exercises</h1>
-<p><strong>Task 0.</strong> Take an arbitrary text from NLTK corpora (e.g.&nbsp;text3) and implement a Bag-of-Words tagger for it.</p>
-<p><strong>Task 1.</strong> Enhance the tagger so that it will use N-grams instead of words</p>
-<p><strong>Task 2.</strong> Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.</p>
-<p><strong>Task 3.</strong> Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.</p>
-<p><strong>Task 4.</strong> Very rare words might will have high PMI values. How would you solve the problem?</p>
-<p><strong>Task 5.</strong> Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g.&nbsp;using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.</p>
+<p><strong>Task 1.</strong> Implement PPMI weighting with co-occurrence based on the presence within the same paragraph.</p>
+<p><strong>Task 2.</strong> Implement PPMI weighting with co-occurrence based on a sliding window of neighboring words. Pick some number between 2-10.</p>
+<p><strong>Task 3.</strong> Very rare words might will have high PMI values. How would you solve the problem?</p>
+<p><strong>Task 4.</strong> Check how algorithm works using English thesaurus. Pick some 10 words, find synonyms for these, e.g.&nbsp;using https://www.merriam-webster.com/thesaurus. Note that semantic similarity is represented in different shades of orange. Does it match the output of PPMI weighting function? Would be nice if you could also draw a table with shaded cells matching closeness given by PPMI.</p>
 </section>
 <section id="recommended-reading" class="level1">
 <h1>Recommended reading</h1>

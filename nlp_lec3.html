@@ -957,10 +957,14 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 <img data-src="img/skipgram-language-model-training-2.png" class="r-stretch"></section>
 <section id="training-1" class="slide level2">
 <h2>Training</h2>
+
+<img data-src="img/skipgram-language-model-training-5.png" class="r-stretch"></section>
+<section id="training-2" class="slide level2">
+<h2>Training</h2>
 <p>How to improve performance of the step 3?</p>
 
 <img data-src="img/language-model-expensive.png" class="r-stretch"></section>
-<section id="training-2" class="slide level2">
+<section id="training-3" class="slide level2">
 <h2>Training</h2>
 <!-- Replace -->
 <div class="columns">
@@ -970,34 +974,34 @@ p_{*j} = \dfrac{\sum\limits_{i=1}^W f_{ij}}{\sum\limits_{i=1}^W \sum\limits_{j=1
 <p><img data-src="img/are-the-words-neighbors.png"></p>
 </div></div>
 </section>
-<section id="training-3" class="slide level2">
+<section id="training-4" class="slide level2">
 <h2>Training</h2>
 <p>Logistic regression: need to add <strong>negative samples</strong>. <img data-src="img/word2vec-negative-sampling.png"></p>
 </section>
-<section id="training-4" class="slide level2">
+<section id="training-5" class="slide level2">
 <h2>Training</h2>
 
 <img data-src="img/word2vec-negative-sampling-2.png" class="r-stretch"></section>
-<section id="training-5" class="slide level2">
+<section id="training-6" class="slide level2">
 <h2>Training</h2>
 <p>At the start of training, initialize Embedding and Context with <strong>random</strong> values:</p>
 
 <img data-src="img/word2vec-embedding-context-matrix.png" class="r-stretch"></section>
-<section id="training-6" class="slide level2">
+<section id="training-7" class="slide level2">
 <h2>Training</h2>
 <p>Perform lookup: <img data-src="img/word2vec-lookup-embeddings.png"></p>
 </section>
-<section id="training-7" class="slide level2">
+<section id="training-8" class="slide level2">
 <h2>Training</h2>
 <p>Compute sigmoid:</p>
 
 <img data-src="img/word2vec-training-dot-product-sigmoid.png" class="r-stretch"></section>
-<section id="training-8" class="slide level2">
+<section id="training-9" class="slide level2">
 <h2>Training</h2>
 <p>Calculate error:</p>
 
 <img data-src="img/word2vec-training-error.png" class="r-stretch"></section>
-<section id="training-9" class="slide level2">
+<section id="training-10" class="slide level2">
 <h2>Training</h2>
 <p>Update parameters: <img data-src="img/word2vec-training-update.png"></p>
 </section>
