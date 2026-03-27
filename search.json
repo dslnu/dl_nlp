@@ -3010,11 +3010,25 @@
     "text": "Let’s agree on terminology:\n\ncorpus (plural: corpora) is a collection of documents\ndocument is a sequence of sentences. Say, a paragraph, or a chapter\nsentence is a sequence of words\nword is synonymous to term"
   },
   {
-    "objectID": "nlp_lab7.html#tf-idf-vectorizer",
-    "href": "nlp_lab7.html#tf-idf-vectorizer",
+    "objectID": "nlp_lab7.html#motivation",
+    "href": "nlp_lab7.html#motivation",
     "title": "NLP: Lab 7 (TF-IDF)",
-    "section": "TF-IDF vectorizer",
-    "text": "TF-IDF vectorizer\nIn this model, the meaning of a word is defined by a simple function of the counts of distinct words.\nUsually used for term-document matrices.\nDenote a term by \\(t\\), a document by \\(d\\), and the corpus by \\(D\\). \\[\ncount(t,d) \\equiv n \\text{ of times that } t \\text{ appears in } d\n\\]\nBy term frequency we denote \\[\n  TF(t,d) \\equiv \\begin{cases}\n   1 + log(count(t,d)), \\; \\text{if } count(t,d) &gt; 0,\\\\\n   0, \\; otherwise\n\\end{cases}\n\\] By document frequency we denote \\[\nDF(t,D) \\equiv n \\text{ of documents that contain } t\n\\]\nInverse document frequency is defined to counter-balance the impact of often-encountered terms. IDF is a numerical measure of how much information a term provides: \\[\nIDF(t,D)=log\\dfrac{|D|+1}{DF(t,D)+1},\n\\]\nwhere \\(|D|\\) is the total number of documents in the corpus.\nThe TF-IDF measure is simply the product of TF and IDF: \\[\nTFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).\n\\]"
+    "section": "Motivation",
+    "text": "Motivation\nTF-IDF has two known weaknesses:\n\nUnbounded TF: a term appearing 100 times in a document gets 100× the weight of a term appearing once, even though the extra occurrences are far less informative.\nNo length normalization: a long document naturally contains more term occurrences, inflating its score relative to short documents.\n\nBM25 fixes both."
+  },
+  {
+    "objectID": "nlp_lab7.html#formula",
+    "href": "nlp_lab7.html#formula",
+    "title": "NLP: Lab 7 (TF-IDF)",
+    "section": "Formula",
+    "text": "Formula\nGiven a query \\(Q = \\{q_1, q_2, \\dots, q_n\\}\\), the BM25 score of a document \\(d\\) is:\n\\[\nBM25(d, Q) = \\sum_{i=1}^{n} IDF(q_i) \\cdot \\frac{count(q_i, d) \\cdot (k_1 + 1)}{count(q_i, d) + k_1 \\cdot \\left(1 - b + b \\cdot \\dfrac{|d|}{avgdl}\\right)},\n\\]\nwhere:\n\n\\(count(q_i, d)\\) — number of times query term \\(q_i\\) appears in document \\(d\\),\n\\(|d|\\) — length of document \\(d\\) (in words),\n\\(avgdl\\) — average document length across the corpus,\n\\(k_1 \\in [1.2,\\, 2.0]\\) — term frequency saturation parameter; controls how quickly additional occurrences of a term lose marginal value,\n\\(b \\in [0,\\, 1]\\) — length normalization parameter; \\(b=1\\) applies full normalization, \\(b=0\\) disables it.\n\nThe IDF term is typically defined as:\n\\[\nIDF(q_i) = \\log\\frac{|D| - DF(q_i) + 0.5}{DF(q_i) + 0.5},\n\\]\nwhere \\(|D|\\) is the total number of documents and \\(DF(q_i)\\) is the number of documents containing \\(q_i\\)."
+  },
+  {
+    "objectID": "nlp_lab7.html#key-properties",
+    "href": "nlp_lab7.html#key-properties",
+    "title": "NLP: Lab 7 (TF-IDF)",
+    "section": "Key properties",
+    "text": "Key properties\n\n\n\nProperty\nTF-IDF\nBM25\n\n\n\n\nTF growth\nunbounded (linear)\nsaturates as \\(count \\to \\infty\\)\n\n\nLength normalization\nnone\ncontrolled by \\(b\\)\n\n\nTypical use\nvectorization, similarity\ndocument ranking / search\n\n\n\nWhen \\(k_1 \\to \\infty\\) and \\(b = 0\\), BM25 degenerates to classical TF-IDF. Default values \\(k_1 = 1.5\\), \\(b = 0.75\\) work well in most settings.\nIt can be used for information retrieval purposes."
   },
   {
     "objectID": "nlp_lec6.html#cnns-for-nlp",
