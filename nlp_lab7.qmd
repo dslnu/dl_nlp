@@ -42,7 +42,7 @@ Bag-of-Words is very similar to one-hot representation. One difference is that i
 - compute distances between two documents via dot product.
 
 
-## TF-IDF vectorizer
+# TF-IDF vectorizer
 
 In this model,  the meaning of a word is defined by a simple function of the counts of distinct words.
 
@@ -77,6 +77,57 @@ $$
 TFIDF(t,d,D)=TF(t,d)⋅IDF(t,D).
 $$
 
+It can be used for **keyword summarization ** purposes.
+
+# BM25
+
+**BM25** (Best Match 25) is a probabilistic ranking function that improves upon TF-IDF by addressing two of its limitations: **term frequency saturation** and **document length bias**.
+
+## Motivation
+
+TF-IDF has two known weaknesses:
+
+1. **Unbounded TF**: a term appearing 100 times in a document gets 100× the weight of a term appearing once, even though the extra occurrences are far less informative.
+2. **No length normalization**: a long document naturally contains more term occurrences, inflating its score relative to short documents.
+
+BM25 fixes both.
+
+## Formula
+
+Given a query $Q = \{q_1, q_2, \dots, q_n\}$, the BM25 score of a document $d$ is:
+
+$$
+BM25(d, Q) = \sum_{i=1}^{n} IDF(q_i) \cdot \frac{count(q_i, d) \cdot (k_1 + 1)}{count(q_i, d) + k_1 \cdot \left(1 - b + b \cdot \dfrac{|d|}{avgdl}\right)},
+$$
+
+where:
+
+- $count(q_i, d)$ — number of times query term $q_i$ appears in document $d$,
+- $|d|$ — length of document $d$ (in words),
+- $avgdl$ — average document length across the corpus,
+- $k_1 \in [1.2,\, 2.0]$ — **term frequency saturation** parameter; controls how quickly additional occurrences of a term lose marginal value,
+- $b \in [0,\, 1]$ — **length normalization** parameter; $b=1$ applies full normalization, $b=0$ disables it.
+
+The IDF term is typically defined as:
+
+$$
+IDF(q_i) = \log\frac{|D| - DF(q_i) + 0.5}{DF(q_i) + 0.5},
+$$
+
+where $|D|$ is the total number of documents and $DF(q_i)$ is the number of documents containing $q_i$.
+
+## Key properties
+
+| Property | TF-IDF | BM25 |
+|---|---|---|
+| TF growth | unbounded (linear) | saturates as $count \to \infty$ |
+| Length normalization | none | controlled by $b$ |
+| Typical use | vectorization, similarity | document ranking / search |
+
+When $k_1 \to \infty$ and $b = 0$, BM25 degenerates to classical TF-IDF. Default values $k_1 = 1.5$, $b = 0.75$ work well in most settings.
+
+It can be used for **information retrieval** purposes.
+
 # Exercises
 **Task 1.**  Take an arbitrary text from NLTK corpora (e.g. text3) and implement a Bag-of-Words tagger for it.
 
@@ -87,8 +138,9 @@ $$
 - <https://www.kaggle.com/datasets/thedatabeast/ted-talk-transcripts-2006-2021>
 - <https://www.kaggle.com/datasets/crawford/20-newsgroups>
 
-implement an information retrieval and extractive summarization functions.
+
+implement an information retrieval (BM25) and keyword summarization (TF-IDF) functions.
 
 # Recommended reading 
 
-- Chapter 6.5 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/).
+- Chapter 6.5 from [Jurafsky's book](https://web.stanford.edu/~jurafsky/slp3/) (Jan25 edition).
