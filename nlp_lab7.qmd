@@ -82,7 +82,11 @@ $$
 
 **Task 2.** Enhance the tagger so that it will use N-grams instead of words
 
-**Task 3**. Using https://www.nltk.org/howto/corpus.html#overview, implement TF-IDF vectorizer for e.g. Treebank corpus
+**Task 3**. Using one of the below datasets:
+- <https://www.kaggle.com/datasets/thedatabeast/ted-talk-transcripts-2006-2021>
+- <https://www.kaggle.com/datasets/crawford/20-newsgroups>
+
+implement an information retrieval and extractive summarization functions.
 
 # Recommended reading 
 
