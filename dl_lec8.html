@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-ed96de9b727972fe78a7b5d16c58bf87.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.8.27">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.36">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Convolutional networks: examples</title>
@@ -17,6 +17,9 @@
   <link rel="stylesheet" href="site_libs/revealjs/dist/reset.css">
   <link rel="stylesheet" href="site_libs/revealjs/dist/reveal.css">
   <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -95,7 +98,7 @@
     code span.vs { color: #20794d; } /* VerbatimString */
     code span.wa { color: #5e5e5e; font-style: italic; } /* Warning */
   </style>
-  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-534cd8e3a96973385dffff3f4709048d.css">
+  <link rel="stylesheet" href="site_libs/revealjs/dist/theme/quarto-2740581606dc327e82f18f789b69d8a0.css">
   <link href="site_libs/revealjs/plugin/quarto-line-highlight/line-highlight.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/menu.css" rel="stylesheet">
   <link href="site_libs/revealjs/plugin/reveal-menu/quarto-menu.css" rel="stylesheet">
@@ -228,7 +231,7 @@ Vitaly Vlasov
 </div></aside></section>
 <section id="imports" class="slide level2">
 <h2>Imports</h2>
-<div id="66a896ea" class="cell">
+<div id="2b816962" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a></a><span class="co">## Standard libraries</span></span>
 <span id="cb1-2"><a></a><span class="im">import</span> os</span>
 <span id="cb1-3"><a></a><span class="im">import</span> numpy <span class="im">as</span> np </span>
@@ -260,7 +263,7 @@ Vitaly Vlasov
 </section>
 <section id="seeds" class="slide level2">
 <h2>Seeds</h2>
-<div id="6a48092e" class="cell">
+<div id="b0abfcdc" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a></a><span class="co"># Path to the folder where the datasets are/should be downloaded (e.g. CIFAR10)</span></span>
 <span id="cb2-2"><a></a>DATASET_PATH <span class="op">=</span> <span class="st">"./_data"</span></span>
 <span id="cb2-3"><a></a><span class="co"># Path to the folder where the pretrained models are saved</span></span>
@@ -285,7 +288,7 @@ Vitaly Vlasov
 </section>
 <section id="pre-trained-models" class="slide level2">
 <h2>Pre-trained models</h2>
-<div id="c9b94287" class="cell">
+<div id="b5ec8ccc" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a></a><span class="im">import</span> urllib.request</span>
 <span id="cb3-2"><a></a><span class="im">from</span> urllib.error <span class="im">import</span> HTTPError</span>
 <span id="cb3-3"><a></a><span class="co"># Github URL where saved models are stored for this tutorial</span></span>
@@ -328,7 +331,7 @@ Vitaly Vlasov
 </div>
 </div>
 </div>
-<div id="f13aa2bd" class="cell">
+<div id="823ff26d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a></a>train_dataset <span class="op">=</span> CIFAR10(root<span class="op">=</span>DATASET_PATH, train<span class="op">=</span><span class="va">True</span>, download<span class="op">=</span><span class="va">True</span>)</span>
 <span id="cb4-2"><a></a>DATA_MEANS <span class="op">=</span> (train_dataset.data <span class="op">/</span> <span class="fl">255.0</span>).mean(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
 <span id="cb4-3"><a></a>DATA_STD <span class="op">=</span> (train_dataset.data <span class="op">/</span> <span class="fl">255.0</span>).std(axis<span class="op">=</span>(<span class="dv">0</span>,<span class="dv">1</span>,<span class="dv">2</span>))</span>
@@ -360,7 +363,7 @@ Vitaly Vlasov
 <p><strong>Code</strong></p>
 </div>
 <div class="callout-content">
-<div id="c8fd8872" class="cell">
+<div id="087cbf3c" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a></a>test_transform <span class="op">=</span> transforms.Compose([transforms.ToTensor(),</span>
 <span id="cb5-2"><a></a>                                     transforms.Normalize(DATA_MEANS, DATA_STD)</span>
 <span id="cb5-3"><a></a>                                     ])</span>
@@ -399,7 +402,7 @@ Vitaly Vlasov
 <p><strong>Verify normalization</strong></p>
 </div>
 <div class="callout-content">
-<div id="84bfaa31" class="cell">
+<div id="2a7f1047" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a></a>imgs, _ <span class="op">=</span> <span class="bu">next</span>(<span class="bu">iter</span>(train_loader))</span>
 <span id="cb6-2"><a></a><span class="bu">print</span>(<span class="st">"Batch mean"</span>, imgs.mean(dim<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span>
 <span id="cb6-3"><a></a><span class="bu">print</span>(<span class="st">"Batch std"</span>, imgs.std(dim<span class="op">=</span>[<span class="dv">0</span>,<span class="dv">2</span>,<span class="dv">3</span>]))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -414,7 +417,7 @@ Vitaly Vlasov
 <ul id="tabset-1" class="panel-tabset-tabby"><li><a data-tabby-default="" href="#tabset-1-1">Code</a></li><li><a href="#tabset-1-2">Result</a></li></ul>
 <div class="tab-content">
 <div id="tabset-1-1">
-<div id="67bbb63b" class="cell">
+<div id="83e924c0" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a></a>NUM_IMAGES <span class="op">=</span> <span class="dv">4</span></span>
 <span id="cb7-2"><a></a>images <span class="op">=</span> [train_dataset[idx][<span class="dv">0</span>] <span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(NUM_IMAGES)]</span>
 <span id="cb7-3"><a></a>orig_images <span class="op">=</span> [Image.fromarray(train_dataset.data[idx]) <span class="cf">for</span> idx <span class="kw">in</span> <span class="bu">range</span>(NUM_IMAGES)]</span>
@@ -450,13 +453,13 @@ Vitaly Vlasov
 </div>
 </div>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a></a><span class="op">!</span>pip install pytorch<span class="op">-</span>lightning</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div id="d4a5105a" class="cell">
+<div id="94d34315" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a></a><span class="im">import</span> pytorch_lightning <span class="im">as</span> pl</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="pytorch-lightning-1" class="slide level2">
 <h2>PyTorch Lightning</h2>
-<div id="bc9ab28f" class="cell">
+<div id="1bb7f1aa" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a></a><span class="co"># Setting the seed</span></span>
 <span id="cb10-2"><a></a>pl.seed_everything(<span class="dv">42</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -484,7 +487,7 @@ Vitaly Vlasov
 </section>
 <section id="pytorch-lightning-3" class="slide level2 scrollable">
 <h2>PyTorch Lightning</h2>
-<div id="444f2bca" class="cell">
+<div id="833e0f30" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a></a><span class="kw">class</span> CIFARModule(pl.LightningModule):</span>
 <span id="cb11-2"><a></a></span>
 <span id="cb11-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, model_name, model_hparams, optimizer_name, optimizer_hparams):</span>
@@ -568,7 +571,7 @@ Vitaly Vlasov
 </div>
 </div>
 </div>
-<div id="955fc0fc" class="cell">
+<div id="6d76fb5f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a></a><span class="co"># Callbacks </span></span>
 <span id="cb12-2"><a></a><span class="im">from</span> pytorch_lightning.callbacks <span class="im">import</span> LearningRateMonitor, ModelCheckpoint</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -581,7 +584,7 @@ Vitaly Vlasov
 <p><strong>Multiple models support</strong></p>
 </div>
 <div class="callout-content">
-<div id="844a3320" class="cell">
+<div id="3526d3f5" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a></a>model_dict <span class="op">=</span> {}</span>
 <span id="cb13-2"><a></a></span>
 <span id="cb13-3"><a></a><span class="kw">def</span> create_model(model_name, model_hparams):</span>
@@ -596,7 +599,7 @@ Vitaly Vlasov
 </section>
 <section id="pytorch-lightning-6" class="slide level2">
 <h2>PyTorch Lightning</h2>
-<div id="3260659d" class="cell">
+<div id="6e57bf4f" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a></a>act_fn_by_name <span class="op">=</span> {</span>
 <span id="cb14-2"><a></a>    <span class="st">"tanh"</span>: nn.Tanh,</span>
 <span id="cb14-3"><a></a>    <span class="st">"relu"</span>: nn.ReLU,</span>
@@ -625,7 +628,7 @@ Vitaly Vlasov
 </section>
 <section id="pytorch-lightning-8" class="slide level2 scrollable">
 <h2>PyTorch Lightning</h2>
-<div id="8fe61b74" class="cell">
+<div id="f0628976" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a></a><span class="kw">def</span> train_model(model_name, save_name<span class="op">=</span><span class="va">None</span>, <span class="op">**</span>kwargs):</span>
 <span id="cb15-2"><a></a>    <span class="co">"""</span></span>
 <span id="cb15-3"><a></a><span class="co">    Inputs:</span></span>
@@ -701,7 +704,7 @@ Vitaly Vlasov
 <img data-src="img/inception_block.svg" class="r-stretch"></section>
 <section id="inception-2" class="slide level2 scrollable">
 <h2>Inception</h2>
-<div id="3ee56d0f" class="cell">
+<div id="9a57fee2" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb16"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a></a><span class="kw">class</span> InceptionBlock(nn.Module):</span>
 <span id="cb16-2"><a></a>    </span>
 <span id="cb16-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, c_red : <span class="bu">dict</span>, c_out : <span class="bu">dict</span>, act_fn):</span>
@@ -777,7 +780,7 @@ Vitaly Vlasov
 </section>
 <section id="inception-4" class="slide level2">
 <h2>Inception</h2>
-<div id="2b6f76d1" class="cell">
+<div id="20d78831" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a></a><span class="kw">class</span> GoogleNet(nn.Module):</span>
 <span id="cb17-2"><a></a></span>
 <span id="cb17-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_classes<span class="op">=</span><span class="dv">10</span>, act_fn_name<span class="op">=</span><span class="st">"relu"</span>, <span class="op">**</span>kwargs):</span>
@@ -840,7 +843,7 @@ Vitaly Vlasov
 <p><strong>Update model dictionary</strong></p>
 </div>
 <div class="callout-content">
-<div id="293eabb1" class="cell">
+<div id="2d4f5a45" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a></a>model_dict[<span class="st">"GoogleNet"</span>] <span class="op">=</span> GoogleNet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -855,7 +858,7 @@ Vitaly Vlasov
 <p><strong>Training</strong></p>
 </div>
 <div class="callout-content">
-<div id="852b51f4" class="cell">
+<div id="8d7a891b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb19"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a></a>googlenet_model, googlenet_results <span class="op">=</span> train_model(model_name<span class="op">=</span><span class="st">"GoogleNet"</span>, </span>
 <span id="cb19-2"><a></a>                                                 model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>, </span>
 <span id="cb19-3"><a></a>                                                                <span class="st">"act_fn_name"</span>: <span class="st">"relu"</span>}, </span>
@@ -872,7 +875,7 @@ Vitaly Vlasov
 <p><strong>Results</strong></p>
 </div>
 <div class="callout-content">
-<div id="c90f0a77" class="cell">
+<div id="4a3c90ae" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb20"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a></a><span class="bu">print</span>(<span class="st">"GoogleNet Results"</span>, googlenet_results)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -980,7 +983,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </section>
 <section id="resnet-5" class="slide level2">
 <h2>ResNet</h2>
-<div id="b8b8394c" class="cell">
+<div id="14cdb301" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb22"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a></a><span class="kw">class</span> ResNetBlock(nn.Module):</span>
 <span id="cb22-2"><a></a></span>
 <span id="cb22-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, act_fn, subsample<span class="op">=</span><span class="va">False</span>, c_out<span class="op">=-</span><span class="dv">1</span>):</span>
@@ -1029,7 +1032,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </div>
 </div>
 </div>
-<div id="452bd2b2" class="cell">
+<div id="8029703d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb23"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a></a><span class="kw">class</span> PreActResNetBlock(nn.Module):</span>
 <span id="cb23-2"><a></a></span>
 <span id="cb23-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, act_fn, subsample<span class="op">=</span><span class="va">False</span>, c_out<span class="op">=-</span><span class="dv">1</span>):</span>
@@ -1078,7 +1081,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </div>
 <div class="callout-content">
 <p>Similarly to the model selection, we define a dictionary to create a mapping from string to block class. We will use the string name as hyperparameter value in our model to choose between the ResNet blocks.</p>
-<div id="37af8dc9" class="cell">
+<div id="c6f91421" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb24"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a></a>resnet_blocks_by_name <span class="op">=</span> {</span>
 <span id="cb24-2"><a></a>    <span class="st">"ResNetBlock"</span>: ResNetBlock,</span>
 <span id="cb24-3"><a></a>    <span class="st">"PreActResNetBlock"</span>: PreActResNetBlock</span>
@@ -1105,7 +1108,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </section>
 <section id="resnet-9" class="slide level2">
 <h2>ResNet</h2>
-<div id="44a90028" class="cell">
+<div id="588e4464" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb25"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a></a><span class="kw">class</span> ResNet(nn.Module):</span>
 <span id="cb25-2"><a></a></span>
 <span id="cb25-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_classes<span class="op">=</span><span class="dv">10</span>, num_blocks<span class="op">=</span>[<span class="dv">3</span>,<span class="dv">3</span>,<span class="dv">3</span>], c_hidden<span class="op">=</span>[<span class="dv">16</span>,<span class="dv">32</span>,<span class="dv">64</span>], act_fn_name<span class="op">=</span><span class="st">"relu"</span>, block_name<span class="op">=</span><span class="st">"ResNetBlock"</span>, <span class="op">**</span>kwargs):</span>
@@ -1188,7 +1191,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>Model dictionary update</strong></p>
 </div>
 <div class="callout-content">
-<div id="aa45a32e" class="cell">
+<div id="642c92b6" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb26"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a></a>model_dict[<span class="st">"ResNet"</span>] <span class="op">=</span> ResNet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1218,7 +1221,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>Original ResNet training</strong></p>
 </div>
 <div class="callout-content">
-<div id="e45fbc3b" class="cell">
+<div id="af0c2d2b" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb27"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a></a>resnet_model, resnet_results <span class="op">=</span> train_model(model_name<span class="op">=</span><span class="st">"ResNet"</span>, </span>
 <span id="cb27-2"><a></a>                                           model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
 <span id="cb27-3"><a></a>                                                          <span class="st">"c_hidden"</span>: [<span class="dv">16</span>,<span class="dv">32</span>,<span class="dv">64</span>],</span>
@@ -1241,7 +1244,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>Pre-activation ResNet training</strong></p>
 </div>
 <div class="callout-content">
-<div id="89666e52" class="cell">
+<div id="68ae606a" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb28"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a></a>resnetpreact_model, resnetpreact_results <span class="op">=</span> train_model(model_name<span class="op">=</span><span class="st">"ResNet"</span>, </span>
 <span id="cb28-2"><a></a>                                                       model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
 <span id="cb28-3"><a></a>                                                                      <span class="st">"c_hidden"</span>: [<span class="dv">16</span>,<span class="dv">32</span>,<span class="dv">64</span>],</span>
@@ -1328,7 +1331,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>DenseLayer</strong></p>
 </div>
 <div class="callout-content">
-<div id="508baf42" class="cell">
+<div id="c5d3101d" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb30"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a></a><span class="kw">class</span> DenseLayer(nn.Module):</span>
 <span id="cb30-2"><a></a>    </span>
 <span id="cb30-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, bn_size, growth_rate, act_fn):</span>
@@ -1366,7 +1369,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>DenseBlock</strong></p>
 </div>
 <div class="callout-content">
-<div id="1d607053" class="cell">
+<div id="cd6561cb" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb31"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a></a><span class="kw">class</span> DenseBlock(nn.Module):</span>
 <span id="cb31-2"><a></a>    </span>
 <span id="cb31-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, num_layers, bn_size, growth_rate, act_fn):</span>
@@ -1406,7 +1409,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </div>
 <div class="callout-content">
 <p>Takes as input the final output of a dense block and reduces its channel dimensionality using a 1x1 convolution. To reduce the height and width dimension, we take a slightly different approach than in ResNet and apply an average pooling with kernel size 2 and stride 2. This is because we don’t have an additional connection to the output that would consider the full 2x2 patch instead of a single value. Besides, it is more parameter efficient than using a 3x3 convolution with stride 2.</p>
-<div id="c4da292b" class="cell">
+<div id="8d0fdab7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb32"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a></a><span class="kw">class</span> TransitionLayer(nn.Module):</span>
 <span id="cb32-2"><a></a>    </span>
 <span id="cb32-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, c_in, c_out, act_fn):</span>
@@ -1433,7 +1436,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>Everything together</strong></p>
 </div>
 <div class="callout-content">
-<div id="62ffe058" class="cell">
+<div id="2fb773a3" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb33"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a></a><span class="kw">class</span> DenseNet(nn.Module):</span>
 <span id="cb33-2"><a></a>    </span>
 <span id="cb33-3"><a></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, num_classes<span class="op">=</span><span class="dv">10</span>, num_layers<span class="op">=</span>[<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>], bn_size<span class="op">=</span><span class="dv">2</span>, growth_rate<span class="op">=</span><span class="dv">16</span>, act_fn_name<span class="op">=</span><span class="st">"relu"</span>, <span class="op">**</span>kwargs):</span>
@@ -1511,7 +1514,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <p><strong>Dictionary update</strong></p>
 </div>
 <div class="callout-content">
-<div id="965ddce2" class="cell">
+<div id="cb3615c1" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb34"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a></a>model_dict[<span class="st">"DenseNet"</span>] <span class="op">=</span> DenseNet</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
@@ -1527,7 +1530,7 @@ x_{l+1}=x_{l}+F(x_{l})
 </div>
 <div class="callout-content">
 <p>DenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.</p>
-<div id="d39b5743" class="cell">
+<div id="eb6b4d15" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb35"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a></a>densenet_model, densenet_results <span class="op">=</span> train_model(model_name<span class="op">=</span><span class="st">"DenseNet"</span>, </span>
 <span id="cb35-2"><a></a>                                               model_hparams<span class="op">=</span>{<span class="st">"num_classes"</span>: <span class="dv">10</span>,</span>
 <span id="cb35-3"><a></a>                                                              <span class="st">"num_layers"</span>: [<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">6</span>],</span>
@@ -1559,7 +1562,7 @@ x_{l+1}=x_{l}+F(x_{l})
 <img data-src="img/tensorboard_screenshot_DenseNet.png" class="r-stretch"></section>
 <section id="comparison" class="slide level2">
 <h2>Comparison</h2>
-<div id="b314af56" class="cell">
+<div id="342fddd7" class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb37"><pre class="sourceCode numberSource python number-lines code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a></a><span class="im">import</span> tabulate</span>
 <span id="cb37-2"><a></a><span class="im">from</span> IPython.display <span class="im">import</span> display, HTML</span>
 <span id="cb37-3"><a></a>all_models <span class="op">=</span> [</span>
