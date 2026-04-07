@@ -33,6 +33,9 @@ format:
     include-in-header: mathjax.html
     slide-number: true
     theme: default
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
     multiplex:
       url: 'https://mplex.vitv.ly'
       secret: '00f9f248d2ef7b650f7b5b70c14bf8e5'
@@ -493,6 +496,9 @@ $$
 \end{align*}
 $$
 :::
+
+## Padding
+![](img/udl_1d_conv.png)
 
 # Pooling
 
