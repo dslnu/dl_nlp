@@ -1040,14 +1040,14 @@
     "href": "dl_lab7.html",
     "title": "DL: Lab 7",
     "section": "",
-    "text": "Review the Jupyter notebook here\nGrab the dataset from https://huggingface.co/datasets/food101\nImplement a convolutional neural network for multiclass image classification.\n\n\n\n\n\nhttps://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html"
+    "text": "Review the Jupyter notebook here\nGrab the dataset from https://huggingface.co/datasets/ethz/food101\nImplement a convolutional neural network for multiclass image classification.\n\n\n\n\n\nhttps://pytorch.org/tutorials/beginner/blitz/cifar10_tutorial.html"
   },
   {
     "objectID": "dl_lab7.html#task-description",
     "href": "dl_lab7.html#task-description",
     "title": "DL: Lab 7",
     "section": "",
-    "text": "Review the Jupyter notebook here\nGrab the dataset from https://huggingface.co/datasets/food101\nImplement a convolutional neural network for multiclass image classification."
+    "text": "Review the Jupyter notebook here\nGrab the dataset from https://huggingface.co/datasets/ethz/food101\nImplement a convolutional neural network for multiclass image classification."
   },
   {
     "objectID": "dl_lab7.html#recommended-reading",
@@ -4673,7 +4673,7 @@
     "href": "dl_lec8.html#meanstd",
     "title": "Convolutional networks: examples",
     "section": "Mean/std",
-    "text": "Mean/std\n\n\n\n\n\n\nImportant\n\n\nAs we have learned from the previous tutorial about initialization, it is important to have the data preprocessed with a zero mean.\n\n\n\n\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, download=True)\nDATA_MEANS = (train_dataset.data / 255.0).mean(axis=(0,1,2))\nDATA_STD = (train_dataset.data / 255.0).std(axis=(0,1,2))\nprint(\"Data mean\", DATA_MEANS)\nprint(\"Data std\", DATA_STD)"
+    "text": "Mean/std\n\n\n\n\n\n\nImportant\n\n\nAs we have learned from the previous tutorial about initialization, it is important to have the data preprocessed with a zero mean.\n\n\n\n\ntrain_dataset = CIFAR10(root=DATASET_PATH, train=True, download=True)\nDATA_MEANS = (train_dataset.data / 255.0).mean(axis=(0,1,2))\nDATA_STD = (train_dataset.data / 255.0).std(axis=(0,1,2))\nprint(\"Data mean\", DATA_MEANS)\nprint(\"Data std\", DATA_STD)\n\nData mean [0.49139968 0.48215841 0.44653091]\nData std [0.24703223 0.24348513 0.26158784]"
   },
   {
     "objectID": "dl_lec8.html#pre-processing",
@@ -4694,7 +4694,7 @@
     "href": "dl_lec8.html#pre-processing-2",
     "title": "Convolutional networks: examples",
     "section": "Pre-processing",
-    "text": "Pre-processing\n\n\n\nVerify normalization\n\n\n\nimgs, _ = next(iter(train_loader))\nprint(\"Batch mean\", imgs.mean(dim=[0,2,3]))\nprint(\"Batch std\", imgs.std(dim=[0,2,3]))"
+    "text": "Pre-processing\n\n\n\nVerify normalization\n\n\n\nimgs, _ = next(iter(train_loader))\nprint(\"Batch mean\", imgs.mean(dim=[0,2,3]))\nprint(\"Batch std\", imgs.std(dim=[0,2,3]))\n\nBatch mean tensor([0.0231, 0.0006, 0.0005])\nBatch std tensor([0.9865, 0.9849, 0.9868])"
   },
   {
     "objectID": "dl_lec8.html#visualization",
@@ -4715,7 +4715,7 @@
     "href": "dl_lec8.html#pytorch-lightning-1",
     "title": "Convolutional networks: examples",
     "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\n# Setting the seed\npl.seed_everything(42)"
+    "text": "PyTorch Lightning\n\n# Setting the seed\npl.seed_everything(42)\n\n42"
   },
   {
     "objectID": "dl_lec8.html#pytorch-lightning-2",
@@ -4764,7 +4764,7 @@
     "href": "dl_lec8.html#pytorch-lightning-8",
     "title": "Convolutional networks: examples",
     "section": "PyTorch Lightning",
-    "text": "PyTorch Lightning\n\ndef train_model(model_name, save_name=None, **kwargs):\n    \"\"\"\n    Inputs:\n        model_name - Name of the model you want to run. Is used to look up the class in \"model_dict\"\n        save_name (optional) - If specified, this name will be used for creating the checkpoint and logging directory.\n    \"\"\"\n    if save_name is None:\n        save_name = model_name\n        \n    # Create a PyTorch Lightning trainer with the generation callback\n    trainer = pl.Trainer(default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),                          # Where to save models\n                         accelerator=\"gpu\" if str(device).startswith(\"cuda\") else \"cpu\",                     # We run on a GPU (if possible)\n                         devices=1,                                                                          # How many GPUs/CPUs we want to use (1 is enough for the notebooks)\n                         max_epochs=180,                                                                     # How many epochs to train for if no patience is set\n                         callbacks=[ModelCheckpoint(save_weights_only=True, mode=\"max\", monitor=\"val_acc\"),  # Save the best checkpoint based on the maximum val_acc recorded. Saves only weights and not optimizer\n                                    LearningRateMonitor(\"epoch\")],                                           # Log learning rate every epoch\n                         enable_progress_bar=True)                                                           # Set to False if you do not want a progress bar\n    trainer.logger._log_graph = True         # If True, we plot the computation graph in tensorboard\n    trainer.logger._default_hp_metric = None # Optional logging argument that we don't need\n    \n    # Check whether pretrained model exists. If yes, load it and skip training\n    pretrained_filename = os.path.join(CHECKPOINT_PATH, save_name + \".ckpt\")\n    if os.path.isfile(pretrained_filename):\n        print(f\"Found pretrained model at {pretrained_filename}, loading...\")\n        model = CIFARModule.load_from_checkpoint(pretrained_filename) # Automatically loads the model with the saved hyperparameters\n    else:\n        pl.seed_everything(42) # To be reproducable\n        model = CIFARModule(model_name=model_name, **kwargs)\n        trainer.fit(model, train_loader, val_loader)\n        model = CIFARModule.load_from_checkpoint(trainer.checkpoint_callback.best_model_path) # Load best checkpoint after training\n        \n    # Test best model on validation and test set\n    val_result = trainer.test(model, val_loader, verbose=False)\n    test_result = trainer.test(model, test_loader, verbose=False)\n    result = {\"test\": test_result[0][\"test_acc\"], \"val\": val_result[0][\"test_acc\"]}\n    \n    return model, result"
+    "text": "PyTorch Lightning\n\ndef train_model(model_name, save_name=None, **kwargs):\n    \"\"\"\n    Inputs:\n        model_name - Name of the model you want to run. Is used to look up the class in \"model_dict\"\n        save_name (optional) - If specified, this name will be used for creating the checkpoint and logging directory.\n    \"\"\"\n    if save_name is None:\n        save_name = model_name\n        \n    # Create a PyTorch Lightning trainer with the generation callback\n    trainer = pl.Trainer(default_root_dir=os.path.join(CHECKPOINT_PATH, save_name),                          # Where to save models\n                         accelerator=\"gpu\" if str(device).startswith(\"mps\") else \"cpu\",                     # We run on a GPU (if possible)\n                         devices=1,                                                                          # How many GPUs/CPUs we want to use (1 is enough for the notebooks)\n                         max_epochs=180,                                                                     # How many epochs to train for if no patience is set\n                         callbacks=[ModelCheckpoint(save_weights_only=True, mode=\"max\", monitor=\"val_acc\"),  # Save the best checkpoint based on the maximum val_acc recorded. Saves only weights and not optimizer\n                                    LearningRateMonitor(\"epoch\")],                                           # Log learning rate every epoch\n                         enable_progress_bar=True)                                                           # Set to False if you do not want a progress bar\n    trainer.logger._log_graph = True         # If True, we plot the computation graph in tensorboard\n    trainer.logger._default_hp_metric = None # Optional logging argument that we don't need\n    \n    # Check whether pretrained model exists. If yes, load it and skip training\n    pretrained_filename = os.path.join(CHECKPOINT_PATH, save_name + \".ckpt\")\n    if os.path.isfile(pretrained_filename):\n        print(f\"Found pretrained model at {pretrained_filename}, loading...\")\n        model = CIFARModule.load_from_checkpoint(pretrained_filename) # Automatically loads the model with the saved hyperparameters\n    else:\n        pl.seed_everything(42) # To be reproducable\n        model = CIFARModule(model_name=model_name, **kwargs)\n        trainer.fit(model, train_loader, val_loader)\n        model = CIFARModule.load_from_checkpoint(trainer.checkpoint_callback.best_model_path) # Load best checkpoint after training\n        \n    # Test best model on validation and test set\n    val_result = trainer.test(model, val_loader, verbose=False)\n    test_result = trainer.test(model, test_loader, verbose=False)\n    result = {\"test\": test_result[0][\"test_acc\"], \"val\": val_result[0][\"test_acc\"]}\n    \n    return model, result"
   },
   {
     "objectID": "dl_lec8.html#inception",
@@ -4813,7 +4813,7 @@
     "href": "dl_lec8.html#inception-6",
     "title": "Convolutional networks: examples",
     "section": "Inception",
-    "text": "Inception\n\n\n\nTraining\n\n\n\ngooglenet_model, googlenet_results = train_model(model_name=\"GoogleNet\", \n                                                 model_hparams={\"num_classes\": 10, \n                                                                \"act_fn_name\": \"relu\"}, \n                                                 optimizer_name=\"Adam\",\n                                                 optimizer_hparams={\"lr\": 1e-3,\n                                                                    \"weight_decay\": 1e-4})\n\n\n\n\n\n\n\nResults\n\n\n\nprint(\"GoogleNet Results\", googlenet_results)"
+    "text": "Inception\n\n\n\nTraining\n\n\n\ngooglenet_model, googlenet_results = train_model(model_name=\"GoogleNet\", \n                                                 model_hparams={\"num_classes\": 10, \n                                                                \"act_fn_name\": \"relu\"}, \n                                                 optimizer_name=\"Adam\",\n                                                 optimizer_hparams={\"lr\": 1e-3,\n                                                                    \"weight_decay\": 1e-4})\n\nFound pretrained model at ./_saved_models/tutorial5/GoogleNet.ckpt, loading...\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nResults\n\n\n\nprint(\"GoogleNet Results\", googlenet_results)\n\nGoogleNet Results {'test': 0.8970000147819519, 'val': 0.9039999842643738}"
   },
   {
     "objectID": "dl_lec8.html#inception-7",
@@ -4918,14 +4918,14 @@
     "href": "dl_lec8.html#resnet-12",
     "title": "Convolutional networks: examples",
     "section": "ResNet",
-    "text": "ResNet\n\n\n\nOriginal ResNet training\n\n\n\nresnet_model, resnet_results = train_model(model_name=\"ResNet\", \n                                           model_hparams={\"num_classes\": 10,\n                                                          \"c_hidden\": [16,32,64],\n                                                          \"num_blocks\": [3,3,3],\n                                                          \"act_fn_name\": \"relu\"}, \n                                           optimizer_name=\"SGD\",\n                                           optimizer_hparams={\"lr\": 0.1,\n                                                              \"momentum\": 0.9,\n                                                              \"weight_decay\": 1e-4})"
+    "text": "ResNet\n\n\n\nOriginal ResNet training\n\n\n\nresnet_model, resnet_results = train_model(model_name=\"ResNet\", \n                                           model_hparams={\"num_classes\": 10,\n                                                          \"c_hidden\": [16,32,64],\n                                                          \"num_blocks\": [3,3,3],\n                                                          \"act_fn_name\": \"relu\"}, \n                                           optimizer_name=\"SGD\",\n                                           optimizer_hparams={\"lr\": 0.1,\n                                                              \"momentum\": 0.9,\n                                                              \"weight_decay\": 1e-4})\n\nFound pretrained model at ./_saved_models/tutorial5/ResNet.ckpt, loading..."
   },
   {
     "objectID": "dl_lec8.html#resnet-13",
     "href": "dl_lec8.html#resnet-13",
     "title": "Convolutional networks: examples",
     "section": "ResNet",
-    "text": "ResNet\n\n\n\nPre-activation ResNet training\n\n\n\nresnetpreact_model, resnetpreact_results = train_model(model_name=\"ResNet\", \n                                                       model_hparams={\"num_classes\": 10,\n                                                                      \"c_hidden\": [16,32,64],\n                                                                      \"num_blocks\": [3,3,3],\n                                                                      \"act_fn_name\": \"relu\",\n                                                                      \"block_name\": \"PreActResNetBlock\"}, \n                                                       optimizer_name=\"SGD\",\n                                                       optimizer_hparams={\"lr\": 0.1,\n                                                                          \"momentum\": 0.9,\n                                                                          \"weight_decay\": 1e-4},\n                                                       save_name=\"ResNetPreAct\")"
+    "text": "ResNet\n\n\n\nPre-activation ResNet training\n\n\n\nresnetpreact_model, resnetpreact_results = train_model(model_name=\"ResNet\", \n                                                       model_hparams={\"num_classes\": 10,\n                                                                      \"c_hidden\": [16,32,64],\n                                                                      \"num_blocks\": [3,3,3],\n                                                                      \"act_fn_name\": \"relu\",\n                                                                      \"block_name\": \"PreActResNetBlock\"}, \n                                                       optimizer_name=\"SGD\",\n                                                       optimizer_hparams={\"lr\": 0.1,\n                                                                          \"momentum\": 0.9,\n                                                                          \"weight_decay\": 1e-4},\n                                                       save_name=\"ResNetPreAct\")\n\nFound pretrained model at ./_saved_models/tutorial5/ResNetPreAct.ckpt, loading..."
   },
   {
     "objectID": "dl_lec8.html#resnet-14",
@@ -4995,7 +4995,7 @@
     "href": "dl_lec8.html#densenet-8",
     "title": "Convolutional networks: examples",
     "section": "DenseNet",
-    "text": "DenseNet\n\n\n\nTraining\n\n\nDenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.\n\ndensenet_model, densenet_results = train_model(model_name=\"DenseNet\", \n                                               model_hparams={\"num_classes\": 10,\n                                                              \"num_layers\": [6,6,6,6],\n                                                              \"bn_size\": 2,\n                                                              \"growth_rate\": 16,\n                                                              \"act_fn_name\": \"relu\"}, \n                                               optimizer_name=\"Adam\",\n                                               optimizer_hparams={\"lr\": 1e-3,\n                                                                  \"weight_decay\": 1e-4})"
+    "text": "DenseNet\n\n\n\nTraining\n\n\nDenseNet is more parameter efficient than ResNet while achieving a similar or even better performance.\n\ndensenet_model, densenet_results = train_model(model_name=\"DenseNet\", \n                                               model_hparams={\"num_classes\": 10,\n                                                              \"num_layers\": [6,6,6,6],\n                                                              \"bn_size\": 2,\n                                                              \"growth_rate\": 16,\n                                                              \"act_fn_name\": \"relu\"}, \n                                               optimizer_name=\"Adam\",\n                                               optimizer_hparams={\"lr\": 1e-3,\n                                                                  \"weight_decay\": 1e-4})\n\nFound pretrained model at ./_saved_models/tutorial5/DenseNet.ckpt, loading..."
   },
   {
     "objectID": "dl_lec8.html#densenet-9",
@@ -5009,7 +5009,7 @@
     "href": "dl_lec8.html#comparison",
     "title": "Convolutional networks: examples",
     "section": "Comparison",
-    "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))"
+    "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))\n\n\n\n\nModel\nVal Accuracy\nTest Accuracy\nNum Parameters\n\n\n\n\nGoogleNet\n90.40%\n89.70%\n260,650\n\n\nResNet\n91.84%\n91.06%\n272,378\n\n\nResNetPreAct\n91.80%\n91.07%\n272,250\n\n\nDenseNet\n90.72%\n90.23%\n239,146"
   },
   {
     "objectID": "dl_lab8.html",
