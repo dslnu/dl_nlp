@@ -25,19 +25,19 @@ In this lab we will fetch documents from Reddit manually. After preprocessing we
 
 We will use a Reddit Python library:
 ```python
-pip install praw
+uv add praw
 ```
 
 Wordcloud:
 ```python
-!pip install wordcloud
+uv add wordcloud
 ```
-Library docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html
+Library docs: <https://praw.readthedocs.io/en/stable/getting_started/quick_start.html>.
 
 ## Data loading
 Now we need to setup Reddit data fetching. For this we need to have a Reddit account.
 
-We'll use posts from https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration.
+We'll use posts from <https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration>.
 
 Now, create `client_id` and `client_secret`.
 
