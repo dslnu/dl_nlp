@@ -6,8 +6,8 @@
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
 <link href="site_libs/quarto-html/light-border.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
-  <meta name="generator" content="quarto-1.9.36">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles"><meta charset="utf-8">
+  <meta name="generator" content="quarto-1.9.37">
 
   <meta name="author" content="Vitaly Vlasov">
   <title>Deep Learning/NLP course – Recurrent neural networks</title>
@@ -448,26 +448,34 @@ L(\boldsymbol{O}, \boldsymbol{Y}) = \sum\limits_{t=1}^T l_t (\boldsymbol{O}_t, \
 <section id="backpropagation-in-rnns-4" class="slide level2">
 <h2>Backpropagation in RNNs</h2>
 <p><span class="math display">\[
+\begin{align}
 \notag
 \frac{\partial L}{\partial \boldsymbol{W}_{ho}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t}\cdot\frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\partial \boldsymbol{W}_{ho}} = \\
 \label{loss_function_derivative1}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t} \cdot \frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \boldsymbol{H}_t.
+\end{align}
 \]</span></p>
 </section>
 <section id="backpropagation-in-rnns-5" class="slide level2">
 <h2>Backpropagation in RNNs</h2>
 <p><span class="math display">\[
-\label{loss_function_derivative2}
+\begin{align}
+\notag
 \frac{\partial L}{\partial \boldsymbol{W}_{hh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t}\cdot\frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\boldsymbol{H}_t} \cdot \frac{\partial \boldsymbol{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \boldsymbol{W}_{hh}}= \\
+\label{loss_function_derivative2}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t} \cdot \frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \boldsymbol{W}_{ho} \cdot \frac{\partial \boldsymbol{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \boldsymbol{W}_hh}.
+\end{align}
 \]</span></p>
 </section>
 <section id="backpropagation-in-rnns-6" class="slide level2">
 <h2>Backpropagation in RNNs</h2>
 <p><span class="math display">\[
-\label{loss_function_derivative3}
+\begin{align}
+\notag
 \frac{\partial L}{\partial \boldsymbol{W}_{xh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t}\cdot\frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\boldsymbol{H}_t} \cdot \frac{\partial \boldsymbol{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \boldsymbol{W}_{xh}}= \\
+\label{loss_function_derivative3}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \boldsymbol{O}_t} \cdot \frac{\partial \boldsymbol{O}_t}{\partial \phi_o} \boldsymbol{W}_{ho} \cdot \frac{\partial \boldsymbol{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \boldsymbol{W}_xh}.
+\end{align}
 \]</span></p>
 </section>
 <section id="backpropagation-in-rnns-7" class="slide level2">
@@ -597,10 +605,14 @@ L(\boldsymbol{O}, \boldsymbol{Y}) = \sum\limits_{t=1}^T l_t (\boldsymbol{O}_t, \
 </div>
 <div class="callout-content">
 <p><span class="math display">\[
-\label{lstm_computations}
+\begin{align}
+\notag
 \boldsymbol{O}_t = \sigma\left(\boldsymbol{X}_t \boldsymbol{W}_{xo} + \boldsymbol{H}_{t-1} \boldsymbol{W}_{ho} + \boldsymbol{b}_o\right), \\
+\notag
 \boldsymbol{I}_t = \sigma\left(\boldsymbol{X}_t \boldsymbol{W}_{xi} + \boldsymbol{H}_{t-1} \boldsymbol{W}_{hi} + \boldsymbol{b}_i\right), \\
+\label{lstm_computations}
 \boldsymbol{F}_t = \sigma\left(\boldsymbol{X}_t \boldsymbol{W}_{xf} + \boldsymbol{H}_{t-1} \boldsymbol{W}_{hf} + \boldsymbol{b}_f\right).
+\end{align}
 \]</span></p>
 <p>Here <span class="math inline">\(\boldsymbol{W}_{xo}, \boldsymbol{W}_{xi}\boldsymbol{W}_{xf} \in \mathbb{R}^{d \times h}\)</span>, and <span class="math inline">\(\boldsymbol{W}_{ho}, \boldsymbol{W}_{hi}\boldsymbol{W}_{hf} \in \mathbb{R}^{h \times h}\)</span> are weight matrices and <span class="math inline">\(\boldsymbol{b}_o, \boldsymbol{b}_i, \boldsymbol{b}_f \in \mathbb{R}^{1 \times h}\)</span> are their respective biases.</p>
 <p>Further, they use the sigmoid activation function <span class="math inline">\(\sigma\)</span> to transform the output <span class="math inline">\(\in (0, 1)\)</span> which each results in a vector with entries <span class="math inline">\(\in (0, 1)\)</span>.</p>
@@ -1272,7 +1284,7 @@ L(\boldsymbol{O}, \boldsymbol{Y}) = \sum\limits_{t=1}^T l_t (\boldsymbol{O}_t, \
         margin: 0.1,
 
         math: {
-          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@2.7.9/MathJax.js',
+          mathjax: 'https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js',
           config: 'TeX-AMS_HTML-full',
           tex2jax: {
             inlineMath: [['\\(','\\)']],

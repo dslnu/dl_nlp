@@ -998,21 +998,21 @@
     "href": "nlp_lab10.html",
     "title": "NLP: Lab 10 (PCA)",
     "section": "",
-    "text": "In this lab we will fetch documents from Reddit manually. After preprocessing we will use PCA for topic modeling.\n\n\nWe will use a Reddit Python library:\npip install praw\nWordcloud:\n!pip install wordcloud\nLibrary docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html\n\n\n\nNow we need to setup Reddit data fetching. For this we need to have a Reddit account.\nWe’ll use posts from https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration.\nNow, create client_id and client_secret.\nHow?\n\nCreate a Reddit account if you don’t have one yet\nGo to https://www.reddit.com/prefs/apps and click create an app\nPick script app type. Name and description can be anything, but make sure to specify http://localhost:8080 as redirect uri\nPress create app. Your client_id is the string under personal use script and client_secret is the string next to secret\n\nBelow is the function for comment fetching:\nimport praw\nimport pandas as pd\n\n#reddit = praw.Reddit(\n #   client_id = '???',\n  #  client_secret = '???',\n   # user_agent = 'praw'\n\n# This function returns a Pandas dataframe\n# containing reddit post comments, given its id\ndef getComments(id):\n    submission = reddit.submission(id)\n    pandas_list = []\n    commentsList = submission.comments.list()\n    # 'limit' parameter can be increased \n    # in order to expand more comments\n    submission.comments.replace_more(limit=64)\n    print(len(commentsList))\n    i = 0\n    for c in commentsList:\n        if isinstance(c, praw.models.MoreComments):\n            continue\n        commentText = c.body\n        if commentText in {'[deleted]', '[removed]'}:\n            continue\n        pandas_list.append([i, commentText])\n        i+=1\n    df = pd.DataFrame(pandas_list)\n    df.columns = ['id', 'description']\n    return df\nRead reddit comments and put it in a DataFrame named corpus.\ncorpus = getComments('1detli')\n\nprint(corpus.shape)\ncorpus.head()\nprint('First spooky story : ',corpus.loc[0,'description'])\n\n\n\nUse str methods to clean the texts. Save cleaned-up text into a column named clean_description.\n# Remove HTML elements\n\n# CODE_START\n# corpus['clean_description'] = ...\n# CODE_END\n\n# Remove special characters and numbers\n\n# CODE_START\n#corpus['clean_description'] = ...\n# CODE_END\nprint('Description cleaned of the first product : ',corpus.loc[0,'clean_description'])\nTransform characters to lowercase:\n# Lowercase\n# CODE_START\n#corpus['clean_description'] = ...\n# CODE_END\nprint('First story lower-cased : ',corpus.loc[0,'clean_description'])\nUse NLTK to tokenize the documents and put the result in a new column named clean_tokens.\n## Tokenize the cleaned description\n# CODE_START\n#corpus['clean_tokens'] = ...\n# CODE_END\ncorpus.head()\nRemove the stop words and lemmatize clean_tokens. We’ll use the code we had in lab3.\n# Remove stop words\nfrom nltk.stem import WordNetLemmatizer\nfrom nltk.corpus import stopwords\nfrom nltk.tag import pos_tag\nstop_words = set(stopwords.words('english'))\n\n\n \nlemmatizer = WordNetLemmatizer()\ndef lemmatize(tokens):\n# CODE_START\n#...\n# CODE_END\n    \n# Lemmatize\n# CODE_START\n#corpus['clean_tokens'] = ...\n# CODE_END\ncorpus.head()\nWrite all the cleaned tokens into one single string and put it in a new column named clean_document.\n# Put back tokens into one single string\n# CODE_START\n#corpus[\"clean_document\"] = ...\n# CODE_END\ncorpus.head()\n\n\n\nWe can use clean_document to compute TF-IDF matrices:\nfrom sklearn.feature_extraction.text import TfidfVectorizer\n\n# TF-IDF vector\nvectorizer = TfidfVectorizer(stop_words='english')\nX = vectorizer.fit_transform(corpus[\"clean_document\"])\n\n# X is a generator. We can transform that as an array\nX = X.toarray()\nprint(X.shape)\n\nEach line of X correspond to a story.\nEach column of X correspond to a word in the vocabulary.\nSo each cell of X correspond to the score TF-IDF for a word in a particular story.\n\n\n\n\nScikit-learn library has a TruncatedSVD class:\nfrom sklearn.decomposition import TruncatedSVD\n# Train SVD model\nsvd_model = TruncatedSVD(n_components=12) # We test on 12 topics\nlsa = svd_model.fit_transform(X)\ntopic_encoded_df = pd.DataFrame(lsa, columns = [\"topic_\" + str(i) for i in range(lsa.shape[1])])\ntopic_encoded_df[\"documents\"] = corpus['clean_description']\ntopic_encoded_df.head()\nCreate a new column named main_topic in topic_encoded_df where we store the main topics related to each document:\nimport numpy as np\n\ndef extract_main_topics(x):\n    \"\"\"\n    Return the main topic for each document. The main topic is the one that has the maximum value for each line\n    \"\"\"\n\n    # CODE_START\n    #...\n    # CODE_END\n    return main_topic\n\n# Initialize column main_topics with 0\ntopic_encoded_df.loc[:, 'main_topic'] = 0\n\nfor i, row in topic_encoded_df.iloc[:,:-2].iterrows():\n    topic_encoded_df.loc[i, 'main_topic'] = extract_main_topics(row)\n\ntopic_encoded_df.head()\nCount each main topic in the corpus:\ntopic_encoded_df['main_topic'].value_counts()\nUse the attribute components_ of the SVD model to print the 5 most important words in each topic.\n# Create DataFrame containing the description of each topic in terms of the words in the vocabulary\ntopics_description = pd.DataFrame(svd_model.components_, columns = vectorizer.get_feature_names_out(), \n                                  index = ['topic_' + str(i) for i in range(svd_model.components_.shape[0])])\n\n# Compute absolute values of coefficients\ntopics_description = topics_description.apply(np.abs, axis = 1)\n\n# Each word is map with a score of relevance for each topic\ntopics_description.head()\n# Loop over each topic and print the 5 most important words\n\n# CODE_START\n#for i,row in ...\n\n# CODE_END\nCreate a wordcloud:\nimport wordcloud\nimport matplotlib.pyplot as plt\n\n# Loop over each topic and create wordcloud from documents that are related to this main topic\nwd = wordcloud.WordCloud()\n\ncols = [c for c in topic_encoded_df.columns if 'topic_' in c]\n\nfor t in cols:\n    print('-------------------------')\n    print()\n    print('TOPIC ', t)\n    \n    # Handle topics that are not main topics for any document in the corpus\n    if (topic_encoded_df['main_topic']==t).any() == False :\n        print('cannot create wordcloud for this topic')\n        continue\n    \n    texts = \" \".join(topic_encoded_df.loc[topic_encoded_df['main_topic']==t,'documents'])\n    cloud = wd.generate(texts)\n    plt.imshow(cloud)\n    plt.show()\n    \n    print()"
+    "text": "In this lab we will fetch documents from Reddit manually. After preprocessing we will use PCA for topic modeling.\n\n\nWe will use a Reddit Python library:\nuv add praw\nWordcloud:\nuv add wordcloud\nLibrary docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html.\n\n\n\nNow we need to setup Reddit data fetching. For this we need to have a Reddit account.\nWe’ll use posts from &lt;https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration&gt;.\nNow, create client_id and client_secret.\nHow?\n\nCreate a Reddit account if you don’t have one yet\nGo to https://www.reddit.com/prefs/apps and click create an app\nPick script app type. Name and description can be anything, but make sure to specify http://localhost:8080 as redirect uri\nPress create app. Your client_id is the string under personal use script and client_secret is the string next to secret\n\nBelow is the function for comment fetching:\nimport praw\nimport pandas as pd\n\n#reddit = praw.Reddit(\n #   client_id = '???',\n  #  client_secret = '???',\n   # user_agent = 'praw'\n\n# This function returns a Pandas dataframe\n# containing reddit post comments, given its id\ndef getComments(id):\n    submission = reddit.submission(id)\n    pandas_list = []\n    commentsList = submission.comments.list()\n    # 'limit' parameter can be increased \n    # in order to expand more comments\n    submission.comments.replace_more(limit=64)\n    print(len(commentsList))\n    i = 0\n    for c in commentsList:\n        if isinstance(c, praw.models.MoreComments):\n            continue\n        commentText = c.body\n        if commentText in {'[deleted]', '[removed]'}:\n            continue\n        pandas_list.append([i, commentText])\n        i+=1\n    df = pd.DataFrame(pandas_list)\n    df.columns = ['id', 'description']\n    return df\nRead reddit comments and put it in a DataFrame named corpus.\ncorpus = getComments('1detli')\n\nprint(corpus.shape)\ncorpus.head()\nprint('First spooky story : ',corpus.loc[0,'description'])\n\n\n\nUse str methods to clean the texts. Save cleaned-up text into a column named clean_description.\n# Remove HTML elements\n\n# CODE_START\n# corpus['clean_description'] = ...\n# CODE_END\n\n# Remove special characters and numbers\n\n# CODE_START\n#corpus['clean_description'] = ...\n# CODE_END\nprint('Description cleaned of the first product : ',corpus.loc[0,'clean_description'])\nTransform characters to lowercase:\n# Lowercase\n# CODE_START\n#corpus['clean_description'] = ...\n# CODE_END\nprint('First story lower-cased : ',corpus.loc[0,'clean_description'])\nUse NLTK to tokenize the documents and put the result in a new column named clean_tokens.\n## Tokenize the cleaned description\n# CODE_START\n#corpus['clean_tokens'] = ...\n# CODE_END\ncorpus.head()\nRemove the stop words and lemmatize clean_tokens. We’ll use the code we had in lab3.\n# Remove stop words\nfrom nltk.stem import WordNetLemmatizer\nfrom nltk.corpus import stopwords\nfrom nltk.tag import pos_tag\nstop_words = set(stopwords.words('english'))\n\n\n \nlemmatizer = WordNetLemmatizer()\ndef lemmatize(tokens):\n# CODE_START\n#...\n# CODE_END\n    \n# Lemmatize\n# CODE_START\n#corpus['clean_tokens'] = ...\n# CODE_END\ncorpus.head()\nWrite all the cleaned tokens into one single string and put it in a new column named clean_document.\n# Put back tokens into one single string\n# CODE_START\n#corpus[\"clean_document\"] = ...\n# CODE_END\ncorpus.head()\n\n\n\nWe can use clean_document to compute TF-IDF matrices:\nfrom sklearn.feature_extraction.text import TfidfVectorizer\n\n# TF-IDF vector\nvectorizer = TfidfVectorizer(stop_words='english')\nX = vectorizer.fit_transform(corpus[\"clean_document\"])\n\n# X is a generator. We can transform that as an array\nX = X.toarray()\nprint(X.shape)\n\nEach line of X correspond to a story.\nEach column of X correspond to a word in the vocabulary.\nSo each cell of X correspond to the score TF-IDF for a word in a particular story.\n\n\n\n\nScikit-learn library has a TruncatedSVD class:\nfrom sklearn.decomposition import TruncatedSVD\n# Train SVD model\nsvd_model = TruncatedSVD(n_components=12) # We test on 12 topics\nlsa = svd_model.fit_transform(X)\ntopic_encoded_df = pd.DataFrame(lsa, columns = [\"topic_\" + str(i) for i in range(lsa.shape[1])])\ntopic_encoded_df[\"documents\"] = corpus['clean_description']\ntopic_encoded_df.head()\nCreate a new column named main_topic in topic_encoded_df where we store the main topics related to each document:\nimport numpy as np\n\ndef extract_main_topics(x):\n    \"\"\"\n    Return the main topic for each document. The main topic is the one that has the maximum value for each line\n    \"\"\"\n\n    # CODE_START\n    #...\n    # CODE_END\n    return main_topic\n\n# Initialize column main_topics with 0\ntopic_encoded_df.loc[:, 'main_topic'] = 0\n\nfor i, row in topic_encoded_df.iloc[:,:-2].iterrows():\n    topic_encoded_df.loc[i, 'main_topic'] = extract_main_topics(row)\n\ntopic_encoded_df.head()\nCount each main topic in the corpus:\ntopic_encoded_df['main_topic'].value_counts()\nUse the attribute components_ of the SVD model to print the 5 most important words in each topic.\n# Create DataFrame containing the description of each topic in terms of the words in the vocabulary\ntopics_description = pd.DataFrame(svd_model.components_, columns = vectorizer.get_feature_names_out(), \n                                  index = ['topic_' + str(i) for i in range(svd_model.components_.shape[0])])\n\n# Compute absolute values of coefficients\ntopics_description = topics_description.apply(np.abs, axis = 1)\n\n# Each word is map with a score of relevance for each topic\ntopics_description.head()\n# Loop over each topic and print the 5 most important words\n\n# CODE_START\n#for i,row in ...\n\n# CODE_END\nCreate a wordcloud:\nimport wordcloud\nimport matplotlib.pyplot as plt\n\n# Loop over each topic and create wordcloud from documents that are related to this main topic\nwd = wordcloud.WordCloud()\n\ncols = [c for c in topic_encoded_df.columns if 'topic_' in c]\n\nfor t in cols:\n    print('-------------------------')\n    print()\n    print('TOPIC ', t)\n    \n    # Handle topics that are not main topics for any document in the corpus\n    if (topic_encoded_df['main_topic']==t).any() == False :\n        print('cannot create wordcloud for this topic')\n        continue\n    \n    texts = \" \".join(topic_encoded_df.loc[topic_encoded_df['main_topic']==t,'documents'])\n    cloud = wd.generate(texts)\n    plt.imshow(cloud)\n    plt.show()\n    \n    print()"
   },
   {
     "objectID": "nlp_lab10.html#libraries",
     "href": "nlp_lab10.html#libraries",
     "title": "NLP: Lab 10 (PCA)",
     "section": "",
-    "text": "We will use a Reddit Python library:\npip install praw\nWordcloud:\n!pip install wordcloud\nLibrary docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html"
+    "text": "We will use a Reddit Python library:\nuv add praw\nWordcloud:\nuv add wordcloud\nLibrary docs: https://praw.readthedocs.io/en/stable/getting_started/quick_start.html."
   },
   {
     "objectID": "nlp_lab10.html#data-loading",
     "href": "nlp_lab10.html#data-loading",
     "title": "NLP: Lab 10 (PCA)",
     "section": "",
-    "text": "Now we need to setup Reddit data fetching. For this we need to have a Reddit account.\nWe’ll use posts from https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration.\nNow, create client_id and client_secret.\nHow?\n\nCreate a Reddit account if you don’t have one yet\nGo to https://www.reddit.com/prefs/apps and click create an app\nPick script app type. Name and description can be anything, but make sure to specify http://localhost:8080 as redirect uri\nPress create app. Your client_id is the string under personal use script and client_secret is the string next to secret\n\nBelow is the function for comment fetching:\nimport praw\nimport pandas as pd\n\n#reddit = praw.Reddit(\n #   client_id = '???',\n  #  client_secret = '???',\n   # user_agent = 'praw'\n\n# This function returns a Pandas dataframe\n# containing reddit post comments, given its id\ndef getComments(id):\n    submission = reddit.submission(id)\n    pandas_list = []\n    commentsList = submission.comments.list()\n    # 'limit' parameter can be increased \n    # in order to expand more comments\n    submission.comments.replace_more(limit=64)\n    print(len(commentsList))\n    i = 0\n    for c in commentsList:\n        if isinstance(c, praw.models.MoreComments):\n            continue\n        commentText = c.body\n        if commentText in {'[deleted]', '[removed]'}:\n            continue\n        pandas_list.append([i, commentText])\n        i+=1\n    df = pd.DataFrame(pandas_list)\n    df.columns = ['id', 'description']\n    return df\nRead reddit comments and put it in a DataFrame named corpus.\ncorpus = getComments('1detli')\n\nprint(corpus.shape)\ncorpus.head()\nprint('First spooky story : ',corpus.loc[0,'description'])"
+    "text": "Now we need to setup Reddit data fetching. For this we need to have a Reddit account.\nWe’ll use posts from &lt;https://www.reddit.com/r/Paranormal/comments/gc4ive/i_made_another_big_list_of_paranormal_and_mystery/ for inspiration&gt;.\nNow, create client_id and client_secret.\nHow?\n\nCreate a Reddit account if you don’t have one yet\nGo to https://www.reddit.com/prefs/apps and click create an app\nPick script app type. Name and description can be anything, but make sure to specify http://localhost:8080 as redirect uri\nPress create app. Your client_id is the string under personal use script and client_secret is the string next to secret\n\nBelow is the function for comment fetching:\nimport praw\nimport pandas as pd\n\n#reddit = praw.Reddit(\n #   client_id = '???',\n  #  client_secret = '???',\n   # user_agent = 'praw'\n\n# This function returns a Pandas dataframe\n# containing reddit post comments, given its id\ndef getComments(id):\n    submission = reddit.submission(id)\n    pandas_list = []\n    commentsList = submission.comments.list()\n    # 'limit' parameter can be increased \n    # in order to expand more comments\n    submission.comments.replace_more(limit=64)\n    print(len(commentsList))\n    i = 0\n    for c in commentsList:\n        if isinstance(c, praw.models.MoreComments):\n            continue\n        commentText = c.body\n        if commentText in {'[deleted]', '[removed]'}:\n            continue\n        pandas_list.append([i, commentText])\n        i+=1\n    df = pd.DataFrame(pandas_list)\n    df.columns = ['id', 'description']\n    return df\nRead reddit comments and put it in a DataFrame named corpus.\ncorpus = getComments('1detli')\n\nprint(corpus.shape)\ncorpus.head()\nprint('First spooky story : ',corpus.loc[0,'description'])"
   },
   {
     "objectID": "nlp_lab10.html#preprocessing",
@@ -4585,60 +4585,424 @@
     "text": "Питання\nМатеріали\n\n\n\n\nБіологія нейромереж.\nЛекція 1\n\n\nОпис роботи перцептрона.\nЛекція 1, Лекція 2\n\n\nГрадієнтний спуск. Опис алгоритму.\nЛекція 1, Лекція 2, https://d2l.ai/chapter_optimization/gd.html\n\n\nЛогістична регресія, побудована з використанням нейронних мереж.\nЛекція 2, Лаб 1\n\n\nФункції активації та їх властивості. Теорема про тотожну функцію.\nЛекція 2, Лекція 3, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial3/Activation_Functions.html\n\n\nФункції втрат. Їх диференціювання. Приклади.\nЛекція 2, Лекція 3\n\n\nМетод зворотного поширення (backpropagation)\nЛекція 2, Лекція 3, https://d2l.ai/chapter_multilayer-perceptrons/backprop.html\n\n\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nЛекція 3, Лаб 3\n\n\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nЛекція 4\n\n\nРегуляризація нейронних мереж: L1/L2.\nЛекція 4, Лаб 4\n\n\nРегуляризація нейронних мереж: Dropout.\nЛекція 4, Лаб 4\n\n\nНормалізація нейронних мереж.\nЛекція 4, Лаб 4\n\n\nІніціалізація нейронних мереж.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: SGD with Momentum.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nОптимізація нейронних мереж: Adam.\nЛекція 4, Лаб 4, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial4/Optimization_and_Initialization.html\n\n\nЗгорткові нейронні мережі.\nЛекція 7, Лаб 7, https://d2l.ai/chapter_convolutional-neural-networks/index.html\n\n\nЗгорткова архітектура Inception.\nЛекція 8, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nЗгорткова архітектура ResNet.\nЛекція 8, https://d2l.ai/chapter_convolutional-modern/resnet.html, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nЗгорткова архітектура DenseNet.\nЛекція 8, https://d2l.ai/chapter_convolutional-modern/densenet.html, https://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial5/Inception_ResNet_DenseNet.html\n\n\nРекурентні нейронні мережі.\nЛекція 9, https://d2l.ai/chapter_recurrent-neural-networks/index.html\n\n\nРекурентна архітектура LSTM.\nЛекція 9, Лаб 8, https://d2l.ai/chapter_recurrent-modern/index.html\n\n\nРекурентна архітектура GRU.\nЛекція 9, https://d2l.ai/chapter_recurrent-modern/index.html\n\n\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nЛекція 9, https://d2l.ai/chapter_recurrent-modern/encoder-decoder.html\n\n\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЛекція 9, Лекція 10, https://d2l.ai/chapter_attention-mechanisms-and-transformers/index.html\n\n\nТрансформери. Self-attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nТрансформери: Scaled dot product attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nТрансформери: multi-head attention.\nЛекція 10, Лекція 11, Лаб 9\n\n\nОсновні поняття бібліотеки PyTorch. Модулі та моделі в PyTorch\nhttps://uvadlc-notebooks.readthedocs.io/en/latest/tutorial_notebooks/tutorial2/Introduction_to_PyTorch.html, Лаб 6\n\n\nПлатформа HuggingFace\nЛаб 10\n\n\nОгляд сучасних нейромережевих архтектур.\nЛекція 12"
   },
   {
-    "objectID": "test/list.html",
-    "href": "test/list.html",
-    "title": "Білет № 1",
+    "objectID": "test/questions.html",
+    "href": "test/questions.html",
+    "title": "Deep Learning/NLP course",
     "section": "",
-    "text": "Білет № 1\n\nЗгорткова архітекура Inception.\nЗгорткова архітектура ResNet.\nЗгорткова архітектура DenseNet.\nЛогістична регресія, побудована з використанням нейронних мереж.\nТрансформери: multi-head attention.\nТрансформери: Scaled dot product attention.\nРекурентна архітектура LSTM.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nТрансформери. Self-attention.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 2\n\nФункції активації та їх властивості. Теорема про тотожну функцію.\nРегуляризація нейронних мереж: Dropout.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nМетод зворотного поширення (backpropagation)\nОптимізація нейронних мереж: Adam.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nІніціалізація нейронних мереж.\nЛогістична регресія, побудована з використанням нейронних мереж.\nЗгорткова архітекура Inception.\n\n\n\nБілет № 3\n\nНормалізація нейронних мереж.\nРекурентні нейронні мережі.\nГрадієнтний спуск. Опис алгоритму.\nОпис роботи перцептрона.\nМетод зворотного поширення (backpropagation)\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nПлатформа HuggingFace.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nАрхітектура кодувальника-декодувальника (encoder-decoder).\n\n\n\nБілет № 4\n\nОптимізація нейронних мереж: Adam.\nОгляд сучасних нейромережевих архтектур.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nОпис роботи перцептрона.\nТрансформери: Scaled dot product attention.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nРегуляризація нейронних мереж: L1/L2.\nРекурентні нейронні мережі.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\n\n# Білет № 5 1. Архітектура кодувальника-декодувальника (encoder-decoder). 2. Оптимізація нейронних мереж: Adam. 3. Градієнтний спуск. Опис алгоритму. 4. Біологія нейромереж. 5. Згорткова архітектура DenseNet. 6. Трансформери. Self-attention. 7. Згорткова архітекура Inception. 8. Ініціалізація нейронних мереж. 9. Опис роботи перцептрона. 10. Функції активації та їх властивості. Теорема про тотожну функцію.\n\n\nБілет № 6\n\nЗгорткова архітектура ResNet.\nБіологія нейромереж.\nНормалізація нейронних мереж.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nЗгорткові нейронні мережі.\nПлатформа HuggingFace.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nМетод зворотного поширення (backpropagation)\nОпис роботи перцептрона.\nІніціалізація нейронних мереж.\n\n\n\nБілет № 7\n\nМетод зворотного поширення (backpropagation)\nТрансформери: multi-head attention.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nГрадієнтний спуск. Опис алгоритму.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nЗгорткова архітектура DenseNet.\nРекурентна архітектура GRU.\nНормалізація нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\n\n\n\nБілет № 8\n\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nТрансформери: Scaled dot product attention.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nЗгорткова архітекура Inception.\nТрансформери: multi-head attention.\nОптимізація нейронних мереж: SGD with Momentum.\nРекурентні нейронні мережі.\nЗгорткова архітектура ResNet.\nРегуляризація нейронних мереж: L1/L2.\nЗгорткові нейронні мережі.\n\n# Білет № 9 1. Архітектура кодувальника-декодувальника (encoder-decoder). 2. Згорткова архітектура DenseNet. 3. Згорткова архітектура ResNet. 4. Трансформери: Scaled dot product attention. 5. Градієнтний спуск. Опис алгоритму. 6. Функції активації та їх властивості. Теорема про тотожну функцію. 7. Трансформери. Self-attention. 8. Оптимізація нейронних мереж: Adam. 9. Компроміс зсуву та дисперсії (bias-variance tradeoff). 10. Огляд сучасних нейромережевих архтектур.\n\n\nБілет № 10\n\nЗгорткова архітекура Inception.\nЗгорткова архітектура DenseNet.\nНормалізація нейронних мереж.\nРегуляризація нейронних мереж: L1/L2.\nОпис роботи перцептрона.\nРекурентні нейронні мережі.\nІніціалізація нейронних мереж.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nРекурентна архітектура LSTM.\nЛогістична регресія, побудована з використанням нейронних мереж.\n\n\n\nБілет № 11\n\nБіологія нейромереж.\nФункції втрат. Їх диференціювання. Приклади.\nНормалізація нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nМетод зворотного поширення (backpropagation)\nТрансформери. Self-attention.\nЗгорткова архітекура Inception.\nФункції активації та їх властивості. Теорема про тотожну функцію.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nОптимізація нейронних мереж: SGD with Momentum.\n\n\n\nБілет № 12\n\nТрансформери: multi-head attention.\nОгляд сучасних нейромережевих архтектур.\nБіологія нейромереж.\nЗгорткова архітектура ResNet.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nТрансформери. Self-attention.\nЛогістична регресія, побудована з використанням нейронних мереж.\nРегуляризація нейронних мереж: L1/L2.\n\n# Білет № 13 1. Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD. 2. Згорткова архітекура Inception. 3. Платформа HuggingFace. 4. Функції активації та їх властивості. Теорема про тотожну функцію. 5. Логістична регресія, побудована з використанням нейронних мереж. 6. Рекурентні нейронні мережі. 7. Огляд сучасних нейромережевих архтектур. 8. Згорткова архітектура ResNet. 9. Регуляризація нейронних мереж: L1/L2. 10. Опис роботи перцептрона.\n\n\nБілет № 14\n\nТрансформери: multi-head attention.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nОптимізація нейронних мереж: SGD with Momentum.\nЛогістична регресія, побудована з використанням нейронних мереж.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nБіологія нейромереж.\nТрансформери. Self-attention.\nОптимізація нейронних мереж: Adam.\n\n\n\nБілет № 15\n\nОптимізація нейронних мереж: Adam.\nЛогістична регресія, побудована з використанням нейронних мереж.\nЗгорткові нейронні мережі.\nФункції втрат. Їх диференціювання. Приклади.\nПлатформа HuggingFace.\nЗгорткова архітектура ResNet.\nОпис роботи перцептрона.\nОптимізація нейронних мереж: SGD with Momentum.\nГрадієнтний спуск. Опис алгоритму.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 16\n\nЗгорткові нейронні мережі.\nОгляд сучасних нейромережевих архтектур.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Adam.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nЗгорткова архітекура Inception.\nФункції втрат. Їх диференціювання. Приклади.\nРекурентна архітектура GRU.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nФункції активації та їх властивості. Теорема про тотожну функцію.\n\n# Білет № 17 1. Метод зворотного поширення (backpropagation) 2. Рекурентна архітектура GRU. 3. Згорткова архітекура Inception. 4. Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами 5. Функції втрат. Їх диференціювання. Приклади. 6. Механізми уваги для рекурентних мереж (seq2seq моделей). 7. Рекурентні нейронні мережі. 8. Оптимізація нейронних мереж: Adam. 9. Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD. 10. Трансформери. Self-attention.\n\n\nБілет № 18\n\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nРекурентна архітектура LSTM.\nГрадієнтний спуск. Опис алгоритму.\nОгляд сучасних нейромережевих архтектур.\nЛогістична регресія, побудована з використанням нейронних мереж.\nРекурентні нейронні мережі.\nРегуляризація нейронних мереж: Dropout.\nОпис роботи перцептрона.\nІніціалізація нейронних мереж.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 19\n\nГрадієнтний спуск. Опис алгоритму.\nПлатформа HuggingFace.\nФункції втрат. Їх диференціювання. Приклади.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nРекурентні нейронні мережі.\nЗгорткова архітекура Inception.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЛогістична регресія, побудована з використанням нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nІніціалізація нейронних мереж.\n\n\n\nБілет № 20\n\nФункції втрат. Їх диференціювання. Приклади.\nРегуляризація нейронних мереж: L1/L2.\nТрансформери: Scaled dot product attention.\nРекурентні нейронні мережі.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Adam.\nЗгорткова архітекура Inception.\nЛогістична регресія, побудована з використанням нейронних мереж.\nОгляд сучасних нейромережевих архтектур.\nГрадієнтний спуск. Опис алгоритму."
+    "text": "q = [\n    \"Біологія нейромереж.\",\n    \"Опис роботи перцептрона.\",\n    \"Градієнтний спуск. Опис алгоритму.\",\n    \"Логістична регресія, побудована з використанням нейронних мереж.\",\n    \"Функції активації та їх властивості. Теорема про тотожну функцію.\",\n    \"Функції втрат. Їх диференціювання. Приклади.\",\n    \"Метод зворотного поширення (backpropagation)\",\n    \"Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з $L$ шарами\",\n    \"Компроміс зсуву та дисперсії (bias-variance tradeoff). \",\n    \"Регуляризація нейронних мереж: L1/L2.\",\n    \"Регуляризація нейронних мереж: Dropout.\",\n    \"Нормалізація  нейронних мереж. \",\n    \"Ініціалізація нейронних мереж.\",\n    \"Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\",\n    \"Оптимізація нейронних мереж: SGD with Momentum.\",\n    \"Оптимізація нейронних мереж: Adam.\",\n    \"Згорткові нейронні мережі.\",\n    \"Згорткова архітекура Inception.\",\n    \"Згорткова архітектура ResNet.\",\n    \"Згорткова архітектура DenseNet.\",\n    \"Рекурентні нейронні мережі.\",\n    \"Рекурентна архітектура LSTM.\",\n    \"Рекурентна архітектура GRU.\",\n    \"Архітектура кодувальника-декодувальника (encoder-decoder).\",\n    \"Механізми уваги для рекурентних мереж (seq2seq моделей).\",\n    \"Трансформери. Self-attention.\",\n    \"Трансформери: Scaled dot product attention.\",\n    \"Трансформери: multi-head attention.\",\n    \"Основні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\",\n    \"Платформа HuggingFace.\",\n    \"Огляд сучасних нейромережевих архтектур.\",\n]\n\n\nimport random\n\n\ndef generate():\n    return [str(i+1) + \". \" + s for i, s in enumerate(random.sample(q, 10))]\n\n\ngenerate()\n\n['1. Рекурентна архітектура LSTM.',\n '2. Рекурентна архітектура GRU.',\n '3. Компроміс зсуву та дисперсії (bias-variance tradeoff). ',\n '4. Нормалізація  нейронних мереж. ',\n '5. Логістична регресія, побудована з використанням нейронних мереж.',\n '6. Основні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch',\n '7. Трансформери: multi-head attention.',\n '8. Метод зворотного поширення (backpropagation)',\n '9. Функції активації та їх властивості. Теорема про тотожну функцію.',\n '10. Оптимізація нейронних мереж: SGD with Momentum.']\n\n\n\ndef create_list():\n    md = \"\"\"---\nmainfont: \"Courier New\"\nformat:\n  pdf:\n    documentclass: article\n    papersize: a4\n    margin-right: 2cm\n    margin-left: 2cm\n    margin-top: 2cm\n    margin-bottom: 2cm\n---\\n\\n\"\"\" \n    for i in range(1,21):\n        l = generate()\n        md += \"# Білет № \" + str(i) + \"\\n\"\n        md += \"\\n\".join(l)\n        md += \"\\n\\n\\n\"\n        if i % 4 == 0:\n            md += \"{{&lt; pagebreak &gt;}}\\n\\n\"\n    return md\n\n\nwith open(\"list.qmd\", \"w\") as f:\n    f.write(create_list())"
   },
   {
-    "objectID": "dl.html",
-    "href": "dl.html",
-    "title": "Deep Learning",
+    "objectID": "test/questions-intro-to-specialty.html",
+    "href": "test/questions-intro-to-specialty.html",
+    "title": "Deep Learning/NLP course",
     "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
+    "text": "q = [\n    \"Основні поняття теорії ймовірності.\",\n    \"Лапласове визначення ймовірності.\",\n    \"Випадкові величини.\",\n    \"Види статистики.\",\n    \"Типи даних у статистиці.\",\n    \"Міри центральності.\",\n    \"Міри розподілу.\",\n    \"Що таке мовна модель - статистичне означення. N-грами.\",\n    \"Припущення Маркова.\",\n    \"Короткий опис бібліотеки Numpy.\",\n    \"Основні поняття бібліотеки Pandas.\",\n]\n\n\nimport random\n\n\ndef generate():\n    return [str(i+1) + \". \" + s for i, s in enumerate(random.sample(q, 5))]\n\n\ngenerate()\n\n['1. Види статистики.',\n '2. Типи даних у статистиці.',\n '3. Основні поняття бібліотеки Pandas.',\n '4. Припущення Маркова.',\n '5. Основні поняття теорії ймовірності.']\n\n\n\ndef create_list():\n    md = \"\"\"---\nmainfont: \"Courier New\"\nformat:\n  pdf:\n    documentclass: article\n    papersize: a4\n    margin-right: 2cm\n    margin-left: 2cm\n    margin-top: 2cm\n    margin-bottom: 2cm\n---\\n\\n\"\"\" \n    for i in range(1,36):\n        l = generate()\n        md += \"# Білет № \" + str(i) + \"\\n\"\n        md += \"\\n\".join(l)\n        md += \"\\n\\n\\n\"\n        if i % 6 == 0:\n            md += \"{{&lt; pagebreak &gt;}}\\n\\n\"\n    return md\n\n\nwith open(\"list_intro_to_specialty.qmd\", \"w\") as f:\n    f.write(create_list())"
   },
   {
-    "objectID": "dl.html#lectures",
-    "href": "dl.html#lectures",
-    "title": "Deep Learning",
+    "objectID": "dl_lec9.html#recurrent-neural-networks",
+    "href": "dl_lec9.html#recurrent-neural-networks",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\n\n\n\nUses\n\n\n\nLanguage Modelling and Generating Text\nSpeech Recognition\nGenerating Image Descriptions\nVideo Tagging"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-1",
+    "href": "dl_lec9.html#recurrent-neural-networks-1",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\nRecurrent networks operate on sequences of vectors"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-2",
+    "href": "dl_lec9.html#recurrent-neural-networks-2",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nInterpretation\n\n\n\nRNNs combine the input vector with their state vector with a fixed (but learned) function to produce a new state vector.\nThis can in programming terms be interpreted as running a fixed program with certain inputs and some internal variables.\nViewed this way, RNNs essentially describe programs and are Turing-complete.\n\n\n\n\n\n\n\nRNNs as programs\n\n\nIf training vanilla neural nets is optimization over functions, training recurrent nets is optimization over programs."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-3",
+    "href": "dl_lec9.html#recurrent-neural-networks-3",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\n\n\n\nCycles\n\n\n\nfeedforward networks – no cycles\nRNN has cycles and transmits information back into itself.\ncycles are recurrent connections\n\n\n\n\n\n\n\nConnection types\n\n\n\nstandard connections: applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step\nrecurrent connections: dynamic, passing information across adjacent time steps\n\nWhile Feedforward Networks pass information through the network without cycles, recurrent networks have cycles. This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs \\(\\boldsymbol{X}_{0:t-1}\\) and not only the current input \\(\\boldsymbol{X}_t\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-4",
+    "href": "dl_lec9.html#recurrent-neural-networks-4",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-5",
+    "href": "dl_lec9.html#recurrent-neural-networks-5",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-6",
+    "href": "dl_lec9.html#recurrent-neural-networks-6",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nNotation\n\n\n\n\\(n\\) – number of samples\n\\(d\\) – number of inputs\n\\(h\\) – number of hidden units\n\\(\\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}\\) – hidden state at time \\(t\\)\n\\(\\boldsymbol{X}_t \\in \\mathbb{R}^{n \\times d}\\) – input at time \\(t\\)\n\\(\\boldsymbol{W}_{xh} \\in \\mathbb{R}^{d \\times h}\\) – weight matrix\n\\(\\boldsymbol{W}_{hh} \\in \\mathbb{R}^{h \\times h}\\) – hidden-state-to-hidden-state matrix\n\\(\\boldsymbol{b}_h \\in \\mathbb{R}^{1 \\times h}\\) – bias parameter\n\\(\\phi\\) – activation function (usually sigmoid or tanh)"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-7",
+    "href": "dl_lec9.html#recurrent-neural-networks-7",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\nNote, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block \\(\\boldsymbol{H}\\). This block can obviously be extended to multiple hidden layers."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-8",
+    "href": "dl_lec9.html#recurrent-neural-networks-8",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nEquation for hidden variable\n\n\n\\[\n\\label{hidden_var}\n\\boldsymbol{H}_t = \\phi_h \\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hh} + \\boldsymbol{b}_h\\right)\n\\]\n\n\n\n\n\n\nEquation for output variable\n\n\n\\[\n\\label{output_var}\n\\boldsymbol{O}_t = \\phi_o \\left(\\boldsymbol{H}_t \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right)\n\\] Since \\(\\boldsymbol{H}_t\\) recursively includes \\(\\boldsymbol{H}_{t-1}\\) and this process occurs for every time step the RNN includes traces of all hidden states that preceded \\(\\boldsymbol{H}_{t-1}\\) as well as \\(\\boldsymbol{H}_{t-1}\\) itself."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-9",
+    "href": "dl_lec9.html#recurrent-neural-networks-9",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nComputation for hidden variable\n\n\n\\[\n\\label{hidden_var_computation}\n\\boldsymbol{H} = \\phi_h \\left(\\boldsymbol{X} \\boldsymbol{W}_{xh} + \\boldsymbol{b}_h\\right)\n\\]\n\n\n\n\n\n\nComputation for output variable\n\n\n\\[\n\\label{output_var_computation}\n\\boldsymbol{O} = \\phi_o \\left(\\boldsymbol{H} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right)\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-10",
+    "href": "dl_lec9.html#recurrent-neural-networks-10",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nHidden state computation\n\n\nAt any time step \\(t\\):\n\nconcatenate the input \\(\\boldsymbol{X}_t\\) at the current time step \\(t\\) and the hidden state \\(\\boldsymbol{H}_{t-1}\\) at the previous time step \\(t\\)\nfeed the concatenation result into a fully connected layer with the activation function \\(\\phi\\)\nThe output of such a fully connected layer is the hidden state \\(\\boldsymbol{H}_t\\) of the current time step \\(t\\)\nthe model parameters are the concatenation of \\(\\boldsymbol{W}_{xh}\\) and \\(\\boldsymbol{W}_{hh}\\) and a bias \\(\\boldsymbol{b}_h\\)\n\\(\\boldsymbol{H}_t\\) will participate in computing the hidden state \\(\\boldsymbol{H}_{t+1}\\) of the next time step \\(t+1\\)\n\\(\\boldsymbol{H}_t\\) will also be fed into the fully connected output layer to compute the output \\(\\boldsymbol{O}_t\\) of the current time step \\(t\\)"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-11",
+    "href": "dl_lec9.html#recurrent-neural-networks-11",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks"
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-12",
+    "href": "dl_lec9.html#recurrent-neural-networks-12",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nLanguage modeling\n\n\nWe aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels).\nBengio et al. (2003) first proposed to use a neural network for language modeling."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-13",
+    "href": "dl_lec9.html#recurrent-neural-networks-13",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\nA character-level language model based on the RNN. The input and target sequences are “machin” and “achine”, respectively."
+  },
+  {
+    "objectID": "dl_lec9.html#recurrent-neural-networks-14",
+    "href": "dl_lec9.html#recurrent-neural-networks-14",
+    "title": "Recurrent neural networks",
+    "section": "Recurrent neural networks",
+    "text": "Recurrent neural networks\n\n\n\nProcess\n\n\nDuring the training process, we run a softmax operation on the output from the output layer for each time step, and then use the cross-entropy loss to compute the error between the model output and the target.\nBecause of the recurrent computation of the hidden state in the hidden layer, the output \\(\\boldsymbol{O}_3\\) of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.\n\n\n\n\n\n\n\n\n\nNote\n\n\nIn practice, each token is represented by a \\(d\\)-dimensional vector, and we use a batch size \\(n\\). Therefore, the input \\(\\boldsymbol{X}_t\\) at time step \\(t\\) will be an \\(n \\times d\\) matrix."
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-1",
+    "href": "dl_lec9.html#backpropagation-in-rnns-1",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\n\n\nBackpropagation Through Time (BPTT)\n\n\n\nBPTT expands (or unrolls) the computational graph of an RNN one time step at a time.\nunrolled RNN is a FF neural network with same parameters appearing at each time step\nThe gradient with respect to each parameter must be summed across all places that the parameter occurs in the unrolled net."
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-2",
+    "href": "dl_lec9.html#backpropagation-in-rnns-2",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\n\n\nBackpropagation Through Time (BPTT)\n\n\nWhen we forward pass our input \\(\\boldsymbol{X}_t\\) through the network, we compute the hidden state \\(\\boldsymbol{H}_t\\) and the output state \\(\\boldsymbol{O}_t\\) one step at at time.\nWe can then define a loss function \\(L(\\boldsymbol{O}, \\boldsymbol{Y})\\) to describe the difference between all outputs \\(\\boldsymbol{O}_t\\) and target values \\(\\boldsymbol{Y}_t\\), summing up loss terms \\(l_t\\).\n\\[\n\\label{loss_function}\nL(\\boldsymbol{O}, \\boldsymbol{Y}) = \\sum\\limits_{t=1}^T l_t (\\boldsymbol{O}_t, \\boldsymbol{Y}_t)\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-3",
+    "href": "dl_lec9.html#backpropagation-in-rnns-3",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\nBoxes represent variables (not shaded) or parameters (shaded) and circles represent operators."
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-4",
+    "href": "dl_lec9.html#backpropagation-in-rnns-4",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\\[\n\\begin{align}\n\\notag\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{ho}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\partial \\boldsymbol{W}_{ho}} = \\\\\n\\label{loss_function_derivative1}\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{H}_t.\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-5",
+    "href": "dl_lec9.html#backpropagation-in-rnns-5",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\\[\n\\begin{align}\n\\notag\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\boldsymbol{H}_t} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_{hh}}= \\\\\n\\label{loss_function_derivative2}\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{W}_{ho} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_hh}.\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-6",
+    "href": "dl_lec9.html#backpropagation-in-rnns-6",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\\[\n\\begin{align}\n\\notag\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\boldsymbol{H}_t} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_{xh}}= \\\\\n\\label{loss_function_derivative3}\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{W}_{ho} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_xh}.\n\\end{align}\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-7",
+    "href": "dl_lec9.html#backpropagation-in-rnns-7",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\nSince each \\(\\boldsymbol{H}_t\\) depends on the previous time step, we can substitute the last part from above equations to obtain \\[\n\\label{loss_function_derivative4}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{W}_{hh}}.\n\\]\n\\[\n\\label{loss_function_derivative5}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{W}_{xh}}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-8",
+    "href": "dl_lec9.html#backpropagation-in-rnns-8",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\n\n\nOR:\n\n\n\\[\n\\label{loss_function_derivative6}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\left(\\boldsymbol{W}^T_{hh}\\right)^{t-k} \\cdot \\boldsymbol{H}_k.\n\\]\n\\[\n\\label{loss_function_derivative7}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\left(\\boldsymbol{W}^T_{hh}\\right)^{t-k} \\cdot \\boldsymbol{X}_k.\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-9",
+    "href": "dl_lec9.html#backpropagation-in-rnns-9",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\n\n\nA problem\n\n\nWe can see that we need to store powers of \\(\\boldsymbol{W}_{hh}^k\\) as we proceed through each loss term \\(l_t\\) of the overall loss function \\(L\\) that can become very large.\nFor these large values this method becomes numerically unstable since eigenvalues smaller than 1 vanish and eigenvalues larger than 1 diverge.\n\n\n\n\n\n\nSolution\n\n\nTruncate a sum at computationally convenient size - Truncated BPTT."
+  },
+  {
+    "objectID": "dl_lec9.html#backpropagation-in-rnns-10",
+    "href": "dl_lec9.html#backpropagation-in-rnns-10",
+    "title": "Recurrent neural networks",
+    "section": "Backpropagation in RNNs",
+    "text": "Backpropagation in RNNs\n\n\n\nTruncated BPTT\n\n\nThis establishes an upper bound for the number of time steps the gradient can flow back to.\nInterpretation: a moving window of past time steps which the RNN considers. Anything before the cut-off time step doesn’t get taken into account. Since BPTT basically unfolds the RNN to create a new layer for each time step we can also think of this procedure as limiting the number of hidden layers.\nResult: model focuses primarily on short-term influence rather than long-term consequences."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-1",
+    "href": "dl_lec9.html#lstms-1",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nProblem\n\n\nIn \\(\\eqref{loss_function_derivative4}\\) and \\(\\eqref{loss_function_derivative5}\\) we see \\(\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\) that introduces a matrix multiplication over a potentially very long sequence.\n\n\n\n\n\n\nSolution\n\n\nLSTMs were designed to handle a vanishing gradient problem.\nSince they use a more constant error, they allow RNNs to learn over a lot more time steps (way over 1000)."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-2",
+    "href": "dl_lec9.html#lstms-2",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nGates\n\n\nTo achieve that, LSTMs store more information outside of the traditional neural network flow in structures called gated cells.\nGate types\n\noutput gate \\(\\boldsymbol{O}_t\\) – reads entries of the cell\ninput gate \\(\\boldsymbol{I}_t\\) – reads data into the cell\nforget gate \\(\\boldsymbol{F}_t\\) – resets the content of the cell."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-3",
+    "href": "dl_lec9.html#lstms-3",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nComputations\n\n\n\\[\n\\begin{align}\n\\notag\n\\boldsymbol{O}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xo} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right), \\\\\n\\notag\n\\boldsymbol{I}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xi} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hi} + \\boldsymbol{b}_i\\right), \\\\\n\\label{lstm_computations}\n\\boldsymbol{F}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xf} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hf} + \\boldsymbol{b}_f\\right).\n\\end{align}\n\\]\nHere \\(\\boldsymbol{W}_{xo}, \\boldsymbol{W}_{xi}\\boldsymbol{W}_{xf} \\in \\mathbb{R}^{d \\times h}\\), and \\(\\boldsymbol{W}_{ho}, \\boldsymbol{W}_{hi}\\boldsymbol{W}_{hf} \\in \\mathbb{R}^{h \\times h}\\) are weight matrices and \\(\\boldsymbol{b}_o, \\boldsymbol{b}_i, \\boldsymbol{b}_f \\in \\mathbb{R}^{1 \\times h}\\) are their respective biases.\nFurther, they use the sigmoid activation function \\(\\sigma\\) to transform the output \\(\\in (0, 1)\\) which each results in a vector with entries \\(\\in (0, 1)\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-4",
+    "href": "dl_lec9.html#lstms-4",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\nCalculation of input, forget, and output gates in an LSTM"
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-5",
+    "href": "dl_lec9.html#lstms-5",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nCandidate memory cell\n\n\n\\(\\tilde{\\boldsymbol{C}}_t \\in \\mathbb{R}^{n \\times h}\\) – similar computation as previously mentioned gates but uses tanh to have output \\(\\in (-1, 1)\\).\nHas its own weights \\(\\boldsymbol{W}_{xc} \\in \\mathbb{R}^{d \\times h},\\boldsymbol{W}_{hc} \\in \\mathbb{R}^{h \\times h}\\) and biases \\(\\boldsymbol{b}_c \\in \\mathbb{R}^{1 \\times h}\\).\n\n\n\n\n\n\nComputation\n\n\n\\[\n\\label{candidate_memory_cell_computation}\n\\tilde{\\boldsymbol{C}}_t = tanh \\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xc} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hc} + \\boldsymbol{b}_c\\right)\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-6",
+    "href": "dl_lec9.html#lstms-6",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\nComputation of candidate memory cells in LSTM."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-7",
+    "href": "dl_lec9.html#lstms-7",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nOld memory content\n\n\nTo put things together we introduce old memory content \\(\\boldsymbol{C}_{t−1} \\in \\mathbb{R}^{n \\times h}\\) which together with the introduced gates controls how much of the old memory content we want to preserve to get to the new memory content \\(\\boldsymbol{C}_t\\).\n\n\n\n\n\n\nComputation\n\n\n\\[\n\\label{candidate_memory_cell_computation2}\n\\boldsymbol{C}_t = \\boldsymbol{F}_t \\odot \\boldsymbol{C}_{t-1} + \\boldsymbol{I}_t \\odot \\tilde{\\boldsymbol{C}}_t.\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-8",
+    "href": "dl_lec9.html#lstms-8",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\nComputation of memory cells in an LSTM."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-9",
+    "href": "dl_lec9.html#lstms-9",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\n\n\nHidden states computation\n\n\n\\[\n\\label{hidden_states_computation}\n\\boldsymbol{H}_t = \\boldsymbol{O}_t \\odot tanh\\left(\\boldsymbol{C}_t\\right), \\; \\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}.\n\\]\n\nthe output gate is close to 1 – we allow the memory cell internal state to impact the subsequent layers uninhibited,\nthe output gate is close to – we prevent the current memory from impacting other layers of the network at the current time step.\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nA memory cell can accrue information across many time steps without impacting the rest of the network (as long as the output gate takes values close to 0), and then suddenly impact the network at a subsequent time step as soon as the output gate flips from values close to 0 to values close to 1."
+  },
+  {
+    "objectID": "dl_lec9.html#lstms-10",
+    "href": "dl_lec9.html#lstms-10",
+    "title": "Recurrent neural networks",
+    "section": "LSTMs",
+    "text": "LSTMs\n\nComputation of the hidden state in an LSTM."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-1",
+    "href": "dl_lec9.html#gated-recurrent-units-1",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\n\n\nRationale\n\n\n\nsimpler architecture\nretain internal state and gating mechanisms\nbut speed up computation\n\n\n\n\n\n\n\nOutline\n\n\n\ninstead of LSTM’s 3 gates, use 2: reset gate and update gate\nreset gate controls how much of the previous state we want to remember\nupdate gate controls how much of the new state is just a copy of the old one"
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-2",
+    "href": "dl_lec9.html#gated-recurrent-units-2",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\nComputing the reset gate and the update gate in a GRU model."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-3",
+    "href": "dl_lec9.html#gated-recurrent-units-3",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\n\n\nGate computation\n\n\nSuppose that for a given time step \\(t\\) we have:\n\na minibatch \\(\\boldsymbol{X}_t \\in \\mathbb{R}^{n \\times d}\\)\nhidden state of the previous time step \\(\\boldsymbol{H}_{t-1} \\in \\mathbb{R}^{n \\times h}\\)\n\\(\\boldsymbol{W}_{xr}, \\boldsymbol{W}_{xz} \\in \\mathbb{R}^{d \\times h}, \\; \\boldsymbol{W}_{hr}, \\boldsymbol{W}_{hz} \\in \\mathbb{R}^{h \\times h}\\) are weights\n\\(\\boldsymbol{b}_r, \\boldsymbol{b}_z \\in \\mathbb{R}^{1 \\times h}\\) are bias parameters\n\nWe compute: \\[\n\\boldsymbol{R}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xr} + \\boldsymbol{H}_{t-1}\\boldsymbol{W}_{hr} + \\boldsymbol{b}_r\\right),\\\\\n\\boldsymbol{Z}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xz} + \\boldsymbol{H}_{t-1}\\boldsymbol{W}_{hz} + \\boldsymbol{b}_z\\right).\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-4",
+    "href": "dl_lec9.html#gated-recurrent-units-4",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\n\n\nCandidate hidden state at time step \\(t\\)\n\n\nNext, we integrate reset gate \\(\\boldsymbol{R}_t\\) with the regular updating mechanism and obtain: \\[\n\\tilde{\\boldsymbol{H}}_t = tanh\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh} + (\\boldsymbol{R}_t \\odot \\boldsymbol{H}_{t-1}) \\boldsymbol{W}_{hh} + \\boldsymbol{b}_h\\right), \\; \\tilde{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n\\times h}\n\\]\n\ninfluence of previous states is reduced with the Hadamard product of \\(\\boldsymbol{R}_t\\) and \\(\\boldsymbol{H}_{t-1}\\)\nentries in \\(\\boldsymbol{R}_t\\) close to 1 – vanilla RNN\nentries in \\(\\boldsymbol{R}_t\\) close to 0 – candidate hidden state is the result of MLP with \\(\\boldsymbol{X}_t\\) as an input\nany pre-existing hidden state is thus reset to defaults."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-5",
+    "href": "dl_lec9.html#gated-recurrent-units-5",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\nComputing the candidate hidden state in a GRU model."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-6",
+    "href": "dl_lec9.html#gated-recurrent-units-6",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\n\n\nUpdate gate\n\n\nFinally, we need to incorporate the effect of the update gate \\(\\boldsymbol{Z}_t\\).\nThis determines the extent to which the new hidden state \\(\\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}\\) matches the old state \\(\\boldsymbol{H}_{t-1}\\) compared with how much it resembles the new candidate state \\(\\tilde{\\boldsymbol{H}}_t\\).\nThe update gate \\(\\boldsymbol{Z}_t\\) can be used for this purpose, simply by taking elementwise convex combinations of \\(\\boldsymbol{H}_{t-1}\\) and \\(\\tilde{\\boldsymbol{H}}_t\\).\n\\[\n\\boldsymbol{H}_t = \\boldsymbol{Z}_t \\odot \\boldsymbol{H}_{t-1} + (1-\\boldsymbol{Z}_t) \\odot \\tilde{\\boldsymbol{H}}_t.\n\\]\n\n\\(\\boldsymbol{Z}_t\\) close to 1 – retain the old state. In this case the information from \\(\\boldsymbol{X}_t\\) is ignored%, effectively skipping time step \\(t\\) in the dependency chain.\n\\(\\boldsymbol{Z}_t\\) is close to 0 – the new latent state \\(\\boldsymbol{H}_t\\) approaches the candidate latent state \\(\\tilde{\\boldsymbol{H}}_t\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-7",
+    "href": "dl_lec9.html#gated-recurrent-units-7",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\nComputing the hidden state in a GRU model."
+  },
+  {
+    "objectID": "dl_lec9.html#gated-recurrent-units-8",
+    "href": "dl_lec9.html#gated-recurrent-units-8",
+    "title": "Recurrent neural networks",
+    "section": "Gated Recurrent Units",
+    "text": "Gated Recurrent Units\n\n\n\nSummary\n\n\n\nReset gates help capture short-term dependencies in sequences.\nUpdate gates help capture long-term dependencies in sequences."
+  },
+  {
+    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-1",
+    "href": "dl_lec9.html#deep-recurrent-neural-networks-1",
+    "title": "Recurrent neural networks",
+    "section": "Deep Recurrent Neural Networks",
+    "text": "Deep Recurrent Neural Networks\n\n\n\nStacking\n\n\nTo construct a deep RNN with \\(L\\) hidden layers we simply stack ordinary RNNs of any type on top of each other.\nEach hidden state \\(\\boldsymbol{H}^{(l)}_t \\in \\mathbb{R}^{n\\times h}\\) is passed to the next time step of the current layer \\(\\boldsymbol{H}^{(l)}_{t+1}\\) as well as the current time step of the next layer \\(\\boldsymbol{H}^{(l+1)}_t\\).\n\n\n\n\n\n\nState computation\n\n\n\\[\n\\label{drnn_subsequent_state}\n\\boldsymbol{H}^{(l)}_t = \\phi_l \\left(\\boldsymbol{H}^{(l-1)}_t \\boldsymbol{W}_{xh}^{(l)} + \\boldsymbol{H}_{t-1}^{(l)} \\boldsymbol{W}_{hh}^{(l)} + \\boldsymbol{b}_h^{(l)}\\right),\n\\] where \\(\\boldsymbol{H}_t^{(0)} = \\boldsymbol{X}_t\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-2",
+    "href": "dl_lec9.html#deep-recurrent-neural-networks-2",
+    "title": "Recurrent neural networks",
+    "section": "Deep Recurrent Neural Networks",
+    "text": "Deep Recurrent Neural Networks\n\n\n\nOutput computation\n\n\n\\[\n\\label{drnn_output_computation}\n\\boldsymbol{O}_t = \\phi_o \\left(\\boldsymbol{H}_t^{(L)} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right), \\; \\boldsymbol{O}_t \\in \\mathbb{R}^{n \\times o}.\n\\]\nNote that we only use the hidden state of layer \\(L\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-3",
+    "href": "dl_lec9.html#deep-recurrent-neural-networks-3",
+    "title": "Recurrent neural networks",
+    "section": "Deep Recurrent Neural Networks",
+    "text": "Deep Recurrent Neural Networks\n\nArchitecture of a deep recurrent neural network."
+  },
+  {
+    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-1",
+    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-1",
+    "title": "Recurrent neural networks",
+    "section": "Bidirectional Recurrent Neural Networks",
+    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nLanguage modeling example\n\n\nBased on our current models we are able to reliably predict the next sequence element (i.e. the next word) based on what we have seen so far. However, there scenarios where we might want to fill in a gap in a sentence and the part of the sentence after the gap conveys significant information. This information is necessary to take into account to perform well on this kind of task. On a more generalised level we want to incorporate a look-ahead property for sequences.\n\nI am ___.\nI am ___ hungry.\nI am ___ hungry, and I can eat half a pig."
+  },
+  {
+    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-2",
+    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-2",
+    "title": "Recurrent neural networks",
+    "section": "Bidirectional Recurrent Neural Networks",
+    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nDescription\n\n\nTo achieve this look-ahead property Bidirectional Recurrent Neural Networks (BRNNs) got introduced which basically add another hidden layer which run the sequence backwards starting from the last element.\nWe simply implement two unidirectional RNN layers chained together in opposite directions and acting on the same input. For the first RNN layer, the first input is \\(\\boldsymbol{X}_1\\) and the last input is \\(\\boldsymbol{X}_T\\), but for the second RNN layer, the first input is \\(\\boldsymbol{X}_T\\) and the last input is \\(\\boldsymbol{X}_1\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-3",
+    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-3",
+    "title": "Recurrent neural networks",
+    "section": "Bidirectional Recurrent Neural Networks",
+    "text": "Bidirectional Recurrent Neural Networks\n\nArchitecture of a bidirectional recurrent neural network."
+  },
+  {
+    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-4",
+    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-4",
+    "title": "Recurrent neural networks",
+    "section": "Bidirectional Recurrent Neural Networks",
+    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nForward/Backward Hidden States\n\n\n\\[\n\\label{brnn_forward}\n\\overrightarrow{\\boldsymbol{H}}_t = \\phi\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh}^{(f)} + \\overrightarrow{\\boldsymbol{H}}_{t-1}\\boldsymbol{W}_{hh}^{(f)} + \\boldsymbol{b}_h^{(f)}\\right),\\; \\overrightarrow{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n \\times h},\n\\] \\[\n\\label{brnn_backward}\n\\overleftarrow{\\boldsymbol{H}}_t = \\phi\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh}^{(b)} + \\overleftarrow{\\boldsymbol{H}}_{t+1}\\boldsymbol{W}_{hh}^{(b)} + \\boldsymbol{b}_h^{(b)}\\right), \\; \\overleftarrow{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n \\times h}.\n\\]\nNote two sets of hidden matrices and biases: \\[\n\\boldsymbol{W}_{xh}^{(f)},\\boldsymbol{W}_{xh}^{(b)} \\in \\mathbb{R}^{d \\times h}, \\; \\boldsymbol{W}_{hh}^{(f)},\\boldsymbol{W}_{hh}^{(b)} \\in \\mathbb{R}^{h \\times h},\\\\\n\\boldsymbol{b}_h^{(f)}, \\boldsymbol{b}_h^{(b)} \\in \\mathbb{R}^{1 \\times h}.\n\\]"
+  },
+  {
+    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-5",
+    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-5",
+    "title": "Recurrent neural networks",
+    "section": "Bidirectional Recurrent Neural Networks",
+    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nBRNN output\n\n\n\\[\n\\boldsymbol{O}_t = \\phi\\left(\\left[\\overrightarrow{\\boldsymbol{H}}_t \\frown \\overleftarrow{\\boldsymbol{H}}_t\\right]\\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right),\n\\] where \\(\\frown\\) denotes matrix concatenation (stacking them on top of each other).\nWeight matrices \\(\\boldsymbol{W}_{ho} \\in \\mathbb{R}^{2h\\times o}\\), bias parameters \\(\\boldsymbol{b}_o \\in \\mathbb{R}^{1 \\times o}\\)."
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-1",
+    "href": "dl_lec9.html#encoder-decoder-architecture-1",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nDescription\n\n\n\nnetwork is twofold\nencoder network – encode the (variable-length) input into a state\ndecoder network – decode the state into an output"
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-2",
+    "href": "dl_lec9.html#encoder-decoder-architecture-2",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nseq2seq\n\n\nBased on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq) got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder.\nIt mainly focuses on mapping a fixed length input sequence of size \\(n\\) to an fixed length output sequence of size \\(m\\) where \\(n \\neq m\\) can be true but isn’t a necessity."
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-3",
+    "href": "dl_lec9.html#encoder-decoder-architecture-3",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\nSeq2seq model"
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-4",
+    "href": "dl_lec9.html#encoder-decoder-architecture-4",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder\n\n\n\nRNN accepts a single element of the sequence \\(\\boldsymbol{X}_t\\), \\(t\\) being order of the sequence element\nthese RNNs can be LSTMs or GRUs for performance\nhidden states \\(\\boldsymbol{H}_t\\) are computed according to the definition of hidden states in the used RNN type (LSTM or GRU)\nThe Encoder Vector (context) is a representation of the last hidden state of the encoder network which aims to aggregate all information from all previous input elements.\nThis functions as initial hidden state of the decoder network of the model and enables the decoder to make accurate predictions."
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-5",
+    "href": "dl_lec9.html#encoder-decoder-architecture-5",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nDecoder\n\n\n\nRNN which predicts an output \\(\\boldsymbol{Y}_t\\) at a time step \\(t\\)\nThe produced output is again a sequence where each \\(\\boldsymbol{Y}_t\\) is a sequence element with order \\(t\\)\nAt each time step the RNN accepts a hidden state from the previous unit and itself produces an output as well as a new hidden state."
+  },
+  {
+    "objectID": "dl_lec9.html#encoder-decoder-architecture-6",
+    "href": "dl_lec9.html#encoder-decoder-architecture-6",
+    "title": "Recurrent neural networks",
+    "section": "Encoder-Decoder Architecture",
+    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder computation\n\n\nEncoder transforms the hidden states at all time steps into a context variable \\(\\boldsymbol{C}\\) through a customized function \\(q\\): \\[\n\\boldsymbol{C} = q\\left(\\boldsymbol{H}_1, \\dots, \\boldsymbol{H}_T\\right)\n\\]\n\n\n\n\n\n\nDecoder computation\n\n\nDecoder assigns a predicted probability to each possible token occurring at step \\(t'+1\\) conditioned upon the previous tokens in the target \\(y_1, \\dots, y_{t'}\\) and the context variable \\(\\boldsymbol{C}\\), i.e. \\(P(y_{t'+1} | y_1, \\dots, y_{t'}, \\boldsymbol{C})\\).\n\\[\n\\boldsymbol{S}_{t'} = g\\left(y_{t'-1}, \\boldsymbol{C}, \\boldsymbol{S}_{t'-1}\\right)\n\\]"
+  },
+  {
+    "objectID": "dl_lab8.html",
+    "href": "dl_lab8.html",
+    "title": "DL: Lab 8",
     "section": "",
-    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
-  },
-  {
-    "objectID": "dl.html#labs",
-    "href": "dl.html#labs",
-    "title": "Deep Learning",
-    "section": "Labs",
-    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch\nLab 9: Annotated Encoder-Decoder with Attention\nLab 10: HuggingFace Transformers"
-  },
-  {
-    "objectID": "dl.html#python-venv-info",
-    "href": "dl.html#python-venv-info",
-    "title": "Deep Learning",
-    "section": "Python venv info",
-    "text": "Python venv info\nInstructions on how to create a virtual environment for DL course:\n\nLaunch Anaconda Prompt. In it execute:\n\npython -m venv dl_venv\n\nActivate the environment:\n\ndl_venv\\Scripts\\activate\n\nInstall required packages:\n\npip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py\n\nRun Jupyter:\n\njupyter notebook\n\nVoila! (pardon my French)"
-  },
-  {
-    "objectID": "dl.html#midterm-questions",
-    "href": "dl.html#midterm-questions",
-    "title": "Deep Learning",
-    "section": "Midterm questions",
-    "text": "Midterm questions\nList"
-  },
-  {
-    "objectID": "dl.html#exam-questions",
-    "href": "dl.html#exam-questions",
-    "title": "Deep Learning",
-    "section": "Exam questions",
-    "text": "Exam questions\nList"
-  },
-  {
-    "objectID": "dl_lab9.html",
-    "href": "dl_lab9.html",
-    "title": "DL: Lab 9 (Annotated Encoder-Decoder with Attention)",
-    "section": "",
-    "text": "Annotated Encoder-Decoder with Attention\nJupyter notebook attached (dl_lab9.zip)\nPlease do the following:\n\nIn Part1_EncoderDecoder.ipynb, complete notebook. Modify the code to use NLTK’s tokenizer instead of spacy.\nIn Part2_SelfAttention.ipynb, complete computation of weights/scores/final context vector for multi-head attention."
+    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
   },
   {
     "objectID": "dl_lec8.html#modern-cnn-variants",
@@ -5012,424 +5376,67 @@
     "text": "Comparison\n\nimport tabulate\nfrom IPython.display import display, HTML\nall_models = [\n    (\"GoogleNet\", googlenet_results, googlenet_model),\n    (\"ResNet\", resnet_results, resnet_model),\n    (\"ResNetPreAct\", resnetpreact_results, resnetpreact_model),\n    (\"DenseNet\", densenet_results, densenet_model)\n]\ntable = [[model_name,\n          f\"{100.0*model_results['val']:4.2f}%\",\n          f\"{100.0*model_results['test']:4.2f}%\",\n          \"{:,}\".format(sum([np.prod(p.shape) for p in model.parameters()]))]\n         for model_name, model_results, model in all_models]\ndisplay(HTML(tabulate.tabulate(table, tablefmt='html', headers=[\"Model\", \"Val Accuracy\", \"Test Accuracy\", \"Num Parameters\"])))\n\n\n\n\nModel\nVal Accuracy\nTest Accuracy\nNum Parameters\n\n\n\n\nGoogleNet\n90.40%\n89.70%\n260,650\n\n\nResNet\n91.84%\n91.06%\n272,378\n\n\nResNetPreAct\n91.80%\n91.07%\n272,250\n\n\nDenseNet\n90.72%\n90.23%\n239,146"
   },
   {
-    "objectID": "dl_lab8.html",
-    "href": "dl_lab8.html",
-    "title": "DL: Lab 8",
+    "objectID": "dl_lab9.html",
+    "href": "dl_lab9.html",
+    "title": "DL: Lab 9 (Annotated Encoder-Decoder with Attention)",
     "section": "",
-    "text": "Character-Level LSTM in PyTorch\nJupyter notebook attached (dl_lab8.zip)"
+    "text": "Annotated Encoder-Decoder with Attention\nJupyter notebook attached (dl_lab9.zip)\nPlease do the following:\n\nIn Part1_EncoderDecoder.ipynb, complete notebook. Modify the code to use NLTK’s tokenizer instead of spacy.\nIn Part2_SelfAttention.ipynb, complete computation of weights/scores/final context vector for multi-head attention."
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks",
-    "href": "dl_lec9.html#recurrent-neural-networks",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\n\n\n\nUses\n\n\n\nLanguage Modelling and Generating Text\nSpeech Recognition\nGenerating Image Descriptions\nVideo Tagging"
+    "objectID": "dl.html",
+    "href": "dl.html",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-1",
-    "href": "dl_lec9.html#recurrent-neural-networks-1",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\nRecurrent networks operate on sequences of vectors"
+    "objectID": "dl.html#lectures",
+    "href": "dl.html#lectures",
+    "title": "Deep Learning",
+    "section": "",
+    "text": "Slides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides\n\n\n\nSlides"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-2",
-    "href": "dl_lec9.html#recurrent-neural-networks-2",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nInterpretation\n\n\n\nRNNs combine the input vector with their state vector with a fixed (but learned) function to produce a new state vector.\nThis can in programming terms be interpreted as running a fixed program with certain inputs and some internal variables.\nViewed this way, RNNs essentially describe programs and are Turing-complete.\n\n\n\n\n\n\n\nRNNs as programs\n\n\nIf training vanilla neural nets is optimization over functions, training recurrent nets is optimization over programs."
+    "objectID": "dl.html#labs",
+    "href": "dl.html#labs",
+    "title": "Deep Learning",
+    "section": "Labs",
+    "text": "Labs\nLab 1: Logistic Regression using a single-layer Neural Network\nLab 2: 2-layer Neural Networ\nLab 3: Deep Neural Network from Scratch\nLab 4: Initialization/Regularization\nLab 5: Optimization\nLab 6: PyTorch basics\nLab 7: Convolutional networks\nLab 8: Character-Level LSTM in PyTorch\nLab 9: Annotated Encoder-Decoder with Attention\nLab 10: HuggingFace Transformers"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-3",
-    "href": "dl_lec9.html#recurrent-neural-networks-3",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\n\n\n\nCycles\n\n\n\nfeedforward networks – no cycles\nRNN has cycles and transmits information back into itself.\ncycles are recurrent connections\n\n\n\n\n\n\n\nConnection types\n\n\n\nstandard connections: applied synchronously to propagate each layer’s activations to the subsequent layer at the same time step\nrecurrent connections: dynamic, passing information across adjacent time steps\n\nWhile Feedforward Networks pass information through the network without cycles, recurrent networks have cycles. This enables them to extend the functionality of Feedforward Networks to also take into account previous inputs \\(\\boldsymbol{X}_{0:t-1}\\) and not only the current input \\(\\boldsymbol{X}_t\\)."
+    "objectID": "dl.html#python-venv-info",
+    "href": "dl.html#python-venv-info",
+    "title": "Deep Learning",
+    "section": "Python venv info",
+    "text": "Python venv info\nInstructions on how to create a virtual environment for DL course:\n\nLaunch Anaconda Prompt. In it execute:\n\npython -m venv dl_venv\n\nActivate the environment:\n\ndl_venv\\Scripts\\activate\n\nInstall required packages:\n\npip install jupyter matplotlib scipy numpy scikit-learn termcolor h5py\n\nRun Jupyter:\n\njupyter notebook\n\nVoila! (pardon my French)"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-4",
-    "href": "dl_lec9.html#recurrent-neural-networks-4",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks"
+    "objectID": "dl.html#midterm-questions",
+    "href": "dl.html#midterm-questions",
+    "title": "Deep Learning",
+    "section": "Midterm questions",
+    "text": "Midterm questions\nList"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-5",
-    "href": "dl_lec9.html#recurrent-neural-networks-5",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks"
+    "objectID": "dl.html#exam-questions",
+    "href": "dl.html#exam-questions",
+    "title": "Deep Learning",
+    "section": "Exam questions",
+    "text": "Exam questions\nList"
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-6",
-    "href": "dl_lec9.html#recurrent-neural-networks-6",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nNotation\n\n\n\n\\(n\\) – number of samples\n\\(d\\) – number of inputs\n\\(h\\) – number of hidden units\n\\(\\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}\\) – hidden state at time \\(t\\)\n\\(\\boldsymbol{X}_t \\in \\mathbb{R}^{n \\times d}\\) – input at time \\(t\\)\n\\(\\boldsymbol{W}_{xh} \\in \\mathbb{R}^{d \\times h}\\) – weight matrix\n\\(\\boldsymbol{W}_{hh} \\in \\mathbb{R}^{h \\times h}\\) – hidden-state-to-hidden-state matrix\n\\(\\boldsymbol{b}_h \\in \\mathbb{R}^{1 \\times h}\\) – bias parameter\n\\(\\phi\\) – activation function (usually sigmoid or tanh)"
+    "objectID": "test/list.html",
+    "href": "test/list.html",
+    "title": "Білет № 1",
+    "section": "",
+    "text": "Білет № 1\n\nЗгорткова архітекура Inception.\nЗгорткова архітектура ResNet.\nЗгорткова архітектура DenseNet.\nЛогістична регресія, побудована з використанням нейронних мереж.\nТрансформери: multi-head attention.\nТрансформери: Scaled dot product attention.\nРекурентна архітектура LSTM.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nТрансформери. Self-attention.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 2\n\nФункції активації та їх властивості. Теорема про тотожну функцію.\nРегуляризація нейронних мереж: Dropout.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nМетод зворотного поширення (backpropagation)\nОптимізація нейронних мереж: Adam.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nІніціалізація нейронних мереж.\nЛогістична регресія, побудована з використанням нейронних мереж.\nЗгорткова архітекура Inception.\n\n\n\nБілет № 3\n\nНормалізація нейронних мереж.\nРекурентні нейронні мережі.\nГрадієнтний спуск. Опис алгоритму.\nОпис роботи перцептрона.\nМетод зворотного поширення (backpropagation)\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nПлатформа HuggingFace.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nАрхітектура кодувальника-декодувальника (encoder-decoder).\n\n\n\nБілет № 4\n\nОптимізація нейронних мереж: Adam.\nОгляд сучасних нейромережевих архтектур.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nОпис роботи перцептрона.\nТрансформери: Scaled dot product attention.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nРегуляризація нейронних мереж: L1/L2.\nРекурентні нейронні мережі.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\n\n# Білет № 5 1. Архітектура кодувальника-декодувальника (encoder-decoder). 2. Оптимізація нейронних мереж: Adam. 3. Градієнтний спуск. Опис алгоритму. 4. Біологія нейромереж. 5. Згорткова архітектура DenseNet. 6. Трансформери. Self-attention. 7. Згорткова архітекура Inception. 8. Ініціалізація нейронних мереж. 9. Опис роботи перцептрона. 10. Функції активації та їх властивості. Теорема про тотожну функцію.\n\n\nБілет № 6\n\nЗгорткова архітектура ResNet.\nБіологія нейромереж.\nНормалізація нейронних мереж.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nЗгорткові нейронні мережі.\nПлатформа HuggingFace.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nМетод зворотного поширення (backpropagation)\nОпис роботи перцептрона.\nІніціалізація нейронних мереж.\n\n\n\nБілет № 7\n\nМетод зворотного поширення (backpropagation)\nТрансформери: multi-head attention.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nГрадієнтний спуск. Опис алгоритму.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nЗгорткова архітектура DenseNet.\nРекурентна архітектура GRU.\nНормалізація нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\n\n\n\nБілет № 8\n\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nТрансформери: Scaled dot product attention.\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nЗгорткова архітекура Inception.\nТрансформери: multi-head attention.\nОптимізація нейронних мереж: SGD with Momentum.\nРекурентні нейронні мережі.\nЗгорткова архітектура ResNet.\nРегуляризація нейронних мереж: L1/L2.\nЗгорткові нейронні мережі.\n\n# Білет № 9 1. Архітектура кодувальника-декодувальника (encoder-decoder). 2. Згорткова архітектура DenseNet. 3. Згорткова архітектура ResNet. 4. Трансформери: Scaled dot product attention. 5. Градієнтний спуск. Опис алгоритму. 6. Функції активації та їх властивості. Теорема про тотожну функцію. 7. Трансформери. Self-attention. 8. Оптимізація нейронних мереж: Adam. 9. Компроміс зсуву та дисперсії (bias-variance tradeoff). 10. Огляд сучасних нейромережевих архтектур.\n\n\nБілет № 10\n\nЗгорткова архітекура Inception.\nЗгорткова архітектура DenseNet.\nНормалізація нейронних мереж.\nРегуляризація нейронних мереж: L1/L2.\nОпис роботи перцептрона.\nРекурентні нейронні мережі.\nІніціалізація нейронних мереж.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nРекурентна архітектура LSTM.\nЛогістична регресія, побудована з використанням нейронних мереж.\n\n\n\nБілет № 11\n\nБіологія нейромереж.\nФункції втрат. Їх диференціювання. Приклади.\nНормалізація нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nМетод зворотного поширення (backpropagation)\nТрансформери. Self-attention.\nЗгорткова архітекура Inception.\nФункції активації та їх властивості. Теорема про тотожну функцію.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nОптимізація нейронних мереж: SGD with Momentum.\n\n\n\nБілет № 12\n\nТрансформери: multi-head attention.\nОгляд сучасних нейромережевих архтектур.\nБіологія нейромереж.\nЗгорткова архітектура ResNet.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nОсновні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\nТрансформери. Self-attention.\nЛогістична регресія, побудована з використанням нейронних мереж.\nРегуляризація нейронних мереж: L1/L2.\n\n# Білет № 13 1. Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD. 2. Згорткова архітекура Inception. 3. Платформа HuggingFace. 4. Функції активації та їх властивості. Теорема про тотожну функцію. 5. Логістична регресія, побудована з використанням нейронних мереж. 6. Рекурентні нейронні мережі. 7. Огляд сучасних нейромережевих архтектур. 8. Згорткова архітектура ResNet. 9. Регуляризація нейронних мереж: L1/L2. 10. Опис роботи перцептрона.\n\n\nБілет № 14\n\nТрансформери: multi-head attention.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nОптимізація нейронних мереж: SGD with Momentum.\nЛогістична регресія, побудована з використанням нейронних мереж.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\nБіологія нейромереж.\nТрансформери. Self-attention.\nОптимізація нейронних мереж: Adam.\n\n\n\nБілет № 15\n\nОптимізація нейронних мереж: Adam.\nЛогістична регресія, побудована з використанням нейронних мереж.\nЗгорткові нейронні мережі.\nФункції втрат. Їх диференціювання. Приклади.\nПлатформа HuggingFace.\nЗгорткова архітектура ResNet.\nОпис роботи перцептрона.\nОптимізація нейронних мереж: SGD with Momentum.\nГрадієнтний спуск. Опис алгоритму.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 16\n\nЗгорткові нейронні мережі.\nОгляд сучасних нейромережевих архтектур.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Adam.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nЗгорткова архітекура Inception.\nФункції втрат. Їх диференціювання. Приклади.\nРекурентна архітектура GRU.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nФункції активації та їх властивості. Теорема про тотожну функцію.\n\n# Білет № 17 1. Метод зворотного поширення (backpropagation) 2. Рекурентна архітектура GRU. 3. Згорткова архітекура Inception. 4. Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами 5. Функції втрат. Їх диференціювання. Приклади. 6. Механізми уваги для рекурентних мереж (seq2seq моделей). 7. Рекурентні нейронні мережі. 8. Оптимізація нейронних мереж: Adam. 9. Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD. 10. Трансформери. Self-attention.\n\n\nБілет № 18\n\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nРекурентна архітектура LSTM.\nГрадієнтний спуск. Опис алгоритму.\nОгляд сучасних нейромережевих архтектур.\nЛогістична регресія, побудована з використанням нейронних мереж.\nРекурентні нейронні мережі.\nРегуляризація нейронних мереж: Dropout.\nОпис роботи перцептрона.\nІніціалізація нейронних мереж.\nПряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з \\(L\\) шарами\n\n\n\nБілет № 19\n\nГрадієнтний спуск. Опис алгоритму.\nПлатформа HuggingFace.\nФункції втрат. Їх диференціювання. Приклади.\nКомпроміс зсуву та дисперсії (bias-variance tradeoff).\nРекурентні нейронні мережі.\nЗгорткова архітекура Inception.\nМеханізми уваги для рекурентних мереж (seq2seq моделей).\nЛогістична регресія, побудована з використанням нейронних мереж.\nАрхітектура кодувальника-декодувальника (encoder-decoder).\nІніціалізація нейронних мереж.\n\n\n\nБілет № 20\n\nФункції втрат. Їх диференціювання. Приклади.\nРегуляризація нейронних мереж: L1/L2.\nТрансформери: Scaled dot product attention.\nРекурентні нейронні мережі.\nЗгорткова архітектура ResNet.\nОптимізація нейронних мереж: Adam.\nЗгорткова архітекура Inception.\nЛогістична регресія, побудована з використанням нейронних мереж.\nОгляд сучасних нейромережевих архтектур.\nГрадієнтний спуск. Опис алгоритму."
   },
   {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-7",
-    "href": "dl_lec9.html#recurrent-neural-networks-7",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\nNote, that here the option of having multiple hidden layers is aggregated to one Hidden Layer block \\(\\boldsymbol{H}\\). This block can obviously be extended to multiple hidden layers."
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-8",
-    "href": "dl_lec9.html#recurrent-neural-networks-8",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nEquation for hidden variable\n\n\n\\[\n\\label{hidden_var}\n\\boldsymbol{H}_t = \\phi_h \\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hh} + \\boldsymbol{b}_h\\right)\n\\]\n\n\n\n\n\n\nEquation for output variable\n\n\n\\[\n\\label{output_var}\n\\boldsymbol{O}_t = \\phi_o \\left(\\boldsymbol{H}_t \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right)\n\\] Since \\(\\boldsymbol{H}_t\\) recursively includes \\(\\boldsymbol{H}_{t-1}\\) and this process occurs for every time step the RNN includes traces of all hidden states that preceded \\(\\boldsymbol{H}_{t-1}\\) as well as \\(\\boldsymbol{H}_{t-1}\\) itself."
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-9",
-    "href": "dl_lec9.html#recurrent-neural-networks-9",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nComputation for hidden variable\n\n\n\\[\n\\label{hidden_var_computation}\n\\boldsymbol{H} = \\phi_h \\left(\\boldsymbol{X} \\boldsymbol{W}_{xh} + \\boldsymbol{b}_h\\right)\n\\]\n\n\n\n\n\n\nComputation for output variable\n\n\n\\[\n\\label{output_var_computation}\n\\boldsymbol{O} = \\phi_o \\left(\\boldsymbol{H} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right)\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-10",
-    "href": "dl_lec9.html#recurrent-neural-networks-10",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nHidden state computation\n\n\nAt any time step \\(t\\):\n\nconcatenate the input \\(\\boldsymbol{X}_t\\) at the current time step \\(t\\) and the hidden state \\(\\boldsymbol{H}_{t-1}\\) at the previous time step \\(t\\)\nfeed the concatenation result into a fully connected layer with the activation function \\(\\phi\\)\nThe output of such a fully connected layer is the hidden state \\(\\boldsymbol{H}_t\\) of the current time step \\(t\\)\nthe model parameters are the concatenation of \\(\\boldsymbol{W}_{xh}\\) and \\(\\boldsymbol{W}_{hh}\\) and a bias \\(\\boldsymbol{b}_h\\)\n\\(\\boldsymbol{H}_t\\) will participate in computing the hidden state \\(\\boldsymbol{H}_{t+1}\\) of the next time step \\(t+1\\)\n\\(\\boldsymbol{H}_t\\) will also be fed into the fully connected output layer to compute the output \\(\\boldsymbol{O}_t\\) of the current time step \\(t\\)"
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-11",
-    "href": "dl_lec9.html#recurrent-neural-networks-11",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks"
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-12",
-    "href": "dl_lec9.html#recurrent-neural-networks-12",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nLanguage modeling\n\n\nWe aim to predict the next token based on the current and past tokens; thus we shift the original sequence by one token as the targets (labels).\nBengio et al. (2003) first proposed to use a neural network for language modeling."
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-13",
-    "href": "dl_lec9.html#recurrent-neural-networks-13",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\nA character-level language model based on the RNN. The input and target sequences are “machin” and “achine”, respectively."
-  },
-  {
-    "objectID": "dl_lec9.html#recurrent-neural-networks-14",
-    "href": "dl_lec9.html#recurrent-neural-networks-14",
-    "title": "Recurrent neural networks",
-    "section": "Recurrent neural networks",
-    "text": "Recurrent neural networks\n\n\n\nProcess\n\n\nDuring the training process, we run a softmax operation on the output from the output layer for each time step, and then use the cross-entropy loss to compute the error between the model output and the target.\nBecause of the recurrent computation of the hidden state in the hidden layer, the output \\(\\boldsymbol{O}_3\\) of time step 3 is determined by the text sequence “m”, “a”, and “c”. Since the next character of the sequence in the training data is “h”, the loss of time step 3 will depend on the probability distribution of the next character generated based on the feature sequence “m”, “a”, “c” and the target “h” of this time step.\n\n\n\n\n\n\n\n\n\nNote\n\n\nIn practice, each token is represented by a \\(d\\)-dimensional vector, and we use a batch size \\(n\\). Therefore, the input \\(\\boldsymbol{X}_t\\) at time step \\(t\\) will be an \\(n \\times d\\) matrix."
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-1",
-    "href": "dl_lec9.html#backpropagation-in-rnns-1",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\n\n\nBackpropagation Through Time (BPTT)\n\n\n\nBPTT expands (or unrolls) the computational graph of an RNN one time step at a time.\nunrolled RNN is a FF neural network with same parameters appearing at each time step\nThe gradient with respect to each parameter must be summed across all places that the parameter occurs in the unrolled net."
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-2",
-    "href": "dl_lec9.html#backpropagation-in-rnns-2",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\n\n\nBackpropagation Through Time (BPTT)\n\n\nWhen we forward pass our input \\(\\boldsymbol{X}_t\\) through the network, we compute the hidden state \\(\\boldsymbol{H}_t\\) and the output state \\(\\boldsymbol{O}_t\\) one step at at time.\nWe can then define a loss function \\(L(\\boldsymbol{O}, \\boldsymbol{Y})\\) to describe the difference between all outputs \\(\\boldsymbol{O}_t\\) and target values \\(\\boldsymbol{Y}_t\\), summing up loss terms \\(l_t\\).\n\\[\n\\label{loss_function}\nL(\\boldsymbol{O}, \\boldsymbol{Y}) = \\sum\\limits_{t=1}^T l_t (\\boldsymbol{O}_t, \\boldsymbol{Y}_t)\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-3",
-    "href": "dl_lec9.html#backpropagation-in-rnns-3",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\nBoxes represent variables (not shaded) or parameters (shaded) and circles represent operators."
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-4",
-    "href": "dl_lec9.html#backpropagation-in-rnns-4",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\\[\n\\notag\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{ho}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\partial \\boldsymbol{W}_{ho}} = \\\\\n\\label{loss_function_derivative1}\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{H}_t.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-5",
-    "href": "dl_lec9.html#backpropagation-in-rnns-5",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\\[\n\\label{loss_function_derivative2}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\boldsymbol{H}_t} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_{hh}}= \\\\\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{W}_{ho} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_hh}.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-6",
-    "href": "dl_lec9.html#backpropagation-in-rnns-6",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\\[\n\\label{loss_function_derivative3}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\frac{\\partial \\phi_o}{\\boldsymbol{H}_t} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_{xh}}= \\\\\n= \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t} \\cdot \\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\boldsymbol{W}_{ho} \\cdot \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\phi_h} \\cdot \\frac{\\partial \\phi_h}{\\partial \\boldsymbol{W}_xh}.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-7",
-    "href": "dl_lec9.html#backpropagation-in-rnns-7",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\nSince each \\(\\boldsymbol{H}_t\\) depends on the previous time step, we can substitute the last part from above equations to obtain \\[\n\\label{loss_function_derivative4}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{W}_{hh}}.\n\\]\n\\[\n\\label{loss_function_derivative5}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{W}_{xh}}.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-8",
-    "href": "dl_lec9.html#backpropagation-in-rnns-8",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\n\n\nOR:\n\n\n\\[\n\\label{loss_function_derivative6}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{hh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\left(\\boldsymbol{W}^T_{hh}\\right)^{t-k} \\cdot \\boldsymbol{H}_k.\n\\]\n\\[\n\\label{loss_function_derivative7}\n\\frac{\\partial L}{\\partial \\boldsymbol{W}_{xh}} = \\sum\\limits_{t=1}^T \\frac{\\partial l_t}{\\partial \\boldsymbol{O}_t}\\cdot\\frac{\\partial \\boldsymbol{O}_t}{\\partial \\phi_o} \\cdot \\boldsymbol{W}_{ho} \\sum\\limits_{k=1}^t \\left(\\boldsymbol{W}^T_{hh}\\right)^{t-k} \\cdot \\boldsymbol{X}_k.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-9",
-    "href": "dl_lec9.html#backpropagation-in-rnns-9",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\n\n\nA problem\n\n\nWe can see that we need to store powers of \\(\\boldsymbol{W}_{hh}^k\\) as we proceed through each loss term \\(l_t\\) of the overall loss function \\(L\\) that can become very large.\nFor these large values this method becomes numerically unstable since eigenvalues smaller than 1 vanish and eigenvalues larger than 1 diverge.\n\n\n\n\n\n\nSolution\n\n\nTruncate a sum at computationally convenient size - Truncated BPTT."
-  },
-  {
-    "objectID": "dl_lec9.html#backpropagation-in-rnns-10",
-    "href": "dl_lec9.html#backpropagation-in-rnns-10",
-    "title": "Recurrent neural networks",
-    "section": "Backpropagation in RNNs",
-    "text": "Backpropagation in RNNs\n\n\n\nTruncated BPTT\n\n\nThis establishes an upper bound for the number of time steps the gradient can flow back to.\nInterpretation: a moving window of past time steps which the RNN considers. Anything before the cut-off time step doesn’t get taken into account. Since BPTT basically unfolds the RNN to create a new layer for each time step we can also think of this procedure as limiting the number of hidden layers.\nResult: model focuses primarily on short-term influence rather than long-term consequences."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-1",
-    "href": "dl_lec9.html#lstms-1",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nProblem\n\n\nIn \\(\\eqref{loss_function_derivative4}\\) and \\(\\eqref{loss_function_derivative5}\\) we see \\(\\frac{\\partial \\boldsymbol{H}_t}{\\partial \\boldsymbol{H}_k}\\) that introduces a matrix multiplication over a potentially very long sequence.\n\n\n\n\n\n\nSolution\n\n\nLSTMs were designed to handle a vanishing gradient problem.\nSince they use a more constant error, they allow RNNs to learn over a lot more time steps (way over 1000)."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-2",
-    "href": "dl_lec9.html#lstms-2",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nGates\n\n\nTo achieve that, LSTMs store more information outside of the traditional neural network flow in structures called gated cells.\nGate types\n\noutput gate \\(\\boldsymbol{O}_t\\) – reads entries of the cell\ninput gate \\(\\boldsymbol{I}_t\\) – reads data into the cell\nforget gate \\(\\boldsymbol{F}_t\\) – resets the content of the cell."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-3",
-    "href": "dl_lec9.html#lstms-3",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nComputations\n\n\n\\[\n\\label{lstm_computations}\n\\boldsymbol{O}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xo} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right), \\\\\n\\boldsymbol{I}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xi} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hi} + \\boldsymbol{b}_i\\right), \\\\\n\\boldsymbol{F}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xf} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hf} + \\boldsymbol{b}_f\\right).\n\\]\nHere \\(\\boldsymbol{W}_{xo}, \\boldsymbol{W}_{xi}\\boldsymbol{W}_{xf} \\in \\mathbb{R}^{d \\times h}\\), and \\(\\boldsymbol{W}_{ho}, \\boldsymbol{W}_{hi}\\boldsymbol{W}_{hf} \\in \\mathbb{R}^{h \\times h}\\) are weight matrices and \\(\\boldsymbol{b}_o, \\boldsymbol{b}_i, \\boldsymbol{b}_f \\in \\mathbb{R}^{1 \\times h}\\) are their respective biases.\nFurther, they use the sigmoid activation function \\(\\sigma\\) to transform the output \\(\\in (0, 1)\\) which each results in a vector with entries \\(\\in (0, 1)\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-4",
-    "href": "dl_lec9.html#lstms-4",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\nCalculation of input, forget, and output gates in an LSTM"
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-5",
-    "href": "dl_lec9.html#lstms-5",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nCandidate memory cell\n\n\n\\(\\tilde{\\boldsymbol{C}}_t \\in \\mathbb{R}^{n \\times h}\\) – similar computation as previously mentioned gates but uses tanh to have output \\(\\in (-1, 1)\\).\nHas its own weights \\(\\boldsymbol{W}_{xc} \\in \\mathbb{R}^{d \\times h},\\boldsymbol{W}_{hc} \\in \\mathbb{R}^{h \\times h}\\) and biases \\(\\boldsymbol{b}_c \\in \\mathbb{R}^{1 \\times h}\\).\n\n\n\n\n\n\nComputation\n\n\n\\[\n\\label{candidate_memory_cell_computation}\n\\tilde{\\boldsymbol{C}}_t = tanh \\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xc} + \\boldsymbol{H}_{t-1} \\boldsymbol{W}_{hc} + \\boldsymbol{b}_c\\right)\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-6",
-    "href": "dl_lec9.html#lstms-6",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\nComputation of candidate memory cells in LSTM."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-7",
-    "href": "dl_lec9.html#lstms-7",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nOld memory content\n\n\nTo put things together we introduce old memory content \\(\\boldsymbol{C}_{t−1} \\in \\mathbb{R}^{n \\times h}\\) which together with the introduced gates controls how much of the old memory content we want to preserve to get to the new memory content \\(\\boldsymbol{C}_t\\).\n\n\n\n\n\n\nComputation\n\n\n\\[\n\\label{candidate_memory_cell_computation2}\n\\boldsymbol{C}_t = \\boldsymbol{F}_t \\odot \\boldsymbol{C}_{t-1} + \\boldsymbol{I}_t \\odot \\tilde{\\boldsymbol{C}}_t.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-8",
-    "href": "dl_lec9.html#lstms-8",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\nComputation of memory cells in an LSTM."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-9",
-    "href": "dl_lec9.html#lstms-9",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\n\n\nHidden states computation\n\n\n\\[\n\\label{hidden_states_computation}\n\\boldsymbol{H}_t = \\boldsymbol{O}_t \\odot tanh\\left(\\boldsymbol{C}_t\\right), \\; \\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}.\n\\]\n\nthe output gate is close to 1 – we allow the memory cell internal state to impact the subsequent layers uninhibited,\nthe output gate is close to – we prevent the current memory from impacting other layers of the network at the current time step.\n\n\n\n\n\n\n\n\n\n\nNote\n\n\nA memory cell can accrue information across many time steps without impacting the rest of the network (as long as the output gate takes values close to 0), and then suddenly impact the network at a subsequent time step as soon as the output gate flips from values close to 0 to values close to 1."
-  },
-  {
-    "objectID": "dl_lec9.html#lstms-10",
-    "href": "dl_lec9.html#lstms-10",
-    "title": "Recurrent neural networks",
-    "section": "LSTMs",
-    "text": "LSTMs\n\nComputation of the hidden state in an LSTM."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-1",
-    "href": "dl_lec9.html#gated-recurrent-units-1",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\n\n\nRationale\n\n\n\nsimpler architecture\nretain internal state and gating mechanisms\nbut speed up computation\n\n\n\n\n\n\n\nOutline\n\n\n\ninstead of LSTM’s 3 gates, use 2: reset gate and update gate\nreset gate controls how much of the previous state we want to remember\nupdate gate controls how much of the new state is just a copy of the old one"
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-2",
-    "href": "dl_lec9.html#gated-recurrent-units-2",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\nComputing the reset gate and the update gate in a GRU model."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-3",
-    "href": "dl_lec9.html#gated-recurrent-units-3",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\n\n\nGate computation\n\n\nSuppose that for a given time step \\(t\\) we have:\n\na minibatch \\(\\boldsymbol{X}_t \\in \\mathbb{R}^{n \\times d}\\)\nhidden state of the previous time step \\(\\boldsymbol{H}_{t-1} \\in \\mathbb{R}^{n \\times h}\\)\n\\(\\boldsymbol{W}_{xr}, \\boldsymbol{W}_{xz} \\in \\mathbb{R}^{d \\times h}, \\; \\boldsymbol{W}_{hr}, \\boldsymbol{W}_{hz} \\in \\mathbb{R}^{h \\times h}\\) are weights\n\\(\\boldsymbol{b}_r, \\boldsymbol{b}_z \\in \\mathbb{R}^{1 \\times h}\\) are bias parameters\n\nWe compute: \\[\n\\boldsymbol{R}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xr} + \\boldsymbol{H}_{t-1}\\boldsymbol{W}_{hr} + \\boldsymbol{b}_r\\right),\\\\\n\\boldsymbol{Z}_t = \\sigma\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xz} + \\boldsymbol{H}_{t-1}\\boldsymbol{W}_{hz} + \\boldsymbol{b}_z\\right).\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-4",
-    "href": "dl_lec9.html#gated-recurrent-units-4",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\n\n\nCandidate hidden state at time step \\(t\\)\n\n\nNext, we integrate reset gate \\(\\boldsymbol{R}_t\\) with the regular updating mechanism and obtain: \\[\n\\tilde{\\boldsymbol{H}}_t = tanh\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh} + (\\boldsymbol{R}_t \\odot \\boldsymbol{H}_{t-1}) \\boldsymbol{W}_{hh} + \\boldsymbol{b}_h\\right), \\; \\tilde{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n\\times h}\n\\]\n\ninfluence of previous states is reduced with the Hadamard product of \\(\\boldsymbol{R}_t\\) and \\(\\boldsymbol{H}_{t-1}\\)\nentries in \\(\\boldsymbol{R}_t\\) close to 1 – vanilla RNN\nentries in \\(\\boldsymbol{R}_t\\) close to 0 – candidate hidden state is the result of MLP with \\(\\boldsymbol{X}_t\\) as an input\nany pre-existing hidden state is thus reset to defaults."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-5",
-    "href": "dl_lec9.html#gated-recurrent-units-5",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\nComputing the candidate hidden state in a GRU model."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-6",
-    "href": "dl_lec9.html#gated-recurrent-units-6",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\n\n\nUpdate gate\n\n\nFinally, we need to incorporate the effect of the update gate \\(\\boldsymbol{Z}_t\\).\nThis determines the extent to which the new hidden state \\(\\boldsymbol{H}_t \\in \\mathbb{R}^{n \\times h}\\) matches the old state \\(\\boldsymbol{H}_{t-1}\\) compared with how much it resembles the new candidate state \\(\\tilde{\\boldsymbol{H}}_t\\).\nThe update gate \\(\\boldsymbol{Z}_t\\) can be used for this purpose, simply by taking elementwise convex combinations of \\(\\boldsymbol{H}_{t-1}\\) and \\(\\tilde{\\boldsymbol{H}}_t\\).\n\\[\n\\boldsymbol{H}_t = \\boldsymbol{Z}_t \\odot \\boldsymbol{H}_{t-1} + (1-\\boldsymbol{Z}_t) \\odot \\tilde{\\boldsymbol{H}}_t.\n\\]\n\n\\(\\boldsymbol{Z}_t\\) close to 1 – retain the old state. In this case the information from \\(\\boldsymbol{X}_t\\) is ignored%, effectively skipping time step \\(t\\) in the dependency chain.\n\\(\\boldsymbol{Z}_t\\) is close to 0 – the new latent state \\(\\boldsymbol{H}_t\\) approaches the candidate latent state \\(\\tilde{\\boldsymbol{H}}_t\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-7",
-    "href": "dl_lec9.html#gated-recurrent-units-7",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\nComputing the hidden state in a GRU model."
-  },
-  {
-    "objectID": "dl_lec9.html#gated-recurrent-units-8",
-    "href": "dl_lec9.html#gated-recurrent-units-8",
-    "title": "Recurrent neural networks",
-    "section": "Gated Recurrent Units",
-    "text": "Gated Recurrent Units\n\n\n\nSummary\n\n\n\nReset gates help capture short-term dependencies in sequences.\nUpdate gates help capture long-term dependencies in sequences."
-  },
-  {
-    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-1",
-    "href": "dl_lec9.html#deep-recurrent-neural-networks-1",
-    "title": "Recurrent neural networks",
-    "section": "Deep Recurrent Neural Networks",
-    "text": "Deep Recurrent Neural Networks\n\n\n\nStacking\n\n\nTo construct a deep RNN with \\(L\\) hidden layers we simply stack ordinary RNNs of any type on top of each other.\nEach hidden state \\(\\boldsymbol{H}^{(l)}_t \\in \\mathbb{R}^{n\\times h}\\) is passed to the next time step of the current layer \\(\\boldsymbol{H}^{(l)}_{t+1}\\) as well as the current time step of the next layer \\(\\boldsymbol{H}^{(l+1)}_t\\).\n\n\n\n\n\n\nState computation\n\n\n\\[\n\\label{drnn_subsequent_state}\n\\boldsymbol{H}^{(l)}_t = \\phi_l \\left(\\boldsymbol{H}^{(l-1)}_t \\boldsymbol{W}_{xh}^{(l)} + \\boldsymbol{H}_{t-1}^{(l)} \\boldsymbol{W}_{hh}^{(l)} + \\boldsymbol{b}_h^{(l)}\\right),\n\\] where \\(\\boldsymbol{H}_t^{(0)} = \\boldsymbol{X}_t\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-2",
-    "href": "dl_lec9.html#deep-recurrent-neural-networks-2",
-    "title": "Recurrent neural networks",
-    "section": "Deep Recurrent Neural Networks",
-    "text": "Deep Recurrent Neural Networks\n\n\n\nOutput computation\n\n\n\\[\n\\label{drnn_output_computation}\n\\boldsymbol{O}_t = \\phi_o \\left(\\boldsymbol{H}_t^{(L)} \\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right), \\; \\boldsymbol{O}_t \\in \\mathbb{R}^{n \\times o}.\n\\]\nNote that we only use the hidden state of layer \\(L\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#deep-recurrent-neural-networks-3",
-    "href": "dl_lec9.html#deep-recurrent-neural-networks-3",
-    "title": "Recurrent neural networks",
-    "section": "Deep Recurrent Neural Networks",
-    "text": "Deep Recurrent Neural Networks\n\nArchitecture of a deep recurrent neural network."
-  },
-  {
-    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-1",
-    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-1",
-    "title": "Recurrent neural networks",
-    "section": "Bidirectional Recurrent Neural Networks",
-    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nLanguage modeling example\n\n\nBased on our current models we are able to reliably predict the next sequence element (i.e. the next word) based on what we have seen so far. However, there scenarios where we might want to fill in a gap in a sentence and the part of the sentence after the gap conveys significant information. This information is necessary to take into account to perform well on this kind of task. On a more generalised level we want to incorporate a look-ahead property for sequences.\n\nI am ___.\nI am ___ hungry.\nI am ___ hungry, and I can eat half a pig."
-  },
-  {
-    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-2",
-    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-2",
-    "title": "Recurrent neural networks",
-    "section": "Bidirectional Recurrent Neural Networks",
-    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nDescription\n\n\nTo achieve this look-ahead property Bidirectional Recurrent Neural Networks (BRNNs) got introduced which basically add another hidden layer which run the sequence backwards starting from the last element.\nWe simply implement two unidirectional RNN layers chained together in opposite directions and acting on the same input. For the first RNN layer, the first input is \\(\\boldsymbol{X}_1\\) and the last input is \\(\\boldsymbol{X}_T\\), but for the second RNN layer, the first input is \\(\\boldsymbol{X}_T\\) and the last input is \\(\\boldsymbol{X}_1\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-3",
-    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-3",
-    "title": "Recurrent neural networks",
-    "section": "Bidirectional Recurrent Neural Networks",
-    "text": "Bidirectional Recurrent Neural Networks\n\nArchitecture of a bidirectional recurrent neural network."
-  },
-  {
-    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-4",
-    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-4",
-    "title": "Recurrent neural networks",
-    "section": "Bidirectional Recurrent Neural Networks",
-    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nForward/Backward Hidden States\n\n\n\\[\n\\label{brnn_forward}\n\\overrightarrow{\\boldsymbol{H}}_t = \\phi\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh}^{(f)} + \\overrightarrow{\\boldsymbol{H}}_{t-1}\\boldsymbol{W}_{hh}^{(f)} + \\boldsymbol{b}_h^{(f)}\\right),\\; \\overrightarrow{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n \\times h},\n\\] \\[\n\\label{brnn_backward}\n\\overleftarrow{\\boldsymbol{H}}_t = \\phi\\left(\\boldsymbol{X}_t \\boldsymbol{W}_{xh}^{(b)} + \\overleftarrow{\\boldsymbol{H}}_{t+1}\\boldsymbol{W}_{hh}^{(b)} + \\boldsymbol{b}_h^{(b)}\\right), \\; \\overleftarrow{\\boldsymbol{H}}_t \\in \\mathbb{R}^{n \\times h}.\n\\]\nNote two sets of hidden matrices and biases: \\[\n\\boldsymbol{W}_{xh}^{(f)},\\boldsymbol{W}_{xh}^{(b)} \\in \\mathbb{R}^{d \\times h}, \\; \\boldsymbol{W}_{hh}^{(f)},\\boldsymbol{W}_{hh}^{(b)} \\in \\mathbb{R}^{h \\times h},\\\\\n\\boldsymbol{b}_h^{(f)}, \\boldsymbol{b}_h^{(b)} \\in \\mathbb{R}^{1 \\times h}.\n\\]"
-  },
-  {
-    "objectID": "dl_lec9.html#bidirectional-recurrent-neural-networks-5",
-    "href": "dl_lec9.html#bidirectional-recurrent-neural-networks-5",
-    "title": "Recurrent neural networks",
-    "section": "Bidirectional Recurrent Neural Networks",
-    "text": "Bidirectional Recurrent Neural Networks\n\n\n\nBRNN output\n\n\n\\[\n\\boldsymbol{O}_t = \\phi\\left(\\left[\\overrightarrow{\\boldsymbol{H}}_t \\frown \\overleftarrow{\\boldsymbol{H}}_t\\right]\\boldsymbol{W}_{ho} + \\boldsymbol{b}_o\\right),\n\\] where \\(\\frown\\) denotes matrix concatenation (stacking them on top of each other).\nWeight matrices \\(\\boldsymbol{W}_{ho} \\in \\mathbb{R}^{2h\\times o}\\), bias parameters \\(\\boldsymbol{b}_o \\in \\mathbb{R}^{1 \\times o}\\)."
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-1",
-    "href": "dl_lec9.html#encoder-decoder-architecture-1",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\n\n\nDescription\n\n\n\nnetwork is twofold\nencoder network – encode the (variable-length) input into a state\ndecoder network – decode the state into an output"
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-2",
-    "href": "dl_lec9.html#encoder-decoder-architecture-2",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\n\n\nseq2seq\n\n\nBased on this Encoder-Decoder architecture a model called Sequence to Sequence (seq2seq) got proposed for generating a sequence output based on a sequence input. This model uses RNNs for the encoder as well as the decoder where the hidden state of the encoder gets passed to the hidden state of the decoder.\nIt mainly focuses on mapping a fixed length input sequence of size \\(n\\) to an fixed length output sequence of size \\(m\\) where \\(n \\neq m\\) can be true but isn’t a necessity."
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-3",
-    "href": "dl_lec9.html#encoder-decoder-architecture-3",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\nSeq2seq model"
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-4",
-    "href": "dl_lec9.html#encoder-decoder-architecture-4",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder\n\n\n\nRNN accepts a single element of the sequence \\(\\boldsymbol{X}_t\\), \\(t\\) being order of the sequence element\nthese RNNs can be LSTMs or GRUs for performance\nhidden states \\(\\boldsymbol{H}_t\\) are computed according to the definition of hidden states in the used RNN type (LSTM or GRU)\nThe Encoder Vector (context) is a representation of the last hidden state of the encoder network which aims to aggregate all information from all previous input elements.\nThis functions as initial hidden state of the decoder network of the model and enables the decoder to make accurate predictions."
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-5",
-    "href": "dl_lec9.html#encoder-decoder-architecture-5",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\n\n\nDecoder\n\n\n\nRNN which predicts an output \\(\\boldsymbol{Y}_t\\) at a time step \\(t\\)\nThe produced output is again a sequence where each \\(\\boldsymbol{Y}_t\\) is a sequence element with order \\(t\\)\nAt each time step the RNN accepts a hidden state from the previous unit and itself produces an output as well as a new hidden state."
-  },
-  {
-    "objectID": "dl_lec9.html#encoder-decoder-architecture-6",
-    "href": "dl_lec9.html#encoder-decoder-architecture-6",
-    "title": "Recurrent neural networks",
-    "section": "Encoder-Decoder Architecture",
-    "text": "Encoder-Decoder Architecture\n\n\n\nEncoder computation\n\n\nEncoder transforms the hidden states at all time steps into a context variable \\(\\boldsymbol{C}\\) through a customized function \\(q\\): \\[\n\\boldsymbol{C} = q\\left(\\boldsymbol{H}_1, \\dots, \\boldsymbol{H}_T\\right)\n\\]\n\n\n\n\n\n\nDecoder computation\n\n\nDecoder assigns a predicted probability to each possible token occurring at step \\(t'+1\\) conditioned upon the previous tokens in the target \\(y_1, \\dots, y_{t'}\\) and the context variable \\(\\boldsymbol{C}\\), i.e. \\(P(y_{t'+1} | y_1, \\dots, y_{t'}, \\boldsymbol{C})\\).\n\\[\n\\boldsymbol{S}_{t'} = g\\left(y_{t'-1}, \\boldsymbol{C}, \\boldsymbol{S}_{t'-1}\\right)\n\\]"
-  },
-  {
-    "objectID": "test/questions-intro-to-specialty.html",
-    "href": "test/questions-intro-to-specialty.html",
+    "objectID": "test/questions-midterm.html",
+    "href": "test/questions-midterm.html",
     "title": "Deep Learning/NLP course",
     "section": "",
-    "text": "q = [\n    \"Основні поняття теорії ймовірності.\",\n    \"Лапласове визначення ймовірності.\",\n    \"Випадкові величини.\",\n    \"Види статистики.\",\n    \"Типи даних у статистиці.\",\n    \"Міри центральності.\",\n    \"Міри розподілу.\",\n    \"Що таке мовна модель - статистичне означення. N-грами.\",\n    \"Припущення Маркова.\",\n    \"Короткий опис бібліотеки Numpy.\",\n    \"Основні поняття бібліотеки Pandas.\",\n]\n\n\nimport random\n\n\ndef generate():\n    return [str(i+1) + \". \" + s for i, s in enumerate(random.sample(q, 5))]\n\n\ngenerate()\n\n['1. Види статистики.',\n '2. Типи даних у статистиці.',\n '3. Основні поняття бібліотеки Pandas.',\n '4. Припущення Маркова.',\n '5. Основні поняття теорії ймовірності.']\n\n\n\ndef create_list():\n    md = \"\"\"---\nmainfont: \"Courier New\"\nformat:\n  pdf:\n    documentclass: article\n    papersize: a4\n    margin-right: 2cm\n    margin-left: 2cm\n    margin-top: 2cm\n    margin-bottom: 2cm\n---\\n\\n\"\"\" \n    for i in range(1,36):\n        l = generate()\n        md += \"# Білет № \" + str(i) + \"\\n\"\n        md += \"\\n\".join(l)\n        md += \"\\n\\n\\n\"\n        if i % 6 == 0:\n            md += \"{{&lt; pagebreak &gt;}}\\n\\n\"\n    return md\n\n\nwith open(\"list_intro_to_specialty.qmd\", \"w\") as f:\n    f.write(create_list())"
-  },
-  {
-    "objectID": "test/questions.html",
-    "href": "test/questions.html",
-    "title": "Deep Learning/NLP course",
-    "section": "",
-    "text": "q = [\n    \"Біологія нейромереж.\",\n    \"Опис роботи перцептрона.\",\n    \"Градієнтний спуск. Опис алгоритму.\",\n    \"Логістична регресія, побудована з використанням нейронних мереж.\",\n    \"Функції активації та їх властивості. Теорема про тотожну функцію.\",\n    \"Функції втрат. Їх диференціювання. Приклади.\",\n    \"Метод зворотного поширення (backpropagation)\",\n    \"Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з $L$ шарами\",\n    \"Компроміс зсуву та дисперсії (bias-variance tradeoff). \",\n    \"Регуляризація нейронних мереж: L1/L2.\",\n    \"Регуляризація нейронних мереж: Dropout.\",\n    \"Нормалізація  нейронних мереж. \",\n    \"Ініціалізація нейронних мереж.\",\n    \"Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\",\n    \"Оптимізація нейронних мереж: SGD with Momentum.\",\n    \"Оптимізація нейронних мереж: Adam.\",\n    \"Згорткові нейронні мережі.\",\n    \"Згорткова архітекура Inception.\",\n    \"Згорткова архітектура ResNet.\",\n    \"Згорткова архітектура DenseNet.\",\n    \"Рекурентні нейронні мережі.\",\n    \"Рекурентна архітектура LSTM.\",\n    \"Рекурентна архітектура GRU.\",\n    \"Архітектура кодувальника-декодувальника (encoder-decoder).\",\n    \"Механізми уваги для рекурентних мереж (seq2seq моделей).\",\n    \"Трансформери. Self-attention.\",\n    \"Трансформери: Scaled dot product attention.\",\n    \"Трансформери: multi-head attention.\",\n    \"Основні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch\",\n    \"Платформа HuggingFace.\",\n    \"Огляд сучасних нейромережевих архтектур.\",\n]\n\n\nimport random\n\n\ndef generate():\n    return [str(i+1) + \". \" + s for i, s in enumerate(random.sample(q, 10))]\n\n\ngenerate()\n\n['1. Рекурентна архітектура LSTM.',\n '2. Рекурентна архітектура GRU.',\n '3. Компроміс зсуву та дисперсії (bias-variance tradeoff). ',\n '4. Нормалізація  нейронних мереж. ',\n '5. Логістична регресія, побудована з використанням нейронних мереж.',\n '6. Основні поняття бібліотеки PyTorch. Модуі та моделі в PyTorch',\n '7. Трансформери: multi-head attention.',\n '8. Метод зворотного поширення (backpropagation)',\n '9. Функції активації та їх властивості. Теорема про тотожну функцію.',\n '10. Оптимізація нейронних мереж: SGD with Momentum.']\n\n\n\ndef create_list():\n    md = \"\"\"---\nmainfont: \"Courier New\"\nformat:\n  pdf:\n    documentclass: article\n    papersize: a4\n    margin-right: 2cm\n    margin-left: 2cm\n    margin-top: 2cm\n    margin-bottom: 2cm\n---\\n\\n\"\"\" \n    for i in range(1,21):\n        l = generate()\n        md += \"# Білет № \" + str(i) + \"\\n\"\n        md += \"\\n\".join(l)\n        md += \"\\n\\n\\n\"\n        if i % 4 == 0:\n            md += \"{{&lt; pagebreak &gt;}}\\n\\n\"\n    return md\n\n\nwith open(\"list.qmd\", \"w\") as f:\n    f.write(create_list())"
+    "text": "q = [\n    \"Біологія нейромереж.\",\n    \"Опис роботи перцептрона.\",\n    \"Градієнтний спуск. Опис алгоритму.\",\n    \"Логістична регресія, побудована з використанням нейронних мереж.\",\n    \"Універсальна теорема апроксимації.\",\n    \"Функції активації та їх властивості.\",\n    \"Теорема про тотожну функцію активації.\"\n    \"Функції втрат. Їх диференціювання. Приклади.\",\n    \"Метод зворотного поширення (backpropagation)\",\n    \"Пряме та зворотне поширення (forward and back propagation) на прикладі глибокої нейронної мережі з $L$ шарами\",\n    \"Компроміс зсуву та дисперсії (bias-variance tradeoff). \",\n    \"Регуляризація нейронних мереж: L1/L2.\",\n    \"Регуляризація нейронних мереж: Dropout.\",\n    \"Нормалізація  нейронних мереж. \",\n    \"Ініціалізація нейронних мереж.\",\n    \"Оптимізація нейронних мереж: Mini-batch GD, Stochastic GD.\",\n    \"Оптимізація нейронних мереж: SGD with Momentum.\",\n    \"Оптимізація нейронних мереж: Adam.\",\n    \"Згорткові нейронні мережі. Основні властивості. Означення згортки.\",\n    \"Згорткові нейронні мережі. Stride, pooling, dilation, padding.\",\n]\n\n\nimport random\n\n\ndef generate():\n    return [str(i+1) + \". \" + s for i, s in enumerate(random.sample(q, 10))]\n\n\ngenerate()\n\n['1. Компроміс зсуву та дисперсії (bias-variance tradeoff). ',\n '2. Універсальна теорема апроксимації.',\n '3. Логістична регресія, побудована з використанням нейронних мереж.',\n '4. Теорема про тотожну функцію активації.Функції втрат. Їх диференціювання. Приклади.',\n '5. Регуляризація нейронних мереж: Dropout.',\n '6. Нормалізація  нейронних мереж. ',\n '7. Регуляризація нейронних мереж: L1/L2.',\n '8. Градієнтний спуск. Опис алгоритму.',\n '9. Згорткові нейронні мережі. Основні властивості. Означення згортки.',\n '10. Ініціалізація нейронних мереж.']\n\n\n\ndef create_list():\n    md = \"\"\"---\nmainfont: \"Courier New\"\nformat:\n  pdf:\n    documentclass: article\n    papersize: a4\n    margin-right: 2cm\n    margin-left: 2cm\n    margin-top: 2cm\n    margin-bottom: 2cm\n---\\n\\n\"\"\" \n    for i in range(1,13):\n        l = generate()\n        md += \"# Білет № \" + str(i) + \"\\n\"\n        md += \"\\n\".join(l)\n        md += \"\\n\\n\\n\"\n        if i % 4 == 0:\n            md += \"{{&lt; pagebreak &gt;}}\\n\\n\"\n    return md\n\n\nwith open(\"list.qmd\", \"w\") as f:\n    f.write(create_list())"
   },
   {
     "objectID": "nlp_lab9.html",
