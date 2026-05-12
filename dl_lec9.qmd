@@ -33,6 +33,9 @@ format:
     include-in-header: mathjax.html
     slide-number: true
     theme: default
+    html-math-method:
+      method: mathjax
+      url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
     multiplex:
       url: 'https://mplex.vitv.ly'
       secret: 'd1bd5b366670324829aaa528aa92edc1'
@@ -226,24 +229,32 @@ $$
 
 ## Backpropagation in RNNs
 $$
+\begin{align}
 \notag
 \frac{\partial L}{\partial \bb{W}_{ho}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\partial \bb{W}_{ho}} = \\
 \label{loss_function_derivative1}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{H}_t.
+\end{align}
 $$
 
 ## Backpropagation in RNNs
 $$
-\label{loss_function_derivative2}
+\begin{align}
+\notag
 \frac{\partial L}{\partial \bb{W}_{hh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\bb{H}_t} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_{hh}}= \\
+\label{loss_function_derivative2}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{W}_{ho} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_hh}.
+\end{align}
 $$
 
 ## Backpropagation in RNNs
 $$
-\label{loss_function_derivative3}
+\begin{align}
+\notag
 \frac{\partial L}{\partial \bb{W}_{xh}} = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t}\cdot\frac{\partial \bb{O}_t}{\partial \phi_o} \cdot \frac{\partial \phi_o}{\bb{H}_t} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_{xh}}= \\
+\label{loss_function_derivative3}
 = \sum\limits_{t=1}^T \frac{\partial l_t}{\partial \bb{O}_t} \cdot \frac{\partial \bb{O}_t}{\partial \phi_o} \bb{W}_{ho} \cdot \frac{\partial \bb{H}_t}{\partial \phi_h} \cdot \frac{\partial \phi_h}{\partial \bb{W}_xh}.
+\end{align}
 $$
 
 ## Backpropagation in RNNs
@@ -328,10 +339,14 @@ To achieve that, LSTMs store more information outside of the traditional neural 
 :::{.callout-tip icon=false}
 ## Computations
 $$
-\label{lstm_computations}
+\begin{align}
+\notag
 \bb{O}_t = \sigma\left(\bb{X}_t \bb{W}_{xo} + \bb{H}_{t-1} \bb{W}_{ho} + \bb{b}_o\right), \\
+\notag
 \bb{I}_t = \sigma\left(\bb{X}_t \bb{W}_{xi} + \bb{H}_{t-1} \bb{W}_{hi} + \bb{b}_i\right), \\
+\label{lstm_computations}
 \bb{F}_t = \sigma\left(\bb{X}_t \bb{W}_{xf} + \bb{H}_{t-1} \bb{W}_{hf} + \bb{b}_f\right).
+\end{align}
 $$
 
 Here $\bb{W}_{xo}, \bb{W}_{xi}\bb{W}_{xf} \in \mathbb{R}^{d \times h}$, and $\bb{W}_{ho}, \bb{W}_{hi}\bb{W}_{hf} \in \mathbb{R}^{h \times h}$ are weight matrices and $\bb{b}_o, \bb{b}_i, \bb{b}_f \in \mathbb{R}^{1 \times h}$ are their respective biases.

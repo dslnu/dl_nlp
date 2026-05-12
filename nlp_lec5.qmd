@@ -234,7 +234,7 @@ Minhashing is the next step in our process, allowing us to convert our *sparse v
 - MinHash functions are a randomized order of numbers — and we count from 1 to the final number (which is `len(vocab)`)
 :::
 
-## Minhashing {.smaller}
+## Minhashing {.smaller .scrollable}
 Our signature values are created by first taking a randomly permuted count vector (from 1 to `len(vocab)+1`) and finding the minimum number that aligns with a 1 in our sparse vector.
 
 ::: {layout-ncol=2}
