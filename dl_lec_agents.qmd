@@ -9,6 +9,11 @@ format:
     include-in-header: mathjax.html
     slide-number: true
     theme: default
+    mermaid:
+      themeVariables:
+        clusterBkg: "#ffffff"      # subgraph fill
+        clusterBorder: "#cccccc"   # subgraph border
+        background: "#ffffff"
     html-math-method:
       method: mathjax
       url: "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"
@@ -21,45 +26,21 @@ execute:
   cache: true
 ---
 
-## What we'll cover {.smaller}
+## Agents intro
 
-::: {.incremental}
-- **Part 1** — What is an agent? Why now?
-- **Part 2** — Agent theory: Lilian Weng's framework (Planning · Memory · Tools)
-- **Part 3** — Agent design patterns (Anthropic's *Building Effective Agents*)
-- **Part 4** — The LLM as a reasoning engine
-- **Part 5** — Tools and function calling
-- **Part 6** — The Thought → Action → Observation loop, and context engineering
-- **Part 7** — Building an agent from scratch
-- **Part 8** — Framework deep-dive: `smolagents`, LangChain / LangGraph, LlamaIndex, PydanticAI, CrewAI
-- **Part 9** — Observability, evaluation, GAIA
-- **Part 10** — Production deployment: compute, state, durable execution, governance
-- **Part 11** — Advanced: MCP, multi-agent, fine-tuning, safety
-- **Part 12** — Where things are heading
+:::{.callout-tip icon=false}
+## Definition
+**An agent is an LLM that can take actions in the world.**
 :::
-
-::: footer
-Based on the [Hugging Face AI Agents Course](https://huggingface.co/learn/agents-course/) (2025), [Weng's "LLM Powered Autonomous Agents"](https://lilianweng.github.io/posts/2023-06-23-agent/) (2023), [Anthropic's "Building Effective Agents"](https://www.anthropic.com/research/building-effective-agents) (2024), and current framework docs (2025–26)
-:::
-
-# Part 1 — What is an agent?
-
-## The 30-second definition
-
-> **An agent is an LLM that can take actions in the world.**
-
-. . .
 
 More precisely:
 
-::: {.incremental}
 - An **AI agent** is a program where an **LLM's output controls the workflow**.
 - The LLM **reasons** (decides what to do next).
 - The LLM **acts** through **tools** (functions it can call).
 - The LLM **observes** the results and **iterates** until done.
-:::
 
-## Agency is a spectrum, not a binary {.smaller}
+## Agents intro {.smaller}
 
 | Agency level | What the LLM controls | Example |
 |---|---|---|
@@ -74,7 +55,7 @@ More precisely:
 Source: [smolagents conceptual guide](https://huggingface.co/docs/smolagents/conceptual_guides/intro_agents)
 :::
 
-## Why now — and when *not* to {.smaller}
+## Agents intro {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -103,7 +84,9 @@ Agents earn their keep when:
 :::
 :::
 
-## The anatomy of an agent
+## Agents intro
+:::{.callout-tip icon=false}
+## Architecture
 
 ```{mermaid}
 flowchart LR
@@ -117,14 +100,14 @@ flowchart LR
     L --> F[Final answer]
     F --> U
 ```
+:::
 
-::: {.fragment}
+:::{.callout-note icon=false}
 Four ingredients: **LLM**, **system prompt**, **tools**, **a loop**.
 :::
 
-# Part 2 — Agent theory: Lilian Weng's framework
 
-## The canonical mental model {.smaller}
+## Agents intro {.smaller}
 
 > **Agent = LLM + Memory + Planning + Tool use**
 >
@@ -145,34 +128,29 @@ flowchart TB
     T --> T1[APIs · code ·<br/>search · files]
 ```
 
-::: {.fragment}
-The most-cited blueprint for LLM agents — and every framework we'll meet is one realization of it.
-:::
-
 ::: footer
 Source: Weng (2023), Fig. 1 — redrawn.
 :::
 
-## Component 1 — Planning {.smaller}
+## Agents intro
 
+:::{.callout-tip icon=false}
+## Planning
 Two sub-capabilities Weng calls out:
 
-::: {.incremental}
 - **Task decomposition** — break a complex goal into ordered subgoals.
-  - *Chain-of-Thought* (Wei et al., 2022) — "think step by step" inside one prompt.
-  - *Tree-of-Thoughts* (Yao et al., 2023) — generate multiple thoughts per step, explore with BFS/DFS.
-  - *LLM+P* (Liu et al., 2023) — LLM emits a PDDL plan, a classical planner solves it.
+  - *Chain-of-Thought* — "think step by step" inside one prompt.
+  - *Tree-of-Thoughts*  — generate multiple thoughts per step, explore with BFS/DFS.
+  - *LLM+P* — LLM emits a PDDL plan, a classical planner solves it.
 - **Reflection & refinement** — critique past actions, retry with what was learned.
-  - *ReAct* (Yao et al., 2022) — interleave thought and action.
-  - *Reflexion* (Shinn & Labash, 2023) — verbal self-critique stored in memory across episodes.
-  - *Chain-of-Hindsight* (Liu et al., 2023) — train on sequences of past attempts + feedback.
+  - *ReAct* — interleave thought and action.
+  - *Reflexion* — verbal self-critique stored in memory across episodes.
+  - *Chain-of-Hindsight*  — train on sequences of past attempts + feedback.
 :::
 
-::: footer
-Sources: [ReAct](https://arxiv.org/abs/2210.03629) · [CoT](https://arxiv.org/abs/2201.11903) · [ToT](https://arxiv.org/abs/2305.10601) · [Reflexion](https://arxiv.org/abs/2303.11366) · [LLM+P](https://arxiv.org/abs/2304.11477)
-:::
+## Agents intro
 
-## Task decomposition: CoT → ToT
+Task decomposition: CoT
 
 ```{mermaid}
 flowchart TB
@@ -181,6 +159,9 @@ flowchart TB
     end
 ```
 
+## Agents intro
+
+Task decomposition: ToT
 ```{mermaid}
 flowchart TB
     subgraph tot["Tree-of-Thoughts (branching + search)"]
@@ -191,7 +172,7 @@ flowchart TB
     end
 ```
 
-::: {.fragment}
+::: aside
 ToT trades latency and tokens for solution quality on hard reasoning problems.
 :::
 
@@ -206,18 +187,18 @@ flowchart LR
     MEM --> AT
 ```
 
-::: {.incremental}
 - Three roles: **Actor**, **Evaluator**, **Self-reflection** — all are LLMs.
 - The lesson ("I should have searched before answering") is stored verbally.
 - Next attempt starts with previous lessons in context.
 - No weight updates — just better prompts on retry.
-:::
 
 ::: footer
 Source: [*Reflexion: Language Agents with Verbal Reinforcement Learning*](https://arxiv.org/abs/2303.11366) — Shinn et al., 2023
 :::
 
-## Component 2 — Memory {.smaller}
+## Agents intro
+:::{.callout-tip icon=false}
+## Memory
 
 Weng maps LLM memory to **human memory taxonomy**:
 
@@ -229,11 +210,9 @@ Weng maps LLM memory to **human memory taxonomy**:
 | Long-term: explicit (semantic) | Facts and concepts | Knowledge base / RAG corpus |
 | Long-term: implicit (procedural) | Skills, habits | Fine-tuned weights, learned tool patterns |
 
-::: footer
-Source: Weng (2023), §"Component Two: Memory", Fig. 3.
 :::
 
-## Short-term vs. long-term, operationally
+## Agents intro
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -257,7 +236,7 @@ Source: Weng (2023), §"Component Two: Memory", Fig. 3.
 
 ## A minimal long-term memory tool
 
-```{.python code-line-numbers="|1-3|5-8|10-15|17-21"}
+```python
 from sentence_transformers import SentenceTransformer
 import faiss
 import numpy as np
@@ -280,38 +259,26 @@ def recall(query: str, k: int = 3) -> list[str]:
     return [documents[i] for i in ids[0] if i < len(documents)]
 ```
 
-::: {.fragment}
+::: aside
 Wrap these as agent tools and you have **persistent episodic memory** — the agent decides when to remember, when to recall.
 :::
 
-## Component 3 — Tool use, and why this taxonomy holds {.smaller}
+## Agents intro
 
-Weng credits three milestone papers:
 
-::: {.incremental}
-- **MRKL** (Karpas et al., 2022) — LLM as a router between expert modules.
-- **TALM / Toolformer** (Parisi 2022; Schick 2023) — *fine-tune* the LM to insert tool calls inline.
-- **HuggingGPT** (Shen et al., 2023) — LLM as planner that picks HF Hub models per subtask.
-- Plus **ChatGPT Plugins** (2023) and **OpenAI function calling** — first production tool APIs.
-:::
-
-::: {.fragment}
-Three years on, every "new" agent paper still slots into Weng's taxonomy:
-
+:::{.callout-tip icon=false}
+## Taxonomy and tool use
 - *Reasoning models* (o1, R1, Claude reasoning) → better **Planning**.
 - *Long-context models* → bigger **Short-term memory**.
 - *MCP* → standardized **Tool use**.
 
-**Reading the post once is worth more than reading ten framework READMEs.**
 :::
 
-::: footer
-Sources: [MRKL](https://arxiv.org/abs/2205.00445) · [TALM](https://arxiv.org/abs/2205.12255) · [Toolformer](https://arxiv.org/abs/2302.04761) · [HuggingGPT](https://arxiv.org/abs/2303.17580)
-:::
 
-## Open problems Weng called out — still open
+## Agents intro
+:::{.callout-warning icon=false}
+## Open problems
 
-::: {.incremental}
 - **Long-horizon planning** — agents stumble past ~10 steps; humans don't.
 - **Reliability of the natural-language interface** — parsing failures, formatting drift, "rebellious" refusals.
 - **Adapting plans to unexpected errors** — humans iterate gracefully; agents tend to thrash or give up.
@@ -319,17 +286,11 @@ Sources: [MRKL](https://arxiv.org/abs/2205.00445) · [TALM](https://arxiv.org/ab
 - **Credit assignment** — when a 12-step trajectory fails, *which* step was wrong?
 :::
 
-::: footer
-Source: Weng (2023), final section. Three years on, these remain active research areas.
-:::
+## Agent patterns
 
-# Part 3 — Agent design patterns
+:::{.callout-tip icon=false}
+## Workflows vs agents
 
-## Workflows vs. agents — Anthropic's distinction {.smaller}
-
-From *Building Effective Agents* (Schluntz & Zhang, Anthropic, Dec 2024):
-
-::: {.incremental}
 - **Agentic system** is the umbrella term.
 - **Workflow** — LLMs and tools orchestrated through **predefined code paths**. You decide the control flow.
 - **Agent** — LLMs **dynamically direct** their own process and tool use. The model decides the control flow.
@@ -341,8 +302,12 @@ From *Building Effective Agents* (Schluntz & Zhang, Anthropic, Dec 2024):
 Source: [anthropic.com/research/building-effective-agents](https://www.anthropic.com/research/building-effective-agents) (Dec 2024)
 :::
 
-## The augmented LLM — the building block
+## Agent patterns {.smaller}
 
+::: {.columns}
+::: {.column width="50%"}
+:::{.callout-tip icon=false}
+## The augmented LLM — the building block
 ```{mermaid}
 flowchart LR
     IN[Input] --> LLM((LLM))
@@ -351,14 +316,20 @@ flowchart LR
     LLM <--> M[Memory]
     LLM --> OUT[Output]
 ```
+:::
+:::
 
-::: {.incremental}
+::: {.column width="50%"}
 - An LLM enhanced with **retrieval**, **tools**, and **memory** is the atom of all agentic systems.
 - Most production tasks need only this — no orchestration, no loops, no multi-agent.
 - The five workflow patterns below are all compositions **of augmented LLMs**.
+
+:::
 :::
 
-## Pattern 1 — Prompt chaining
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 1: Prompt chaining
 
 ```{mermaid}
 flowchart LR
@@ -366,7 +337,6 @@ flowchart LR
     G -- fail --> EXIT[Exit / retry]
 ```
 
-::: {.incremental}
 - Sequential LLM calls; each one's output is the next one's input.
 - Optional **gates** between steps for programmatic checks.
 - **Use when**: the task cleanly decomposes into fixed, ordered subtasks.
@@ -374,7 +344,9 @@ flowchart LR
 - Trades higher latency for higher accuracy.
 :::
 
-## Pattern 2 — Routing
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 2: Routing
 
 ```{mermaid}
 flowchart LR
@@ -387,14 +359,15 @@ flowchart LR
     C --> OUT
 ```
 
-::: {.incremental}
 - Classify the input, dispatch to the right specialist.
 - The specialists can be different prompts, different models, or different sub-workflows.
 - **Use when**: inputs fall into distinct categories that benefit from focused handling.
 - **Examples**: cheap model for easy questions, frontier model for hard ones; support-ticket triage; language detection → translation.
 :::
 
-## Pattern 3 — Parallelization
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 3: Parallelization
 
 ```{mermaid}
 flowchart LR
@@ -408,13 +381,14 @@ flowchart LR
     AGG --> OUT[Output]
 ```
 
-::: {.incremental}
 - Two flavors: **Sectioning** (different subtasks in parallel) and **Voting** (same task N times, then majority/best).
 - **Use when**: subtasks are independent, or when redundancy / multiple perspectives improve quality.
 - **Examples**: per-page OCR on a document; running 5 critics in parallel and merging; safety-check + main-answer concurrently.
 :::
 
-## Pattern 4 — Orchestrator–workers
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 4: Orchestrator–workers
 
 ```{mermaid}
 flowchart TB
@@ -427,15 +401,20 @@ flowchart TB
     Wn --> S
     S --> OUT[Output]
 ```
+:::
 
-::: {.incremental}
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 4: Orchestrator–workers
 - An orchestrator **dynamically decides** which subtasks to spawn — unlike parallelization where the split is predefined.
 - **Use when**: the structure of the problem depends on the input.
 - **Examples**: a coding agent that figures out which files to modify; a research agent that decides which sources to query.
 - This is where you start to leave "workflow" and edge toward "agent".
 :::
 
-## Pattern 5 — Evaluator–optimizer
+## Agent patterns
+:::{.callout-tip icon=false}
+## Pattern 5: Evaluator–optimizer
 
 ```{mermaid}
 flowchart LR
@@ -445,14 +424,15 @@ flowchart LR
     E -- good enough --> OUT[Output]
 ```
 
-::: {.incremental}
 - A generator produces a candidate, an evaluator scores or critiques it, loop until acceptable.
 - **Use when**: you have clear evaluation criteria *and* iteration measurably improves quality.
 - **Examples**: code generation with a critic that runs tests; translation with a quality scorer; essay with a rubric.
 - Closely related to **Reflexion** (Part 2) — the same idea, just framed as engineering rather than research.
 :::
 
-## Workflow → agent — the decision tree {.smaller}
+## Agent patterns {.smaller .scrollable}
+:::{.callout-tip icon=false}
+## Workflow vs agent - the decision tree
 
 ```{mermaid}
 flowchart TD
@@ -475,16 +455,16 @@ flowchart TD
     AGENT --> EVAL
     EVAL -- yes --> EO[Wrap in<br/>evaluator–optimizer]
 ```
+:::
 
 ::: {.fragment}
 **Anthropic's bottom line**: most teams jump to "full agent" too quickly. Try the simpler pattern first. Measure. Only escalate when the simpler pattern *demonstrably* fails.
 :::
 
-# Part 4 — The LLM as a reasoning engine
+## LLMs in agents
 
-## LLMs in one slide {.smaller}
-
-::: {.incremental}
+:::{.callout-tip icon=false}
+## Description
 - A decoder-only transformer trained to predict the next **token**.
 - Vocabulary is ~32k–256k tokens (subwords, not characters).
 - Generation is **autoregressive**: token by token, until an **EOS** token.
@@ -492,13 +472,16 @@ flowchart TD
 - For agents we mostly care about **instruction-tuned** models, not base models.
 :::
 
-::: {.fragment}
+:::{.callout-note icon=false}
+## Types
 Two flavors you'll meet:
 
 - **Base model** — just predicts next token. Raw, not chatty.
 - **Instruct / chat model** — fine-tuned on conversations. The agent's brain.
 :::
 
+## LLMs in agents
+:::{.callout-tip icon=false}
 ## Chat templates: how prompts really look
 
 Under the hood, your nice `[{"role": "user", "content": "..."}]` becomes:
@@ -513,13 +496,16 @@ What's the weather in London?<|eot_id|>
 <|start_header_id|>assistant<|end_header_id|>
 ```
 
-. . .
 
 The model **continues** from that final `assistant` header. **Every framework you'll use is doing this for you.**
+:::
 
+
+## LLMs in agents
+:::{.callout-tip icon=false}
 ## Applying a chat template in code
 
-```{.python code-line-numbers="|1-2|4-7|9"}
+```python
 from transformers import AutoTokenizer
 
 tok = AutoTokenizer.from_pretrained(
@@ -537,11 +523,11 @@ prompt = tok.apply_chat_template(
 print(prompt)
 ```
 
-::: {.fragment}
+
 `add_generation_prompt=True` appends the assistant header so the model knows it's its turn.
 :::
 
-## Base vs. Instruct, and sampling for agents {.smaller}
+## LLMs in agents {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -573,24 +559,22 @@ What's the capital of France?<|assistant|>
 | `max_tokens` | Per step, not session |
 | `stop` | `"Observation:"` to halt before tool runs |
 
-::: {.callout-tip}
 Determinism > creativity in tool-calling. Crank temperature **down**.
-:::
+
 :::
 :::
 
-# Part 5 — Tools: the agent's hands
+## Tools
+:::{.callout-tip icon=false}
+## Definition
 
-## What is a tool, really?
-
-::: {.incremental}
 - A **tool** is a function the LLM can call.
 - It has a **name**, a **description**, and a **typed schema** of arguments.
 - The model never *runs* the tool — your code does, then feeds the result back.
 - Good tools are: **small**, **focused**, **idempotent where possible**, and **well-described**.
 :::
 
-## A minimal tool, three ways {.smaller}
+## Tools {.smaller}
 
 ::: {.panel-tabset}
 
@@ -632,16 +616,19 @@ def get_weather(location: str) -> str:
 
 :::
 
-## Why descriptions are everything
+## Tools
+:::{.callout-warning}
+## Descriptions are important
 
-::: {.incremental}
 - The LLM picks tools **based on names and docstrings alone**.
 - A bad description = wrong tool calls = wasted steps.
 - Write descriptions like you're onboarding a smart but new junior dev.
 - Include: *what it does*, *when to use it*, *what each argument means*, *what it returns*.
 :::
 
-::: {.fragment}
+:::{.callout-tip icon=false}
+## Example
+
 Good:
 > `search_arxiv(query)` — Search arXiv for papers. Use for academic / research questions, **not** for general web search. Returns up to 5 paper titles + abstracts.
 
@@ -649,24 +636,11 @@ Bad:
 > `search(q)` — Search.
 :::
 
-## Tools the HF course uses {.smaller}
 
-| Category | Examples |
-|---|---|
-| Search | DuckDuckGo, Tavily, Google search APIs |
-| Code | Python interpreter, shell |
-| Files | Read PDF, read image (vision), download URL |
-| Math | Calculator, symbolic solver |
-| Media | Image generation (FLUX, SDXL), text-to-speech |
-| Memory | Vector store retriever, episodic memory |
+## The Thought-Action-Observation loop
 
-::: {.fragment}
-In Unit 4 (GAIA), assembling the right **tool kit** is half the project.
-:::
-
-# Part 6 — The Thought → Action → Observation loop
-
-## ReAct: the loop and a trace {.smaller}
+:::{.callout-tip icon=false}
+## ReAct: the loop and a trace
 
 ```{mermaid}
 flowchart LR
@@ -687,16 +661,12 @@ Observation: 14°C, rainy.
 Thought: Paris is 4°C warmer.
 Final Answer: Paris is 18°C, London is 14°C — Paris is warmer by 4°C.
 ```
-
-::: {.fragment}
-**ReAct** = **Rea**son + **Act**. Yao et al., 2022. Still the default mental model for agents.
 :::
 
-::: footer
-Source: [*ReAct: Synergizing Reasoning and Acting in Language Models*](https://arxiv.org/abs/2210.03629) — Yao et al., 2022
-:::
 
-## The system prompt that makes this work {.smaller}
+## The Thought-Action-Observation loop
+:::{.callout-tip icon=false}
+## The system prompt
 
 ```text
 You answer questions by reasoning step-by-step.
@@ -717,24 +687,25 @@ When you have the answer, write:
   Final Answer: <the answer>
 ```
 
-::: {.fragment}
 The whole "agent framework" is essentially **this prompt + a parser + a `while` loop**.
 :::
 
-## Chain-of-Thought vs. ReAct vs. native function calling {.smaller}
+## The Thought-Action-Observation loop
+:::{.callout-tip icon=false}
+## Comparison of Chain-of-Thought vs. ReAct vs. native function calling
 
-::: {.incremental}
 - **CoT** — Model thinks out loud, no tools. `"Let's think step by step."`
 - **ReAct** — Model thinks **and** acts on the world. Prompting strategy.
 - **Native function calling** — Model is **trained** to emit tool calls as structured tokens. No regex parsing needed.
 - **Reasoning models** (o1, R1, Claude reasoning) — Trained to think *internally* (between `<think>` tags) before acting.
-:::
 
-::: {.fragment}
 Modern agents typically use **native function calling + light CoT for hard cases**.
 :::
 
-## Memory: what the agent remembers between steps {.smaller}
+
+## The Thought-Action-Observation loop
+:::{.callout-tip icon=false}
+## Memory
 
 The "memory" is just the **message list** you keep extending each loop:
 
@@ -751,30 +722,27 @@ messages = [
 ]
 ```
 
-::: {.fragment}
 Context windows are large but not infinite. Long-running agents need **summarization** or **external memory** (vector stores).
 :::
 
-## More context isn't always better {.smaller}
+## Contexts
+:::{.callout-tip icon=false}
+## On context
 
 > **Context engineering** *(noun)* — the discipline of designing dynamic systems that put the right information and tools in the context window, in the right format, at the right time. — Karpathy / Lütke, mid-2025
 >
 > *"The LLM is the CPU. The context window is the RAM. Your job is to decide what to load."*
 
-::: {.incremental}
 - Crossed into the mainstream in **June 2025** when Karpathy and Tobi Lütke endorsed the term.
 - The job is no longer writing one good prompt — it's **assembling the context** before every model call.
 - For agents the stakes are higher: every loop adds tool outputs, observations, and history.
-- The discipline borrows from information retrieval, RAG, and systems design — but the *production-time* assembly is the new part.
 :::
 
 ::: footer
 Sources: [Karpathy on context engineering](https://x.com/karpathy/status/1937902205765607626) · [Lütke](https://x.com/tobi/status/1935533422589399127) · *Prompts vs. Context* — [Breunig (Jun 2025)](https://www.dbreunig.com/2025/06/25/prompts-vs-context.html)
 :::
 
-## How long contexts fail — four failure modes {.smaller}
-
-From "How Long Contexts Fail" (Breunig, 2025) and Chroma's **Context Rot** study (Jul 2025, 18 models incl. Claude 4, GPT-4.1, Gemini 2.5, Qwen 3):
+## Contexts {.smaller}
 
 | Failure | What it is | Where it bites |
 |---|---|---|
@@ -783,27 +751,21 @@ From "How Long Contexts Fail" (Breunig, 2025) and Chroma's **Context Rot** study
 | **Context confusion** | Irrelevant docs / tools crowd out the signal | RAG with loose retrieval, MCP-rich setups |
 | **Context clash** | Sources contradict each other (tool A vs. tool B, MCP descriptions vs. system prompt) | Multi-tool, multi-source agents |
 
-::: {.fragment}
-Plus the older **lost-in-the-middle** (Stanford, 2023): models attend more to the start and end of a long context than to the middle, even when the answer is sitting there.
-:::
+Plus the older **lost-in-the-middle**: models attend more to the start and end of a long context than to the middle, even when the answer is sitting there.
 
-::: footer
-Sources: [*How Long Contexts Fail*](https://www.dbreunig.com/2025/06/22/how-contexts-fail-and-how-to-fix-them.html) — Breunig (Jun 2025) · [*Lost in the Middle*](https://arxiv.org/abs/2307.03172) — Liu et al., 2023
-:::
 
-## Context rot is real and measurable {.smaller}
 
+## Contexts
+
+:::{.callout-tip icon=false}
+## Rot
 Chroma's headline finding:
 
-::: {.incremental}
 - **Models do not use their context uniformly.** Performance degrades non-uniformly as input grows — even on **trivial** tasks like repeating a sequence.
 - This isn't a reasoning failure; it's a limit of attention itself.
 - Models differ in **how** they fail: Claude tends to abstain; GPT tends to confidently hallucinate.
 - Distractors that are **semantically close** to the answer hurt more than unrelated ones.
 - "Million-token context windows don't mean a million tokens of useful context."
-:::
-
-::: {.callout-warning}
 The implication for agents: **context length is a budget, not a free resource**. Curate it like memory in an embedded system.
 :::
 
@@ -811,7 +773,7 @@ The implication for agents: **context length is a budget, not a free resource**.
 Source: [*Context Rot: How Increasing Input Tokens Impacts LLM Performance*](https://research.trychroma.com/context-rot) — Hong et al., Chroma Research (Jul 2025)
 :::
 
-## Context engineering — practical levers {.smaller}
+## Contexts {.smaller}
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -833,22 +795,16 @@ Source: [*Context Rot: How Increasing Input Tokens Impacts LLM Performance*](htt
 :::
 :::
 
-::: {.fragment}
-**Isolate** — split context across specialized agents (back to Anthropic's orchestrator pattern). Each gets a focused slice. The multi-agent argument from a context-engineering angle: not "many minds are better than one" but "many narrow contexts beat one bloated one".
-:::
+Also, **Isolate** — split context across specialized agents (back to Anthropic's orchestrator pattern). Each gets a focused slice. The multi-agent argument from a context-engineering angle: not "many minds are better than one" but "many narrow contexts beat one bloated one".
 
-# Part 7 — Build an agent from scratch
-
-## The "dummy agent" from Unit 1
+## Agent from scratch
 
 ::: {.callout-note}
 ## Goal
 Write a working agent in **~40 lines of Python**, no framework, just an LLM API + a `while` loop. This is the best way to understand what frameworks do for you.
-:::
 
 We need:
 
-::: {.incremental}
 1. A tool (a Python function).
 2. A system prompt describing the format.
 3. An LLM client.
@@ -856,9 +812,9 @@ We need:
 5. A loop.
 :::
 
-## Step 1 — Tools and system prompt {.smaller}
+## Agent from scratch
 
-```{.python code-line-numbers="|1-9|11-29"}
+```python
 import datetime
 
 def get_weather(location: str) -> str:
@@ -891,9 +847,9 @@ Final Answer: <answer>
 """
 ```
 
-## Step 2 — Parse the model output
+## Agent from scratch
 
-```{.python code-line-numbers="|1-2|4-9|11-14"}
+```python
 import json, re
 
 ACTION_RE = re.compile(
@@ -911,9 +867,9 @@ def parse(text: str):
     return ("error", text)
 ```
 
-## Step 3 — The loop, and use it
+## Agent from scratch
 
-```{.python code-line-numbers="|1-7|9-22|24-27"}
+```python
 from huggingface_hub import InferenceClient
 
 client = InferenceClient(model="meta-llama/Llama-3.2-3B-Instruct")
@@ -944,11 +900,9 @@ print(answer)
 # → "It is currently 2026-05-12T13:42:00Z, and Berlin is 18°C and cloudy."
 ```
 
-::: {.fragment}
-That's an agent. **All frameworks below are productionizing pieces of this.**
-:::
-
-## What the frameworks add {.smaller}
+## Agent from scratch
+:::{.callout-tip icon=false}
+## Frameworks
 
 | You wrote yourself | A framework gives you |
 |---|---|
@@ -959,10 +913,9 @@ That's an agent. **All frameworks below are productionizing pieces of this.**
 | `print(out)` | Tracing, telemetry, evaluation hooks |
 | Single agent | Multi-agent orchestration |
 | Manual sandboxing | E2B / Docker isolation for code execution |
+:::
 
-# Part 8 — Framework deep-dive
-
-## The 2026 framework landscape {.smaller}
+## Agent frameworks {.scrollable .smaller}
 
 ```{mermaid}
 flowchart LR
@@ -985,6 +938,7 @@ flowchart LR
     end
 ```
 
+## Agent frameworks {.smaller}
 | Pick | Best for | Star feature |
 |---|---|---|
 | **smolagents** | Learning, minimal deps, code agents | `CodeAgent` writes Python actions |
@@ -994,44 +948,44 @@ flowchart LR
 | **PydanticAI** | Type-safe production agents | Pydantic-validated outputs, DI |
 | **CrewAI** | Role-based teams, business workflows | Crews + Flows duality |
 
-::: {.fragment}
-The next slides show the **same toy task** — *"compare the weather in Paris and Tokyo"* with one `get_weather` tool — in each framework. Watch the **idiom**, not the syntax.
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Task definition
+"Compare the weather in Paris and Tokyo"* with one `get_weather` tool.
 :::
 
-## Framework 1 — smolagents {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## smolagents
 
 > A **minimal** agent library from Hugging Face built around the idea that **LLMs should write code, not JSON**.
 
-::: {.incremental}
 - ~1000 lines of core code, on purpose.
 - Two agent flavors: **`ToolCallingAgent`** (JSON tool calls) and **`CodeAgent`** (writes Python).
 - Works with any LLM: HF Inference API, OpenAI, Anthropic, local models via `transformers`.
 - Code execution is **sandboxed** (E2B by default, or `LocalPythonExecutor`).
 :::
 
-## Why code actions beat JSON actions {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Code actions vs JSON actions
 
 From the paper *Executable Code Actions Elicit Better LLM Agents* (Wang et al., 2024):
 
-::: {.incremental}
 - **Composability** — `f(g(x))` is natural in code, awkward in JSON.
 - **Object management** — what does the JSON for "the image I just generated" look like?
 - **Control flow** — loops and conditionals come for free.
 - **Reuse** — define a helper function once, call it later.
 - **Empirically** — fewer steps, higher success rates on benchmarks.
-:::
 
-::: {.fragment}
 The trade-off: **you must sandbox code execution**. smolagents does this for you.
 :::
 
-::: footer
-Source: [*Executable Code Actions Elicit Better LLM Agents*](https://arxiv.org/abs/2402.01030) — Wang et al., 2024
-:::
+## Agent frameworks
+:::{.callout-tip icon=false}
+## CodeAgent
 
-## smolagents — CodeAgent
-
-```{.python code-line-numbers="|1-2|4-12|14-17|19"}
+```python
 from smolagents import CodeAgent, InferenceClientModel, tool
 
 @tool
@@ -1052,7 +1006,10 @@ agent = CodeAgent(tools=[get_weather], model=model)
 result = agent.run("Compare the weather in Paris and Tokyo.")
 print(result)
 ```
+:::
 
+## Agent frameworks
+:::{.callout-tip icon=false}
 ## What the model actually emits
 
 Instead of a JSON tool call, the LLM writes:
@@ -1064,13 +1021,14 @@ tokyo = get_weather("Tokyo")
 final_answer(f"Paris: {paris} | Tokyo: {tokyo}")
 ```
 
-::: {.fragment}
 smolagents parses the code block, executes it in a sandbox, captures stdout / return values as the **Observation**, then loops.
 :::
 
+## Agent frameworks
+:::{.callout-tip icon=false}
 ## smolagents — managed multi-agent
 
-```{.python code-line-numbers="|1-4|6-10|12-15"}
+```python
 from smolagents import CodeAgent, ToolCallingAgent
 from smolagents import DuckDuckGoSearchTool, InferenceClientModel
 
@@ -1091,28 +1049,27 @@ manager = CodeAgent(
 manager.run("Summarize today's top AI news in 3 bullet points.")
 ```
 
-::: {.fragment}
 The manager calls `web_searcher(...)` as if it were just another tool.
 :::
 
-## Framework 2 — LangChain v1 {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## LangChain v1
 
 > Released **October 2025**. A major rewrite focused on the **standard agent loop**, with provider-agnostic models, native tool calling, and a new **middleware** system.
 
-::: {.incremental}
 - The old `AgentExecutor` / `initialize_agent` patterns are **deprecated** (maintenance mode until Dec 2026).
 - The new entry point: `from langchain.agents import create_agent`.
 - Backward compatible with v0.3 — but you should migrate.
 - **`create_agent` runs on top of LangGraph** — same engine, simpler surface.
 :::
 
-::: footer
-Source: [*LangChain & LangGraph 1.0*](https://blog.langchain.com/langchain-langgraph-1dot0/) — LangChain blog (Oct 2025)
-:::
 
-## LangChain v1 — `create_agent`
+## Agent frameworks
+:::{.callout-tip icon=false}
+## create_agent
 
-```{.python code-line-numbers="|1-3|5-12|14-17"}
+```python
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 from langchain_openai import ChatOpenAI
@@ -1135,10 +1092,13 @@ result = agent.invoke({
 })
 print(result["messages"][-1].content)
 ```
+:::
 
-## LangChain v1 — middleware
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Middleware
 
-```{.python code-line-numbers="|1-2|4-12|14-19"}
+```python
 from langchain.agents import create_agent
 from langchain.agents.middleware import HumanInTheLoopMiddleware
 
@@ -1159,15 +1119,15 @@ agent = create_agent(
 )
 ```
 
-::: {.fragment}
 Middleware is the new extension point — auth, logging, rate-limiting, HITL, content filtering all live here.
 :::
 
-## Framework 3 — LangGraph v1 {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## LangGraph v1
 
 > Also released October 2025. The **low-level runtime** beneath LangChain v1. Use directly when you want explicit graph control.
 
-::: {.incremental}
 - Models execution as a **directed graph** of typed state transitions.
 - **Checkpointers** — persistent state via Postgres, Redis, SQLite.
 - **Interrupts** — pause and resume on human input, days later.
@@ -1175,9 +1135,11 @@ Middleware is the new extension point — auth, logging, rate-limiting, HITL, co
 - "The first stable major release in the durable agent framework space" (LangChain blog, Oct 2025).
 :::
 
-## LangGraph — manual `StateGraph`
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Manual StateGraph
 
-```{.python code-line-numbers="|1-5|7-8|10|12-13|15-17|19-25"}
+```python
 from langgraph.graph import StateGraph, START, END
 from langgraph.prebuilt import ToolNode
 from langgraph.checkpoint.postgres import PostgresSaver
@@ -1206,7 +1168,11 @@ graph.add_edge("tools", "agent")
 checkpointer = PostgresSaver.from_conn_string("postgresql://…")
 app = graph.compile(checkpointer=checkpointer)
 ```
+:::
 
+
+## Agent frameworks
+:::{.callout-tip icon=false}
 ## LangGraph mental model
 
 ```{mermaid}
@@ -1217,16 +1183,16 @@ stateDiagram-v2
     tools --> agent
 ```
 
-::: {.incremental}
 - **Nodes** are functions, **edges** are transitions, **state** is a typed dict.
-- Every node execution → a **checkpoint** in the store.
+- Every node execution generates a **checkpoint** in the store.
 - Resume after crash, restart, or week-long human delay.
-- Per LangChain's 2025 survey: **89% of agent developers ship observability** — checkpointing is the foundation.
 :::
 
-## LangGraph — human-in-the-loop interrupt
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Human-in-the-loop interrupt
 
-```{.python code-line-numbers="|1-2|4-9|11-14|16-21"}
+```python
 from langgraph.types import interrupt, Command
 from langgraph.checkpoint.memory import MemorySaver
 
@@ -1250,21 +1216,25 @@ app.invoke(
     config=config,
 )
 ```
+:::
 
-## Framework 4 — LlamaIndex {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## LlamaIndex
 
 > An agent + data framework. Strongest when retrieval is **the core of the job**, not a side-tool.
 
-::: {.incremental}
 - First-class **indexes**: vector, summary, knowledge-graph, SQL.
 - **Workflows** — event-driven async orchestration with typed events.
 - Strong document parsing (**LlamaParse**) for PDFs, slides, scanned docs.
 - `ReActAgent`, `FunctionAgent`, `AgentWorkflow` — multiple flavors at multiple abstraction levels.
 :::
 
-## LlamaIndex — agentic RAG
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Agentic RAG
 
-```{.python code-line-numbers="|1-4|6-10|12-15|17-23"}
+```python
 from llama_index.core import VectorStoreIndex, SimpleDirectoryReader
 from llama_index.core.agent.workflow import ReActAgent
 from llama_index.core.tools import QueryEngineTool
@@ -1290,15 +1260,15 @@ agent = ReActAgent(
 )
 ```
 
-::: {.fragment}
-The **agent decides** when to retrieve, when to skip, and what to query for — that's "agentic RAG".
+The **agent decides** when to retrieve, when to skip, and what to query for.
 :::
 
-## Framework 5 — PydanticAI {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## PydanticAI
 
 > From the Pydantic team. Launched late 2024, **v1 stable September 2025**. The "FastAPI of agent frameworks": type-safe, dependency-injected, validated.
 
-::: {.incremental}
 - Built on Pydantic — already inside the OpenAI, Anthropic, Google SDKs.
 - **Structured outputs** as a first-class primitive. Validated, retried on failure.
 - **Dependency injection** via `RunContext[Deps]` — DBs and services without globals.
@@ -1306,9 +1276,11 @@ The **agent decides** when to retrieve, when to skip, and what to query for — 
 - Pairs natively with **Logfire** for tracing.
 :::
 
-## PydanticAI — simplest agent
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Simplest agent
 
-```{.python code-line-numbers="|1-2|4-7|9-11|13"}
+```python
 from pydantic_ai import Agent
 from pydantic import BaseModel
 
@@ -1326,13 +1298,14 @@ result = agent.run_sync("Compare the weather in Paris and Tokyo.")
 print(result.output)
 ```
 
-::: {.fragment}
-Plain tools, plain types. The agent loop is hidden — you're writing a normal Python function with a typed signature.
+The agent loop is hidden — you're writing a normal Python function with a typed signature.
 :::
 
-## PydanticAI — structured output + dependency injection
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Structured output + dependency injection
 
-```{.python code-line-numbers="|1-3|5-9|11-14|16-22|24-28"}
+```python
 from dataclasses import dataclass
 from pydantic import BaseModel, Field
 from pydantic_ai import Agent, RunContext
@@ -1363,10 +1336,12 @@ async def customer_balance(ctx: RunContext[Deps]) -> float:
 reply = agent.run_sync("My card was stolen.", deps=Deps(...))
 # reply.output is a SupportReply — fully typed, IDE-aware, runtime-validated
 ```
+:::
 
-## Why PydanticAI matters in production
+## Agent frameworks
+:::{.callout-tip icon=false}
+## PydanticAI vs others
 
-::: {.incremental}
 - **Type checker catches bugs** that other frameworks let through to runtime.
 - **Validation retries** — malformed JSON triggers an automatic re-prompt with the validation error.
 - **Testable** — dependencies are swappable; mock `db` in tests, no framework patching.
@@ -1374,20 +1349,22 @@ reply = agent.run_sync("My card was stolen.", deps=Deps(...))
 - Reported wins: ~40% less code than LangGraph, ~60% less than CrewAI on the same tasks (per public benchmarks).
 :::
 
-## Framework 6 — CrewAI {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## CrewAI
 
 > A **role-based multi-agent** framework. Independent of LangChain. Used by AWS Bedrock, IBM, and others in production multi-agent deployments.
 
-::: {.incremental}
 - Core primitives: **Agent**, **Task**, **Crew**, **Tool**.
 - Each agent has a **role**, **goal**, and **backstory** — these become the system prompt.
 - Two orchestration modes: **Crews** (autonomous collaboration) and **Flows** (event-driven, deterministic).
-- 100k+ certified developers via the CrewAI Learn community.
 :::
 
-## CrewAI — a research-and-write crew
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Research-and-write crew
 
-```{.python code-line-numbers="|1-3|5-12|14-21|23-30|32-37"}
+```python
 from crewai import Agent, Task, Crew, Process
 from crewai_tools import SerperDevTool
 
@@ -1428,8 +1405,11 @@ crew = Crew(
 )
 print(crew.kickoff())
 ```
+:::
 
-## CrewAI — Crews vs. Flows
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Crews vs. Flows
 
 ::: {.columns}
 ::: {.column width="50%"}
@@ -1451,13 +1431,13 @@ print(crew.kickoff())
 :::
 :::
 
-::: {.fragment}
-**Recent change**: `allow_code_execution` / `code_execution_mode` are **deprecated**. Use a dedicated sandbox (**E2B**, **Modal**) — CrewAI no longer ships built-in code execution.
 :::
 
-## CrewAI — a tiny Flow
+## Agent frameworks
+:::{.callout-tip icon=false}
+## A tiny Flow
 
-```{.python code-line-numbers="|1-3|5-8|10-15|17-22|24-26"}
+```python
 from crewai.flow.flow import Flow, listen, start
 from pydantic import BaseModel
 
@@ -1483,11 +1463,12 @@ class BlogFlow(Flow[State]):
 flow = BlogFlow()
 flow.kickoff()
 ```
+:::
 
-## Picking a framework — the honest version {.smaller}
+## Agent frameworks
+:::{.callout-tip icon=false}
+## Framework comparison
 
-::: {.callout-tip}
-## Pragmatic defaults
 - **Just learning?** → `smolagents`, or no framework at all (see Part 6).
 - **One agent, type-safe, production?** → **PydanticAI**.
 - **Standard agent loop, lots of integrations?** → **LangChain `create_agent`**.
@@ -1496,11 +1477,9 @@ flow.kickoff()
 - **A team of specialized agents?** → **CrewAI**.
 :::
 
-::: {.fragment}
-**Anti-pattern**: pick the framework first, discover the requirements later. Prototype the task in 50 lines of plain Python, *then* choose.
-:::
-
-## Side-by-side: same task, six frameworks {.smaller}
+## Agent frameworks {.smaller}
+:::{.callout-tip icon=false}
+## Comparison
 
 | Framework | LOC (toy task) | Tool definition | Output validation |
 |---|---|---|---|
@@ -1511,11 +1490,7 @@ flow.kickoff()
 | LlamaIndex | ~15 | `FunctionTool` | `response.response` |
 | PydanticAI | ~10 | `@agent.tool_plain` | **Pydantic-validated** `result.output` |
 | CrewAI | ~25 | Agent + tool list | `Task.expected_output` (free-text) |
-
-::: {.fragment}
-Lines of code aren't everything — but the trend is real: **PydanticAI and smolagents win on concision**, LangGraph wins on **control**, CrewAI wins on **modeling teams**.
 :::
-# Part 9 — Observability, evaluation, GAIA
 
 ## Why observability is non-optional {.smaller}
 
