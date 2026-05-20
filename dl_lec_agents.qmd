@@ -1492,17 +1492,18 @@ flow.kickoff()
 | CrewAI | ~25 | Agent + tool list | `Task.expected_output` (free-text) |
 :::
 
-## Why observability is non-optional {.smaller}
+## Observability
+:::{.callout-tip icon=false}
+## Why observability is non-optional
 
-::: {.incremental}
 - Agents are **non-deterministic loops** with side effects.
 - A bug at step 4 has cascading effects through step 8.
 - Without traces, debugging is guessing.
 - Without metrics, "is this getting better?" is a vibe.
 :::
 
-::: {.fragment}
-The Hugging Face course's Bonus Unit 2 makes a strong case: **instrument from day one**. What to log:
+
+## Observability
 
 | Layer | Capture |
 |---|---|
@@ -1511,11 +1512,12 @@ The Hugging Face course's Bonus Unit 2 makes a strong case: **instrument from da
 | LLM call | Full prompt, full completion, tokens in/out, latency |
 | Tool call | Name, arguments, return value, errors, duration |
 | Errors | Stack traces, parser failures, timeouts |
-:::
 
+## Observability
+:::{.callout-tip icon=false}
 ## OpenTelemetry-style tracing with smolagents
 
-```{.python code-line-numbers="|1-5|7-10|12-15"}
+```python
 from opentelemetry.sdk.trace import TracerProvider
 from opentelemetry.sdk.trace.export import (
     BatchSpanProcessor, ConsoleSpanExporter
@@ -1531,13 +1533,13 @@ SmolagentsInstrumentor().instrument(tracer_provider=provider)
 agent.run("Compare the weather in Paris and Tokyo.")
 ```
 
-::: {.fragment}
 Pipe spans to **Langfuse**, **Phoenix (Arize)**, **LangSmith**, or **Jaeger** — same protocol.
 :::
 
-## Evaluating agents: what to measure {.smaller}
+## Evaluation
+:::{.callout-tip icon=false}
+## Evaluating agents: what to measure
 
-::: {.incremental}
 - **Task success rate** — did it get the right final answer?
 - **Trajectory quality** — did it take a reasonable path, or stumble?
 - **Tool-use precision / recall** — right tool, right arguments?
@@ -1546,13 +1548,15 @@ Pipe spans to **Langfuse**, **Phoenix (Arize)**, **LangSmith**, or **Jaeger** �
 - **Robustness** — same task, run 10x — variance?
 :::
 
+## Evaluation
+:::{.callout-tip icon=false}
 ## Two evaluation flavors
 
 ::: {.columns}
 ::: {.column width="50%"}
 **Benchmark suites**
 
-- GAIA (HF, used in course)
+- GAIA (HF)
 - SWE-bench (coding agents)
 - WebArena (browsing)
 - τ-bench (multi-turn tool use)
@@ -1573,62 +1577,15 @@ Good for **shipping decisions**.
 :::
 :::
 
-## GAIA: the course's final boss {.smaller}
-
-> **GAIA** — *General AI Assistants benchmark* — Mialon et al. (Meta + HF), 2023.
-
-::: {.incremental}
-- 466 questions across 3 difficulty levels.
-- Questions a smart human can answer in minutes — but require **tool use, multi-step reasoning, and grounding**.
-- Examples: "How many studio albums did artist X release before 2007?" / "What's in cell B7 of the attached Excel file?"
-- The course's Unit 4 uses a **subset**; **30% accuracy → certificate**.
-- Top systems at launch: ~15% (GPT-4 + plugins). Humans: ~92%.
 :::
 
-::: footer
-Source: [*GAIA: A Benchmark for General AI Assistants*](https://arxiv.org/abs/2311.12983) — Mialon et al., 2023 · [HF leaderboard](https://huggingface.co/spaces/gaia-benchmark/leaderboard)
-:::
 
-## A typical GAIA-grade tool kit
-
-```{.python code-line-numbers="|1-3|5-15"}
-from smolagents import CodeAgent, DuckDuckGoSearchTool
-from smolagents import VisitWebpageTool, PythonInterpreterTool
-
-agent = CodeAgent(
-    tools=[
-        DuckDuckGoSearchTool(),
-        VisitWebpageTool(),
-        PythonInterpreterTool(),
-        # plus: read_pdf, read_excel, transcribe_audio,
-        #       describe_image, run_calculator, …
-    ],
-    model=InferenceClientModel("Qwen/Qwen2.5-Coder-32B-Instruct"),
-    max_steps=15,
-    additional_authorized_imports=["pandas", "numpy", "openpyxl"],
-)
-```
-
-## Patterns that boost GAIA scores
-
-::: {.incremental}
-- **Tool diversity** beats clever prompting.
-- **A vision-capable model** for image / chart questions.
-- **A planner step** before the main loop — sketch the approach first.
-- **Self-critique**: after a draft answer, re-check against the question.
-- **Format compliance**: GAIA grades by **exact match**. A correct fact in the wrong format scores zero.
-:::
-
-# Part 10 — Production deployment
-
-## The gap between demo and production {.smaller}
+## Prod deployment
 
 ::: {.callout-warning}
 ## The harsh truth
 A working notebook is **~10%** of the work. The other 90% is making it reliable, observable, affordable, and safe at scale.
-:::
 
-::: {.incremental}
 - Agents are **non-deterministic**, **stateful**, **long-running** processes — three things web frameworks weren't built for.
 - Standard serverless (15-min Lambda timeout) breaks for multi-step agents.
 - Standard Kubernetes assumes stateless microservices.
@@ -1647,11 +1604,7 @@ flowchart TB
     L1 --- L2 --- L3 --- L4 --- L5
 ```
 
-::: footer
-Adapted from "Deploying AI Agents to Production" (MachineLearningMastery, 2026) and the OWASP Agentic AI Top 10.
-:::
-
-## Three execution models
+## Three execution models {.smaller}
 
 ::: {.columns}
 ::: {.column width="33%"}
@@ -1682,11 +1635,9 @@ Adapted from "Deploying AI Agents to Production" (MachineLearningMastery, 2026) 
 :::
 :::
 
-::: {.fragment}
 Real systems usually **mix all three** — e.g. a support platform with stateless FAQ + stateful chat + event-driven case investigation.
-:::
 
-## Compute layer — choosing a target
+## Compute layer — choosing a target {.smaller}
 
 | Option | When to use | Watch out for |
 |---|---|---|
@@ -1696,108 +1647,7 @@ Real systems usually **mix all three** — e.g. a support platform with stateles
 | **Agent-native platforms (Bedrock AgentCore, Agentuity)** | Fast deploy, less ops | Vendor lock-in, less control |
 | **GPU serverless (Runpod, Modal)** | Self-hosted LLM inference | Right-size workers |
 
-::: {.fragment}
 **Common pattern**: orchestration on CPU serverless + LLM inference on GPU serverless or a managed API.
-:::
-
-## Kubernetes for agents — what it doesn't give you
-
-::: {.incremental}
-- ✅ Container scheduling, scaling, health checks, networking — all the K8s standards.
-- ❌ Persistent agent state across pod restarts.
-- ❌ LLM gateway / model routing.
-- ❌ Sandbox isolation for code-executing agents.
-- ❌ Long-running workflow orchestration (>pod lifetime).
-:::
-
-::: {.fragment}
-**Google's Agent Sandbox** (2026, K8s primitive) adds gVisor/Kata isolation + pre-warmed pools + pod snapshots specifically for agent workloads. The K8s ecosystem is catching up.
-:::
-
-## Durable execution — the production unlock {.smaller}
-
-The problem: an agent crashes at step 7 of 12. **Do you re-run from step 1?** (Expensive, non-idempotent.) **Resume from step 7?** (Need durable state.)
-
-::: {.incremental}
-- **Durable execution** = the runtime persists every step so the workflow can resume after any failure.
-- Each LLM call and tool call becomes a **journaled, retriable step**.
-- Survives: process crashes, deploys, multi-day human waits, network blips.
-- Critical for any agent that costs >$0.10 per run or runs >5 minutes.
-:::
-
-## The durable execution toolbox {.smaller}
-
-| System | Model | Best for |
-|---|---|---|
-| **Temporal** | Workflow journal + replay | Mature, multi-service, complex retries |
-| **Restate** | Lightweight journal, serverless-first | Edge / Lambda / Vercel deployments |
-| **DBOS** | Postgres-as-runtime (zero new infra) | Teams already on Postgres |
-| **Inngest / Hatchet** | Step-level retries, AI primitives | Event-driven, serverless |
-| **Prefect** | Cached task results | Cost saving on expensive LLM calls |
-| **LangGraph checkpointers** | Built-in graph-level state | Already using LangGraph |
-
-```{.python code-line-numbers="|3-7|9-19"}
-# Temporal-style durable agent workflow
-from temporalio import workflow, activity
-
-@activity.defn
-async def call_llm(messages: list) -> str: ...
-@activity.defn
-async def call_tool(name: str, args: dict) -> str: ...
-
-@workflow.defn
-class AgentWorkflow:
-    @workflow.run
-    async def run(self, question: str) -> str:
-        messages = [{"role": "user", "content": question}]
-        for _ in range(20):
-            reply = await workflow.execute_activity(call_llm, messages)
-            if "Final Answer:" in reply: return reply
-            obs = await workflow.execute_activity(call_tool, ...)
-            messages += [{"role": "assistant", "content": reply},
-                         {"role": "tool", "content": obs}]
-```
-
-::: {.fragment}
-Each `execute_activity` call is a **durable step**. Crash, restart — resume exactly where you left off.
-:::
-
-## State & memory in production {.smaller}
-
-| Need | Typical solution |
-|---|---|
-| Short-term (per-run scratchpad) | In-memory, or the framework's state object |
-| Conversation history (per-user) | Postgres / Redis, keyed by `thread_id` |
-| Long-term semantic memory | Vector DB: pgvector, Pinecone, Qdrant, Weaviate, Chroma |
-| Long-term episodic memory | Postgres + embeddings + recency filter |
-| Tool call audit log | Append-only Postgres or object storage |
-| Checkpoints | Framework-native (LangGraph `PostgresSaver`) or durable-exec engine |
-
-::: {.fragment}
-**Common mistake**: putting long conversation logs straight into context. Cost scales linearly with turns. **Summarize** older turns or store and **retrieve on demand**.
-:::
-
-## LLM gateway — the missing middleware
-
-```{mermaid}
-flowchart LR
-    A1[Agent 1] --> G[LLM Gateway]
-    A2[Agent 2] --> G
-    A3[Agent N] --> G
-    G --> M1[OpenAI]
-    G --> M2[Anthropic]
-    G --> M3[Self-hosted vLLM]
-    G --> M4[Bedrock]
-    G --> C[(Response cache)]
-    G --> R[(Rate limiter)]
-    G --> O[(Telemetry)]
-```
-
-::: {.incremental}
-- One place for: **API key rotation**, **provider failover**, **prompt caching**, **rate limits**, **cost tracking**, **PII filtering**.
-- Options: **LiteLLM**, **Portkey**, **OpenRouter**, **Pydantic AI Gateway**, custom FastAPI.
-- Without it, every agent re-implements these badly.
-:::
 
 ## The observability stack {.smaller}
 
