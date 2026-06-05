@@ -1,5 +1,5 @@
 ---
-title: "DL: Lab 10 (HuggingFace Transformers)"
+title: "Exam presentation subjects"
 execute:
   enabled: true
   echo: true
@@ -18,13 +18,22 @@ filters:
   - diagram
 ---
 
-# Subjects
 
-
-- BitNet
-- Graph neural networks
-- Neurosymbolic AI
-- Mamba
-- KANs
-- Liquid AI/Neural ODEs
-- Equivariant DL
+   | #  | Topic                                                  | References                                                                                                |
+|---:|--------------------------------------------------------|-----------------------------------------------------------------------------------------------------------|
+| 1  | BitNet                                                 | [2310.11453](https://arxiv.org/pdf/2310.11453)                                                            |
+| 2  | Graph Convolutional Networks                           | [1609.02907](https://arxiv.org/pdf/1609.02907)                                                            |
+| 3  | Graph Transformers                                     | [2407.09777](https://arxiv.org/pdf/2407.09777)                                                            |
+| 4  | Neurosymbolic AI: DeepProbLog                          | [1805.10872](https://arxiv.org/pdf/1805.10872)                                                            |
+| 5  | Neurosymbolic AI: Logic Tensor Networks                | [2012.13635](https://arxiv.org/pdf/2012.13635)                                                            |
+| 6  | Mamba architecture and State Space Models              | [2312.00752](https://arxiv.org/abs/2312.00752), [2503.18970](https://arxiv.org/abs/2503.18970)            |
+| 7  | Kolmogorov–Arnold Networks                             | [2404.19756](https://arxiv.org/abs/2404.19756)                                                            |
+| 8  | Liquid Neural Networks                                 | [2510.07578](https://arxiv.org/pdf/2510.07578), [2006.04439](https://arxiv.org/pdf/2006.04439)            |
+| 9  | Equivariant Deep Learning                              | [2205.07362](https://arxiv.org/pdf/2205.07362)                                                            |
+| 10 | Hypercomplex Neural Networks                           | [2403.17929](https://arxiv.org/pdf/2403.17929), [2102.08597](https://arxiv.org/pdf/2102.08597)            |
+| 11 | Spiking Neural Networks and Neuromorphic Computing     | [2109.12894](https://arxiv.org/pdf/2109.12894)                                                            |
+| 12 | Graph Foundation Models                                | [2505.15116](https://arxiv.org/abs/2505.15116)                                                            |
+| 13 | Geometric Deep Learning                                | [2104.13478](https://arxiv.org/pdf/2104.13478)                                                            |
+| 14 | Clifford Neural Networks                               | [2209.04934](https://arxiv.org/pdf/2209.04934), [2305.11141](https://arxiv.org/pdf/2305.11141)            |
+| 15 | Mixture-of-Experts                                     | [1701.06538](https://arxiv.org/pdf/1701.06538), [2401.04088](https://arxiv.org/pdf/2401.04088)            |
+| 16 | Reasoning Models                                       | [2201.11903](https://arxiv.org/pdf/2201.11903)                                                            |
